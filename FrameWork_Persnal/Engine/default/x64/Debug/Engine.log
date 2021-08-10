@@ -1,0 +1,27 @@
+﻿  Engine.vcxproj -> C:\Users\Administrator\Desktop\FrameWork_Persnal\Engine\default\..\bin\Engine.dll
+  Engine.vcxproj -> ..\bin\Engine.pdb (Full PDB)
+  ..\public\Base.h
+  ..\public\Component.h
+  ..\public\Component_Manager.h
+  ..\public\Engine_Defines.h
+  ..\public\Engine_Function.h
+  ..\public\Engine_Macro.h
+  ..\public\Engine_Struct.h
+  ..\public\Engine_Typedef.h
+  ..\public\GameInstance.h
+  ..\public\GameObject.h
+  ..\public\GameObject_Manager.h
+  ..\public\Graphic_Device.h
+  ..\public\Layer.h
+  ..\public\Level.h
+  ..\public\Level_Manager.h
+  ..\public\Renderer.h
+  ..\public\VIBuffer.h
+  ..\public\VIBuffer_Rect.h
+  18개 파일이 복사되었습니다.
+  ..\Bin\Engine.lib
+  1개 파일이 복사되었습니다.
+  ..\Bin\Engine.dll
+  1개 파일이 복사되었습니다.
+  ..\Bin\Engine.dll
+  1개 파일이 복사되었습니다.
