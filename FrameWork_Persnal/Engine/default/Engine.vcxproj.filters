@@ -43,9 +43,6 @@
     <Filter Include="02.Utility\01.GameObject\Manager">
       <UniqueIdentifier>{fd56bb75-f294-4f46-b541-b95cd2571d65}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Utility\01.GameObject\GameObject">
-      <UniqueIdentifier>{4fd0cb81-40c7-4252-ad20-3888f1bd2eed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Utility\01.GameObject\Manager\Layer">
       <UniqueIdentifier>{e8dd997f-1c3a-4eae-8432-887a41d676ae}</UniqueIdentifier>
     </Filter>
@@ -96,9 +93,6 @@
     <ClInclude Include="..\public\Level_Manager.h">
       <Filter>02.Utility\00.Level\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\GameObject.h">
-      <Filter>02.Utility\01.GameObject\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\GameObject_Manager.h">
       <Filter>02.Utility\01.GameObject\Manager</Filter>
     </ClInclude>
@@ -120,6 +114,9 @@
     <ClInclude Include="..\public\VIBuffer_Rect.h">
       <Filter>02.Utility\02.Component\01.Buffer\00.Rect</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\GameObject.h">
+      <Filter>02.Utility\01.GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -136,9 +133,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Level_Manager.cpp">
       <Filter>02.Utility\00.Level\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\GameObject.cpp">
-      <Filter>02.Utility\01.GameObject\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GameObject_Manager.cpp">
       <Filter>02.Utility\01.GameObject\Manager</Filter>
@@ -160,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Rect.cpp">
       <Filter>02.Utility\02.Component\01.Buffer\00.Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GameObject.cpp">
+      <Filter>02.Utility\01.GameObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

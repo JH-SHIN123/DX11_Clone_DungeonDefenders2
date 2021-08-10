@@ -34,6 +34,10 @@ _int CGameObject::Tick(_double TimeDelta)
 
 _int CGameObject::Late_Tick(_double TimeDelta)
 {
+	// 자식의 Late_Tick에서 렌더러에 넣는데 이걸
+	// 절두체 컬링으로 판단하게 된다면?
+	// 일단은 간단하게 뷰 행렬 기준으로 카메라의 Z보다 작으면 그리지 말자
+
 	return _int();
 }
 

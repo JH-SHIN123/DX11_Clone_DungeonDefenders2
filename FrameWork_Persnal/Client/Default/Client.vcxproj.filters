@@ -31,6 +31,9 @@
     <Filter Include="02.GameObject\Logo\BackGround">
       <UniqueIdentifier>{fd714cb0-ce9e-4958-91e7-a718b433c0d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.ShaderFiles">
+      <UniqueIdentifier>{c897f1d9-0925-4b86-b82e-978dc2dda110}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -105,5 +108,10 @@
     <ResourceCompile Include="Client.rc">
       <Filter>99.Default</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader_Default.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

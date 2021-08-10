@@ -1,2 +1,6 @@
-﻿  Client.vcxproj -> C:\Project\Dungeon_Defendus\FrameWork_Persnal\Client\Default\..\bin\Client.exe
+﻿FXC : warning X4717: Effects deprecated for D3DCompiler_47
+C:\Project\Dungeon_Defendus\FrameWork_Persnal\Client\Default\Shader_Default.hlsl(58,31-47): warning X3081: comma expression used where a vector constructor may have been intended
+  
+  compilation object save succeeded; see C:\Project\Dungeon_Defendus\FrameWork_Persnal\Client\bin\Shader_Default.cso
+  Client.vcxproj -> C:\Project\Dungeon_Defendus\FrameWork_Persnal\Client\Default\..\bin\Client.exe
   Client.vcxproj -> ..\bin\Client.pdb (Full PDB)
