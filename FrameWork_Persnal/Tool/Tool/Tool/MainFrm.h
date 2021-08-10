@@ -13,7 +13,8 @@ protected: // serialization에서만 만들어집니다.
 
 // 특성입니다.
 protected:
-	CSplitterWnd m_wndSplitter;
+	CSplitterWnd m_tMainSplitterWnd; 
+	CSplitterWnd m_tSecondSplitterWnd; 
 public:
 
 // 작업입니다.

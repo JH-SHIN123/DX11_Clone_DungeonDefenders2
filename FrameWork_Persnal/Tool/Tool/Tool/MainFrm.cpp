@@ -6,6 +6,8 @@
 #include "Tool.h"
 
 #include "MainFrm.h"
+#include "ToolView.h"
+#include "Form.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -51,10 +53,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT /*lpcs*/,
 	CCreateContext* pContext)
 {
-	return m_wndSplitter.Create(this,
-		2, 2,               // TODO: 행 및 열의 개수를 조정합니다.
-		CSize(10, 10),      // TODO: 최소 창 크기를 조정합니다.
-		pContext);
+	m_tMainSplitterWnd.CreateStatic(this, 1, 2);
+	m_tMainSplitterWnd.CreateView(0, 0, RUNTIME_CLASS(CForm), CSize(300, 500), pContext);
+
+	m_tMainSplitterWnd.CreateView(0, 1, RUNTIME_CLASS(CToolView), CSize(500, 600), pContext);
+
+	return true;
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)

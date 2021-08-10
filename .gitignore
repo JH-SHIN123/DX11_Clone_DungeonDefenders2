@@ -7,14 +7,10 @@
 *.d
 
 # Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+
 
 # Precompiled Headers
-*.gch
-*.pch
+
 
 # Compiled Dynamic libraries
 *.so
@@ -33,9 +29,18 @@
 *.exe
 *.out
 *.app
-
 *.db
 *.opendb
+*.ipch
+*.obj
+*.slo
+*.lo
+*.o
+*.obj
+*.gch
+*.pch
+*.opendb
+*.suo
 
 # End of https://www.toptal.com/developers/gitignore/api/c++
-*.opendb
+

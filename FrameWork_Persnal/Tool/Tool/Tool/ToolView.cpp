@@ -12,6 +12,9 @@
 #include "ToolDoc.h"
 #include "ToolView.h"
 
+
+
+HWND g_hWND;
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -52,10 +55,10 @@ BOOL CToolView::PreCreateWindow(CREATESTRUCT& cs)
 
 void CToolView::OnDraw(CDC* /*pDC*/)
 {
-	CToolDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	if (!pDoc)
-		return;
+	//CToolDoc* pDoc = GetDocument();
+	//ASSERT_VALID(pDoc);
+	//if (!pDoc)
+	//	return;
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 }
