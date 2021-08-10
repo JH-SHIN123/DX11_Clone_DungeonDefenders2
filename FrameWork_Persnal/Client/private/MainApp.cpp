@@ -3,6 +3,7 @@
 #include "Level_Loading.h"
 #include "Level_Logo.h"
 #include "GameInstance.h"
+#include "Renderer.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -38,6 +39,14 @@ _int CMainApp::Update_MainApp(_double TimeDelta)
 	if (nullptr == m_pGameInstance)
 		return -1;
 
+#ifdef _DEBUG
+	if (GetAsyncKeyState('Q') & 0x8000)
+	{
+
+	}
+
+#endif // _DEBUG
+
 	return m_pGameInstance->Tick(TimeDelta);	
 }
 
@@ -70,6 +79,17 @@ HRESULT CMainApp::Ready_DefaultLevel(ELevel eLevelID)
 
 HRESULT CMainApp::Ready_Component_PrototypeForStatic()
 {
+	if (nullptr == m_pGameInstance)
+		return E_FAIL;
+
+	/* Renderer */
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Renderer"), m_pRenderer = CRenderer::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+	Safe_AddRef(m_pRenderer);
+
+	/* Transform */
+
+
 	return S_OK;
 }
 
@@ -88,6 +108,7 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
+	Safe_Release(m_pRenderer);
 	Safe_Release(m_pDevice_Context);
 	Safe_Release(m_pDevice);
 

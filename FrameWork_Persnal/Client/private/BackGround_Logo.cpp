@@ -93,4 +93,6 @@ CGameObject * CBackGround_Logo::Clone_GameObject(void * pArg)
 void CBackGround_Logo::Free()
 {
 	CGameObject::Free();
+
+	Safe_Release(m_pRendererCom);
 }
