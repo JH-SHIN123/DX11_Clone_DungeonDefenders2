@@ -23,8 +23,8 @@ protected:
 	ID3D11DeviceContext*	m_pDevice_Context = nullptr;
 
 protected:
-	unordered_map<const _tchar*, class CComponent*>			m_Components;
 	typedef unordered_map<const _tchar*, class CComponent*>	COMPONENTS;
+	COMPONENTS	m_Components;
 
 protected:
 	HRESULT Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);

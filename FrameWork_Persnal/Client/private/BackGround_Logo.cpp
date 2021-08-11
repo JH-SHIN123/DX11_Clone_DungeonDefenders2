@@ -2,7 +2,7 @@
 #include "..\public\BackGround_Logo.h"
 #include "GameInstance.h"
 #include "Renderer.h"
-
+#include "VIBuffer_Rect.h"
 CBackGround_Logo::CBackGround_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)	
 {
@@ -41,6 +41,8 @@ _int CBackGround_Logo::Late_Tick(_double TimeDelta)
 
 HRESULT CBackGround_Logo::Render()
 {
+	m_pBuffer_Rect->Render();
+
 	return S_OK;
 }
 
@@ -56,8 +58,13 @@ HRESULT CBackGround_Logo::Ready_Component()
 	/* For.Renderer*/
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
+	//Component_VIBuffer_Rect
 
 	/* For.Transform */
+
+
+	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Rect"), (CComponent**)&m_pBuffer_Rect)))
+		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 
@@ -92,7 +99,8 @@ CGameObject * CBackGround_Logo::Clone_GameObject(void * pArg)
 
 void CBackGround_Logo::Free()
 {
-	CGameObject::Free();
-
 	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pBuffer_Rect);
+
+	CGameObject::Free();
 }

@@ -3,6 +3,8 @@
 #ifndef __CCOMPONENT_MANAGER_H__
 
 #include "Component.h"
+#include "VIBuffer.h"
+#include "VIBuffer_Rect.h"
 
 class CComponent_Manager final : public CBase
 {

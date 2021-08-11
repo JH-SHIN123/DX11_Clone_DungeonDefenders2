@@ -117,6 +117,9 @@
     <ClInclude Include="..\public\GameObject.h">
       <Filter>02.Utility\01.GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Engine_Enum.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">

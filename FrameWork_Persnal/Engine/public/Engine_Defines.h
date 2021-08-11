@@ -4,8 +4,13 @@
 
 #include "D3D11.h"
 #include "DirectXMath.h"
+
 using namespace DirectX;
 
+#define DIRECTINPUT_VERSION	0x0800
+#include <dinput.h>
+
+#include <list>
 #include <unordered_map>
 #include <algorithm>
 using namespace std;
@@ -26,6 +31,7 @@ using namespace std;
 
 #endif // _DEBUG
 
+#include "Engine_Enum.h"
 #include "Engine_Macro.h"
 #include "Engine_Struct.h"
 #include "Engine_Typedef.h"

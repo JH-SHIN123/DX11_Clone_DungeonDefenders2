@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class CRenderer;
+class CVIBuffer_Rect;
 END
 
 BEGIN(Client)
@@ -28,6 +29,7 @@ public:
 
 private:
 	CRenderer*				m_pRendererCom = nullptr;
+	CVIBuffer_Rect*			m_pBuffer_Rect = nullptr;
 
 private:
 	HRESULT	Ready_Component();

@@ -55,6 +55,9 @@ HRESULT CVIBuffer_Rect::NativeConstruct_Prototype()
 	if (FAILED(CVIBuffer::NativeConstruct_Prototype()))
 		return E_FAIL;
 
+	Safe_Delete(pPolygonIndices);
+	Safe_Delete(pVertices);
+
 	return S_OK;
 }
 

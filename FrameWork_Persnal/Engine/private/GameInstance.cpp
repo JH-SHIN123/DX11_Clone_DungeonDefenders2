@@ -170,6 +170,7 @@ _ulong CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {
+	// °¨¼Ò
 	Safe_Release(m_pLevel_Manager);
 	Safe_Release(m_pGameObject_Manager);
 	Safe_Release(m_pComponent_Manager);

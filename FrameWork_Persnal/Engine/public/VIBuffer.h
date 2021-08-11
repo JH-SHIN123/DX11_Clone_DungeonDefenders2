@@ -38,6 +38,14 @@ protected: // For.Indices
 	DXGI_FORMAT					m_eIndexFormat;
 	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;
 
+protected: // For.Shaders
+	ID3D11VertexShader*			m_pVertexShader = nullptr;
+	ID3D11PixelShader*			m_pPixelShader = nullptr;
+	ID3D11InputLayout*			m_pInputLayout = nullptr;
+
+protected:
+	_bool		m_IsClone = false;
+
 protected:
 	HRESULT SetUp_VertexBuffer_Desc(_uint iNumVertices, _uint iStride, D3D11_USAGE Usage, _uint BindFlag, _uint iCpuAccessFlag);
 	HRESULT SetUp_IndexBuffer_Desc(DXGI_FORMAT eFormat, _uint iNumPolygons, D3D11_PRIMITIVE_TOPOLOGY eTopology, D3D11_USAGE Usage, _uint BindFlag, _uint iCpuAccessFlag);

@@ -35,6 +35,7 @@ private:
 private:
 	HRESULT Ready_DefaultLevel(ELevel eLevelID);
 	HRESULT	Ready_Component_PrototypeForStatic();
+	HRESULT Comlile_ShaderFiles();
 
 public:
 	static CMainApp* Create();

@@ -1,10 +1,27 @@
-﻿  GameObject.cpp
+﻿  VIBuffer_Rect.cpp
+  VIBuffer.cpp
+  Renderer.cpp
+  Level_Manager.cpp
+  Level.cpp
+  Layer.cpp
+  Graphic_Device.cpp
+  GameObject_Manager.cpp
+  GameObject.cpp
+  GameInstance.cpp
+  Component_Manager.cpp
+  Component.cpp
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  Base.cpp
+  코드를 생성하고 있습니다...
+     ..\bin\Engine.lib 라이브러리 및 ..\bin\Engine.exp 개체를 생성하고 있습니다.
   Engine.vcxproj -> C:\Project\Dungeon_Defendus\FrameWork_Persnal\Engine\default\..\bin\Engine.dll
   Engine.vcxproj -> ..\bin\Engine.pdb (Full PDB)
   ..\public\Base.h
   ..\public\Component.h
   ..\public\Component_Manager.h
   ..\public\Engine_Defines.h
+  ..\public\Engine_Enum.h
   ..\public\Engine_Function.h
   ..\public\Engine_Macro.h
   ..\public\Engine_Struct.h
@@ -13,13 +30,14 @@
   ..\public\GameObject.h
   ..\public\GameObject_Manager.h
   ..\public\Graphic_Device.h
+  ..\public\InputDev.h
   ..\public\Layer.h
   ..\public\Level.h
   ..\public\Level_Manager.h
   ..\public\Renderer.h
   ..\public\VIBuffer.h
   ..\public\VIBuffer_Rect.h
-  18개 파일이 복사되었습니다.
+  20개 파일이 복사되었습니다.
   ..\Bin\Engine.lib
   1개 파일이 복사되었습니다.
   ..\Bin\Engine.dll

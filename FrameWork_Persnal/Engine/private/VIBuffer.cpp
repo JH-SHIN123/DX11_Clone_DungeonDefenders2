@@ -1,15 +1,30 @@
 #include "..\public\VIBuffer.h"
 
 CVIBuffer::CVIBuffer(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
-	: CComponent(m_pDevice, m_pDevice_Context)
+	: CComponent(pDevice, pDevice_Context)
 {
 }
 
 CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 	: CComponent(rhs)
 	, m_pVB(rhs.m_pVB)
+	, m_VBDesc(rhs.m_VBDesc)
+	, m_VBSubresourceData(rhs.m_VBSubresourceData)
+	, m_iNumVertices(rhs.m_iNumVertices)
+	, m_iStride(rhs.m_iStride)
+	, m_iNumVertexBuffers(rhs.m_iNumVertexBuffers)
+	, m_pVertices(rhs.m_pVertices)
+	, m_pIB(rhs.m_pIB)
+	, m_IBDesc(rhs.m_IBDesc)
+	, m_IBSubresourceData(rhs.m_IBSubresourceData)
+	, m_iNumPolygons(rhs.m_iNumPolygons)
+	, m_iIndicesStride(rhs.m_iIndicesStride)
+	, m_eIndexFormat(rhs.m_eIndexFormat)
+	, m_eTopology(rhs.m_eTopology)
 {
-	Safe_AddRef(m_pVB);
+	//Safe_AddRef(m_pIB);
+	//Safe_AddRef(m_pVB);
+	m_IsClone = true;
 }
 
 HRESULT CVIBuffer::NativeConstruct_Prototype()
@@ -45,13 +60,22 @@ HRESULT CVIBuffer::Render()
 	m_pDevice_Context->IASetPrimitiveTopology(m_eTopology);
 	//m_pDevice_Context->IASetInputLayout(); 여기서 쉐이더 사용
 
-	_uint iNumIndices = 0;
-	_uint iIndexBufferSize = sizeof(m_IBSubresourceData.pSysMem);
+	_uint		iNumIndices = 0;
+	_uint		iIndexBufferSize = 0;
+
+
+
 
 	if (m_eIndexFormat == DXGI_FORMAT_R16_UINT)
+	{
+		iIndexBufferSize = sizeof(*(_ushort*)m_IBSubresourceData.pSysMem);
 		iNumIndices = iIndexBufferSize >> 1;
+	}
 	else
+	{
+		iIndexBufferSize = sizeof(*(_ulong*)m_IBSubresourceData.pSysMem);
 		iNumIndices = iIndexBufferSize >> 2;
+	}
 
 	m_pDevice_Context->DrawIndexed(iNumIndices, 0, 0);
 
@@ -118,9 +142,12 @@ HRESULT CVIBuffer::SetUp_IndexSubResourceData(void * pSysMem)
 
 void CVIBuffer::Free()
 {
-	Safe_Delete_Array(m_pVertices);
-	Safe_Release(m_pIB);
-	Safe_Release(m_pVB);
+	if (m_IsClone == false)
+	{
+		Safe_Delete_Array(m_pVertices);
+		Safe_Release(m_pIB);
+		Safe_Release(m_pVB);
+	}
 
 	CComponent::Free();
 }
