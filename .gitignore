@@ -9,3 +9,6 @@
 *.ipch
 64/
 Release/
+FrameWork_Persnal/x64/Debug/Tool.exe
+FrameWork_Persnal/x64/Debug/Tool.ilk
+FrameWork_Persnal/x64/Debug/Tool.pdb
