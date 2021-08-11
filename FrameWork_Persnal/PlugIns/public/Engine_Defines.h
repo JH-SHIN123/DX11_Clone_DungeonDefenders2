@@ -4,8 +4,6 @@
 
 #include "D3D11.h"
 #include "DirectXMath.h"
-#include "d3dcompiler.h"
-#pragma comment(lib,"d3dcompiler.lib")
 
 using namespace DirectX;
 

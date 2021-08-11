@@ -1,19 +1,4 @@
-﻿  VIBuffer_Rect.cpp
-  VIBuffer.cpp
-  Renderer.cpp
-  Level_Manager.cpp
-  Level.cpp
-  Layer.cpp
-  Graphic_Device.cpp
-  GameObject_Manager.cpp
-  GameObject.cpp
-  GameInstance.cpp
-  Component_Manager.cpp
-  Component.cpp
-  코드를 생성하고 있습니다...
-  컴파일하고 있습니다...
-  Base.cpp
-  코드를 생성하고 있습니다...
+﻿  LINK : ..\bin\Engine.dll을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
      ..\bin\Engine.lib 라이브러리 및 ..\bin\Engine.exp 개체를 생성하고 있습니다.
   Engine.vcxproj -> C:\Project\Dungeon_Defendus\FrameWork_Persnal\Engine\default\..\bin\Engine.dll
   Engine.vcxproj -> ..\bin\Engine.pdb (Full PDB)

@@ -1,11 +1,4 @@
-﻿  Client.cpp
-  MainApp.cpp
-  Loading.cpp
-  Level_Logo.cpp
-  Level_Loading.cpp
-  코드를 생성하고 있습니다...
-  컴파일하고 있습니다...
-  BackGround_Logo.cpp
-  코드를 생성하고 있습니다...
+﻿  MainApp.cpp
+  LINK : ..\bin\Client.exe을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
   Client.vcxproj -> C:\Project\Dungeon_Defendus\FrameWork_Persnal\Client\Default\..\bin\Client.exe
   Client.vcxproj -> ..\bin\Client.pdb (Full PDB)
