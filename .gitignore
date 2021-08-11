@@ -7,13 +7,14 @@
 *.db
 *.opendb
 *.ipch
-64/
+
+x64/
 Release/
 FrameWork_Persnal/x64/Debug/Tool.exe
 FrameWork_Persnal/x64/Debug/Tool.ilk
 FrameWork_Persnal/x64/Debug/Tool.pdb
-FrameWork_Persnal/x64
-FrameWork_Persnal/ipch
+FrameWork_Persnal/x64/
+FrameWork_Persnal/ipch/
 FrameWork_Persnal/Client/Default/Debug/
 FrameWork_Persnal/Client/Default/x64/
 FrameWork_Persnal/Engine/default/Debug/
