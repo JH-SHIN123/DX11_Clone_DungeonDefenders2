@@ -32,6 +32,9 @@ private:
 	CVIBuffer_Rect*			m_pBuffer_Rect = nullptr;
 
 private:
+	_bool		m_IsReverse = false;
+
+private:
 	HRESULT	Ready_Component();
 
 

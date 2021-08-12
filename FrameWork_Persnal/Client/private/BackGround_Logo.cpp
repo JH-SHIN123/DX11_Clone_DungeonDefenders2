@@ -28,6 +28,11 @@ HRESULT CBackGround_Logo::NativeConstruct(void* pArg)
 
 _int CBackGround_Logo::Tick(_double TimeDelta)
 {
+	if (GetAsyncKeyState('Q') & 0x8000)
+		m_IsReverse = false;
+	else
+		m_IsReverse = true;
+
 	return _int();
 }
 
@@ -47,7 +52,7 @@ HRESULT CBackGround_Logo::Render()
 	// 스페이스를 넣어줘야 함
 
 	if(nullptr != m_pBuffer_Rect)
-		m_pBuffer_Rect->Render(0);
+		m_pBuffer_Rect->Render(m_IsReverse);
 
 	return S_OK;
 }
