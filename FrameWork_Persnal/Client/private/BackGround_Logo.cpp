@@ -36,12 +36,18 @@ _int CBackGround_Logo::Late_Tick(_double TimeDelta)
 	if (nullptr == m_pRendererCom)
 		return -1;
 
+
+			
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Priority, this);
+  //
 }
 
 HRESULT CBackGround_Logo::Render()
 {
-	m_pBuffer_Rect->Render();
+	// 스페이스를 넣어줘야 함
+
+	if(nullptr != m_pBuffer_Rect)
+		m_pBuffer_Rect->Render(0);
 
 	return S_OK;
 }
@@ -54,17 +60,21 @@ HRESULT CBackGround_Logo::Ready_Component()
 
 	Safe_AddRef(pGameInstance);
 
-	/* 렌더러컴포넌트를 추가하자.*/
+
+
 	/* For.Renderer*/
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
-	//Component_VIBuffer_Rect
+
+	/* For. VIBuffer */
+	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Rect"), (CComponent**)&m_pBuffer_Rect)))
+		return E_FAIL;
 
 	/* For.Transform */
 
 
-	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Rect"), (CComponent**)&m_pBuffer_Rect)))
-		return E_FAIL;
+
+
 
 	Safe_Release(pGameInstance);
 

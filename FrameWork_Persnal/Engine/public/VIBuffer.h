@@ -17,7 +17,7 @@ protected:
 public:
 	virtual HRESULT NativeConstruct_Prototype() override;
 	virtual HRESULT NativeConstruct(void* pArg) override;
-	virtual HRESULT Render();
+	virtual HRESULT Render(_uint iPassIdx);
 
 protected: // For.Vertices
 	ID3D11Buffer*				m_pVB = nullptr;
@@ -38,17 +38,15 @@ protected: // For.Indices
 	DXGI_FORMAT					m_eIndexFormat;
 	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;
 
-protected: // For.Shaders
-	ID3D11VertexShader*			m_pVertexShader = nullptr;
-	ID3D11PixelShader*			m_pPixelShader = nullptr;
-	ID3D11InputLayout*			m_pInputLayout = nullptr;
+protected: /* For.Shader */
+	ID3DX11Effect*				m_pEffect = nullptr;
 
-protected:
-	_bool		m_IsClone = false;
+	vector<INPUTLAYOUTDESC>		m_InputLayouts;
 
 protected:
 	HRESULT SetUp_VertexBuffer_Desc(_uint iNumVertices, _uint iStride, D3D11_USAGE Usage, _uint BindFlag, _uint iCpuAccessFlag);
 	HRESULT SetUp_IndexBuffer_Desc(DXGI_FORMAT eFormat, _uint iNumPolygons, D3D11_PRIMITIVE_TOPOLOGY eTopology, D3D11_USAGE Usage, _uint BindFlag, _uint iCpuAccessFlag);
+	HRESULT SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC* pInputElementDesc, _uint iNumElement, const _tchar* pShaderFilePath, const char* pTechniqueName);// 쉐이더를 한번 초기화 하고 쭉 쓰자
 	HRESULT SetUp_VertexSubResourceData(void* pSysMem);
 	HRESULT SetUp_IndexSubResourceData(void* pSysMem);
 

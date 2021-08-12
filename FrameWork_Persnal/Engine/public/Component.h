@@ -21,6 +21,10 @@ protected:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDevice_Context = nullptr;
 
+protected:
+	_bool		m_IsClone = false;
+
+
 public:
 	virtual CComponent* Clone(void* pArg) PURE;
 	virtual void Free() PURE;

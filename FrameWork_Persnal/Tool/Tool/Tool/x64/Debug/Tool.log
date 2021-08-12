@@ -1,7 +1,4 @@
-﻿  stdafx.cpp
-  ToolView.cpp
-  ToolDoc.cpp
-  Tool.cpp
+﻿  Tool.cpp
   MainFrm.cpp
   Form.cpp
   코드를 생성하고 있습니다...

@@ -24,7 +24,7 @@ _int CLevel_Manager::Tick(_double TimeDelta)
 	if (nullptr == m_pCurrentLevel)
 		return -1;
 
-	return m_pCurrentLevel->Tick(TimeDelta);	
+	return m_pCurrentLevel->Tick(TimeDelta);
 }
 
 HRESULT CLevel_Manager::Render()
@@ -32,6 +32,8 @@ HRESULT CLevel_Manager::Render()
 	if (nullptr == m_pCurrentLevel)
 		return S_OK;
 
+	/* Level Rdner ¤´ */
+	//return 0;
 	return m_pCurrentLevel->Render();
 }
 

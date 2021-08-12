@@ -1,9 +1,14 @@
 ﻿  Base.cpp
+  Component.cpp
+  Component_Manager.cpp
   GameInstance.cpp
+  GameObject.cpp
+  GameObject_Manager.cpp
   Graphic_Device.cpp
-     ..\bin\Engine.lib 라이브러리 및 ..\bin\Engine.exp 개체를 생성하고 있습니다.
-  코드를 생성하고 있습니다.
-  All 44 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  코드를 생성했습니다.
-  Engine.vcxproj -> D:\Jung\116\FrameWork\Engine\default\..\bin\Engine.dll
-  Engine.vcxproj -> ..\bin\Engine.pdb (Full PDB)
+  Layer.cpp
+  Level.cpp
+  Level_Manager.cpp
+  Renderer.cpp
+  VIBuffer.cpp
+  VIBuffer_Rect.cpp
+LINK : fatal error LNK1181: 'Effects11.lib' 입력 파일을 열 수 없습니다.

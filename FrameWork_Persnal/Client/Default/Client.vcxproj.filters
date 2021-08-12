@@ -72,6 +72,9 @@
     <ClInclude Include="..\public\Client_Macro.h">
       <Filter>98.Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Bin\Shader\Shader_Defines.hpp">
+      <Filter>97.ShaderFiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -110,7 +113,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shader_Default.hlsl">
+    <FxCompile Include="..\Bin\Shader\Shader_Default.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

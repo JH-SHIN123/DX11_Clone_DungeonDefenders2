@@ -3,6 +3,7 @@
 CVIBuffer::CVIBuffer(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CComponent(pDevice, pDevice_Context)
 {
+
 }
 
 CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
@@ -21,10 +22,18 @@ CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 	, m_iIndicesStride(rhs.m_iIndicesStride)
 	, m_eIndexFormat(rhs.m_eIndexFormat)
 	, m_eTopology(rhs.m_eTopology)
+	, m_pEffect(rhs.m_pEffect)
+	, m_InputLayouts(rhs.m_InputLayouts)
 {
-	//Safe_AddRef(m_pIB);
-	//Safe_AddRef(m_pVB);
-	m_IsClone = true;
+	Safe_AddRef(m_pEffect);
+	Safe_AddRef(m_pIB);
+	Safe_AddRef(m_pVB);
+
+	for (auto iter : m_InputLayouts)
+	{
+		Safe_AddRef(iter.pPass);
+		Safe_AddRef(iter.pLayout);
+	}
 }
 
 HRESULT CVIBuffer::NativeConstruct_Prototype()
@@ -35,7 +44,7 @@ HRESULT CVIBuffer::NativeConstruct_Prototype()
 	if (FAILED(m_pDevice->CreateBuffer(&m_VBDesc, &m_VBSubresourceData, &m_pVB)))
 		return E_FAIL;
 
-	if (FAILED(m_pDevice->CreateBuffer(&m_VBDesc, &m_VBSubresourceData, &m_pIB)))
+	if (FAILED(m_pDevice->CreateBuffer(&m_IBDesc, &m_IBSubresourceData, &m_pIB)))
 		return E_FAIL;
 
 	return S_OK;
@@ -46,7 +55,7 @@ HRESULT CVIBuffer::NativeConstruct(void * pArg)
 	return S_OK;
 }
 
-HRESULT CVIBuffer::Render()
+HRESULT CVIBuffer::Render(_uint iPassIdx)
 {
 	if (nullptr == m_pDevice_Context)
 		return E_FAIL;
@@ -58,25 +67,27 @@ HRESULT CVIBuffer::Render()
 	m_pDevice_Context->IASetVertexBuffers(0, m_iNumVertexBuffers, &m_pVB, &m_iStride, &iOffset);
 	m_pDevice_Context->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
 	m_pDevice_Context->IASetPrimitiveTopology(m_eTopology);
-	//m_pDevice_Context->IASetInputLayout(); 여기서 쉐이더 사용
+	m_pDevice_Context->IASetInputLayout(m_InputLayouts[iPassIdx].pLayout);
+
+	if (FAILED(m_InputLayouts[iPassIdx].pPass->Apply(0, m_pDevice_Context)))
+		return E_FAIL;
 
 	_uint		iNumIndices = 0;
-	_uint		iIndexBufferSize = 0;
 
-
-
-
-	if (m_eIndexFormat == DXGI_FORMAT_R16_UINT)
+	switch (m_eTopology)
 	{
-		iIndexBufferSize = sizeof(*(_ushort*)m_IBSubresourceData.pSysMem);
-		iNumIndices = iIndexBufferSize >> 1;
-	}
-	else
-	{
-		iIndexBufferSize = sizeof(*(_ulong*)m_IBSubresourceData.pSysMem);
-		iNumIndices = iIndexBufferSize >> 2;
-	}
+	case D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST:
+		iNumIndices = m_iNumPolygons * 3;
+		break;
 
+	case D3D_PRIMITIVE_TOPOLOGY_LINELIST:
+		iNumIndices = m_iNumPolygons * 2;
+		break;
+
+	case D3D_PRIMITIVE_TOPOLOGY_POINTLIST:
+		iNumIndices = m_iNumPolygons;
+		break;
+	}
 	m_pDevice_Context->DrawIndexed(iNumIndices, 0, 0);
 
 	return S_OK;
@@ -118,6 +129,55 @@ HRESULT CVIBuffer::SetUp_IndexBuffer_Desc(DXGI_FORMAT eFormat, _uint iNumPolygon
 	return S_OK;
 }
 
+HRESULT CVIBuffer::SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC * pInputElementDesc, _uint iNumElement, const _tchar * pShaderFilePath, const char * pTechniqueName)
+{
+	_uint iFlag = 0;
+#ifdef _DEBUG
+	iFlag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION; // 쉐이더 코드 디버그 가능 + 최적화 스킵
+#else
+	iFlag = D3DCOMPILE_OPTIMIZATION_LEVEL1;
+#endif // _DEBUG
+
+	ID3DBlob*	pCompileShader = nullptr;
+	ID3DBlob*	pCompileErrorMsg = nullptr;
+
+	if (FAILED(D3DCompileFromFile(pShaderFilePath, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, nullptr, "fx_5_0", iFlag, 0, &pCompileShader, &pCompileErrorMsg)))
+		return E_FAIL;
+
+	if (FAILED(D3DX11CreateEffectFromMemory(pCompileShader->GetBufferPointer(), pCompileShader->GetBufferSize(), 0, m_pDevice, &m_pEffect)))
+		return E_FAIL;
+
+	ID3DX11EffectTechnique* pTechnique = m_pEffect->GetTechniqueByName(pTechniqueName);
+	if (nullptr == pTechnique)
+		return E_FAIL;
+
+	D3DX11_TECHNIQUE_DESC	TechniqueDesc;
+	if (FAILED(pTechnique->GetDesc(&TechniqueDesc)))
+		return E_FAIL;
+
+	m_InputLayouts.reserve(TechniqueDesc.Passes);
+
+	for (_uint i = 0; i < TechniqueDesc.Passes; ++i)
+	{
+		INPUTLAYOUTDESC		InputLayoutDesc;
+		InputLayoutDesc.pPass = pTechnique->GetPassByIndex(i);
+
+		D3DX11_PASS_DESC	PassDesc;
+		InputLayoutDesc.pPass->GetDesc(&PassDesc);
+
+		if (FAILED(m_pDevice->CreateInputLayout(pInputElementDesc, iNumElement, PassDesc.pIAInputSignature, PassDesc.IAInputSignatureSize, &InputLayoutDesc.pLayout)))
+			return E_FAIL;
+
+		m_InputLayouts.emplace_back(InputLayoutDesc);
+	}
+
+	Safe_Release(pTechnique);
+	Safe_Release(pCompileErrorMsg);
+	Safe_Release(pCompileShader);
+
+	return S_OK;
+}
+
 HRESULT CVIBuffer::SetUp_VertexSubResourceData(void * pSysMem)
 {
 	ZeroMemory(&m_VBSubresourceData, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -142,12 +202,23 @@ HRESULT CVIBuffer::SetUp_IndexSubResourceData(void * pSysMem)
 
 void CVIBuffer::Free()
 {
-	if (m_IsClone == false)
+	CComponent::Free();
+
+	if (false == m_IsClone)
 	{
 		Safe_Delete_Array(m_pVertices);
-		Safe_Release(m_pIB);
-		Safe_Release(m_pVB);
+		Safe_Delete_Array(m_VBSubresourceData.pSysMem);
+		Safe_Delete_Array(m_IBSubresourceData.pSysMem);
 	}
 
-	CComponent::Free();
+	for (auto& InputLayout : m_InputLayouts)
+	{
+		Safe_Release(InputLayout.pPass);
+		Safe_Release(InputLayout.pLayout);
+	}
+	m_InputLayouts.clear();
+
+	Safe_Release(m_pEffect);
+	Safe_Release(m_pIB);
+	Safe_Release(m_pVB);
 }

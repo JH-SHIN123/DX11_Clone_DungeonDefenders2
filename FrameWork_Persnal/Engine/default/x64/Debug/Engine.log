@@ -1,10 +1,11 @@
-﻿  LINK : ..\bin\Engine.dll을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
-     ..\bin\Engine.lib 라이브러리 및 ..\bin\Engine.exp 개체를 생성하고 있습니다.
+﻿  Level_Manager.cpp
   Engine.vcxproj -> C:\Project\Dungeon_Defendus\FrameWork_Persnal\Engine\default\..\bin\Engine.dll
   Engine.vcxproj -> ..\bin\Engine.pdb (Full PDB)
   ..\public\Base.h
   ..\public\Component.h
   ..\public\Component_Manager.h
+  ..\public\d3dx11effect.h
+  ..\public\d3dxGlobal.h
   ..\public\Engine_Defines.h
   ..\public\Engine_Enum.h
   ..\public\Engine_Function.h
@@ -22,7 +23,7 @@
   ..\public\Renderer.h
   ..\public\VIBuffer.h
   ..\public\VIBuffer_Rect.h
-  20개 파일이 복사되었습니다.
+  22개 파일이 복사되었습니다.
   ..\Bin\Engine.lib
   1개 파일이 복사되었습니다.
   ..\Bin\Engine.dll

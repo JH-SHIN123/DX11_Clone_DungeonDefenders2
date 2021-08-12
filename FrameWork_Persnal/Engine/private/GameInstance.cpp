@@ -51,6 +51,8 @@ _int CGameInstance::Tick(_double TimeDelta)
 	if (0x80000000 & m_pGameObject_Manager->Tick_GameObject(TimeDelta))
 		return -1;
 
+	//return 0;
+
 	return m_pLevel_Manager->Tick(TimeDelta);
 }
 

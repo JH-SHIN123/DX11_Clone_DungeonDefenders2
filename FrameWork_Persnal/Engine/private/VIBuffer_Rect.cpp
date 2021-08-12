@@ -10,7 +10,7 @@ CVIBuffer_Rect::CVIBuffer_Rect(const CVIBuffer & rhs)
 {
 }
 
-HRESULT CVIBuffer_Rect::NativeConstruct_Prototype()
+HRESULT CVIBuffer_Rect::NativeConstruct_Prototype(const _tchar* pShaderFilePath, const char* pTechniqueName)
 {
 	// For.VertexBuffer
 	m_iNumVertexBuffers = 1;
@@ -55,8 +55,22 @@ HRESULT CVIBuffer_Rect::NativeConstruct_Prototype()
 	if (FAILED(CVIBuffer::NativeConstruct_Prototype()))
 		return E_FAIL;
 
-	Safe_Delete(pPolygonIndices);
-	Safe_Delete(pVertices);
+
+	D3D11_INPUT_ELEMENT_DESC			ElementDesc[] = {
+		{ "POSITION"						// 시멘틱스(이런 용도~ 라고 알려줌)
+		, 0									// 시멘틱스가 곂치는 애들 중에서 몇번째냐 (텍스처는 8개까지 지원이 가능하다, 인덱스)	
+		, DXGI_FORMAT_R32G32B32_FLOAT		// 데이터는 어떤 형식이니 32비트 4개짜리 float (32bits = 4bytes)
+		, 0									// 입력 어셈블러를 설정하는 정수 값 0~15라는데 잘 모르겠음
+		, 0									// 정점의 해당 정보의 시작 부분 (byte 단위이다) 1빠니까 0
+		, D3D11_INPUT_PER_VERTEX_DATA		// 정점이냐 인스턴스냐 인데 인스턴스를 잘 몰겠음
+		, 0 },								// 인스턴스 수 라는데 인스턴스가 아니니 0
+
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 } // 위에있는걸 똑같이 침
+	};
+
+	// 레이아웃 설정 함수
+	if (FAILED(CVIBuffer::SetUp_InputLayOuts(ElementDesc, 2, pShaderFilePath, pTechniqueName)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -68,11 +82,11 @@ HRESULT CVIBuffer_Rect::NativeConstruct(void * pArg)
 	return S_OK;
 }
 
-CVIBuffer_Rect * CVIBuffer_Rect::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
+CVIBuffer_Rect * CVIBuffer_Rect::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const _tchar* pShaderFilePath, const char* pTechniqueName)
 {
 	CVIBuffer_Rect*		pInstance = new CVIBuffer_Rect(pDevice, pDevice_Context);
 
-	if (FAILED(pInstance->NativeConstruct_Prototype()))
+	if (FAILED(pInstance->NativeConstruct_Prototype(pShaderFilePath, pTechniqueName)))
 	{
 		MSG_BOX("Failed to Creating Instance (CVIBuffer_Rect) ");
 		Safe_Release(pInstance);

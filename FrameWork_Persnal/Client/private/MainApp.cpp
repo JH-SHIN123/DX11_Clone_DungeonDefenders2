@@ -40,14 +40,6 @@ _int CMainApp::Update_MainApp(_double TimeDelta)
 	if (nullptr == m_pGameInstance)
 		return -1;
 
-#ifdef _DEBUG
-	if (GetAsyncKeyState('Q') & 0x8000)
-	{
-
-	}
-
-#endif // _DEBUG
-
 	return m_pGameInstance->Tick(TimeDelta);	
 }
 
@@ -61,7 +53,7 @@ HRESULT CMainApp::Render_MainApp()
 	m_pGameInstance->Clear_Depth_Stencil_Buffer();
 
 	m_pRenderer->Draw_Renderer();
-	m_pGameInstance->Render_Level();
+	//m_pGameInstance->Render_Level();
 
 	m_pGameInstance->Present();
 
@@ -94,14 +86,11 @@ HRESULT CMainApp::Ready_Component_PrototypeForStatic()
 	/* Transform */
 
 	// For. VIBuffer_RECT
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect"), CVIBuffer_Rect::Create(m_pDevice, m_pDevice_Context))))
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect")
+		, CVIBuffer_Rect::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Default.hlsl"), "DefaultTechnique"))))
 		return E_FAIL;
 
-	return S_OK;
-}
 
-HRESULT CMainApp::Comlile_ShaderFiles()
-{
 	return S_OK;
 }
 

@@ -3,6 +3,21 @@
 
 namespace Engine
 {
+	struct MatrixBufferType
+	{
+		XMMATRIX world;
+		XMMATRIX view;
+		XMMATRIX projection;
+	};
+
+	/* For.Shader Layout */
+	typedef struct tagInputLayoutDesc
+	{
+		ID3D11InputLayout*			pLayout = nullptr;
+		ID3DX11EffectPass*			pPass = nullptr;
+	} INPUTLAYOUTDESC;
+
+
 	/* vPosition + UVmap */
 	typedef struct tagVertexTexture
 	{

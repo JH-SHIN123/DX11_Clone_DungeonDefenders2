@@ -5,7 +5,6 @@
 #include "GameInstance.h"
 #include "Level_Logo.h"
 
-
 CLevel_Loading::CLevel_Loading(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CLevel(pDevice, pDevice_Context)
 {
@@ -23,7 +22,7 @@ HRESULT CLevel_Loading::NativeConstruct(ELevel eNextSceneID)
 
 	/* 다음씬에 필요한 자원들을 생성한다. */
 	m_pLoading = CLoading::Create(m_pDevice, m_pDevice_Context, eNextSceneID);
-
+	
 	if (nullptr == m_pLoading)
 		return E_FAIL;
 
@@ -62,7 +61,7 @@ int CLevel_Loading::Tick(_double Timedelta)
 
 HRESULT CLevel_Loading::Render()
 {
-
+	CLevel::Render();
 
 	return S_OK;
 }
