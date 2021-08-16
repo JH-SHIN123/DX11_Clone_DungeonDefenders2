@@ -1,3 +1,14 @@
-﻿  BackGround_Logo.cpp
-  Client.vcxproj -> C:\Project\Dungeon_Defendus\FrameWork_Persnal\Client\Default\..\bin\Client.exe
+﻿FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  compilation object save succeeded; see C:\Users\SHIN JUNG HO\Documents\DX113D_Persnal\FrameWork_Persnal\Client\bin\Shader_Default.cso
+  stdafx.cpp
+  Client.cpp
+  MainApp.cpp
+  Loading.cpp
+  Level_Logo.cpp
+  Level_Loading.cpp
+  BackGround_Logo.cpp
+  코드를 생성하고 있습니다...
+  LINK : ..\bin\Client.exe을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
+  Client.vcxproj -> C:\Users\SHIN JUNG HO\Documents\DX113D_Persnal\FrameWork_Persnal\Client\Default\..\bin\Client.exe
   Client.vcxproj -> ..\bin\Client.pdb (Full PDB)

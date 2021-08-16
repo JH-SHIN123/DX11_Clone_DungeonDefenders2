@@ -61,6 +61,9 @@
     <Filter Include="02.Utility\01.GameObject\Manager\Layer">
       <UniqueIdentifier>{e8dd997f-1c3a-4eae-8432-887a41d676ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Utility\02.Component\01.Buffer\01.Texture">
+      <UniqueIdentifier>{7d1db04f-9ed5-4c4b-9b1f-a99ed72974d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
@@ -126,6 +129,9 @@
     <ClInclude Include="..\public\Level.h">
       <Filter>02.Utility\00.Level</Filter>
     </ClInclude>
+    <ClInclude Include="VIBuffer_Texture.h">
+      <Filter>02.Utility\02.Component\01.Buffer\01.Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -166,6 +172,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Level.cpp">
       <Filter>02.Utility\00.Level</Filter>
+    </ClCompile>
+    <ClCompile Include="VIBuffer_Texture.cpp">
+      <Filter>02.Utility\02.Component\01.Buffer\01.Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

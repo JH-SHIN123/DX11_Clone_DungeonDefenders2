@@ -6,8 +6,7 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CVIBuffer_Rect final :
-	public CVIBuffer
+class ENGINE_DLL CVIBuffer_Rect final :	public CVIBuffer
 {
 private:
 	explicit CVIBuffer_Rect(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
