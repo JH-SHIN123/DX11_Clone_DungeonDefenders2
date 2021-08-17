@@ -11,10 +11,10 @@
 
 #include "ToolDoc.h"
 #include "ToolView.h"
+#include "Main_Level.h"
+#include "public\Renderer.h"
 
-
-
-HWND g_hWND;
+HWND g_hWnd;
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -34,13 +34,25 @@ END_MESSAGE_MAP()
 // CToolView 생성/소멸
 
 CToolView::CToolView()
+	: m_pGameInstance(CGameInstance::GetInstance())
 {
 	// TODO: 여기에 생성 코드를 추가합니다.
+	Safe_AddRef(m_pGameInstance);
+
 
 }
 
 CToolView::~CToolView()
 {
+	Safe_Release(m_pRenderer);
+	Safe_Release(m_pDevice);
+	Safe_Release(m_pDevice_Context);
+
+	Safe_Release(m_pGameInstance);
+
+
+	/* 엔진 내에서 사용된 객체들을 정리한다. */
+	CGameInstance::Release_Engine();
 }
 
 BOOL CToolView::PreCreateWindow(CREATESTRUCT& cs)
@@ -55,10 +67,21 @@ BOOL CToolView::PreCreateWindow(CREATESTRUCT& cs)
 
 void CToolView::OnDraw(CDC* /*pDC*/)
 {
-	//CToolDoc* pDoc = GetDocument();
-	//ASSERT_VALID(pDoc);
-	//if (!pDoc)
-	//	return;
+	CToolDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	m_pGameInstance->Tick(0.00001);
+
+	m_pGameInstance->Clear_Back_Buffer(_float4(0.f, 0.f, 1.f, 1.f));
+	m_pGameInstance->Clear_Depth_Stencil_Buffer();
+
+	m_pRenderer->Draw_Renderer();
+	//m_pGameInstance->Render_Level();
+
+	m_pGameInstance->Present();
+
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 }
@@ -94,6 +117,78 @@ void CToolView::AssertValid() const
 void CToolView::Dump(CDumpContext& dc) const
 {
 	CView::Dump(dc);
+}
+
+void CToolView::OnInitialUpdate()
+{
+	CView::OnInitialUpdate();
+	g_hWnd = m_hWnd;
+	CMainFrame* pMain = dynamic_cast<CMainFrame*>(::AfxGetApp()->GetMainWnd());
+
+	RECT rcMain{};
+	pMain->GetWindowRect(&rcMain);
+	SetRect(&rcMain, 0, 0, rcMain.right - rcMain.left, rcMain.bottom - rcMain.top);
+
+	RECT rcView{};
+	GetClientRect(&rcView);
+	int iGapX = (rcMain.right - rcView.right) + 1;
+	int iGapY = (rcMain.bottom - rcView.bottom) + 1;
+	pMain->SetWindowPos(nullptr, 0, 0, 1280 + iGapX, 720 + iGapY, PM_NOREMOVE);
+
+
+	// 초기화 작업입닌당
+	if (FAILED(m_pGameInstance->Initialize(g_hWnd, CGraphic_Device::TYPE_WINMODE, g_iWinCX, g_iWinCY, &m_pDevice, &m_pDevice_Context)))
+		return;
+
+	if (m_pGameInstance->Reserve_Container((_uint)ELevel::End))
+		return;
+
+	if (Ready_Component_PrototypeForStatic())
+		return;
+
+	if (Ready_DefaultLevel())
+		return;
+
+}
+
+void CToolView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+}
+
+HRESULT CToolView::Ready_Component_PrototypeForStatic()
+{
+	if (nullptr == m_pGameInstance)
+		return E_FAIL;
+
+	/* Renderer */
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Main, TEXT("Component_Renderer"), m_pRenderer = CRenderer::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+	Safe_AddRef(m_pRenderer);
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Main, TEXT("Component_VIBuffer_Rect")
+		, CVIBuffer_Rect::Create(m_pDevice, m_pDevice_Context, L"../../Client/Bin/Shader/Shader_Default.hlsl", "DefaultTechnique"))))
+		return E_FAIL;
+
+
+	return S_OK;
+}
+
+HRESULT CToolView::Ready_DefaultLevel()
+{
+	if (nullptr == m_pGameInstance)
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->SetUp_CurrentLevel(CMain_Level::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+const _tchar * CToolView::Shader_Path(wstring wstrFileName)
+{
+	wstrFileName = L"../../Client/Bin/Shader/" + wstrFileName;
+	return wstrFileName.c_str();
 }
 
 CToolDoc* CToolView::GetDocument() const // 디버그되지 않은 버전은 인라인으로 지정됩니다.

@@ -1,10 +1,12 @@
 #include "VIBuffer_Texture.h"
 
 CVIBuffer_Texture::CVIBuffer_Texture(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
+	: CVIBuffer(pDevice, pDevice_Context)
 {
 }
 
 CVIBuffer_Texture::CVIBuffer_Texture(const CVIBuffer & rhs)
+	: CVIBuffer(rhs)
 {
 }
 
@@ -23,12 +25,12 @@ HRESULT CVIBuffer_Texture::SetUp_Texture(const _tchar * pTexturePath)
 	return S_OK;
 }
 
-CVIBuffer_Texture * CVIBuffer_Texture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
+CVIBuffer_Texture* CVIBuffer_Texture::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 {
 	return nullptr;
 }
 
-CComponent * CVIBuffer_Texture::Clone(void * pArg)
+CComponent* CVIBuffer_Texture::Clone(void * pArg)
 {
 	return nullptr;
 }

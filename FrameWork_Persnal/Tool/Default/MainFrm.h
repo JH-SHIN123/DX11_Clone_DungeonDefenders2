@@ -1,6 +1,7 @@
 
 // MainFrm.h : CMainFrame 클래스의 인터페이스
 //
+#include "../PlugIns/public/Engine_Defines.h"
 
 #pragma once
 

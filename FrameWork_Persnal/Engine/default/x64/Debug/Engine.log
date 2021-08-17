@@ -1,17 +1,32 @@
 ﻿  VIBuffer_Texture.cpp
-c:\users\shin jung ho\documents\dx113d_persnal\framework_persnal\engine\default\vibuffer_texture.cpp(6): error C2512: 'Engine::CVIBuffer': 사용할 수 있는 적절한 기본 생성자가 없습니다.
-  c:\users\shin jung ho\documents\dx113d_persnal\framework_persnal\engine\public\vibuffer.h(9): note: 'Engine::CVIBuffer' 선언을 참조하십시오.
-  VIBuffer_Rect.cpp
-  VIBuffer.cpp
-  Renderer.cpp
-  Level_Manager.cpp
-  Level.cpp
-  Layer.cpp
-  Graphic_Device.cpp
-  GameObject_Manager.cpp
-  GameObject.cpp
-  GameInstance.cpp
-  Component_Manager.cpp
-  Component.cpp
-  Base.cpp
-  코드를 생성하고 있습니다...
+  Engine.vcxproj -> C:\Project\Dungeon_Defendus\FrameWork_Persnal\Engine\default\..\bin\Engine.dll
+  Engine.vcxproj -> ..\bin\Engine.pdb (Full PDB)
+  ..\public\Base.h
+  ..\public\Component.h
+  ..\public\Component_Manager.h
+  ..\public\d3dx11effect.h
+  ..\public\d3dxGlobal.h
+  ..\public\Engine_Defines.h
+  ..\public\Engine_Enum.h
+  ..\public\Engine_Function.h
+  ..\public\Engine_Macro.h
+  ..\public\Engine_Struct.h
+  ..\public\Engine_Typedef.h
+  ..\public\GameInstance.h
+  ..\public\GameObject.h
+  ..\public\GameObject_Manager.h
+  ..\public\Graphic_Device.h
+  ..\public\InputDev.h
+  ..\public\Layer.h
+  ..\public\Level.h
+  ..\public\Level_Manager.h
+  ..\public\Renderer.h
+  ..\public\VIBuffer.h
+  ..\public\VIBuffer_Rect.h
+  22개 파일이 복사되었습니다.
+  ..\Bin\Engine.lib
+  1개 파일이 복사되었습니다.
+  ..\Bin\Engine.dll
+  1개 파일이 복사되었습니다.
+  ..\Bin\Engine.dll
+  1개 파일이 복사되었습니다.

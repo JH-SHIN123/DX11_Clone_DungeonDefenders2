@@ -4,6 +4,14 @@
 
 #pragma once
 
+#include "MainFrm.h"
+#include "Tool_Define.h"
+
+BEGIN(Engine)
+class CRenderer;
+class CGameInstance;
+END
+
 
 class CToolView : public CView
 {
@@ -40,6 +48,26 @@ protected:
 // 생성된 메시지 맵 함수
 protected:
 	DECLARE_MESSAGE_MAP()
+
+// 실 구현
+public:
+	virtual void OnInitialUpdate();
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+
+public:
+	HRESULT Ready_Component_PrototypeForStatic();
+	HRESULT Ready_DefaultLevel();
+
+
+public:
+	class CGameInstance*	m_pGameInstance = nullptr;
+	ID3D11Device*			m_pDevice = nullptr;
+	ID3D11DeviceContext*	m_pDevice_Context = nullptr;
+
+	class CRenderer*		m_pRenderer = nullptr;
+
+public:
+	const _tchar* Shader_Path(wstring wstrFileName);
 };
 
 #ifndef _DEBUG  // ToolView.cpp의 디버그 버전

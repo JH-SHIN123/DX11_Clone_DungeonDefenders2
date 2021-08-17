@@ -7,6 +7,7 @@
 *.db
 *.opendb
 *.ipch
+*.tlog
 
 x64/
 Release/
@@ -19,3 +20,24 @@ FrameWork_Persnal/Client/Default/Debug/
 FrameWork_Persnal/Client/Default/x64/
 FrameWork_Persnal/Engine/default/Debug/
 FrameWork_Persnal/Engine/default/x64/
+
+*.psess
+*.vsp
+*.log
+*.err
+*.wrn
+*.suo
+*.sdf
+*.user
+*.i
+*.vspscc
+*.opensdf
+*.opendb
+*.ipch
+*.cache
+*.tlog
+*.lastbuildstate
+*.ilk
+*.VC.db
+*.nupkg
+.vs/
