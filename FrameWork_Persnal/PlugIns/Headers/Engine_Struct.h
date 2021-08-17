@@ -1,0 +1,42 @@
+#ifndef Engine_Struct_h__
+#define Engine_Struct_h__
+
+namespace Engine
+{
+	struct MatrixBufferType
+	{
+		XMMATRIX world;
+		XMMATRIX view;
+		XMMATRIX projection;
+	};
+
+	/* For.Shader Layout */
+	typedef struct tagInputLayoutDesc
+	{
+		ID3D11InputLayout*			pLayout = nullptr;
+		ID3DX11EffectPass*			pPass = nullptr;
+	} INPUTLAYOUTDESC;
+
+
+	/* vPosition + UVmap */
+	typedef struct tagVertexTexture
+	{
+		XMFLOAT3			vPosition;
+		XMFLOAT2			vTexUV;
+	}VTXTEX;
+
+	typedef struct tagPolygonIndices16
+	{
+		unsigned short		_0, _1, _2;
+	}POLYGONINDICES16;
+
+	typedef struct tagPolygonIndices32
+	{
+		unsigned long		_0, _1, _2;
+	}POLYGONINDICES32;
+
+
+
+}
+
+#endif 

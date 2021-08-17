@@ -82,6 +82,7 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 
 	m_pGameInstance->Present();
 
+	// 터미널로 깃 인덱스 초기화
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 }
