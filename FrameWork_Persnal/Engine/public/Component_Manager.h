@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "VIBuffer.h"
 #include "VIBuffer_Rect.h"
+#include "Textures.h"
 
 class CComponent_Manager final : public CBase
 {

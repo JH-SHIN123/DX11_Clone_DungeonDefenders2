@@ -4,8 +4,8 @@
 cbuffer Matrices
 {
 	matrix			WorldMatrix;
-	matrix			ViewMatrix;
-	matrix			ProjMatrix;
+matrix			ViewMatrix;
+matrix			ProjMatrix;
 }
 
 
@@ -26,15 +26,15 @@ BOOL AntialiasedLineEnable;
 RasterizerState Rasterizer_Wireframe
 {
 	FillMode = wireframe;
-	CullMode = back;
-	FrontCounterClockwise = false;
+CullMode = back;
+FrontCounterClockwise = false;
 };
 
 RasterizerState Rasterizer_Solid
 {
 	FillMode = solid;
-	CullMode = back;
-	FrontCounterClockwise = false;
+CullMode = back;
+FrontCounterClockwise = false;
 };
 
 /*
@@ -51,22 +51,22 @@ D3D11_DEPTH_STENCILOP_DESC BackFace;
 DepthStencilState DepthStecil_Default
 {
 	DepthEnable = true;
-	DepthWriteMask = all;
-	DepthFunc = less;
+DepthWriteMask = all;
+DepthFunc = less;
 };
 
 DepthStencilState DepthStecil_NotZWrite
 {
 	DepthEnable = true;
-	DepthWriteMask = zero;
-	DepthFunc = less;
+DepthWriteMask = zero;
+DepthFunc = less;
 };
 
 DepthStencilState DepthStecil_GARA
 {
 	DepthEnable = true;
-	DepthWriteMask = zero;
-	DepthFunc = greater;
+DepthWriteMask = zero;
+DepthFunc = greater;
 };
 
 
@@ -84,18 +84,18 @@ UINT8 RenderTargetWriteMask;
 BlendState BlendState_Alpha
 {
 	BlendEnable[0] = true;
-	SrcBlend = SRC_ALPHA;
-	DestBlend = INV_SRC_ALPHA;
-	BlendOp = Add;
+SrcBlend = SRC_ALPHA;
+DestBlend = INV_SRC_ALPHA;
+BlendOp = Add;
 };
 
 BlendState BlendState_Add
 {
 	BlendEnable[0] = true;
-	BlendEnable[1] = true;
-	SrcBlend = ONE;
-	DestBlend = ONE;
-	BlendOp = Add;
+BlendEnable[1] = true;
+SrcBlend = ONE;
+DestBlend = ONE;
+BlendOp = Add;
 };
 
 

@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class CRenderer;
+class CTextures;
 class CVIBuffer_Rect;
 END
 
@@ -29,6 +30,7 @@ public:
 
 private:
 	CRenderer*				m_pRendererCom = nullptr;
+	CTextures*				m_pTextureCom = nullptr;
 	CVIBuffer_Rect*			m_pBuffer_Rect = nullptr;
 
 private:

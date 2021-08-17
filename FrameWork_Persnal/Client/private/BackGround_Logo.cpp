@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "Renderer.h"
 #include "VIBuffer_Rect.h"
+#include "Textures.h"
+
 CBackGround_Logo::CBackGround_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)	
 {
@@ -51,8 +53,12 @@ HRESULT CBackGround_Logo::Render()
 {
 	// 스페이스를 넣어줘야 함
 
-	if(nullptr != m_pBuffer_Rect)
-		m_pBuffer_Rect->Render(m_IsReverse);
+	if (nullptr == m_pBuffer_Rect)
+		return E_FAIL;
+
+	m_pBuffer_Rect->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
+
+	m_pBuffer_Rect->Render(0);
 
 	return S_OK;
 }
@@ -73,6 +79,20 @@ HRESULT CBackGround_Logo::Ready_Component()
 
 	/* For. VIBuffer */
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Rect"), (CComponent**)&m_pBuffer_Rect)))
+		return E_FAIL;
+
+
+
+
+
+
+
+
+
+
+
+	/* For.Textures */
+	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Logo, TEXT("Component_Texture_Devil"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Transform */
@@ -116,6 +136,7 @@ void CBackGround_Logo::Free()
 {
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pBuffer_Rect);
+	Safe_Release(m_pTextureCom);
 
 	CGameObject::Free();
 }

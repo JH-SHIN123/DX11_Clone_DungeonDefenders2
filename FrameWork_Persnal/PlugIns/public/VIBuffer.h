@@ -19,6 +19,10 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg) override;
 	virtual HRESULT Render(_uint iPassIdx);
 
+public:
+	HRESULT Set_Variable(const char* pConstanceName, void* pData, _int iByteSize);
+	HRESULT Set_ShaderResourceView(const char* pConstanceName, ID3D11ShaderResourceView* pResourceView);
+
 protected: // For.Vertices
 	ID3D11Buffer*				m_pVB = nullptr;
 	D3D11_BUFFER_DESC			m_VBDesc;

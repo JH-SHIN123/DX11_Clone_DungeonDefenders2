@@ -107,11 +107,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../public/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <MinimalRebuild>true</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;Effects11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;Effects11d.lib;DirectXTexd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdParty/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -154,7 +156,7 @@ xcopy			/y				..\Bin\*.dll		..\..\Tool\Bin\</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;Effects11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;Effects11.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdParty/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -178,6 +180,7 @@ xcopy			/y				..\Bin\*.dll		..\..\Tool\Bin\</Command>
     <ClInclude Include="..\public\Level.h" />
     <ClInclude Include="..\public\Level_Manager.h" />
     <ClInclude Include="..\public\Renderer.h" />
+    <ClInclude Include="..\public\Textures.h" />
     <ClInclude Include="..\public\VIBuffer.h" />
     <ClInclude Include="..\public\VIBuffer_Rect.h" />
     <ClInclude Include="VIBuffer_Texture.h" />
@@ -194,6 +197,7 @@ xcopy			/y				..\Bin\*.dll		..\..\Tool\Bin\</Command>
     <ClCompile Include="..\private\Level.cpp" />
     <ClCompile Include="..\private\Level_Manager.cpp" />
     <ClCompile Include="..\private\Renderer.cpp" />
+    <ClCompile Include="..\private\Textures.cpp" />
     <ClCompile Include="..\private\VIBuffer.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect.cpp" />
     <ClCompile Include="VIBuffer_Texture.cpp" />

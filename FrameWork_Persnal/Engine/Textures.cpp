@@ -1,9 +1,10 @@
 #include "..\public\Textures.h"
 
+
+
 CTextures::CTextures(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CComponent(pDevice, pDevice_Context)
 {
-
 }
 
 CTextures::CTextures(const CTextures & rhs)
@@ -13,60 +14,72 @@ CTextures::CTextures(const CTextures & rhs)
 {
 	for (auto& pShaderResourceView : m_Textures)
 		Safe_AddRef(pShaderResourceView);
-	
 }
 
-HRESULT CTextures::NativeConstruct_Prototype(ETextureType eType, const _tchar * pTextureFilePath, _int iNumTextures)
+HRESULT CTextures::NativeConstruct_Prototype(ETextureType eType, const _tchar * pTextureFilePath, _uint iNumTextures)
 {
 	CComponent::NativeConstruct_Prototype();
 
 	if (nullptr == m_pDevice)
 		return E_FAIL;
 
-	if (FAILED(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED)))
+	if (FAILED(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED))) // À©10 ÀÌ½´ /¾¾¹ß
 		return E_FAIL;
 
 	m_iNumTextures = iNumTextures;
 
-	_tchar			szTextureFileName[MAX_PATH] = L"";
+	_tchar	szTextureFilePath[MAX_PATH] = L"";
 
-	for (_int i = 0; i < iNumTextures; ++i)
+	for (_uint i = 0; i < m_iNumTextures; ++i)
 	{
-		ID3D11ShaderResourceView*			pShaderResourceView = nullptr;
+		ID3D11ShaderResourceView* pShaderResourceView = nullptr;
 
-		wsprintf(szTextureFileName, pTextureFilePath, i);
+		wsprintf(szTextureFilePath, pTextureFilePath, i);
 
-		DirectX::ScratchImage				Image;
+		DirectX::ScratchImage Image;
 
-		HRESULT hr = 0;
+		HRESULT hr = S_OK;
 
 		switch (eType)
 		{
 		case ETextureType::Dds:
-			hr = DirectX::LoadFromDDSFile(szTextureFileName, DirectX::DDS_FLAGS_NONE, nullptr, Image);
+			hr = DirectX::LoadFromDDSFile(szTextureFilePath, DirectX::DDS_FLAGS_NONE, nullptr, Image);
 			break;
 		case ETextureType::Tga:
-			hr = DirectX::LoadFromTGAFile(szTextureFileName, nullptr, Image);
+			hr = DirectX::LoadFromTGAFile(szTextureFilePath, nullptr, Image);
 			break;
 		case ETextureType::Wic:
-			hr = DirectX::LoadFromWICFile(szTextureFileName, DirectX::WIC_FLAGS_NONE, nullptr, Image);
+			hr = DirectX::LoadFromWICFile(szTextureFilePath, DirectX::WIC_FLAGS_NONE, nullptr, Image);
+			break;
+		default:
+			hr = E_FAIL;
 			break;
 		}
 
 		if (FAILED(hr))
+		{
+			MSG_BOX("ERROR! Can't Load Texture File");
 			return E_FAIL;
+		}
 
-		ID3D11Resource*			pResource = nullptr;
+		ID3D11Resource* pResource = nullptr;
 
 		if (FAILED(DirectX::CreateTexture(m_pDevice, Image.GetImages(), Image.GetImageCount(), Image.GetMetadata(), &pResource)))
+		{
+			MSG_BOX("ERROR! Can't Create Texture File");
 			return E_FAIL;
+		}
 
 		if (FAILED(m_pDevice->CreateShaderResourceView(pResource, nullptr, &pShaderResourceView)))
+		{
+			MSG_BOX("ERROR! Can't Create ShaderResourceView");
 			return E_FAIL;
+		}
 
 		Safe_Release(pResource);
 
-		m_Textures.push_back(pShaderResourceView);
+		m_Textures.emplace_back(pShaderResourceView);
+
 	}
 
 	return S_OK;
@@ -107,10 +120,9 @@ CComponent * CTextures::Clone(void * pArg)
 
 void CTextures::Free()
 {
-	CComponent::Free();
-
 	for (auto& pShaderResourceView : m_Textures)
 		Safe_Release(pShaderResourceView);
-
 	m_Textures.clear();
+
+	CComponent::Free();
 }

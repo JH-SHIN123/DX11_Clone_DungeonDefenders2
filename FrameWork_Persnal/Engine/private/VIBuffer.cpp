@@ -93,6 +93,31 @@ HRESULT CVIBuffer::Render(_uint iPassIdx)
 	return S_OK;
 }
 
+HRESULT CVIBuffer::Set_Variable(const char * pConstanceName, void * pData, _int iByteSize)
+{
+	if (nullptr == m_pEffect)
+		return E_FAIL;
+
+	ID3DX11EffectVariable*	pVariable = m_pEffect->GetVariableByName(pConstanceName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	return pVariable->SetRawValue(pData, 0, iByteSize);
+}
+
+HRESULT CVIBuffer::Set_ShaderResourceView(const char * pConstanceName, ID3D11ShaderResourceView * pResourceView)
+{
+	if (nullptr == m_pEffect)
+		return E_FAIL;
+
+	// 
+	ID3DX11EffectShaderResourceVariable*	pVariable = m_pEffect->GetVariableByName(pConstanceName)->AsShaderResource();
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	return pVariable->SetResource(pResourceView);
+}
+
 HRESULT CVIBuffer::SetUp_VertexBuffer_Desc(_uint iNumVertices, _uint iStride, D3D11_USAGE Usage, _uint BindFlag, _uint iCpuAccessFlag)
 {
 	ZeroMemory(&m_VBDesc, sizeof(D3D11_BUFFER_DESC));

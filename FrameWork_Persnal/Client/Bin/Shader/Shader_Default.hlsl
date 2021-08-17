@@ -1,8 +1,16 @@
 
 #include "Shader_Defines.hpp"
-// 헤더 인클루드를 한 모습 확장자는 hpp
 
+texture2D		g_DiffuseTexture;
 
+sampler DiffuseSampler = sampler_state
+{
+	AddressU = wrap;
+	AddressV = wrap;
+
+	/*Filter = MIN_MAG_MIP_LINEAR;
+	*/
+};
 
 struct VS_IN
 {
@@ -26,12 +34,12 @@ VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT			Out = (VS_OUT)0;
 
-	//Out.vPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);
+	Out.vPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);
 
-	vector		vPosition = vector(In.vPosition * 1.7f, 1.f);
+	vector		vPosition = vector(In.vPosition, 1.f);
 
 	Out.vPosition = vPosition;
-	Out.vTexUV = In.vTexUV;
+	Out.vTexUV = In.vTexUV * 2.f;
 
 	return Out;
 }
@@ -54,38 +62,9 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	Out.vColor = vector(0.5f, 0.2f, 0.7f, 1.f);
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
-	if (In.vPosition.y <= 100.f)
-	{
-		Out.vColor = vector(1.f, 1.f, 0.f, 1.f);
-
-
-	}
-	if(In.vPosition.x >= 1000.f)
-		Out.vColor = vector(1.f, 1.f, 1.f, 1.f);
-
-	
-
-	return Out;
-}
-
-PS_OUT PS_CUSTOM(PS_IN In)
-{
-	PS_OUT		Out = (PS_OUT)0;
-
-	Out.vColor = vector(0.3f, 0.3f, 0.7f, 1.f);
-
-	if (In.vPosition.y <= 100.f)
-	{
-		Out.vColor = vector(0.4f, 0.8f, 0.2f, 1.f);
-
-
-	}
-	if (In.vPosition.x >= 1000.f)
-		Out.vColor = vector(1.f, 1.f, 1.f, 1.f);
-
-
+	//Out.vColor.a = 0.5f;
 
 	return Out;
 }
@@ -94,21 +73,11 @@ technique11		DefaultTechnique
 {
 	pass Default
 	{
-		// DX9 때 했었던 것 처럼 RenderState세팅을 쉐이더 내부에서 설정 할 수 있다.
 		SetRasterizerState(Rasterizer_Solid);
 		SetDepthStencilState(DepthStecil_Default, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();
-	}
-
-	pass Custom
-	{
-		SetRasterizerState(Rasterizer_Solid);
-		SetDepthStencilState(DepthStecil_Default, 0);
-		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-		VertexShader = compile vs_5_0 VS_MAIN();
-		PixelShader = compile ps_5_0 PS_CUSTOM();
 	}
 };
 

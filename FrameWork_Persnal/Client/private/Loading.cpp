@@ -2,6 +2,7 @@
 #include "..\public\Loading.h"
 
 #include "BackGround_Logo.h"
+//#include "Textures.h"
 
 CLoading::CLoading(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: m_pDevice(pDevice)
@@ -55,7 +56,13 @@ HRESULT CLoading::LoadingForLogo()
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Prototype_BackGround"), CBackGround_Logo::Create(m_pDevice, m_pDevice_Context))))
+	/* 컴포넌트 원형을 생성ㄹ하자. */
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_Devil")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Devil.png")))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Prototype_BackGround")
+		, CBackGround_Logo::Create(m_pDevice, m_pDevice_Context))))
 		return E_FAIL;
 
 

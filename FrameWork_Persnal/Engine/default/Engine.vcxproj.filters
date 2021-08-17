@@ -43,9 +43,6 @@
     <Filter Include="02.Utility\02.Component">
       <UniqueIdentifier>{dd16c75b-01d5-4354-b696-123a0b7221d5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Utility\02.Component\Manager">
-      <UniqueIdentifier>{7b3d9b6b-099c-47e0-8c79-a741b06cf070}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Utility\02.Component\01.Buffer">
       <UniqueIdentifier>{47d16fb8-de50-4486-bfa9-55f41f27513b}</UniqueIdentifier>
     </Filter>
@@ -63,6 +60,12 @@
     </Filter>
     <Filter Include="02.Utility\02.Component\01.Buffer\01.Texture">
       <UniqueIdentifier>{7d1db04f-9ed5-4c4b-9b1f-a99ed72974d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\99.Manager">
+      <UniqueIdentifier>{7b3d9b6b-099c-47e0-8c79-a741b06cf070}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\02.Textures">
+      <UniqueIdentifier>{d5e58c82-4e27-44b0-8ed0-b0e536c7bbb0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -103,7 +106,7 @@
       <Filter>02.Utility\02.Component</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Component_Manager.h">
-      <Filter>02.Utility\02.Component\Manager</Filter>
+      <Filter>02.Utility\02.Component\99.Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Renderer.h">
       <Filter>02.Utility\02.Component\00.Renderer</Filter>
@@ -132,6 +135,9 @@
     <ClInclude Include="VIBuffer_Texture.h">
       <Filter>02.Utility\02.Component\01.Buffer\01.Texture</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Textures.h">
+      <Filter>02.Utility\02.Component\02.Textures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -156,7 +162,7 @@
       <Filter>02.Utility\02.Component</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Component_Manager.cpp">
-      <Filter>02.Utility\02.Component\Manager</Filter>
+      <Filter>02.Utility\02.Component\99.Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Renderer.cpp">
       <Filter>02.Utility\02.Component\00.Renderer</Filter>
@@ -175,6 +181,9 @@
     </ClCompile>
     <ClCompile Include="VIBuffer_Texture.cpp">
       <Filter>02.Utility\02.Component\01.Buffer\01.Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Textures.cpp">
+      <Filter>02.Utility\02.Component\02.Textures</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

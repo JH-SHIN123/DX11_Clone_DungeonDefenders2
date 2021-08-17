@@ -4,8 +4,8 @@
 
 #include "D3D11.h"
 #include "DirectXMath.h"
-
 #include "d3dx11effect.h"
+#include "DirectXTex.h"		// ≈ÿΩ∫√≥
 #include "d3dxGlobal.h"	
 #include "d3dcompiler.h"
 
