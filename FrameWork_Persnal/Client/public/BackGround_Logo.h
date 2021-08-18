@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __BACKGROUND_LOGO_H__
+
 #include "Client_Defines.h"
 #include "GameObject.h"
 
@@ -13,7 +15,7 @@ BEGIN(Client)
 
 class CBackGround_Logo final : public CGameObject
 {
-public:
+private:
 	CBackGround_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	CBackGround_Logo(const CBackGround_Logo& rhs);
 	virtual ~CBackGround_Logo() = default;
@@ -40,7 +42,6 @@ private:
 private:
 	HRESULT	Ready_Component();
 
-
 public:
 	/* 원형객체를 생성. */
 	static CBackGround_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
@@ -52,3 +53,5 @@ public:
 };
 
 END
+#define __BACKGROUND_LOGO_H__
+#endif // !__BACKGROUND_LOGO_H__

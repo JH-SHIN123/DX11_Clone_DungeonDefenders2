@@ -1,5 +1,5 @@
-#ifndef Engine_Macro_h__
-#define Engine_Macro_h__
+#ifndef __Engine_Macro_h__
+#define __Engine_Macro_h__
 
 
 #ifndef MSG_BOX
@@ -82,4 +82,4 @@
 
 
 
-#endif // Engine_Macro_h__
+#endif // __Engine_Macro_h__

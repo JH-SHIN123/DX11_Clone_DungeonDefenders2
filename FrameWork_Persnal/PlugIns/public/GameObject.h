@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __GAMEOBJECT_H__
+
 #include "Base.h"
 
 BEGIN(Engine)
@@ -38,3 +40,5 @@ public:
 };
 
 END
+#define __GAMEOBJECT_H__
+#endif // !__GAMEOBJECT_H__

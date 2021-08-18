@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __LEVEL_MANAGER_H__
+
 /* 현재 게임내에서 보여줘야할 레벨의 주소를 가지고 있는다. */
 #include "Base.h"
 
@@ -23,3 +25,5 @@ public:
 };
 
 END
+#define __LEVEL_MANAGER_H__
+#endif // !__LEVEL_MANAGER_H__

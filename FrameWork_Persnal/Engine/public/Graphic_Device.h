@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __GRAPHIC_DEVICE_H__
+
 #include "Base.h"
 
 /* 장치객체를 초기화한다. */
@@ -11,7 +13,6 @@
 /* 뎁스버퍼, 스텐실버퍼를 렌더타겟뷰를 생성한다. */
 /* 렌더타겟 뷰들을 장치에 엮는다. */
 /* 뷰포트 설정. */
-
 
 BEGIN(Engine)
 
@@ -55,3 +56,5 @@ public:
 };
 
 END
+#define __GRAPHIC_DEVICE_H__
+#endif // !__GRAPHIC_DEVICE_H__

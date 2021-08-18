@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef __LEVEL_STAGE1_H__
+
+
 #include "Client_Defines.h"
 #include "Level.h"
 
@@ -7,7 +10,7 @@ BEGIN(Client)
 
 class CLevel_Stage1 final : public CLevel
 {
-public:
+private:
 	CLevel_Stage1(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual ~CLevel_Stage1() = default;
 public:
@@ -25,3 +28,5 @@ public:
 };
 
 END
+#define __LEVEL_STAGE1_H__
+#endif // !__LEVEL_STAGE1_H__

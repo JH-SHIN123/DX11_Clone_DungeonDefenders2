@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __LOADING_H__
+
 /* 씬별로 로딩해야할 리소스들을 정의한다. */
 /* 객체원형을 생성한다. */
 #include "Client_Defines.h"
@@ -12,9 +14,10 @@ enum class ELevel
 
 class CLoading final : public CBase
 {
-public:
+private:
 	CLoading(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual ~CLoading() = default;
+
 public:
 	CRITICAL_SECTION* Get_CriticalSectionPtr() {
 		return &m_CriticalSection;
@@ -56,3 +59,5 @@ public:
 };
 
 END
+#define __LOADING_H__
+#endif // !__LOADING_H__

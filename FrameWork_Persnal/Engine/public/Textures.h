@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __TEXTURES_H__
+
 #include "Component.h"
 
 BEGIN(Engine)
@@ -39,3 +41,5 @@ public:
 	virtual void Free();
 };
 END
+#define __TEXTURES_H__
+#endif // !__TEXTURES_H__

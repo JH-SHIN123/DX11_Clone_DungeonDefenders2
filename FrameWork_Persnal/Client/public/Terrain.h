@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __TERRAIN_H__
+
 #include "Client_Defines.h"
 #include "GameObject.h"
 
@@ -13,7 +15,7 @@ BEGIN(Client)
 
 class CTerrain final : public CGameObject
 {
-public:
+private:
 	explicit CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	explicit CTerrain(const CTerrain& rhs);
 	virtual ~CTerrain() = default;
@@ -43,3 +45,5 @@ public:
 };
 
 END
+#define  __TERRAIN_H__
+#endif // !__TERRAIN_H__

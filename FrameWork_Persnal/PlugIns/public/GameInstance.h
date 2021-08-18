@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef __GAMEINSTANCE_H__
+
+
 #include "Graphic_Device.h"
 #include "Level_Manager.h"
 #include "GameObject_Manager.h"
@@ -67,3 +70,5 @@ public:
 };
 
 END
+#define __GAMEINSTANCE_H__
+#endif // !__GAMEINSTANCE_H__

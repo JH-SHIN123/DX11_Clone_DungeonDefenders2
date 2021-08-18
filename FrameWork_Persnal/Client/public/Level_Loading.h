@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef __LEVEL_LOADING_H__
+
+
 #include "Client_Defines.h"
 #include "Level.h"
 #include "Loading.h"
@@ -8,9 +11,10 @@ BEGIN(Client)
 
 class CLevel_Loading final : public CLevel
 {
-public:
+private:
 	CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual ~CLevel_Loading() = default;
+
 public:
 	virtual HRESULT NativeConstruct(ELevel eNextSceneID);
 	virtual int Tick(_double Timedelta) override;
@@ -19,6 +23,7 @@ public:
 private:
 	CLoading*		m_pLoading = nullptr;
 	ELevel			m_eNextLevelID = ELevel::End;
+
 public:
 	static CLevel_Loading* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, ELevel eNextSceneID);
 	virtual void Free();
@@ -26,3 +31,5 @@ public:
 };
 
 END
+#endif // !__LEVEL_LOADING
+#define __LEVEL_LOADING_H___H__

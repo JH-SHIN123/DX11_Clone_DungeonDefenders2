@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __MAINAPP_H__
+
 #include "Client_Defines.h"
 #include "Base.h"
 #include "Loading.h"
@@ -13,7 +15,7 @@ BEGIN(Client)
 
 class CMainApp final : public CBase
 {
-public:
+private:
 	CMainApp();
 	virtual ~CMainApp() = default;
 
@@ -42,3 +44,5 @@ public:
 };
 
 END
+#define __MAINAPP_H__
+#endif // !__MAINAPP_H__

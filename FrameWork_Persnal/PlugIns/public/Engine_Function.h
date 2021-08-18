@@ -1,5 +1,6 @@
 #pragma once
 
+#ifndef __ENGINE_FUNCTION_H__
 
 namespace Engine
 {
@@ -74,3 +75,6 @@ namespace Engine
 
 	};
 }
+
+#define __ENGINE_FUNCTION_H__
+#endif // !__ENGINE_FUNCTION_H__

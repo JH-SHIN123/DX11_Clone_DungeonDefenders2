@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef __BASE_H__
+#ifndef __COMPONENT_H__
 
 #include "Base.h"
 
@@ -32,6 +32,5 @@ public:
 };
 
 END
-
-#define __BASE_H__
-#endif // !__BASE_H__
+#define __COMPONENT_H__
+#endif // !__COMPONENT_H__

@@ -1,5 +1,5 @@
-#ifndef Engine_Typedef_h__
-#define Engine_Typedef_h__
+#ifndef __Engine_Typedef_h__
+#define __Engine_Typedef_h__
 
 namespace Engine
 {
@@ -34,4 +34,4 @@ namespace Engine
 	typedef		XMMATRIX				_matrix;	
 }
 
-#endif // Engine_Typedef_h__
+#endif // __Engine_Typedef_h__

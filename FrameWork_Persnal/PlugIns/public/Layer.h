@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __LAYER_H__
+
 #include "GameObject.h"
 
 BEGIN(Engine)
@@ -24,3 +26,5 @@ public:
 };
 
 END
+#define __LAYER_H__
+#endif // !__LAYER_H__

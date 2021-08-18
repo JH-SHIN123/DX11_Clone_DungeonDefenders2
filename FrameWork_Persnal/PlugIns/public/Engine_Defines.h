@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __ENGINE_DEFINES_H__
+
 #pragma warning (disable : 4251)
 
 #include "D3D11.h"
@@ -18,7 +20,6 @@ using namespace DirectX;
 #include <unordered_map>
 #include <algorithm>
 using namespace std;
-
 
 #ifdef _DEBUG
 
@@ -42,3 +43,6 @@ using namespace std;
 #include "Engine_Function.h"
 
 using namespace Engine;
+
+#define __ENGINE_DEFINES_H__
+#endif // !__ENGINE_DEFINES_H__

@@ -1,5 +1,5 @@
-#ifndef Engine_Struct_h__
-#define Engine_Struct_h__
+#ifndef __Engine_Struct_h__
+#define __Engine_Struct_h__
 
 namespace Engine
 {

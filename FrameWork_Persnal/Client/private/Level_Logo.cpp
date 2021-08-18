@@ -33,7 +33,6 @@ _int CLevel_Logo::Tick(_double Timedelta)
 			return -1;
 
 		pGameInstance->Clear_This_Level((_uint)ELevel::Logo);
-
 	}
 
 	return 0;

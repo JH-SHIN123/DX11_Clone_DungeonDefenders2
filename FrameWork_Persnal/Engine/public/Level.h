@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __LEVEL_H__
+
 #include "Base.h"
 
 BEGIN(Engine)
@@ -21,3 +23,5 @@ public:
 };
 
 END
+#define __LEVEL_H__
+#endif // !__LEVEL_H__

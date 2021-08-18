@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __GAMEOBJECT_MANAGER_H__
+
 #include "Base.h"
 #include "Layer.h"
 
@@ -41,3 +43,5 @@ public:
 };
 
 END
+#define __GAMEOBJECT_MANAGER_H__
+#endif // !__GAMEOBJECT_MANAGER_H__

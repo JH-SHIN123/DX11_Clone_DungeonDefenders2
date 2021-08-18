@@ -69,7 +69,6 @@ HRESULT CTerrain::Render()
 	ProjMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), (_float)g_iWinCX / g_iWinCY, 0.2f, 300.f);
 
 	
-	// °³Áö¶ö¸¶¼À
 	m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(WorldMatrix), sizeof(_matrix));
 	m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(ViewMatrix), sizeof(_matrix));
 	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(ProjMatrix), sizeof(_matrix));
