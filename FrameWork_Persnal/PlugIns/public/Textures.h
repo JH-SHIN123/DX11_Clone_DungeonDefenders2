@@ -9,28 +9,24 @@ enum class ENGINE_DLL ETextureType
 
 class ENGINE_DLL CTextures final : public CComponent
 {	
-public:
 private:
 	explicit CTextures(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	explicit CTextures(const CTextures& rhs);
 	virtual ~CTextures() = default;
 
 public: /* Getter */
-	ID3D11ShaderResourceView* Get_ShaderResourceView(_int iIndex) {
-		return m_Textures[iIndex];
-	}
-
+	ID3D11ShaderResourceView* Get_ShaderResourceView(_int iIndex);
 
 public:
 	virtual HRESULT NativeConstruct_Prototype(ETextureType eType, const _tchar* pTextureFilePath, _int iNumTextures);
 	virtual HRESULT NativeConstruct(void* pArg) override;
 
 private:
-	vector<ID3D11ShaderResourceView*>			m_Textures;
+	vector<ID3D11ShaderResourceView*>			m_Textures; // 텍스처를 담을 리소스뷰(쉐이더로 그려야함)
 	typedef vector<ID3D11ShaderResourceView*>	TEXTURES;
 
 private:
-	_uint			m_iNumTextures = 0;
+	_uint			m_iNumTextures = 0;	// 텍스처 개수
 
 
 public:

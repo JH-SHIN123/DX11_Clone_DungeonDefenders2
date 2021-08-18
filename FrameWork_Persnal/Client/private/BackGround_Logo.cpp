@@ -56,8 +56,10 @@ HRESULT CBackGround_Logo::Render()
 	if (nullptr == m_pBuffer_Rect)
 		return E_FAIL;
 
+	// 텍스처 담을 변수, 텍스처 정보
 	m_pBuffer_Rect->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
 
+	// 어떤 쉐이더 쓸거임
 	m_pBuffer_Rect->Render(0);
 
 	return S_OK;

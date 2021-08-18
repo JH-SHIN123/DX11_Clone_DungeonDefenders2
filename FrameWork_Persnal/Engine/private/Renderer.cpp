@@ -18,13 +18,13 @@ HRESULT CRenderer::NativeConstruct_Prototype()
 
 HRESULT CRenderer::NativeConstruct(void * pArg)
 {
-	// Add_GameObjecetToRenderer((ERenderGroup)7, nullptr); 이따위 enum class가 가능
-
 	return S_OK;
 }
 
 HRESULT CRenderer::Add_GameObjectToRenderer(ERenderGroup eGroup, CGameObject * pGameObject)
 {
+	// Add_GameObjecetToRenderer((ERenderGroup)7, nullptr); 이따위 정신나간 enum class가 가능
+
 	if (ERenderGroup::End <= eGroup ||
 		nullptr == pGameObject)
 		return E_FAIL;

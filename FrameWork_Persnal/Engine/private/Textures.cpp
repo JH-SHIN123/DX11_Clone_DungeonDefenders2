@@ -11,41 +11,58 @@ CTextures::CTextures(const CTextures & rhs)
 	, m_Textures(rhs.m_Textures)
 	, m_iNumTextures(rhs.m_iNumTextures)
 {
+	// 프로토 타입에서 만들었으니 대입하고 레퍼런스 카운팅
 	for (auto& pShaderResourceView : m_Textures)
 		Safe_AddRef(pShaderResourceView);
-	
+}
+
+ID3D11ShaderResourceView * CTextures::Get_ShaderResourceView(_int iIndex)
+{
+	if (m_iNumTextures < iIndex || true == m_Textures.empty())
+		return nullptr;
+
+	return m_Textures[iIndex];
 }
 
 HRESULT CTextures::NativeConstruct_Prototype(ETextureType eType, const _tchar * pTextureFilePath, _int iNumTextures)
 {
+	// 이미지 파일을 세팅하는 그런 부분
 	CComponent::NativeConstruct_Prototype();
 
 	if (nullptr == m_pDevice)
 		return E_FAIL;
 
-	if (FAILED(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED)))
+	if (FAILED(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED)))	// 윈 10 이슈 
 		return E_FAIL;
 
 	m_iNumTextures = iNumTextures;
 
 	_tchar			szTextureFileName[MAX_PATH] = L"";
 
+	// 이미지 개수만큼
 	for (_int i = 0; i < iNumTextures; ++i)
 	{
-		ID3D11ShaderResourceView*			pShaderResourceView = nullptr;
+		// 텍스처 Load
+		DirectX::ScratchImage		Image;
+
+		// Load한 텍스처를 리소스 화
+		ID3D11Resource*				pResource = nullptr;
+
+		// 리소스를 최종적으로 사용 가능한 형태로 다루게하는 쉐이더리소스뷰
+		ID3D11ShaderResourceView*	pShaderResourceView = nullptr;
 
 		wsprintf(szTextureFileName, pTextureFilePath, i);
 
-		DirectX::ScratchImage				Image;
-
 		HRESULT hr = 0;
 
+		// 확장자별로 Load함수가 다르다.
 		switch (eType)
 		{
 		case ETextureType::Dds:
 			hr = DirectX::LoadFromDDSFile(szTextureFileName, DirectX::DDS_FLAGS_NONE, nullptr, Image);
 			break;
 		case ETextureType::Tga:
+			// 얘는 인자가 살짝 다르다
 			hr = DirectX::LoadFromTGAFile(szTextureFileName, nullptr, Image);
 			break;
 		case ETextureType::Wic:
@@ -56,14 +73,15 @@ HRESULT CTextures::NativeConstruct_Prototype(ETextureType eType, const _tchar * 
 		if (FAILED(hr))
 			return E_FAIL;
 
-		ID3D11Resource*			pResource = nullptr;
-
+		// 텍스처 정보를 토대로 리소스를 만들고있다.
 		if (FAILED(DirectX::CreateTexture(m_pDevice, Image.GetImages(), Image.GetImageCount(), Image.GetMetadata(), &pResource)))
 			return E_FAIL;
 
+		// 실질적으로 사용 가능한 형태의 쉐이더리소스뷰로 만드는 모습
 		if (FAILED(m_pDevice->CreateShaderResourceView(pResource, nullptr, &pShaderResourceView)))
 			return E_FAIL;
 
+		// pResource는 거쳐가는 단계이고 포인터니 지운다.
 		Safe_Release(pResource);
 
 		m_Textures.push_back(pShaderResourceView);

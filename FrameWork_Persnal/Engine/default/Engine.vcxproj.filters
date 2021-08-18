@@ -58,9 +58,6 @@
     <Filter Include="02.Utility\01.GameObject\Manager\Layer">
       <UniqueIdentifier>{e8dd997f-1c3a-4eae-8432-887a41d676ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Utility\02.Component\01.Buffer\01.Texture">
-      <UniqueIdentifier>{7d1db04f-9ed5-4c4b-9b1f-a99ed72974d6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Utility\02.Component\99.Manager">
       <UniqueIdentifier>{7b3d9b6b-099c-47e0-8c79-a741b06cf070}</UniqueIdentifier>
     </Filter>
@@ -132,9 +129,6 @@
     <ClInclude Include="..\public\Level.h">
       <Filter>02.Utility\00.Level</Filter>
     </ClInclude>
-    <ClInclude Include="VIBuffer_Texture.h">
-      <Filter>02.Utility\02.Component\01.Buffer\01.Texture</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Textures.h">
       <Filter>02.Utility\02.Component\02.Textures</Filter>
     </ClInclude>
@@ -178,9 +172,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Level.cpp">
       <Filter>02.Utility\00.Level</Filter>
-    </ClCompile>
-    <ClCompile Include="VIBuffer_Texture.cpp">
-      <Filter>02.Utility\02.Component\01.Buffer\01.Texture</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Textures.cpp">
       <Filter>02.Utility\02.Component\02.Textures</Filter>

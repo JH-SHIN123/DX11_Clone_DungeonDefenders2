@@ -110,7 +110,9 @@ HRESULT CVIBuffer::Set_ShaderResourceView(const char * pConstanceName, ID3D11Sha
 	if (nullptr == m_pEffect)
 		return E_FAIL;
 
-	// 
+	// 얻어온 쉐이더리소스뷰를 통해서 리소스를 세팅하는 모씁
+	// 문자열은 쉐이더의 전역변수
+	// 이 단계를 거치고 Render를 하니 텍스처를 통해서 픽셀의 색이 정해질 것이다
 	ID3DX11EffectShaderResourceVariable*	pVariable = m_pEffect->GetVariableByName(pConstanceName)->AsShaderResource();
 	if (nullptr == pVariable)
 		return E_FAIL;
