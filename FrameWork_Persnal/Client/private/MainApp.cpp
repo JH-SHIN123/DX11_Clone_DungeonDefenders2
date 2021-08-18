@@ -3,8 +3,6 @@
 #include "Level_Loading.h"
 #include "Level_Logo.h"
 #include "GameInstance.h"
-#include "Renderer.h"
-#include "VIBuffer_Rect.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -22,6 +20,7 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(m_pGameInstance->Initialize(g_hWnd, CGraphic_Device::TYPE_WINMODE, g_iWinCX, g_iWinCY, &m_pDevice, &m_pDevice_Context)))
 		return E_FAIL;
 
+	// Level의 수에 맞게 컨테이너의 크기를 다시 잡음
 	if (FAILED(m_pGameInstance->Reserve_Container((_uint)ELevel::End)))
 		return E_FAIL;
 
@@ -39,7 +38,7 @@ _int CMainApp::Update_MainApp(_double TimeDelta)
 {
 	if (nullptr == m_pGameInstance)
 		return -1;
-
+	// Tick함수 내에서 매 프레임마다 갱신해야 하는 것들이 전부 들어가 있다.
 	return m_pGameInstance->Tick(TimeDelta);	
 }
 
@@ -53,7 +52,7 @@ HRESULT CMainApp::Render_MainApp()
 	m_pGameInstance->Clear_Depth_Stencil_Buffer();
 
 	m_pRenderer->Draw_Renderer();
-	//m_pGameInstance->Render_Level();
+	m_pGameInstance->Render_Level();
 
 	m_pGameInstance->Present();
 

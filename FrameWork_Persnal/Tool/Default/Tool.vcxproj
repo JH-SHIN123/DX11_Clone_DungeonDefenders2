@@ -193,6 +193,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Codes\DataManager.h" />
+    <ClInclude Include="..\Codes\Dummy.h" />
     <ClInclude Include="..\Codes\Main_Level.h" />
     <ClInclude Include="..\Codes\Tool_Define.h" />
     <ClInclude Include="..\Codes\Tool_Enum.h" />
@@ -206,6 +208,8 @@
     <ClInclude Include="ToolView.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Codes\DataManager.cpp" />
+    <ClCompile Include="..\Codes\Dummy.cpp" />
     <ClCompile Include="..\Codes\Main_Level.cpp" />
     <ClCompile Include="Form.cpp" />
     <ClCompile Include="MainFrm.cpp" />

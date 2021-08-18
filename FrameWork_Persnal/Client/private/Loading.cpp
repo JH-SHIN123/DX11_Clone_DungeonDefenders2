@@ -2,7 +2,11 @@
 #include "..\public\Loading.h"
 
 #include "BackGround_Logo.h"
-//#include "Textures.h"
+#include "../public/VIBuffer_Terrain.h"
+
+#include "Terrain.h"
+
+USING(Engine)
 
 CLoading::CLoading(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: m_pDevice(pDevice)
@@ -74,6 +78,27 @@ HRESULT CLoading::LoadingForLogo()
 
 HRESULT CLoading::LoadingForStage()
 {
+	if (nullptr == m_pGameInstance)
+		return E_FAIL;
+
+	SetWindowText(g_hWnd, TEXT("TMXPDLWL로딩 시작"));
+
+	/* 컴포넌트 원형을 생성ㄹ하자. */
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_Terrain")
+		, CVIBuffer_Terrain::Create(m_pDevice, m_pDevice_Context, L"../Bin/Resources/Textures/Height.bmp", TEXT("../Bin/Shader/Shader_Terrain.hlsl"), "DefaultTechnique"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Devil")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Devil.png")))))
+		return E_FAIL;
+
+	/* 객체 프로토타입을 생성하자. */
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Terrain")
+		, CTerrain::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
+	m_isFinished = true;
+
 	return S_OK;
 }
 

@@ -22,6 +22,12 @@
     <ClCompile Include="..\Codes\Main_Level.cpp">
       <Filter>02.Level</Filter>
     </ClCompile>
+    <ClCompile Include="..\Codes\Dummy.cpp">
+      <Filter>03.GameObject\00.Dummy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Codes\DataManager.cpp">
+      <Filter>04.DataManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -57,6 +63,12 @@
     <ClInclude Include="..\Codes\Main_Level.h">
       <Filter>02.Level</Filter>
     </ClInclude>
+    <ClInclude Include="..\Codes\Dummy.h">
+      <Filter>03.GameObject\00.Dummy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Codes\DataManager.h">
+      <Filter>04.DataManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\Tool.ico">
@@ -68,9 +80,6 @@
     <Image Include="res\ToolDoc.ico">
       <Filter>99.Default</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99.Default">
@@ -97,6 +106,15 @@
     <Filter Include="02.Level">
       <UniqueIdentifier>{206ba705-3d1d-422f-ae35-11b080e5984f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObject">
+      <UniqueIdentifier>{c13493e7-5f47-4fe1-8eb5-99ac83d5999e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObject\00.Dummy">
+      <UniqueIdentifier>{08288ed0-4f83-4ffa-9228-ad0204b92997}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.DataManager">
+      <UniqueIdentifier>{646329f1-9c01-4cc7-bbe7-00569942db51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Tool.rc">
@@ -107,5 +125,10 @@
     <None Include="res\Tool.rc2">
       <Filter>99.Default</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>99.Default</Filter>
+    </Text>
   </ItemGroup>
 </Project>

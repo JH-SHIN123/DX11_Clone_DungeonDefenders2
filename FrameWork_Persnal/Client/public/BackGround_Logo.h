@@ -17,6 +17,7 @@ public:
 	CBackGround_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	CBackGround_Logo(const CBackGround_Logo& rhs);
 	virtual ~CBackGround_Logo() = default;
+
 public:
 	/* 원형객체를 초기화하낟. */
 	virtual HRESULT NativeConstruct_Prototype() override;

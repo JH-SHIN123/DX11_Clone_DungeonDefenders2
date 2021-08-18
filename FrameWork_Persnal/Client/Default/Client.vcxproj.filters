@@ -13,30 +13,36 @@
     <Filter Include="01.Maps">
       <UniqueIdentifier>{64bfc095-c2c2-4355-b485-9ab464726e13}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Maps\Logo">
-      <UniqueIdentifier>{07a35e1c-7bdc-41e7-8134-e6e63f1dfce2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Maps\Loading">
-      <UniqueIdentifier>{97f30d6d-9199-4f05-879d-e185620cd7e9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject">
       <UniqueIdentifier>{97b32a6e-509f-4ced-8939-d6417b37fd97}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Logo">
-      <UniqueIdentifier>{0ed5f72e-f4b8-49bf-a181-071dfb6e7b98}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Stage">
-      <UniqueIdentifier>{af13b4cb-2c6f-4748-ab46-ce104963ecd7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Logo\BackGround">
-      <UniqueIdentifier>{fd714cb0-ce9e-4958-91e7-a718b433c0d2}</UniqueIdentifier>
     </Filter>
     <Filter Include="97.ShaderFiles">
       <UniqueIdentifier>{c897f1d9-0925-4b86-b82e-978dc2dda110}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
+    <Filter Include="01.Maps\00.Loading">
+      <UniqueIdentifier>{97f30d6d-9199-4f05-879d-e185620cd7e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Maps\01.Logo">
+      <UniqueIdentifier>{07a35e1c-7bdc-41e7-8134-e6e63f1dfce2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Maps\02.Stage1">
+      <UniqueIdentifier>{5f1c5b47-f0ca-4a8f-99d5-6657580ca0a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.Logo">
+      <UniqueIdentifier>{0ed5f72e-f4b8-49bf-a181-071dfb6e7b98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.Stage">
+      <UniqueIdentifier>{af13b4cb-2c6f-4748-ab46-ce104963ecd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\02.Stage\00.Terrain">
+      <UniqueIdentifier>{1de666b8-ed6d-4dd9-9cdf-8b5395bc8102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.Logo\00.BackGround">
+      <UniqueIdentifier>{fd714cb0-ce9e-4958-91e7-a718b433c0d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\00.Loading">
+      <UniqueIdentifier>{a411ab72-c4ca-48ca-8258-8223a9a141cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -58,22 +64,28 @@
       <Filter>98.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_Logo.h">
-      <Filter>01.Maps\Logo</Filter>
+      <Filter>01.Maps\01.Logo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_Loading.h">
-      <Filter>01.Maps\Loading</Filter>
+      <Filter>01.Maps\00.Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Loading.h">
-      <Filter>01.Maps\Loading</Filter>
+      <Filter>01.Maps\00.Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BackGround_Logo.h">
-      <Filter>02.GameObject\Logo\BackGround</Filter>
+      <Filter>02.GameObject\01.Logo\00.BackGround</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Client_Macro.h">
       <Filter>98.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Bin\Shader\Shader_Defines.hpp">
       <Filter>97.ShaderFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Stage1.h">
+      <Filter>01.Maps\02.Stage1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Terrain.h">
+      <Filter>02.GameObject\02.Stage\00.Terrain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -87,16 +99,22 @@
       <Filter>00.MainApp</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Logo.cpp">
-      <Filter>01.Maps\Logo</Filter>
+      <Filter>01.Maps\01.Logo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Loading.cpp">
-      <Filter>01.Maps\Loading</Filter>
+      <Filter>01.Maps\00.Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Loading.cpp">
-      <Filter>01.Maps\Loading</Filter>
+      <Filter>01.Maps\00.Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BackGround_Logo.cpp">
-      <Filter>02.GameObject\Logo\BackGround</Filter>
+      <Filter>02.GameObject\01.Logo\00.BackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Stage1.cpp">
+      <Filter>01.Maps\02.Stage1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Terrain.cpp">
+      <Filter>02.GameObject\02.Stage\00.Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -116,5 +134,13 @@
     <FxCompile Include="..\Bin\Shader\Shader_Default.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\Shader\Shader_Terrain.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>99.Default</Filter>
+    </Text>
   </ItemGroup>
 </Project>

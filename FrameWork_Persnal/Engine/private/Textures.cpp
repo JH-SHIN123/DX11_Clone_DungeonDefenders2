@@ -16,7 +16,7 @@ CTextures::CTextures(const CTextures & rhs)
 		Safe_AddRef(pShaderResourceView);
 }
 
-ID3D11ShaderResourceView * CTextures::Get_ShaderResourceView(_int iIndex)
+ID3D11ShaderResourceView * CTextures::Get_ShaderResourceView(_uint iIndex)
 {
 	if (m_iNumTextures < iIndex || true == m_Textures.empty())
 		return nullptr;
@@ -24,7 +24,7 @@ ID3D11ShaderResourceView * CTextures::Get_ShaderResourceView(_int iIndex)
 	return m_Textures[iIndex];
 }
 
-HRESULT CTextures::NativeConstruct_Prototype(ETextureType eType, const _tchar * pTextureFilePath, _int iNumTextures)
+HRESULT CTextures::NativeConstruct_Prototype(ETextureType eType, const _tchar * pTextureFilePath, _uint iNumTextures)
 {
 	// 이미지 파일을 세팅하는 그런 부분
 	CComponent::NativeConstruct_Prototype();
@@ -40,7 +40,7 @@ HRESULT CTextures::NativeConstruct_Prototype(ETextureType eType, const _tchar * 
 	_tchar			szTextureFileName[MAX_PATH] = L"";
 
 	// 이미지 개수만큼
-	for (_int i = 0; i < iNumTextures; ++i)
+	for (_uint i = 0; i < iNumTextures; ++i)
 	{
 		// 텍스처 Load
 		DirectX::ScratchImage		Image;

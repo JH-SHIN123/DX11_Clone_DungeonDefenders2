@@ -90,7 +90,7 @@ HRESULT CGraphic_Device::Present()
 	if (nullptr == m_pSwapChain)
 		return E_FAIL;
 
-	m_pSwapChain->Present(0, 0);
+	m_pSwapChain->Present(1, 0);
 
 	return S_OK;
 }

@@ -20,6 +20,7 @@ public:
 	HRESULT Add_GameObject(_uint iPrototypeLevelIndex, const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, void* pArg = nullptr);
 	
 	_int Tick_GameObject(_double TimeDelta);
+	void Clear(_uint iLevelIndex);
 
 private:
 	typedef unordered_map<const _tchar*, CGameObject*>	PROTOTYPES;

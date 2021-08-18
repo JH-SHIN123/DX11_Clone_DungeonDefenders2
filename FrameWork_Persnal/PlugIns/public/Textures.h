@@ -15,19 +15,20 @@ private:
 	virtual ~CTextures() = default;
 
 public: /* Getter */
-	ID3D11ShaderResourceView* Get_ShaderResourceView(_int iIndex);
+	ID3D11ShaderResourceView* Get_ShaderResourceView(_uint iIndex);
 
 public:
-	virtual HRESULT NativeConstruct_Prototype(ETextureType eType, const _tchar* pTextureFilePath, _int iNumTextures);
+	virtual HRESULT NativeConstruct_Prototype(ETextureType eType, const _tchar* pTextureFilePath, _uint iNumTextures);
 	virtual HRESULT NativeConstruct(void* pArg) override;
 
 private:
-	vector<ID3D11ShaderResourceView*>			m_Textures; // 텍스처를 담을 리소스뷰(쉐이더로 그려야함)
+	// 텍스처를 담고 사용가능한 리소스뷰(쉐이더로 그려야함)
+	// Render를 할 때는 그릴 영역(Rect)가 필요하다
+	vector<ID3D11ShaderResourceView*>			m_Textures;
 	typedef vector<ID3D11ShaderResourceView*>	TEXTURES;
 
 private:
 	_uint			m_iNumTextures = 0;	// 텍스처 개수
-
 
 public:
 	/* 원형생성. */

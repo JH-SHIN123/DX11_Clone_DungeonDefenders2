@@ -3,6 +3,13 @@
 
 namespace Engine
 {
+	typedef struct tagVertexNormalTexture
+	{
+		XMFLOAT3			vPosition;
+		XMFLOAT3			vNormal;
+		XMFLOAT2			vTexUV;
+	}VTXNORTEX;
+
 	struct MatrixBufferType
 	{
 		XMMATRIX world;

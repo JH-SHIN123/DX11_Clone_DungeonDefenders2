@@ -13,12 +13,13 @@ CVIBuffer_Rect::CVIBuffer_Rect(const CVIBuffer & rhs)
 HRESULT CVIBuffer_Rect::NativeConstruct_Prototype(const _tchar* pShaderFilePath, const char* pTechniqueName)
 {
 	// For.VertexBuffer
-	m_iNumVertexBuffers = 1;
+	m_iNumVertexBuffers = 1; // 정점 배열을 몇개 할것이니
 
 	if (FAILED(CVIBuffer::SetUp_VertexBuffer_Desc(4, sizeof(VTXTEX), D3D11_USAGE_IMMUTABLE, D3D11_BIND_VERTEX_BUFFER, 0)))
 		return E_FAIL;
 
-	VTXTEX* pVertices = new VTXTEX[4]; // 정점 몇개 필요함(Rect)
+	// 익숙한 정점 세팅
+	VTXTEX*		pVertices = new VTXTEX[4];
 
 	pVertices[0].vPosition = _float3(-0.5f, 0.5f, 0.f);
 	pVertices[0].vTexUV = _float2(0.f, 0.f);
@@ -30,15 +31,18 @@ HRESULT CVIBuffer_Rect::NativeConstruct_Prototype(const _tchar* pShaderFilePath,
 	pVertices[2].vTexUV = _float2(1.f, 1.f);
 
 	pVertices[3].vPosition = _float3(-0.5f, -0.5f, 0.f);
-	pVertices[3].vTexUV = _float2(0.f, 1.f); // test
+	pVertices[3].vTexUV = _float2(0.f, 1.f);
 
+	// 만든 정점들을 가지고 버퍼를 만드는 함수(memcpy를 한다)
 	if (FAILED(CVIBuffer::SetUp_VertexSubResourceData(pVertices)))
 		return E_FAIL;
 
-	// For.IndicesBuffer
+	/* For. IndexBuffer */
+	// 인덱스 초기화
 	if (FAILED(CVIBuffer::SetUp_IndexBuffer_Desc(DXGI_FORMAT_R16_UINT, 2, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, D3D11_USAGE_IMMUTABLE, D3D11_BIND_INDEX_BUFFER, 0)))
 		return E_FAIL;
 
+	// 인덱스 그거
 	POLYGONINDICES16*		pPolygonIndices = new POLYGONINDICES16[2];
 
 	pPolygonIndices[0]._0 = 0;
@@ -49,14 +53,17 @@ HRESULT CVIBuffer_Rect::NativeConstruct_Prototype(const _tchar* pShaderFilePath,
 	pPolygonIndices[1]._1 = 2;
 	pPolygonIndices[1]._2 = 3;
 
+	// 위에서 만든 인덱스 정보를 대입
+	// 인덱스의 서브리소스는 memcpy를 하지않음
 	if (FAILED(CVIBuffer::SetUp_IndexSubResourceData(pPolygonIndices)))
 		return E_FAIL;
 
+	// 버텍스, 인덱스 세팅 끝, 이제 만들어 주셈
 	if (FAILED(CVIBuffer::NativeConstruct_Prototype()))
 		return E_FAIL;
 
 
-	D3D11_INPUT_ELEMENT_DESC			ElementDesc[] = {
+	D3D11_INPUT_ELEMENT_DESC	ElementDesc[] = {
 		{ "POSITION"						// 시멘틱스(이런 용도~ 라고 알려줌)
 		, 0									// 시멘틱스가 곂치는 애들 중에서 몇번째냐 (텍스처는 8개까지 지원이 가능하다, 인덱스)	
 		, DXGI_FORMAT_R32G32B32_FLOAT		// 데이터는 어떤 형식이니 32비트 4개짜리 float (32bits = 4bytes)

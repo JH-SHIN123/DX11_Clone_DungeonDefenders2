@@ -15,10 +15,10 @@ private:
 	virtual ~CTextures() = default;
 
 public: /* Getter */
-	ID3D11ShaderResourceView* Get_ShaderResourceView(_int iIndex);
+	ID3D11ShaderResourceView* Get_ShaderResourceView(_uint iIndex);
 
 public:
-	virtual HRESULT NativeConstruct_Prototype(ETextureType eType, const _tchar* pTextureFilePath, _int iNumTextures);
+	virtual HRESULT NativeConstruct_Prototype(ETextureType eType, const _tchar* pTextureFilePath, _uint iNumTextures);
 	virtual HRESULT NativeConstruct(void* pArg) override;
 
 private:

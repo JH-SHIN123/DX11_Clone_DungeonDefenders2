@@ -35,9 +35,9 @@ struct VS_OUT
 };
 
 
-/* 그리려하는 정점 하나에 대한 Shading을 한다. */
-/* Shading : 정점의 스페이스 변환. */
-/* 정점의 멤버를 필요에따라 변형한다. */
+/* 그리려하는 정점 하나에 대한 Shading을 한다.	*/
+/* Shading : 정점의 스페이스 변환.			*/
+/* 정점의 멤버를 필요에따라 변형한다.			*/
 // 
 // VS_OUT VS_MAIN(float3 vPosition : POSITION, float2 vTexUV : TEXCOORD0)
 VS_OUT VS_MAIN(VS_IN In)
@@ -47,9 +47,11 @@ VS_OUT VS_MAIN(VS_IN In)
 	Out.vPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);
 
 	vector		vPosition = vector(In.vPosition, 1.f);
+	// w가 크면 작아짐
+	// Z 나누기가 이 정점쉐이더 후에 되고있다는 증거가 아닐까
 
 	Out.vPosition = vPosition;
-	Out.vTexUV = In.vTexUV * 2.f;
+	Out.vTexUV = In.vTexUV * 1.5f; // 텍스처 UV
 
 	return Out;
 
@@ -82,7 +84,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	// 픽셀의 색 = Texture의 UV 좌표에서 g_DiffuseTexture의 색을 따라가되 DiffuseSampler라는 이름의 샘플러를 사용 할 것
 	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
-	//Out.vColor.a = 0.5f;
+	//Out.vColor.a = 1.f;
 
 	return Out;
 }

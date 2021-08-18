@@ -22,6 +22,7 @@ public:
 	HRESULT Initialize(HWND hWnd, CGraphic_Device::WINMODE eWinMode, _uint iSizeX, _uint iSizeY, ID3D11Device** ppDevice = nullptr, ID3D11DeviceContext** ppDevice_Context = nullptr);
 	HRESULT Reserve_Container(_uint	iNumLevels);
 	_int Tick(_double TimeDelta);
+	void Clear_This_Level(_uint iLevelIndex);
 
 public:
 

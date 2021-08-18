@@ -3,9 +3,11 @@
 #ifndef __CCOMPONENT_MANAGER_H__
 
 #include "Component.h"
+#include "Renderer.h"
+#include "Textures.h"
 #include "VIBuffer.h"
 #include "VIBuffer_Rect.h"
-#include "Textures.h"
+#include "VIBuffer_Terrain.h"
 
 class CComponent_Manager final : public CBase
 {
@@ -19,6 +21,7 @@ public:
 	HRESULT Reserve_Container(_uint iNumLevels);
 	HRESULT Add_Prototype(_uint iNumLevels, const _tchar* pComponentTag, CComponent* pPrototype);
 	CComponent* Clone_Component(_uint iNumLevels, const _tchar* pComponentTag, void* pArg);
+	void Clear(_uint iLevelIndex);
 
 private:
 	typedef unordered_map<const _tchar*, CComponent*> COMPONENTS;

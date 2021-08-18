@@ -45,6 +45,15 @@ CComponent * CComponent_Manager::Clone_Component(_uint iNumLevels, const _tchar 
 	return pComponent->Clone(pArg);
 }
 
+void CComponent_Manager::Clear(_uint iLevelIndex)
+{
+	for (auto& Pair : m_pComponents[iLevelIndex])
+	{
+		Safe_Release(Pair.second);
+	}
+	m_pComponents[iLevelIndex].clear();
+}
+
 CComponent * CComponent_Manager::Find_Component(_uint iNumLevels, const _tchar * pComponentTag)
 {
 	auto iter = find_if(m_pComponents[iNumLevels].begin(), m_pComponents[iNumLevels].end(), CTagFinder(pComponentTag));

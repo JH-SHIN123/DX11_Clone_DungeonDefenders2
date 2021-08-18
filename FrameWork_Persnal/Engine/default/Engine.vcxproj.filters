@@ -10,9 +10,6 @@
     <Filter Include="98.SuperClass">
       <UniqueIdentifier>{68e3fc31-c2cc-4beb-a98b-9aceda15b508}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98.SuperClass\Base">
-      <UniqueIdentifier>{63f72c0d-56f2-419b-9ee3-407e6e72ccce}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.System">
       <UniqueIdentifier>{33dba8ca-e78d-4ad7-83a5-da4410e81593}</UniqueIdentifier>
     </Filter>
@@ -37,9 +34,6 @@
     <Filter Include="02.Utility\01.GameObject">
       <UniqueIdentifier>{b443a1e3-19a8-44c0-9368-a200c719eff6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Utility\01.GameObject\Manager">
-      <UniqueIdentifier>{fd56bb75-f294-4f46-b541-b95cd2571d65}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Utility\02.Component">
       <UniqueIdentifier>{dd16c75b-01d5-4354-b696-123a0b7221d5}</UniqueIdentifier>
     </Filter>
@@ -55,14 +49,23 @@
     <Filter Include="03.ThirdParty">
       <UniqueIdentifier>{3e9be724-9098-4f88-89a3-355768282d54}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Utility\01.GameObject\Manager\Layer">
-      <UniqueIdentifier>{e8dd997f-1c3a-4eae-8432-887a41d676ae}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Utility\02.Component\99.Manager">
       <UniqueIdentifier>{7b3d9b6b-099c-47e0-8c79-a741b06cf070}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.Utility\02.Component\02.Textures">
       <UniqueIdentifier>{d5e58c82-4e27-44b0-8ed0-b0e536c7bbb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\01.Buffer\01.Terrain">
+      <UniqueIdentifier>{95838a15-9e45-434a-9a25-079cc75e0e89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\01.GameObject\99.Manager">
+      <UniqueIdentifier>{fd56bb75-f294-4f46-b541-b95cd2571d65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\01.GameObject\99.Manager\Layer">
+      <UniqueIdentifier>{e8dd997f-1c3a-4eae-8432-887a41d676ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.SuperClass\Base">
+      <UniqueIdentifier>{63f72c0d-56f2-419b-9ee3-407e6e72ccce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -94,10 +97,10 @@
       <Filter>02.Utility\00.Level\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GameObject_Manager.h">
-      <Filter>02.Utility\01.GameObject\Manager</Filter>
+      <Filter>02.Utility\01.GameObject\99.Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Layer.h">
-      <Filter>02.Utility\01.GameObject\Manager\Layer</Filter>
+      <Filter>02.Utility\01.GameObject\99.Manager\Layer</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Component.h">
       <Filter>02.Utility\02.Component</Filter>
@@ -132,6 +135,9 @@
     <ClInclude Include="..\public\Textures.h">
       <Filter>02.Utility\02.Component\02.Textures</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Terrain.h">
+      <Filter>02.Utility\02.Component\01.Buffer\01.Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -147,10 +153,10 @@
       <Filter>02.Utility\00.Level\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GameObject_Manager.cpp">
-      <Filter>02.Utility\01.GameObject\Manager</Filter>
+      <Filter>02.Utility\01.GameObject\99.Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Layer.cpp">
-      <Filter>02.Utility\01.GameObject\Manager\Layer</Filter>
+      <Filter>02.Utility\01.GameObject\99.Manager\Layer</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Component.cpp">
       <Filter>02.Utility\02.Component</Filter>
@@ -175,6 +181,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Textures.cpp">
       <Filter>02.Utility\02.Component\02.Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Terrain.cpp">
+      <Filter>02.Utility\02.Component\01.Buffer\01.Terrain</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

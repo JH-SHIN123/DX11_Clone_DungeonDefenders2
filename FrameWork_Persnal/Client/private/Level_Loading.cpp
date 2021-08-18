@@ -4,6 +4,7 @@
 
 #include "GameInstance.h"
 #include "Level_Logo.h"
+#include "Level_Stage1.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CLevel(pDevice, pDevice_Context)
@@ -21,6 +22,7 @@ HRESULT CLevel_Loading::NativeConstruct(ELevel eNextSceneID)
 
 
 	/* 다음씬에 필요한 자원들을 생성한다. */
+	// 멀티스레드로 로딩하는건 얘가 함
 	m_pLoading = CLoading::Create(m_pDevice, m_pDevice_Context, eNextSceneID);
 	
 	if (nullptr == m_pLoading)
@@ -44,6 +46,7 @@ int CLevel_Loading::Tick(_double Timedelta)
 			pLevel = CLevel_Logo::Create(m_pDevice, m_pDevice_Context);
 			break;
 		case ELevel::Stage1:
+			pLevel = CLevel_Stage1::Create(m_pDevice, m_pDevice_Context);
 			break;
 		}		
 

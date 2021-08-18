@@ -96,6 +96,21 @@ _int CGameObject_Manager::Tick_GameObject(_double TimeDelta)
 	return iProgress;
 }
 
+void CGameObject_Manager::Clear(_uint iLevelIndex)
+{
+	for (auto& Pair : m_pLayers[iLevelIndex])
+	{
+		Safe_Release(Pair.second);
+	}
+	m_pLayers[iLevelIndex].clear();
+
+	for (auto& Pair : m_pPrototypes[iLevelIndex])
+	{
+		Safe_Release(Pair.second);
+	}
+	m_pPrototypes[iLevelIndex].clear();
+}
+
 CGameObject * CGameObject_Manager::Find_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag)
 {
 	auto	iter = find_if(m_pPrototypes[iLevelIndex].begin(), m_pPrototypes[iLevelIndex].end(), CTagFinder(pPrototypeTag));

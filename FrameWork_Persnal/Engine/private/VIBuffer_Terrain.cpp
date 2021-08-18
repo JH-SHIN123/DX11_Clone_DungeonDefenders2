@@ -1,0 +1,165 @@
+#include "..\public\VIBuffer_Terrain.h"
+
+CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
+	: CVIBuffer(pDevice, pDevice_Context)
+{
+}
+
+CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain & rhs)
+	: CVIBuffer(rhs)
+	, m_hFile(rhs.m_hFile)
+	, m_fh(rhs.m_fh)
+	, m_ih(rhs.m_ih)
+	, m_pPixels(rhs.m_pPixels)
+	, m_dwNumVerticesX(rhs.m_dwNumVerticesX)
+	, m_dwNumVerticesZ(rhs.m_dwNumVerticesZ)
+{
+}
+
+HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* pHeightMapPath, const _tchar* pShaderFilePath, const char* pTechniqueName)
+{
+	// For.VertexBuffer
+	m_iNumVertexBuffers = 1; // 정점 배열을 몇개 할것이니
+
+	m_hFile = CreateFile(pHeightMapPath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == m_hFile)
+		return E_FAIL;
+
+	_ulong	dwByte = 0;
+
+	ReadFile(m_hFile, &m_fh, sizeof(m_fh), &dwByte, nullptr);
+	if (0 == m_hFile)
+		return E_FAIL;
+
+	ReadFile(m_hFile, &m_ih, sizeof(m_ih), &dwByte, nullptr);
+	if (0 == m_hFile)
+		return E_FAIL;
+
+	m_dwNumVerticesX = m_ih.biWidth;
+	m_dwNumVerticesZ = m_ih.biHeight;
+
+	_ulong dwNumVertices = m_dwNumVerticesX * m_dwNumVerticesZ;
+
+	m_pPixels = new _ulong[dwNumVertices];
+
+	ReadFile(m_hFile, m_pPixels, sizeof(_ulong) * dwNumVertices, &dwByte, nullptr);
+
+
+	if (0 == dwByte)
+		return E_FAIL;
+
+	CloseHandle(m_hFile);
+
+	if (FAILED(CVIBuffer::SetUp_VertexBuffer_Desc(dwNumVertices, sizeof(VTXNORTEX), D3D11_USAGE_IMMUTABLE, D3D11_BIND_VERTEX_BUFFER, 0)))
+		return E_FAIL;
+
+	_float			fVertexInterval = 1.f;
+
+	VTXNORTEX*		pVertices = new VTXNORTEX[dwNumVertices];
+
+	for (_uint i = 0; i < m_dwNumVerticesZ; ++i)
+	{
+		for (_uint j = 0; j < m_dwNumVerticesX; ++j)
+		{
+			_uint		iIndex = i * m_dwNumVerticesX + j;
+
+			pVertices[iIndex].vPosition = _float3(j * fVertexInterval, (m_pPixels[iIndex] & 0x000000ff) / 30.0f, i * fVertexInterval);
+			pVertices[iIndex].vTexUV = _float2((_float)j / (m_dwNumVerticesX - 1), (_float)i / (m_dwNumVerticesZ - 1));
+		}
+	}
+
+	if (FAILED(CVIBuffer::SetUp_VertexSubResourceData(pVertices)))
+		return E_FAIL;
+
+	/* For. IndexBuffer */
+	if (FAILED(CVIBuffer::SetUp_IndexBuffer_Desc(DXGI_FORMAT_R32_UINT, (m_dwNumVerticesX - 1) * (m_dwNumVerticesZ - 1) * 2, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, D3D11_USAGE_IMMUTABLE, D3D11_BIND_INDEX_BUFFER, 0)))
+		return E_FAIL;
+
+	POLYGONINDICES32*		pPolygonIndices = new POLYGONINDICES32[m_iNumPolygons];
+
+	_uint		iNumPolygons = 0;
+
+	for (_uint i = 0; i < m_dwNumVerticesZ - 1; ++i)
+	{
+		for (_uint j = 0; j < m_dwNumVerticesX - 1; ++j)
+		{
+			_uint		iIndex = i * m_dwNumVerticesX + j;
+
+			pPolygonIndices[iNumPolygons]._0 = iIndex + m_dwNumVerticesX;
+			pPolygonIndices[iNumPolygons]._1 = iIndex + m_dwNumVerticesX + 1;
+			pPolygonIndices[iNumPolygons]._2 = iIndex + 1;
+			++iNumPolygons;
+
+			pPolygonIndices[iNumPolygons]._0 = iIndex + m_dwNumVerticesX;
+			pPolygonIndices[iNumPolygons]._1 = iIndex + 1;
+			pPolygonIndices[iNumPolygons]._2 = iIndex;
+			++iNumPolygons;
+		}
+	}
+
+	if (FAILED(CVIBuffer::SetUp_IndexSubResourceData(pPolygonIndices)))
+		return E_FAIL;
+
+	if (FAILED(CVIBuffer::NativeConstruct_Prototype()))
+		return E_FAIL;
+
+	D3D11_INPUT_ELEMENT_DESC			ElementDesc[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+	if (FAILED(CVIBuffer::SetUp_InputLayOuts(ElementDesc, 3, pShaderFilePath, pTechniqueName)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CVIBuffer_Terrain::NativeConstruct(void * pArg)
+{
+	CVIBuffer::NativeConstruct(pArg);
+
+	return S_OK;
+}
+
+CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const _tchar* pHeightMapPath, const _tchar* pShaderFilePath, const char* pTechniqueName)
+{
+	CVIBuffer_Terrain*		pInstance = new CVIBuffer_Terrain(pDevice, pDevice_Context);
+
+	if (FAILED(pInstance->NativeConstruct_Prototype(pHeightMapPath, pShaderFilePath, pTechniqueName)))
+	{
+		MSG_BOX("Failed to Creating Instance (CVIBuffer_Terrain) ");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, _uint iNumVerticesX, _uint iNumVerticesZ, const _tchar * pShaderFilePath, const char * pTechniqueName)
+{
+	// 직접 높이를 제어할 때
+	return nullptr;
+}
+
+CComponent * CVIBuffer_Terrain::Clone(void * pArg)
+{
+	CVIBuffer_Terrain*		pInstance = new CVIBuffer_Terrain(*this);
+
+	if (FAILED(pInstance->NativeConstruct(pArg)))
+	{
+		MSG_BOX("Failed to Cloned Instance (CVIBuffer_Terrain) ");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void CVIBuffer_Terrain::Free()
+{
+	CVIBuffer::Free();
+	
+	if (false == m_IsClone)
+	{
+		Safe_Delete_Array(m_pPixels);
+	}
+
+}

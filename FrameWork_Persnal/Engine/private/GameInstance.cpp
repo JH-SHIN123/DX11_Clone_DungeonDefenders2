@@ -56,6 +56,16 @@ _int CGameInstance::Tick(_double TimeDelta)
 	return m_pLevel_Manager->Tick(TimeDelta);
 }
 
+void CGameInstance::Clear_This_Level(_uint iLevelIndex)
+{
+	if (nullptr == m_pComponent_Manager ||
+		nullptr == m_pGameObject_Manager)
+		return;
+
+	m_pComponent_Manager->Clear(iLevelIndex);
+	m_pGameObject_Manager->Clear(iLevelIndex);
+}
+
 
 #pragma region Graphic_Device
 
