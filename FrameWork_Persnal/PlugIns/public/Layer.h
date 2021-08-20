@@ -15,8 +15,8 @@ public:
 	HRESULT NativeConstruct();
 	HRESULT Add_GameObject(CGameObject* pGameObject);
 
-	_int Tick(_double TimeDelta);
-	_int Late_Tick(_double TimeDelta);
+	_int Tick(_float TimeDelta);
+	_int Late_Tick(_float TimeDelta);
 
 private:
 	list<class CGameObject*>			m_Objects;

@@ -19,7 +19,7 @@ HRESULT CLayer::Add_GameObject(CGameObject * pGameObject)
 	return S_OK;
 }
 
-_int CLayer::Tick(_double TimeDelta)
+_int CLayer::Tick(_float TimeDelta)
 {
 	_int iProgress = 0;
 
@@ -34,7 +34,7 @@ _int CLayer::Tick(_double TimeDelta)
 	return iProgress;
 }
 
-_int CLayer::Late_Tick(_double TimeDelta)
+_int CLayer::Late_Tick(_float TimeDelta)
 {
 	_int		iProgress = 0;
 

@@ -7,11 +7,13 @@ CGameInstance::CGameInstance()
 	, m_pLevel_Manager(CLevel_Manager::GetInstance())
 	, m_pGameObject_Manager(CGameObject_Manager::GetInstance())
 	, m_pComponent_Manager(CComponent_Manager::GetInstance())
+	, m_pPipeline_manager(CPipeline_Manager::GetInstance())
 {
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pGameObject_Manager);
 	Safe_AddRef(m_pLevel_Manager);
 	Safe_AddRef(m_pGraphic_Device);
+	Safe_AddRef(m_pPipeline_manager);
 }
 
 
@@ -42,7 +44,7 @@ HRESULT CGameInstance::Reserve_Container(_uint iNumLevels)
 	return S_OK;
 }
 
-_int CGameInstance::Tick(_double TimeDelta)
+_int CGameInstance::Tick(_float TimeDelta)
 {
 	if (nullptr == m_pLevel_Manager ||
 		nullptr == m_pGameObject_Manager)
@@ -154,6 +156,13 @@ CComponent * CGameInstance::Clone_Component(_uint iNumLevels, const _tchar * pCo
 
 	return m_pComponent_Manager->Clone_Component(iNumLevels, pComponentTag, pArg);
 }
+_matrix CGameInstance::Get_Transform(ETransformState eState)
+{
+	if (nullptr == m_pPipeline_manager)
+		return XMMatrixIdentity();
+
+	return m_pPipeline_manager->Get_Transform(eState);
+}
 #pragma endregion
 
 
@@ -174,6 +183,9 @@ _ulong CGameInstance::Release_Engine()
 	if (dwRefCnt = CComponent_Manager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Release CComponent_Manager");
 
+	if (dwRefCnt = CPipeline_Manager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Release CPipeline_Manager");
+
 	if (dwRefCnt = CGraphic_Device::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Release CGraphic_Device");
 
@@ -186,6 +198,9 @@ void CGameInstance::Free()
 	Safe_Release(m_pLevel_Manager);
 	Safe_Release(m_pGameObject_Manager);
 	Safe_Release(m_pComponent_Manager);
+
+	// 삭제
+	Safe_Release(m_pPipeline_manager);
 
 	/* 게임인스턴스 안에 선언된 멤버함수의 정리를 수행한다. */
 	Safe_Release(m_pGraphic_Device);

@@ -11,7 +11,7 @@ HRESULT CMain_Level::NativeConstruct()
 	return S_OK;
 }
 
-_int CMain_Level::Tick(_double Timedelta)
+_int CMain_Level::Tick(_float Timedelta)
 {
 	return _int();
 }

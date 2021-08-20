@@ -72,7 +72,7 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 	if (!pDoc)
 		return;
 
-	m_pGameInstance->Tick(0.00001);
+	m_pGameInstance->Tick(0.00001f);
 
 	m_pGameInstance->Clear_Back_Buffer(_float4(0.f, 0.f, 1.f, 1.f));
 	m_pGameInstance->Clear_Depth_Stencil_Buffer();

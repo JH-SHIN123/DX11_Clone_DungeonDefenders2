@@ -1,8 +1,8 @@
 #pragma once
 
-#ifdef DEBUG
+// Easy Get To GameInstance Func In Engine
 
-#define DEBUG_TEXT
+#define GET_GAMEINSTANCE CGameInstance::GetInstance()
 
-
-#endif // DEBUG
+#define GET_VIEW_SPACE CGameInstance::GetInstance()->Get_Transform(ETransformState::View)
+#define GET_PROJ_SPACE CGameInstance::GetInstance()->Get_Transform(ETransformState::Proj)

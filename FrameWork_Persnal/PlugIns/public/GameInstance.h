@@ -6,6 +6,7 @@
 #include "Level_Manager.h"
 #include "GameObject_Manager.h"
 #include "Component_Manager.h"
+#include "Pipeline_Manager.h"
 
 /* 싱글톤. */
 /* 엔진프로젝트 하나에 딱 한번만 할당된다. */
@@ -23,7 +24,7 @@ public:
 	/* 게임 초기화 과정을 거치낟. */
 	HRESULT Initialize(HWND hWnd, CGraphic_Device::WINMODE eWinMode, _uint iSizeX, _uint iSizeY, ID3D11Device** ppDevice = nullptr, ID3D11DeviceContext** ppDevice_Context = nullptr);
 	HRESULT Reserve_Container(_uint	iNumLevels);
-	_int Tick(_double TimeDelta);
+	_int Tick(_float TimeDelta);
 	void Clear_This_Level(_uint iLevelIndex);
 
 public:
@@ -56,12 +57,17 @@ public:
 	CComponent* Clone_Component(_uint	iNumLevels, const _tchar* pComponentTag, void* pArg = nullptr);
 #pragma endregion
 
+#pragma  region Pipeline_Manager
+	_matrix Get_Transform(ETransformState eState);
+#pragma  endregion
+
 
 private:
 	CGraphic_Device*				m_pGraphic_Device = nullptr;
 	CLevel_Manager*					m_pLevel_Manager = nullptr;
 	CGameObject_Manager*			m_pGameObject_Manager = nullptr;
 	CComponent_Manager*				m_pComponent_Manager = nullptr;
+	CPipeline_Manager*				m_pPipeline_manager = nullptr;
 
 public:
 	static _ulong	Release_Engine();

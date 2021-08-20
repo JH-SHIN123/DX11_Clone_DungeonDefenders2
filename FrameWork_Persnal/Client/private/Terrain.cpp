@@ -2,7 +2,6 @@
 #include "..\public\Terrain.h"
 #include "Loading.h"
 #include "GameInstance.h"
-#include "VIBuffer_Terrain.h"
 
 CTerrain::CTerrain(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -35,12 +34,12 @@ HRESULT CTerrain::NativeConstruct(void * pArg)
 	return S_OK;
 }
 
-_int CTerrain::Tick(_double TimeDelta)
+_int CTerrain::Tick(_float TimeDelta)
 {
 	return _int();
 }
 
-_int CTerrain::Late_Tick(_double TimeDelta)
+_int CTerrain::Late_Tick(_float TimeDelta)
 {
 	if (nullptr == m_pRendererCom)
 		return -1;
@@ -72,8 +71,8 @@ HRESULT CTerrain::Render()
 	// 행렬이 들어갈때 전치 행렬로 바뀌기 때문에 전치행렬로 바뀌기 전에 직접 전치 행렬로 바꿔 전치전치 행렬이 된다.
 	// 당연히 전치전치행렬이라는 개소리는 없으며 일반 평범한 행렬이다. 360도 회전과 같음
 	m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(WorldMatrix), sizeof(_matrix));
-	m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(ViewMatrix), sizeof(_matrix));
-	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(ProjMatrix), sizeof(_matrix));
+	m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
+	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
 
 	// 이미지 세팅 g_DiffuseTexture에다가 m_pTextureCom의 0번째의 리소스를 넣어주시오.
 	m_pVIBufferCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
@@ -88,7 +87,7 @@ HRESULT CTerrain::Render()
 
 HRESULT CTerrain::Ready_Component()
 {
-	CGameInstance* pGameInstance = GET_GAMEINSTANCE
+	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
 
 	if (nullptr == pGameInstance)
 		return E_FAIL;

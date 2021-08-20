@@ -19,7 +19,7 @@ HRESULT CLevel_Manager::SetUp_CurrentLevel(CLevel * pCurrentLevel)
 	return S_OK;
 }
 
-_int CLevel_Manager::Tick(_double TimeDelta)
+_int CLevel_Manager::Tick(_float TimeDelta)
 {
 	if (nullptr == m_pCurrentLevel)
 		return -1;

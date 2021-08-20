@@ -20,7 +20,7 @@ using namespace Client;
 
 #include "Loading.h"
 
-#define GET_GAMEINSTANCE CGameInstance::GetInstance();
+#include "Client_Macro.h"
 
 #define __CLIENT_DEFINES_H__
 #endif // !__CLIENT_DEFINES_H__

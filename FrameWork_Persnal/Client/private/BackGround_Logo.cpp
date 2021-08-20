@@ -28,7 +28,7 @@ HRESULT CBackGround_Logo::NativeConstruct(void* pArg)
 	return S_OK;
 }
 
-_int CBackGround_Logo::Tick(_double TimeDelta)
+_int CBackGround_Logo::Tick(_float TimeDelta)
 {
 	if (GetAsyncKeyState('Q') & 0x8000)
 		m_IsReverse = false;
@@ -38,7 +38,7 @@ _int CBackGround_Logo::Tick(_double TimeDelta)
 	return _int();
 }
 
-_int CBackGround_Logo::Late_Tick(_double TimeDelta)
+_int CBackGround_Logo::Late_Tick(_float TimeDelta)
 {
 	if (nullptr == m_pRendererCom)
 		return -1;

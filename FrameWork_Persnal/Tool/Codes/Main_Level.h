@@ -11,7 +11,7 @@ public:
 
 public:
 	virtual HRESULT NativeConstruct() override;
-	virtual _int	Tick(_double Timedelta) override;
+	virtual _int	Tick(_float Timedelta) override;
 	virtual HRESULT Render() override;
 
 private:

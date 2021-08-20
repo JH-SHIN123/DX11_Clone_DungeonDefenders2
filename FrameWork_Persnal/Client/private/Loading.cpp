@@ -2,10 +2,11 @@
 #include "..\public\Loading.h"
 
 #include "BackGround_Logo.h"
-#include "../public/VIBuffer_Terrain.h"
+#include "VIBuffer_Terrain.h"
 
 #include "Terrain.h"
 #include "Status_Panel.h"
+#include "Camera_Free.h"
 
 USING(Engine)
 
@@ -108,6 +109,10 @@ HRESULT CLoading::LoadingForStage()
 
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_StatusPanel")
 		, CStatus_Panel::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Free")
+		, CCamera_Free::Create(m_pDevice, m_pDevice_Context))))
 		return E_FAIL;
 
 

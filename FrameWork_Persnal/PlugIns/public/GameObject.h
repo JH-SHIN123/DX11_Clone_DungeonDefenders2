@@ -16,8 +16,8 @@ protected:
 public:
 	virtual HRESULT NativeConstruct_Prototype();	// Prototype Ready
 	virtual HRESULT NativeConstruct(void* pArg);	// Clone Ready
-	virtual _int Tick(_double TimeDelta);
-	virtual _int Late_Tick(_double TimeDelta);
+	virtual _int Tick(_float TimeDelta);
+	virtual _int Late_Tick(_float TimeDelta);
 	virtual HRESULT Render();
 
 protected:

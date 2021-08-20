@@ -13,7 +13,7 @@ protected:
 	virtual ~CLevel() = default;
 public:
 	virtual HRESULT NativeConstruct();
-	virtual int Tick(_double Timedelta);
+	virtual int Tick(_float Timedelta);
 	virtual HRESULT Render();
 protected:
 	ID3D11Device*					m_pDevice = nullptr;

@@ -26,18 +26,19 @@ HRESULT CStatus_Panel::NativeConstruct(void * pArg)
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale((_fvector)XMVectorSet(200.f, 300.f, 0.f, 0.f));
-	m_pTransformCom->Set_State(EState::Position, (_fvector)XMVectorSet(200.f, 200.f, 0.f, 1.f));
+	m_pTransformCom->Set_Scale(XMVectorSet(200.f, 300.f, 0.f, 0.f));
+	m_pTransformCom->Set_State(EState::Position, XMVectorSet(200.f, 200.f, 0.f, 1.f));
 
 	return S_OK;
 }
 
-_int CStatus_Panel::Tick(_double TimeDelta)
+_int CStatus_Panel::Tick(_float TimeDelta)
 {
 	return _int();
+
 }
 
-_int CStatus_Panel::Late_Tick(_double TimeDelta)
+_int CStatus_Panel::Late_Tick(_float TimeDelta)
 {
 	if (nullptr == m_pRendererCom)
 		return UPDATE_ERROR;

@@ -21,8 +21,8 @@ public:
 public:
 	virtual HRESULT NativeConstruct_Prototype() override;	// Prototype Ready
 	virtual HRESULT NativeConstruct(void* pArg) override;	// Clone Ready
-	virtual _int Tick(_double TimeDelta) override;
-	virtual _int Late_Tick(_double TimeDelta) override;
+	virtual _int Tick(_float TimeDelta) override;
+	virtual _int Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
 protected:

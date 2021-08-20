@@ -21,6 +21,9 @@ HRESULT CMovement::NativeConstruct(void * pArg)
 {
 	__super::NativeConstruct(pArg);
 
+	if (nullptr != pArg)
+		memcpy(&m_MoveStateDesc, pArg, sizeof(MOVESTATE_DESC));
+
 	return S_OK;
 }
 

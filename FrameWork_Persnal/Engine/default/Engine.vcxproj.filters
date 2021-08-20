@@ -73,6 +73,12 @@
     <Filter Include="02.Utility\02.Component\04.Movement">
       <UniqueIdentifier>{461a4303-5f72-42ad-8dc8-2a9fd44aad09}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Utility\01.GameObject\00.Camera">
+      <UniqueIdentifier>{90f8df44-a083-475a-afe8-cf7af7b9a735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\03.Pipeline_Manager">
+      <UniqueIdentifier>{444f0adb-b954-492f-99a4-ecba00bcb55a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
@@ -150,6 +156,12 @@
     <ClInclude Include="..\public\Movement.h">
       <Filter>02.Utility\02.Component\04.Movement</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Camera.h">
+      <Filter>02.Utility\01.GameObject\00.Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Pipeline_Manager.h">
+      <Filter>02.Utility\03.Pipeline_Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -202,6 +214,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Movement.cpp">
       <Filter>02.Utility\02.Component\04.Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera.cpp">
+      <Filter>02.Utility\01.GameObject\00.Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Pipeline_Manager.cpp">
+      <Filter>02.Utility\03.Pipeline_Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

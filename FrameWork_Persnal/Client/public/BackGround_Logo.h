@@ -27,8 +27,8 @@ public:
 	/* 복제된 객체를 초기화하낟. */
 	virtual HRESULT NativeConstruct(void* pArg) override;
 
-	virtual _int Tick(_double TimeDelta) override;
-	virtual _int Late_Tick(_double TimeDelta) override;
+	virtual _int Tick(_float TimeDelta) override;
+	virtual _int Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
 private:

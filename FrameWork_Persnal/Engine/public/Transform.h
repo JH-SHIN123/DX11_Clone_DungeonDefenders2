@@ -29,7 +29,10 @@ public:
 public: // Getter
 	_vector Get_State(EState eState) const;
 	_float	Get_Scale(EState eState) const;
-	_matrix	Get_WorldMatrix() const { return XMLoadFloat4x4(&m_WorldMatrix); }
+	_matrix	Get_WorldMatrix() const 
+		{ return XMLoadFloat4x4(&m_WorldMatrix); }
+	_matrix	Get_WorldMatrix_Inverse() const 
+		{ return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)); }
 
 public:	// Setter
 	void	Set_State(EState eState, _fvector vState);

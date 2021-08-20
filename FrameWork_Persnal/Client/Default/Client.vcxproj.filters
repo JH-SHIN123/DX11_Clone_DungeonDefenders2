@@ -52,6 +52,15 @@
     <Filter Include="03.UI, HUD\00.2D\00.StatusPanel">
       <UniqueIdentifier>{d1696c8b-4ff3-4dcb-9dd7-f557e0580322}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Camera">
+      <UniqueIdentifier>{db493a92-67db-4110-8b2f-6b8d92f56183}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Camera\00.Camera_Free">
+      <UniqueIdentifier>{651c9e53-7069-4c8a-b629-0e97df47a9d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Camera\01.Camera_Target">
+      <UniqueIdentifier>{5ef7d385-bd2d-446c-92cb-c61104155379}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -99,6 +108,12 @@
     <ClInclude Include="..\public\Status_Panel.h">
       <Filter>03.UI, HUD\00.2D\00.StatusPanel</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Camera_Free.h">
+      <Filter>04.Camera\00.Camera_Free</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Camera_Manager.h">
+      <Filter>04.Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -130,6 +145,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Status_Panel.cpp">
       <Filter>03.UI, HUD\00.2D\00.StatusPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera_Free.cpp">
+      <Filter>04.Camera\00.Camera_Free</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera_Manager.cpp">
+      <Filter>04.Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

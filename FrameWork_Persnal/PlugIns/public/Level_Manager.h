@@ -15,7 +15,7 @@ private:
 	virtual ~CLevel_Manager() = default;
 public:
 	HRESULT SetUp_CurrentLevel(class CLevel* pCurrentLevel);
-	_int Tick(_double TimeDelta);
+	_int Tick(_float TimeDelta);
 	HRESULT Render();
 
 private:

@@ -17,7 +17,7 @@ private:
 
 public:
 	virtual HRESULT NativeConstruct(ELevel eNextSceneID);
-	virtual int Tick(_double Timedelta) override;
+	virtual int Tick(_float Timedelta) override;
 	virtual HRESULT Render() override;
 
 private:

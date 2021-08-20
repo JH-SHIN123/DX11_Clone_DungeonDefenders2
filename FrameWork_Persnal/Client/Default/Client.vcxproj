@@ -161,6 +161,8 @@
   <ItemGroup>
     <ClInclude Include="..\Bin\Shader\Shader_Defines.hpp" />
     <ClInclude Include="..\public\BackGround_Logo.h" />
+    <ClInclude Include="..\public\Camera_Free.h" />
+    <ClInclude Include="..\public\Camera_Manager.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Client_Macro.h" />
     <ClInclude Include="..\public\Level_Loading.h" />
@@ -177,6 +179,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\BackGround_Logo.cpp" />
+    <ClCompile Include="..\private\Camera_Free.cpp" />
+    <ClCompile Include="..\private\Camera_Manager.cpp" />
     <ClCompile Include="..\private\Level_Loading.cpp" />
     <ClCompile Include="..\private\Level_Logo.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />

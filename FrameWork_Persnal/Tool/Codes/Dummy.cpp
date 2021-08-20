@@ -25,12 +25,12 @@ HRESULT CDummy::NativeConstruct(void * pArg)
 	return S_OK;
 }
 
-_int CDummy::Tick(_double TimeDelta)
+_int CDummy::Tick(_float TimeDelta)
 {
 	return _int();
 }
 
-_int CDummy::Late_Tick(_double TimeDelta)
+_int CDummy::Late_Tick(_float TimeDelta)
 {
 	return _int();
 }

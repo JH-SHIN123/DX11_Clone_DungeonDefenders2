@@ -19,7 +19,7 @@ HRESULT CLevel_Logo::NativeConstruct()
 	return S_OK;
 }
 
-_int CLevel_Logo::Tick(_double Timedelta)
+_int CLevel_Logo::Tick(_float Timedelta)
 {
 	CLevel::Tick(Timedelta);
 

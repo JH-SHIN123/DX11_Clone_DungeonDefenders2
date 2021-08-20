@@ -13,7 +13,7 @@ HRESULT CLevel::NativeConstruct()
 	return S_OK;
 }
 
-int CLevel::Tick(_double Timedelta)
+int CLevel::Tick(_float Timedelta)
 {
 	return 0;
 }

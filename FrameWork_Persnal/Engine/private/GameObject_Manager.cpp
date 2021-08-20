@@ -81,7 +81,7 @@ HRESULT CGameObject_Manager::Add_GameObject(_uint iPrototypeLevelIndex, const _t
 	return S_OK;
 }
 
-_int CGameObject_Manager::Tick_GameObject(_double TimeDelta)
+_int CGameObject_Manager::Tick_GameObject(_float TimeDelta)
 {
 	_int iProgress = 0;
 

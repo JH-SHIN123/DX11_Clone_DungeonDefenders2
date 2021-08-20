@@ -27,12 +27,12 @@ HRESULT CGameObject::NativeConstruct(void* pArg)
 	return S_OK;
 }
 
-_int CGameObject::Tick(_double TimeDelta)
+_int CGameObject::Tick(_float TimeDelta)
 {
 	return _int();
 }
 
-_int CGameObject::Late_Tick(_double TimeDelta)
+_int CGameObject::Late_Tick(_float TimeDelta)
 {
 	// 자식의 Late_Tick에서 렌더러에 넣는데 이걸
 	// 절두체 컬링으로 판단하게 된다면?

@@ -31,7 +31,7 @@ HRESULT CLevel_Loading::NativeConstruct(ELevel eNextSceneID)
 	return S_OK;
 }
 
-int CLevel_Loading::Tick(_double Timedelta)
+int CLevel_Loading::Tick(_float Timedelta)
 {
 	CLevel::Tick(Timedelta);
 

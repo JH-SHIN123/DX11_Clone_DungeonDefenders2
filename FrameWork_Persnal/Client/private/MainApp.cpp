@@ -39,7 +39,7 @@ _int CMainApp::Update_MainApp(_double TimeDelta)
 	if (nullptr == m_pGameInstance)
 		return -1;
 	// Tick함수 내에서 매 프레임마다 갱신해야 하는 것들이 전부 들어가 있다.
-	return m_pGameInstance->Tick(TimeDelta);	
+	return m_pGameInstance->Tick((_float)TimeDelta);
 }
 
 HRESULT CMainApp::Render_MainApp()
