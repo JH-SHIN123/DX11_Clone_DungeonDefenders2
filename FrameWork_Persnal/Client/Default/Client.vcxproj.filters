@@ -61,6 +61,15 @@
     <Filter Include="04.Camera\01.Camera_Target">
       <UniqueIdentifier>{5ef7d385-bd2d-446c-92cb-c61104155379}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\03.Player">
+      <UniqueIdentifier>{5d6e4b8c-f613-4659-9f96-85ac183e7559}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.DefenceTower">
+      <UniqueIdentifier>{3cc97ea3-dadc-46d9-b680-a4e9d483cd9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster">
+      <UniqueIdentifier>{3228ebb7-601a-4537-8501-6e9d6e96577f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -114,6 +123,7 @@
     <ClInclude Include="..\public\Camera_Manager.h">
       <Filter>04.Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -152,6 +162,7 @@
     <ClCompile Include="..\private\Camera_Manager.cpp">
       <Filter>04.Camera</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

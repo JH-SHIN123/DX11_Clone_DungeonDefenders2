@@ -82,7 +82,6 @@ HRESULT CLevel_Stage1::Ready_Layer_Camera_Free(const _tchar * pLayerTag)
 	CameraDesc.StateDesc.fSpeedPerSec = 100.f;
 	CameraDesc.StateDesc.fRotatePerSec = XMConvertToRadians(90.0f);
 
-
 	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Free"), (_uint)ELevel::Stage1, pLayerTag, &CameraDesc);
 
 	return S_OK;
