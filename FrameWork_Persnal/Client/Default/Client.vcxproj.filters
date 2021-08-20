@@ -43,6 +43,15 @@
     <Filter Include="02.GameObject\00.Loading">
       <UniqueIdentifier>{a411ab72-c4ca-48ca-8258-8223a9a141cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.UI, HUD">
+      <UniqueIdentifier>{8783ab3e-9a64-40aa-b484-fa3897ce11c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\00.2D">
+      <UniqueIdentifier>{831ca00b-e15d-4674-9be4-9e996d6926b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\00.2D\00.StatusPanel">
+      <UniqueIdentifier>{d1696c8b-4ff3-4dcb-9dd7-f557e0580322}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -87,6 +96,9 @@
     <ClInclude Include="..\public\Terrain.h">
       <Filter>02.GameObject\02.Stage\00.Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Status_Panel.h">
+      <Filter>03.UI, HUD\00.2D\00.StatusPanel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -115,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Terrain.cpp">
       <Filter>02.GameObject\02.Stage\00.Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Status_Panel.cpp">
+      <Filter>03.UI, HUD\00.2D\00.StatusPanel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

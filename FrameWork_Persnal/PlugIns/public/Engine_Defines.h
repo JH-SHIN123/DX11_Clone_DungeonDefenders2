@@ -44,5 +44,11 @@ using namespace std;
 
 using namespace Engine;
 
+
+
+#define UPDATE_ERROR -1
+#define OBJECT_DEAD 1
+
+
 #define __ENGINE_DEFINES_H__
 #endif // !__ENGINE_DEFINES_H__

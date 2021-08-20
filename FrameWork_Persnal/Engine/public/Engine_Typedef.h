@@ -1,5 +1,4 @@
 #ifndef __Engine_Typedef_h__
-#define __Engine_Typedef_h__
 
 namespace Engine
 {
@@ -24,14 +23,21 @@ namespace Engine
 	typedef		float					_float;
 	typedef		double					_double;
 
-	typedef		XMFLOAT2				_float2;
-	typedef		XMFLOAT3				_float3;
-	typedef		XMFLOAT4				_float4;
+	typedef		XMFLOAT2				_float2;		// Member
+	typedef		XMFLOAT3				_float3;		// Member
+	typedef		XMFLOAT4				_float4;		// Member
 
-	typedef		XMVECTOR				_vector;
+	typedef		XMVECTOR				_vector;		// Local
+	typedef		FXMVECTOR				_fvector;		// Parameter 1st ~ 3rd
+	typedef		GXMVECTOR				_gvector;		// Parameter 4th
+	typedef		HXMVECTOR				_hvector;		// Parameter 5th ~ 6th
 
-	typedef		XMFLOAT4X4				_float4x4;
-	typedef		XMMATRIX				_matrix;	
+	typedef		XMFLOAT4X4				_float4x4;		// Member
+
+	typedef		XMMATRIX				_matrix;		// Local
+	typedef		FXMMATRIX				_fmatrix;		// Parameter 1st
+	typedef		CXMMATRIX				_cmatrix;		// Parameter 2nd ~ 
 }
 
+#define __Engine_Typedef_h__
 #endif // __Engine_Typedef_h__

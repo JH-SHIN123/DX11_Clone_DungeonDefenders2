@@ -5,6 +5,7 @@
 #include "../public/VIBuffer_Terrain.h"
 
 #include "Terrain.h"
+#include "Status_Panel.h"
 
 USING(Engine)
 
@@ -65,10 +66,10 @@ HRESULT CLoading::LoadingForLogo()
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Devil.png")))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Prototype_BackGround")
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Prototype_BackGround_Logo")
 		, CBackGround_Logo::Create(m_pDevice, m_pDevice_Context))))
 		return E_FAIL;
-
 
 
 	m_isFinished = true;
@@ -83,19 +84,32 @@ HRESULT CLoading::LoadingForStage()
 
 	SetWindowText(g_hWnd, TEXT("TMXPDLWL로딩 시작"));
 
-	/* 컴포넌트 원형을 생성ㄹ하자. */
+	// 앵간하면 GameObject가 Component를 가지는 구조가 되니까 Component를 먼저 생성하는게 깔끔함
+
+	/* 컴포넌트 원형을 생성하자. */
+	// 터레인은 생성 되면서 높이맵과 쉐이더 그리고 해당 쉐이더의 테크닉(네임스페이스 개념)을 받고있다
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_Terrain")
 		, CVIBuffer_Terrain::Create(m_pDevice, m_pDevice_Context, L"../Bin/Resources/Textures/Height.bmp", TEXT("../Bin/Shader/Shader_Terrain.hlsl"), "DefaultTechnique"))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_StatusPanel")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StatusPanel/StatusPanel.tga")))))
+		return E_FAIL;
+	
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Devil")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Devil.png")))))
 		return E_FAIL;
+
 
 	/* 객체 프로토타입을 생성하자. */
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Terrain")
 		, CTerrain::Create(m_pDevice, m_pDevice_Context))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_StatusPanel")
+		, CStatus_Panel::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
 
 	m_isFinished = true;
 

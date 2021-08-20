@@ -3,8 +3,14 @@
 
 
 #ifndef MSG_BOX
-#define	MSG_BOX(_message)			MessageBox(NULL, TEXT(_message), L"System Message", MB_OK)
-#endif
+#define	MSG_BOX(message)			MessageBox(NULL, TEXT(message), L"System Message", MB_OK)
+#endif // !MSG_BOX
+
+#ifndef MSG_BOX_L
+#define MSG_BOX_L(caption, message)			MessageBox(NULL, message, caption, MB_OK)
+#endif // !MSG_BOX_L
+
+
 
 
 #define			BEGIN(NAMESPACE)		namespace NAMESPACE {

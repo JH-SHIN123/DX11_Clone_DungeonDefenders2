@@ -62,18 +62,25 @@ HRESULT CTerrain::Render()
 	
 
 
-	_matrix			WorldMatrix, ViewMatrix, ProjMatrix;
+	_matrix			WorldMatrix, ViewMatrix, ProjMatrix, OrthMatrix;
 
 	WorldMatrix = XMMatrixIdentity();
-	ViewMatrix = XMMatrixLookAtLH(XMVectorSet(0.f, 10.f, -7.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f));
+	ViewMatrix = XMMatrixLookAtLH(XMVectorSet(0.f, 7.f, -1.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f));
 	ProjMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), (_float)g_iWinCX / g_iWinCY, 0.2f, 300.f);
+	OrthMatrix = XMMatrixOrthographicLH((_float)g_iWinCX, (_float)g_iWinCY, 0.2f, 300.f);
 
-	
+	// 행렬이 들어갈때 전치 행렬로 바뀌기 때문에 전치행렬로 바뀌기 전에 직접 전치 행렬로 바꿔 전치전치 행렬이 된다.
+	// 당연히 전치전치행렬이라는 개소리는 없으며 일반 평범한 행렬이다. 360도 회전과 같음
 	m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(WorldMatrix), sizeof(_matrix));
 	m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(ViewMatrix), sizeof(_matrix));
-	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(ProjMatrix), sizeof(_matrix));
+	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(OrthMatrix), sizeof(_matrix));
+
+	// 이미지 세팅 g_DiffuseTexture에다가 m_pTextureCom의 0번째의 리소스를 넣어주시오.
 	m_pVIBufferCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
 
+
+	// 0번째 쉐이더를 이용해 그릴게
+	// 쉐이더 세팅은 Prototype을 생성하면서 세팅을 함
 	m_pVIBufferCom->Render(0);
 
 	return S_OK;
@@ -81,7 +88,8 @@ HRESULT CTerrain::Render()
 
 HRESULT CTerrain::Ready_Component()
 {
-	CGameInstance*	pGameInstance = CGameInstance::GetInstance();
+	CGameInstance* pGameInstance = GET_GAMEINSTANCE
+
 	if (nullptr == pGameInstance)
 		return E_FAIL;
 
@@ -99,7 +107,6 @@ HRESULT CTerrain::Ready_Component()
 	/* For.Textures */
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_Devil"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
-
 
 
 

@@ -61,7 +61,21 @@ VS_OUT VS_MAIN(VS_IN In)
 	// 근데 조명도 픽셀의 색이니 결국 픽셀 쉐이더 단계에 가는게 맞나?
 }
 
+VS_OUT VS_MAIN_UI(VS_IN In)
+{
+	VS_OUT			Out = (VS_OUT)0;
 
+	Out.vPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);
+
+	vector		vPosition = vector(In.vPosition, 1.f);
+	// w가 크면 작아짐
+	// Z 나누기가 이 정점쉐이더 후에 되고있다는 증거가 아닐까
+
+	Out.vPosition = vPosition;
+	Out.vTexUV = In.vTexUV; // 텍스처 UV
+
+	return Out;
+}
 
 struct PS_IN
 {
@@ -100,6 +114,15 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_Default, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN();
+		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+
+	pass UI
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_Default, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI();
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 };

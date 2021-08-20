@@ -103,6 +103,9 @@ HRESULT CVIBuffer::Set_Variable(const char * pConstanceName, void * pData, _int 
 		return E_FAIL;
 
 	return pVariable->SetRawValue(pData, 0, iByteSize);
+	// pConstanceName 쉐이더의 전역변수명
+	// pData 어떤 값을 줄것인지
+	// iByteSize 넘기려는 데이터의 사이즈
 }
 
 HRESULT CVIBuffer::Set_ShaderResourceView(const char * pConstanceName, ID3D11ShaderResourceView * pResourceView)

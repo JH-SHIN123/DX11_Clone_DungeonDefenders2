@@ -44,6 +44,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Terrain(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Terrain"), (_uint)ELevel::Stage1, pLayerTag);
+	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_StatusPanel"), (_uint)ELevel::Stage1, TEXT("layer_UI"));
 
 	return S_OK;
 }
@@ -65,5 +66,5 @@ void CLevel_Stage1::Free()
 {
 	CLevel::Free();
 
-
+	
 }

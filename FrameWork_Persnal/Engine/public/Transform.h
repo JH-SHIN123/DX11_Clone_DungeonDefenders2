@@ -1,0 +1,51 @@
+#pragma once
+
+/* For. Static State*/
+/* what if you want to Dynamic State. used Movement Component*/
+
+#ifndef __TRANSFORM_H__
+
+#include "Component.h"
+
+BEGIN(Engine)
+
+enum class EState
+{Right, Up, Look, Position, End};
+
+enum class ERotateEuler
+{Right, Up, Look, End};
+
+class ENGINE_DLL CTransform : public CComponent
+{
+protected:
+	explicit CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
+	explicit CTransform(const CTransform& rhs);
+	virtual ~CTransform() = default;
+
+public:
+	virtual HRESULT NativeConstruct_Prototype() override;
+	virtual HRESULT NativeConstruct(void* pArg) override;
+
+public: // Getter
+	_vector Get_State(EState eState) const;
+	_float	Get_Scale(EState eState) const;
+	_matrix	Get_WorldMatrix() const { return XMLoadFloat4x4(&m_WorldMatrix); }
+
+public:	// Setter
+	void	Set_State(EState eState, _fvector vState);
+	void	Set_RotateAxis(_fvector vAxis, _float fRadian);
+	void	Set_WorldMatrix(const _fmatrix& WorldMatrix) { XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix); }
+	void	Set_WorldMatrix(const _float4x4& WorldMatrix) { m_WorldMatrix = WorldMatrix; }
+
+private:
+	_float4x4		m_WorldMatrix;
+
+public:
+	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
+	virtual CComponent* Clone(void* pArg) override;
+	virtual void Free() override;
+};
+
+END
+#define __TRANSFORM_H__
+#endif // !__TRANSFORM_H__

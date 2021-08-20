@@ -21,11 +21,14 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* pHeightMapPat
 	// For.VertexBuffer
 	m_iNumVertexBuffers = 1; // 정점 배열을 몇개 할것이니
 
+	// 읽을 파일 만들고
 	m_hFile = CreateFile(pHeightMapPath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (0 == m_hFile)
 		return E_FAIL;
 
 	_ulong	dwByte = 0;
+
+	// bmp 파일은 세번 읽어야 제맛
 
 	ReadFile(m_hFile, &m_fh, sizeof(m_fh), &dwByte, nullptr);
 	if (0 == m_hFile)
@@ -35,11 +38,14 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* pHeightMapPat
 	if (0 == m_hFile)
 		return E_FAIL;
 
+	// 두번째로 읽은 Info Header에는 해당 bmp이미지의 길이(픽셀 수)를 가지고 있다
+	// 바로 대입하고 있는데 이게 인터벌값을 정의 하지 않았지만 인터벌을 1.f로 사용 하려고 그런거
 	m_dwNumVerticesX = m_ih.biWidth;
 	m_dwNumVerticesZ = m_ih.biHeight;
 
 	_ulong dwNumVertices = m_dwNumVerticesX * m_dwNumVerticesZ;
 
+	// 픽셀 수 만큼 할당
 	m_pPixels = new _ulong[dwNumVertices];
 
 	ReadFile(m_hFile, m_pPixels, sizeof(_ulong) * dwNumVertices, &dwByte, nullptr);
@@ -50,6 +56,7 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* pHeightMapPat
 
 	CloseHandle(m_hFile);
 
+	// 정점의 개수 = dwNumVertices
 	if (FAILED(CVIBuffer::SetUp_VertexBuffer_Desc(dwNumVertices, sizeof(VTXNORTEX), D3D11_USAGE_IMMUTABLE, D3D11_BIND_VERTEX_BUFFER, 0)))
 		return E_FAIL;
 
@@ -63,7 +70,7 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* pHeightMapPat
 		{
 			_uint		iIndex = i * m_dwNumVerticesX + j;
 
-			pVertices[iIndex].vPosition = _float3(j * fVertexInterval, (m_pPixels[iIndex] & 0x000000ff) / 30.0f, i * fVertexInterval);
+			pVertices[iIndex].vPosition = _float3(j * fVertexInterval, (m_pPixels[iIndex] & 0x000000ff) / 20.0f, i * fVertexInterval);
 			pVertices[iIndex].vTexUV = _float2((_float)j / (m_dwNumVerticesX - 1), (_float)i / (m_dwNumVerticesZ - 1));
 		}
 	}
@@ -87,13 +94,11 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* pHeightMapPat
 
 			pPolygonIndices[iNumPolygons]._0 = iIndex + m_dwNumVerticesX;
 			pPolygonIndices[iNumPolygons]._1 = iIndex + m_dwNumVerticesX + 1;
-			pPolygonIndices[iNumPolygons]._2 = iIndex + 1;
-			++iNumPolygons;
+			pPolygonIndices[iNumPolygons++]._2 = iIndex + 1;
 
 			pPolygonIndices[iNumPolygons]._0 = iIndex + m_dwNumVerticesX;
 			pPolygonIndices[iNumPolygons]._1 = iIndex + 1;
-			pPolygonIndices[iNumPolygons]._2 = iIndex;
-			++iNumPolygons;
+			pPolygonIndices[iNumPolygons++]._2 = iIndex;
 		}
 	}
 
@@ -103,11 +108,14 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* pHeightMapPat
 	if (FAILED(CVIBuffer::NativeConstruct_Prototype()))
 		return E_FAIL;
 
+	// 엇 Rect와 다른데 왜 되는거냐, 쉐이더파일이 별개다
 	D3D11_INPUT_ELEMENT_DESC			ElementDesc[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
+	// 근데 쉐이더 구조체의 이름을 직접 명시한 적이 없는데 어떻게 알아 먹을까
+	// 위에서 정해준 시멘틱스와 데이터 크기를 가지고 판단을 하나?
 
 	if (FAILED(CVIBuffer::SetUp_InputLayOuts(ElementDesc, 3, pShaderFilePath, pTechniqueName)))
 		return E_FAIL;

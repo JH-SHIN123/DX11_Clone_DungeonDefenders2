@@ -24,7 +24,14 @@ HRESULT CComponent_Manager::Add_Prototype(_uint iNumLevels, const _tchar * pComp
 		nullptr == pPrototype ||
 		nullptr == m_pComponents ||
 		nullptr != Find_Component(iNumLevels, pComponentTag)) // 얘는 중복값이라는 소리
+	{
+		_tchar szMSG[MAX_PATH] = L"Can't Add Prototype ( ";
+		lstrcat(szMSG, pComponentTag);
+		lstrcat(szMSG, L" )");
+
+		MSG_BOX_L(L"Component", szMSG);
 		return E_FAIL;
+	}
 
 	m_pComponents[iNumLevels].insert(COMPONENTS::value_type(pComponentTag, pPrototype));
 
@@ -40,7 +47,14 @@ CComponent * CComponent_Manager::Clone_Component(_uint iNumLevels, const _tchar 
 	CComponent* pComponent = Find_Component(iNumLevels, pComponentTag);
 
 	if (nullptr == pComponent)
+	{
+		_tchar szMSG[MAX_PATH] = L"Can't Clone Component ( ";
+		lstrcat(szMSG, pComponentTag);
+		lstrcat(szMSG, L" )");
+
+		MSG_BOX_L(L"Component", szMSG);
 		return nullptr;
+	}
 
 	return pComponent->Clone(pArg);
 }

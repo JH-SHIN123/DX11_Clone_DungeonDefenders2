@@ -24,9 +24,16 @@ HRESULT CGameObject_Manager::Add_Prototype(_uint iLevelIndex, const _tchar* pPro
 {
 	if (nullptr == m_pPrototypes ||
 		nullptr == pPrototype ||
-		iLevelIndex >= m_iNumLevels || 
+		iLevelIndex >= m_iNumLevels ||
 		nullptr != Find_Prototype(iLevelIndex, pPrototypeTag))
+	{
+		_tchar szMSG[MAX_PATH] = L"Can't Add Prototype ( ";
+		lstrcat(szMSG, pPrototypeTag);
+		lstrcat(szMSG, L" )");
+
+		MSG_BOX_L(L"GameObject", szMSG);
 		return E_FAIL;
+	}
 
 	m_pPrototypes[iLevelIndex].insert(PROTOTYPES::value_type(pPrototypeTag, pPrototype));
 
@@ -44,7 +51,14 @@ HRESULT CGameObject_Manager::Add_GameObject(_uint iPrototypeLevelIndex, const _t
 	CGameObject*	pPrototype = Find_Prototype(iPrototypeLevelIndex, pPrototypeTag);
 
 	if (nullptr == pPrototype)
+	{
+		_tchar szMSG[MAX_PATH] = L"Can't Find Prototype ( ";
+		lstrcat(szMSG, pPrototypeTag);
+		lstrcat(szMSG, L" )");
+
+		MSG_BOX_L(L"GameObject", szMSG);
 		return E_FAIL;
+	}
 
 	/* 우너형객체를 복제하여 새객체를 만드낟.ㅏ */
 	CGameObject*	pGameObject = pPrototype->Clone_GameObject(pArg);

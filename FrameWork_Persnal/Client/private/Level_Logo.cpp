@@ -54,7 +54,7 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	pGameInstance->Add_GameObject((_uint)ELevel::Logo, TEXT("Prototype_BackGround"), (_uint)ELevel::Logo, pLayerTag);
+	pGameInstance->Add_GameObject((_uint)ELevel::Logo, TEXT("Prototype_BackGround_Logo"), (_uint)ELevel::Logo, pLayerTag);
 
 	return S_OK;
 }

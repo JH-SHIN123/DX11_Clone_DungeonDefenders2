@@ -67,6 +67,12 @@
     <Filter Include="98.SuperClass\Base">
       <UniqueIdentifier>{63f72c0d-56f2-419b-9ee3-407e6e72ccce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Utility\02.Component\03.Transform">
+      <UniqueIdentifier>{d563ba1e-aa3e-4034-943d-c6972ccf7e3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\04.Movement">
+      <UniqueIdentifier>{461a4303-5f72-42ad-8dc8-2a9fd44aad09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
@@ -138,6 +144,12 @@
     <ClInclude Include="..\public\VIBuffer_Terrain.h">
       <Filter>02.Utility\02.Component\01.Buffer\01.Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Transform.h">
+      <Filter>02.Utility\02.Component\03.Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Movement.h">
+      <Filter>02.Utility\02.Component\04.Movement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -184,6 +196,12 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Terrain.cpp">
       <Filter>02.Utility\02.Component\01.Buffer\01.Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Transform.cpp">
+      <Filter>02.Utility\02.Component\03.Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Movement.cpp">
+      <Filter>02.Utility\02.Component\04.Movement</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

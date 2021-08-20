@@ -43,7 +43,7 @@ protected: // For.Indices
 	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;
 
 protected: /* For.Shader */
-	ID3DX11Effect*				m_pEffect = nullptr;
+	ID3DX11Effect*				m_pEffect = nullptr; // 쉐이더와 관련된 무언가는 이객체를 꼭 사용 하도록 되어있다.
 
 	vector<INPUTLAYOUTDESC>		m_InputLayouts;
 
