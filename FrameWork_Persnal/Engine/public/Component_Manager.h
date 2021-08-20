@@ -6,6 +6,8 @@
 #include "Renderer.h"
 #include "Textures.h"
 #include "VIBuffer.h"
+#include "Transform.h"
+#include "Movement.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Terrain.h"
 

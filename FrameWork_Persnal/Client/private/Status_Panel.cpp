@@ -26,6 +26,9 @@ HRESULT CStatus_Panel::NativeConstruct(void * pArg)
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
+	m_pTransformCom->Set_Scale((_fvector)XMVectorSet(200.f, 300.f, 0.f, 0.f));
+	m_pTransformCom->Set_State(EState::Position, (_fvector)XMVectorSet(200.f, 200.f, 0.f, 1.f));
+
 	return S_OK;
 }
 
@@ -52,11 +55,11 @@ HRESULT CStatus_Panel::Render()
 
 	matWorld = XMMatrixIdentity();
 	matView = XMMatrixIdentity();
-	matProj = XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), (_float)g_iWinCX / g_iWinCY, 0.2f, 300.f);
+	matProj = XMMatrixOrthographicLH((_float)g_iWinCX, (_float)g_iWinCY, 0.f, 1.f);
 
-	m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(matWorld), sizeof(_matrix));
+	m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransformCom->Get_WorldMatrix()), sizeof(_matrix));
 	m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(matView), sizeof(_matrix));
-	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(matWorld), sizeof(_matrix));
+	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(matProj), sizeof(_matrix));
 
 	m_pVIBufferCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
 
@@ -75,9 +78,14 @@ HRESULT CStatus_Panel::Ready_Component()
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
+	/* For.Transform */
+	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
+		return E_FAIL;
+
 	/* For.Texture */
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_StatusPanel"), TEXT("Com_Texture_StatusPanel"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -108,6 +116,7 @@ void CStatus_Panel::Free()
 {
 	CGameObject::Free();
 	
+	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pTextureCom);

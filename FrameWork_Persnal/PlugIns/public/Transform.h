@@ -1,7 +1,7 @@
 #pragma once
 
 /* For. Static State*/
-/* what if you want to Dynamic State. used Movement Component*/
+/* what if you want to Dynamic State. may used Movement Component*/
 
 #ifndef __TRANSFORM_H__
 
@@ -33,10 +33,15 @@ public: // Getter
 
 public:	// Setter
 	void	Set_State(EState eState, _fvector vState);
+	void	Set_Scale(_fvector vScale); // only scale
 	void	Set_RotateAxis(_fvector vAxis, _float fRadian);
 	void	Set_WorldMatrix(const _fmatrix& WorldMatrix) { XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix); }
 	void	Set_WorldMatrix(const _float4x4& WorldMatrix) { m_WorldMatrix = WorldMatrix; }
 
+public:	// Rotate
+	void	RotateToTarget(_fvector vTargetPos);
+	void	RotateToTargetOnLand(_fvector vTargetPos);
+	
 private:
 	_float4x4		m_WorldMatrix;
 

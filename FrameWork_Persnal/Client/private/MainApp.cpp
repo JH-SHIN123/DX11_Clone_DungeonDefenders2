@@ -76,13 +76,22 @@ HRESULT CMainApp::Ready_Component_PrototypeForStatic()
 		return E_FAIL;
 
 	/* Renderer */
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Renderer"), m_pRenderer = CRenderer::Create(m_pDevice, m_pDevice_Context))))
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Renderer")
+		, m_pRenderer = CRenderer::Create(m_pDevice, m_pDevice_Context))))
 		return E_FAIL;
 	Safe_AddRef(m_pRenderer);
 
 
-
 	/* Transform */
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Transform")
+		, CTransform::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
+	/* Movement */
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Movement")
+		, CMovement::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
 
 	// For. VIBuffer_RECT
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect")

@@ -73,8 +73,6 @@ HRESULT CBackGround_Logo::Ready_Component()
 
 	Safe_AddRef(pGameInstance);
 
-
-
 	/* For.Renderer*/
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
@@ -86,19 +84,11 @@ HRESULT CBackGround_Logo::Ready_Component()
 
 
 
-
-
-
-
-
-
-
 	/* For.Textures */
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Logo, TEXT("Component_Texture_Devil"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 	/* For.Transform */
-
 
 
 

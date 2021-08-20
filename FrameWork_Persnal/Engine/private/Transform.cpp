@@ -31,7 +31,10 @@ _vector CTransform::Get_State(EState eState) const
 
 _float CTransform::Get_Scale(EState eState) const
 {
-	return XMVectorGetIntX(XMVector3Length(XMLoadFloat3((_float3*)(&m_WorldMatrix.m[(_uint)eState][0]))));
+	if (EState::Position == eState)
+		return 0.f;
+
+	return XMVectorGetX(XMVector3Length(XMLoadFloat3((_float3*)(&m_WorldMatrix.m[(_uint)eState][0]))));
 }
 
 void CTransform::Set_State(EState eState, _fvector vState)
@@ -39,17 +42,66 @@ void CTransform::Set_State(EState eState, _fvector vState)
 	memcpy(&m_WorldMatrix.m[(_uint)eState][0], &vState, sizeof(_vector));
 }
 
+void CTransform::Set_Scale(_fvector vScale)
+{
+	// Ω∫¿⁄¿Ã
+	_vector vPosition = Get_State(EState::Position);
+	_matrix ScaleMatrix = XMMatrixScalingFromVector(vScale);
+	_float4x4 Scale4x4;
+	XMStoreFloat4x4(&Scale4x4, ScaleMatrix);
+	memcpy(&Scale4x4.m[(_uint)EState::Position][0], &vPosition, sizeof(_vector));
+	m_WorldMatrix = Scale4x4;
+	//memcpy(&ScaleMatrix.m[(_uint)EState::Position][0], &vPosition, sizeof(_vector));
+}
+
 void CTransform::Set_RotateAxis(_fvector vAxis, _float fRadian)
 {
-	_vector	vRight	= XMVectorSet( 1.f, 0.f, 0.f, 0.f ) * XMVectorGetIntX(XMVector3Length(XMLoadFloat3((_float3*)&m_WorldMatrix.m[(_uint)EState::Right][0])));
-	_vector	vUp		= XMVectorSet( 0.f, 1.f, 0.f, 0.f ) * XMVectorGetIntX(XMVector3Length(XMLoadFloat3((_float3*)&m_WorldMatrix.m[(_uint)EState::Up][0])));
-	_vector	vLook	= XMVectorSet( 0.f, 0.f, 1.f, 0.f ) * XMVectorGetIntX(XMVector3Length(XMLoadFloat3((_float3*)&m_WorldMatrix.m[(_uint)EState::Look][0])));
+	_vector	vRight	= XMVectorSet(1.f, 0.f, 0.f, 0.f) * Get_Scale(EState::Right);
+	_vector	vUp		= XMVectorSet(0.f, 1.f, 0.f, 0.f) * Get_Scale(EState::Up);
+	_vector	vLook	= XMVectorSet(0.f, 0.f, 1.f, 0.f) * Get_Scale(EState::Look);
 
 	_matrix	RotateMatrix = XMMatrixRotationAxis(vAxis, fRadian);
 
 	Set_State(EState::Right, XMVector3TransformNormal(vRight, RotateMatrix));
 	Set_State(EState::Up, XMVector3TransformNormal(vUp, RotateMatrix));
 	Set_State(EState::Look, XMVector3TransformNormal(vLook, RotateMatrix));
+}
+
+void CTransform::RotateToTarget(_fvector vTargetPos)
+{
+	_vector	vRight, vUp, vLook;
+	_vector	vPosition;
+
+	vPosition = Get_State(EState::Position);
+
+	_vector		vDirection = vTargetPos - vPosition;
+
+	vLook	= XMVector3Normalize(vDirection) * Get_Scale(EState::Look);
+	vRight	= XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook)) * Get_Scale(EState::Right);
+	vUp		= XMVector3Normalize(XMVector3Cross(vLook, vRight)) * Get_Scale(EState::Up);
+
+	Set_State(EState::Right, vRight);
+	Set_State(EState::Up, vUp);
+	Set_State(EState::Look, vLook);
+}
+
+void CTransform::RotateToTargetOnLand(_fvector vTargetPos)
+{
+	_vector	vRight, vUp, vLook;
+	_vector	vPosition;
+
+	vPosition = Get_State(EState::Position);
+
+	_vector		vDirection = vTargetPos - vPosition;
+
+	vLook	= XMVector3Normalize(vDirection) * Get_Scale(EState::Look);
+	vRight	= XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook)) * Get_Scale(EState::Right);
+	vUp		= Get_State(EState::Up);
+	vLook	= XMVector3Normalize(XMVector3Cross(vRight, vUp)) * Get_Scale(EState::Look);
+
+	Set_State(EState::Right, vRight);
+	Set_State(EState::Up, vUp);
+	Set_State(EState::Look, vLook);
 }
 
 CTransform * CTransform::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

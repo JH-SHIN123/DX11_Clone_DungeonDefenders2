@@ -65,13 +65,25 @@ VS_OUT VS_MAIN_UI(VS_IN In)
 {
 	VS_OUT			Out = (VS_OUT)0;
 
-	Out.vPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);
+	//Out.vPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);
 
-	vector		vPosition = vector(In.vPosition, 1.f);
+	//vector		vPosition = vector(In.vPosition, 1.f);
+	//Out.vPosition = vPosition;
 	// w가 크면 작아짐
 	// Z 나누기가 이 정점쉐이더 후에 되고있다는 증거가 아닐까
 
-	Out.vPosition = vPosition;
+	matrix		matWV, matWVP;
+
+	matWV = mul(WorldMatrix, ViewMatrix);
+	matWVP = mul(matWV, ProjMatrix);
+
+	// 이미지는 왼쪽에서 읽는건 동일하지만
+	// 위에서부터 읽고
+	// 아래에서 그리니
+	// 위아래가 반전된다
+
+	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+
 	Out.vTexUV = In.vTexUV; // 텍스처 UV
 
 	return Out;

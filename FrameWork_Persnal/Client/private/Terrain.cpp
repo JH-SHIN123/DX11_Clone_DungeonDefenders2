@@ -65,7 +65,7 @@ HRESULT CTerrain::Render()
 	_matrix			WorldMatrix, ViewMatrix, ProjMatrix, OrthMatrix;
 
 	WorldMatrix = XMMatrixIdentity();
-	ViewMatrix = XMMatrixLookAtLH(XMVectorSet(0.f, 7.f, -1.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f));
+	ViewMatrix = XMMatrixLookAtLH(XMVectorSet(0.f, 7.f, -1.f, 1.f), XMVectorSet(30.f, 0.f, 30.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f));
 	ProjMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), (_float)g_iWinCX / g_iWinCY, 0.2f, 300.f);
 	OrthMatrix = XMMatrixOrthographicLH((_float)g_iWinCX, (_float)g_iWinCY, 0.2f, 300.f);
 
@@ -73,7 +73,7 @@ HRESULT CTerrain::Render()
 	// 당연히 전치전치행렬이라는 개소리는 없으며 일반 평범한 행렬이다. 360도 회전과 같음
 	m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(WorldMatrix), sizeof(_matrix));
 	m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(ViewMatrix), sizeof(_matrix));
-	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(OrthMatrix), sizeof(_matrix));
+	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(ProjMatrix), sizeof(_matrix));
 
 	// 이미지 세팅 g_DiffuseTexture에다가 m_pTextureCom의 0번째의 리소스를 넣어주시오.
 	m_pVIBufferCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
