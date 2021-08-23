@@ -7,6 +7,7 @@
 #include "GameObject_Manager.h"
 #include "Component_Manager.h"
 #include "Pipeline_Manager.h"
+#include "InputDev.h"
 
 /* 싱글톤. */
 /* 엔진프로젝트 하나에 딱 한번만 할당된다. */
@@ -61,6 +62,10 @@ public:
 	_matrix Get_Transform(ETransformState eState);
 #pragma  endregion
 
+#pragma  region InputDev
+	CInputDev* Get_InputDev() { return m_pInputDev_Manager; }
+#pragma  endregion
+
 
 private:
 	CGraphic_Device*				m_pGraphic_Device = nullptr;
@@ -68,6 +73,7 @@ private:
 	CGameObject_Manager*			m_pGameObject_Manager = nullptr;
 	CComponent_Manager*				m_pComponent_Manager = nullptr;
 	CPipeline_Manager*				m_pPipeline_manager = nullptr;
+	CInputDev*						m_pInputDev_Manager = nullptr;
 
 public:
 	static _ulong	Release_Engine();

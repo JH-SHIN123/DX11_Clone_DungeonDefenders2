@@ -28,6 +28,9 @@
     <ClCompile Include="..\Codes\DataManager.cpp">
       <Filter>04.DataManager</Filter>
     </ClCompile>
+    <ClCompile Include="MapTool.cpp">
+      <Filter>Tool\MapTool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -68,6 +71,9 @@
     </ClInclude>
     <ClInclude Include="..\Codes\DataManager.h">
       <Filter>04.DataManager</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTool.h">
+      <Filter>Tool\MapTool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +120,12 @@
     </Filter>
     <Filter Include="04.DataManager">
       <UniqueIdentifier>{646329f1-9c01-4cc7-bbe7-00569942db51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tool">
+      <UniqueIdentifier>{ee7a2066-51eb-4237-80a3-47236f6f778e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tool\MapTool">
+      <UniqueIdentifier>{4623ef43-1bf5-4dc1-933c-9e5ffec844b1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

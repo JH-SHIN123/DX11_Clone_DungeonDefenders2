@@ -1,8 +1,9 @@
 #pragma once
 
 
-
 // CForm 폼 뷰입니다.
+#include "MapTool.h"
+
 
 class CForm : public CFormView
 {
@@ -27,6 +28,12 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
 	DECLARE_MESSAGE_MAP()
+
+public:
+	CMapTool m_tMapTool;
+
+public:
+	afx_msg void OnBnClickedButton1();
 };
 
 

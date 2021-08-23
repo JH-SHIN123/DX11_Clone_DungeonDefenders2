@@ -8,6 +8,7 @@ CGameInstance::CGameInstance()
 	, m_pGameObject_Manager(CGameObject_Manager::GetInstance())
 	, m_pComponent_Manager(CComponent_Manager::GetInstance())
 	, m_pPipeline_manager(CPipeline_Manager::GetInstance())
+	, m_pInputDev_Manager(CInputDev::GetInstance())
 {
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pGameObject_Manager);
