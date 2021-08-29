@@ -2,18 +2,17 @@
 
 #ifndef __INPUTDEV_H__
 
-#include "Base.h"
 #include "Engine_Defines.h"
+#include "Base.h"
 
 BEGIN(Engine)
-
-class CInputDev final : public CBase
+class ENGINE_DLL CInputDev final : public CBase
 {
 	DECLARE_SINGLETON(CInputDev)
 
 private:
-	explicit CInputDev(void);
-	virtual ~CInputDev(void);
+	explicit CInputDev();
+	virtual ~CInputDev();
 
 public:
 	_byte	Get_DIKeyState(_ubyte byKeyID) { return m_byKeyState[byKeyID]; }
@@ -44,7 +43,8 @@ private:
 	DIMOUSESTATE			m_tMouseState;
 
 public:
-	virtual void Free() override;
+	virtual void		Free();
+
 };
 
 END

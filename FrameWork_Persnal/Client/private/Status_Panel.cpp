@@ -26,16 +26,17 @@ HRESULT CStatus_Panel::NativeConstruct(void * pArg)
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(XMVectorSet(200.f, 300.f, 0.f, 0.f));
-	m_pTransformCom->Set_State(EState::Position, XMVectorSet(200.f, 200.f, 0.f, 1.f));
+	m_pTransformCom->Set_Scale(XMVectorSet(512.f, 256.f, 0.f, 0.f));
+	m_pTransformCom->Set_State(EState::Position, XMVectorSet(-380.f, -236.f, 0.f, 1.f));
 
 	return S_OK;
 }
 
 _int CStatus_Panel::Tick(_float TimeDelta)
 {
-	return _int();
 
+
+	return _int();
 }
 
 _int CStatus_Panel::Late_Tick(_float TimeDelta)
@@ -43,8 +44,7 @@ _int CStatus_Panel::Late_Tick(_float TimeDelta)
 	if (nullptr == m_pRendererCom)
 		return UPDATE_ERROR;
 
-
-	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Alpha, this);
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::FrameUI, this);
 }
 
 HRESULT CStatus_Panel::Render()
@@ -52,19 +52,17 @@ HRESULT CStatus_Panel::Render()
 	if (nullptr == m_pVIBufferCom)
 		return UPDATE_ERROR;
 
-	_matrix matWorld, matView, matProj;
+	m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
+	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
 
-	matWorld = XMMatrixIdentity();
-	matView = XMMatrixIdentity();
-	matProj = XMMatrixOrthographicLH((_float)g_iWinCX, (_float)g_iWinCY, 0.f, 1.f);
 
+	// UI ÇÁ·¹ÀÓ
 	m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransformCom->Get_WorldMatrix()), sizeof(_matrix));
-	m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(matView), sizeof(_matrix));
-	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(matProj), sizeof(_matrix));
-
 	m_pVIBufferCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
-
 	m_pVIBufferCom->Render(1);
+
+
+
 
 	return S_OK;
 }
@@ -72,19 +70,23 @@ HRESULT CStatus_Panel::Render()
 HRESULT CStatus_Panel::Ready_Component()
 {
 	/* For.Renderer*/
-	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
+	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static
+		, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
 	/* For.VIBuffer */
-	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
+	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static
+		, TEXT("Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Rect"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
 	/* For.Transform */
-	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
+	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static
+		, TEXT("Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
 		return E_FAIL;
 
 	/* For.Texture */
-	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_StatusPanel"), TEXT("Com_Texture_StatusPanel"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static
+		, TEXT("Component_Texture_StatusPanel"), TEXT("Com_Texture_StatusPanel"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 

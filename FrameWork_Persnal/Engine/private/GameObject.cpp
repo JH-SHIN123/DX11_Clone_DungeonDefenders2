@@ -70,6 +70,29 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar * pPrototypeT
 	return S_OK;
 }
 
+HRESULT CGameObject::Add_Component_Array(_uint iLevelIndex, const _tchar * pPrototypeTag, const _tchar * pComponentTag, CComponent *** pppOut, void * pArg)
+{
+	CGameInstance*	pGameInstance = CGameInstance::GetInstance();
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	CComponent*		pComponent = Find_Component(pComponentTag);
+	if (nullptr != pComponent)
+		return E_FAIL;
+
+	pComponent = pGameInstance->Clone_Component(iLevelIndex, pPrototypeTag, pArg);
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	m_Components.insert(COMPONENTS::value_type(pComponentTag, pComponent));
+
+	**pppOut = pComponent;
+
+	Safe_AddRef(pComponent);
+
+	return S_OK;
+}
+
 CComponent * CGameObject::Find_Component(const _tchar * pComponentTag)
 {
 	auto iter = find_if(m_Components.begin(), m_Components.end(), CTagFinder(pComponentTag));

@@ -2,10 +2,14 @@
 #include "..\public\Loading.h"
 
 #include "BackGround_Logo.h"
+#include "MainMenu.h"
 #include "VIBuffer_Terrain.h"
 
 #include "Terrain.h"
 #include "Status_Panel.h"
+#include "PlayerSkill.h"
+#include "HpMp.h"
+#include "WaveInfo.h"
 #include "Camera_Free.h"
 
 USING(Engine)
@@ -67,10 +71,21 @@ HRESULT CLoading::LoadingForLogo()
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Devil.png")))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_Logo")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Logo.tga")))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_Generic_Panel")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Menu_%d.tga"), 3))))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Prototype_BackGround_Logo")
 		, CBackGround_Logo::Create(m_pDevice, m_pDevice_Context))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Prototype_MainMenu")
+		, CMainMenu::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
 
 
 	m_isFinished = true;
@@ -93,14 +108,12 @@ HRESULT CLoading::LoadingForStage()
 		, CVIBuffer_Terrain::Create(m_pDevice, m_pDevice_Context, L"../Bin/Resources/Textures/Height.bmp", TEXT("../Bin/Shader/Shader_Terrain.hlsl"), "DefaultTechnique"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_StatusPanel")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StatusPanel/StatusPanel.tga")))))
-		return E_FAIL;
 	
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Devil")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Devil.png")))))
 		return E_FAIL;
 
+													
 
 	/* 객체 프로토타입을 생성하자. */
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Terrain")
@@ -109,6 +122,18 @@ HRESULT CLoading::LoadingForStage()
 
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_StatusPanel")
 		, CStatus_Panel::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_PlayerSkill_UI")
+		, CPlayerSkill::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Player_HpMp")
+		, CHpMp::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_WaveInfo")
+		, CWaveInfo::Create(m_pDevice, m_pDevice_Context))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Free")

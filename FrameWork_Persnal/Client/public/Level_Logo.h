@@ -19,8 +19,16 @@ public:
 	virtual _int	Tick(_float Timedelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void Scene_Change(ELevel eLevel);
+
 private:
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_MainMenu(const _tchar* pLayerTag);
+
+private:
+	_bool m_IsChange = false;
+	ELevel m_eNextLevel = ELevel::End;
 
 public:
 	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

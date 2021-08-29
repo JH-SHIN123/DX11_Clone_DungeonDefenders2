@@ -5,17 +5,18 @@
 #pragma warning (disable : 4251)
 
 #include "D3D11.h"
-#include "DirectXMath.h"
-#include "d3dx11effect.h"
+#include "DirectXMath.h"	// 수학
+#include "d3dx11effect.h"	// 쉐이더 담는거
 #include "DirectXTex.h"		// 텍스처
 #include "d3dxGlobal.h"	
-#include "d3dcompiler.h"
+#include "d3dcompiler.h"	// 쉐이더
+#include <dinput.h>			// 키입력
+#pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "dinput8.lib")
 
 using namespace DirectX;
 
 #define DIRECTINPUT_VERSION	0x0800
-#include <dinput.h>
-
 #include <list>
 #include <unordered_map>
 #include <algorithm>
@@ -48,6 +49,7 @@ using namespace Engine;
 
 #define UPDATE_ERROR -1
 #define OBJECT_DEAD 1
+#define SCENE_CHANGE 2
 
 
 #define __ENGINE_DEFINES_H__

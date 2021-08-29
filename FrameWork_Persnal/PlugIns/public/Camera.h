@@ -27,6 +27,9 @@ typedef struct tagCameraDesc
 
 }CAMERA_DESC;
 
+enum class ECameraState
+{Position, At, Up, End};
+
 class ENGINE_DLL CCamera abstract :	public CGameObject
 {
 protected:

@@ -11,6 +11,7 @@ static const unsigned int g_iWinCY = 720;
 #pragma comment(lib,"d3dcompiler.lib")
 
 extern HWND g_hWnd;
+extern HINSTANCE g_hInst;
 
 namespace Client {
 

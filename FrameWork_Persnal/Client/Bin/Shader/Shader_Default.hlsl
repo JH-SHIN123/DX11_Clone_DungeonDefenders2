@@ -3,6 +3,8 @@
 
 // 텍스처의 픽셀정보를 가지고있음
 texture2D		g_DiffuseTexture;
+texture2D		g_MaskTexture;
+float			g_AlphaTime;
 
 // 샘플러 : 텍스처를 어떻게 필터링하고 샘플링 할것인지 세팅하는것
 // RS보다 세밀한 설정느낌
@@ -51,7 +53,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	// Z 나누기가 이 정점쉐이더 후에 되고있다는 증거가 아닐까
 
 	Out.vPosition = vPosition;
-	Out.vTexUV = In.vTexUV * 1.5f; // 텍스처 UV
+	Out.vTexUV = In.vTexUV; // 텍스처 UV
 
 	return Out;
 
@@ -64,27 +66,30 @@ VS_OUT VS_MAIN(VS_IN In)
 VS_OUT VS_MAIN_UI(VS_IN In)
 {
 	VS_OUT			Out = (VS_OUT)0;
-
-	//Out.vPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);
-
-	//vector		vPosition = vector(In.vPosition, 1.f);
-	//Out.vPosition = vPosition;
-	// w가 크면 작아짐
-	// Z 나누기가 이 정점쉐이더 후에 되고있다는 증거가 아닐까
-
 	matrix		matWV, matWVP;
 
 	matWV = mul(WorldMatrix, ViewMatrix);
 	matWVP = mul(matWV, ProjMatrix);
 
-	// 이미지는 왼쪽에서 읽는건 동일하지만
-	// 위에서부터 읽고
-	// 아래에서 그리니
-	// 위아래가 반전된다
+	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+
+	Out.vTexUV = In.vTexUV; // 텍스처 UV
+
+	return Out;
+}
+
+VS_OUT VS_MAIN_UI_REVERCE(VS_IN In)
+{
+	VS_OUT			Out = (VS_OUT)0;
+	matrix		matWV, matWVP;
+
+	matWV = mul(WorldMatrix, ViewMatrix);
+	matWVP = mul(matWV, ProjMatrix);
 
 	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
 
 	Out.vTexUV = In.vTexUV; // 텍스처 UV
+	Out.vTexUV.x *= -1.f;
 
 	return Out;
 }
@@ -115,11 +120,83 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_RED(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	// 픽셀의 색 = Texture의 UV 좌표에서 g_DiffuseTexture의 색을 따라가되 DiffuseSampler라는 이름의 샘플러를 사용 할 것
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	Out.vColor.a = 0.95f;
+	Out.vColor.r = 1.f;
+
+	return Out;
+}
+
+PS_OUT PS_MAIN_BLUE(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	// 픽셀의 색 = Texture의 UV 좌표에서 g_DiffuseTexture의 색을 따라가되 DiffuseSampler라는 이름의 샘플러를 사용 할 것
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	Out.vColor.a = 0.95f;
+	Out.vColor.b = 1.f;
+
+	return Out;
+}
+
+PS_OUT PS_REDMASKING(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	if (In.vPosition.y >= 640.f ||
+		In.vPosition.y <= 500.f /*||
+		In.vTexUV.y <= 0.2f*/)
+	{
+		Out.vColor.a = 0.f;
+		return Out;
+	}
+
+	float4 vFX_tex = g_MaskTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	float4	vColor = (float4)0.f;
+
+	Out.vColor.g = 0.9f;
+	Out.vColor.a = vFX_tex.g;
+
+	return Out;
+}
+
+PS_OUT PS_ALPHATIME(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	if(any(Out.vColor))
+		Out.vColor.a = g_AlphaTime;
+
+	return Out;
+}
+
+PS_OUT PS_TIME(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	if (Out.vColor.a != 0.f)
+		Out.vColor.a = g_AlphaTime;
+
+	return Out;
+}
+
 // 네임스페이스 정도
 technique11		DefaultTechnique
 {
 // 외부에서 사용할 수 있도록 pass의 이름이나 Index로 접근해서 해당 쉐이더를 호출하는 방식
-	pass Default
+	pass Default //0
 	{
 		// hpp 에서 선언한 그리기모드들이 여기에 들어감
 		SetRasterizerState(Rasterizer_Solid);
@@ -129,13 +206,64 @@ technique11		DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
-	pass UI
+	pass UI_Main //1
 	{
+		// 깊이버퍼 비교 X
 		SetRasterizerState(Rasterizer_Solid);
-		SetDepthStencilState(DepthStecil_Default, 0);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI();
 		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+
+	pass Reverce_Main//2
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI_REVERCE();
+		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+
+	pass Main_Blue//3
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		PixelShader = compile ps_5_0 PS_MAIN_BLUE();
+	}
+
+	pass Reverce_RedMask//4
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		PixelShader = compile ps_5_0 PS_REDMASKING();
+	}
+
+	pass UI_AlphaTime//5
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		PixelShader = compile ps_5_0 PS_ALPHATIME();
+	}
+
+	pass UI_Time//6
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		PixelShader = compile ps_5_0 PS_TIME();
 	}
 };
 

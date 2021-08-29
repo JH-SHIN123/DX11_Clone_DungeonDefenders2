@@ -7,7 +7,7 @@
 BEGIN(Engine)
 
 enum class ENGINE_DLL ERenderGroup
-{ Priority, NoneAlpha, Alpha, UI, AlphaUI, End};
+{ Priority, NoneAlpha, Alpha, UI, AlphaUI, FrameUI, AlphaUI_Scecond, End};
 
 class ENGINE_DLL CRenderer final : public CComponent
 {
@@ -30,6 +30,9 @@ private:
 	HRESULT	Render_Alpha();
 	HRESULT	Render_UI();
 	HRESULT	Render_AlphaUI();
+	HRESULT	Render_FrameUI();
+	HRESULT	Render_AlphaUI_Second();
+
 
 private:
 	typedef list <class CGameObject*> RENDER_OBJECTS;

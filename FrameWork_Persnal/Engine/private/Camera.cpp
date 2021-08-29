@@ -19,6 +19,8 @@ HRESULT CCamera::NativeConstruct_Prototype()
 {
 	__super::NativeConstruct_Prototype();
 
+
+
 	return S_OK;
 }
 
@@ -62,6 +64,17 @@ HRESULT CCamera::NativeConstruct(void * pArg)
 _int CCamera::Tick(_float TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+	_vector vAt = XMLoadFloat3(&m_CameraDesc.vAt);
+	vAt = XMVectorSetW(vAt, 1.f);
+
+	_vector vAxisY = XMLoadFloat3(&m_CameraDesc.vAxisY);
+	vAxisY = XMVectorSetW(vAxisY, 0.f);
+
+	_matrix ViewMatrix = XMMatrixLookAtLH(m_pMovementCom->Get_State(EState::Position), vAt, vAxisY);
+	//m_pMovementCom->Set_WorldMatrix(ViewMatrix);
+
+
 
 	m_pPipeline_Manager->Set_Transform(ETransformState::View, m_pMovementCom->Get_WorldMatrix_Inverse());
 	m_pPipeline_Manager->Set_Transform(ETransformState::Proj, XMMatrixPerspectiveFovLH(m_CameraDesc.fFovy, m_CameraDesc.fAspect, m_CameraDesc.fNear, m_CameraDesc.fFar));

@@ -37,6 +37,7 @@ private:
 private:
 	HRESULT Ready_DefaultLevel(ELevel eLevelID);
 	HRESULT	Ready_Component_PrototypeForStatic();
+	HRESULT	Ready_UI_Texture();
 
 public:
 	static CMainApp* Create();

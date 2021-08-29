@@ -14,6 +14,7 @@ END
 
 BEGIN(Client)
 
+
 class CStatus_Panel final : public CGameObject
 {
 private:
@@ -32,13 +33,14 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CRenderer*				m_pRendererCom = nullptr;
-	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
-	CTextures*				m_pTextureCom = nullptr;
-	CTransform*				m_pTransformCom = nullptr;
+	HRESULT	Ready_Component();
 
 private:
-	HRESULT	Ready_Component();
+	CRenderer*				m_pRendererCom = nullptr;
+	CVIBuffer_Rect*			m_pVIBufferCom = nullptr;
+
+	CTextures*				m_pTextureCom = nullptr;
+	CTransform*				m_pTransformCom = nullptr;
 
 public:
 	static CStatus_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

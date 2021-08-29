@@ -17,6 +17,7 @@ public:
 	HRESULT SetUp_CurrentLevel(class CLevel* pCurrentLevel);
 	_int Tick(_float TimeDelta);
 	HRESULT Render();
+	CLevel*		Get_Scene() {return m_pCurrentLevel;}
 
 private:
 	class CLevel*				m_pCurrentLevel = nullptr;

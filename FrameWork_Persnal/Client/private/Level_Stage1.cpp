@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Loading.h"
 #include "Camera_Free.h"
+#include "UI_2D.h"
 
 CLevel_Stage1::CLevel_Stage1(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CLevel(pDevice, pDevice_Context)
@@ -60,7 +61,32 @@ HRESULT CLevel_Stage1::Ready_Layer_UI(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_StatusPanel"), (_uint)ELevel::Stage1, pLayerTag);
+
+	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_StatusPanel"), (_uint)ELevel::Stage1, L"Layer_FrameUI");
+
+
+	UI2D_DESC UI_Desc;
+	// X 67 Y 67
+	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_SkillMage");
+	UI_Desc.vPos = _float2(-435.2f, -211.f);
+	UI_Desc.vScale = _float2(64.f, 64.f);
+	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_PlayerSkill_UI"), (_uint)ELevel::Stage1, L"Layer_UI", &UI_Desc);
+
+
+
+	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_HpMp");
+	UI_Desc.vPos = _float2(-581.f, -213.f);
+	UI_Desc.vScale = _float2(64.f, 128.f);
+	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Player_HpMp"), (_uint)ELevel::Stage1, L"Layer_UI_HpMp", &UI_Desc);
+
+
+
+	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_Panel_Level");
+	UI_Desc.vPos = _float2(510.f, -305.f);
+	UI_Desc.vScale = _float2(256.f, 100.f);
+	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_WaveInfo"), (_uint)ELevel::Stage1, L"Layer_WaveInfo", &UI_Desc);
+
+
 
 	return S_OK;
 }
@@ -75,7 +101,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Camera_Free(const _tchar * pLayerTag)
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
 	CameraDesc.fAspect = _float(g_iWinCX) / g_iWinCY;
-	CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	CameraDesc.fFovy = XMConvertToRadians(90.0f);
 	CameraDesc.fNear = 0.3f;
 	CameraDesc.fFar = 300.f;
 

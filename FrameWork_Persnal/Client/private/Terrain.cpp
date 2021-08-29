@@ -64,7 +64,6 @@ HRESULT CTerrain::Render()
 	_matrix			WorldMatrix, ViewMatrix, ProjMatrix, OrthMatrix;
 
 	WorldMatrix = XMMatrixIdentity();
-	ViewMatrix = XMMatrixLookAtLH(XMVectorSet(0.f, 7.f, -1.f, 1.f), XMVectorSet(30.f, 0.f, 30.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f));
 	ProjMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), (_float)g_iWinCX / g_iWinCY, 0.2f, 300.f);
 	OrthMatrix = XMMatrixOrthographicLH((_float)g_iWinCX, (_float)g_iWinCY, 0.2f, 300.f);
 

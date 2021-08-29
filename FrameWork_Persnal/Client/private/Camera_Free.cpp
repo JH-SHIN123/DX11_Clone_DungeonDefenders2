@@ -33,16 +33,16 @@ _int CCamera_Free::Tick(_float TimeDelta)
 	if (nullptr == m_pMovementCom)
 		return -1;
 
+	Aim();
+
 	if (GetKeyState(VK_LEFT) & 0x8000)
 		m_pMovementCom->Go_Left(TimeDelta);
 
 	if (GetKeyState(VK_RIGHT) & 0x8000)
 		m_pMovementCom->Go_Right(TimeDelta);
 
-
 	if (GetKeyState(VK_UP) & 0x8000)
 		m_pMovementCom->Go_Straight(TimeDelta);
-
 
 	if (GetKeyState(VK_DOWN) & 0x8000)
 		m_pMovementCom->Go_Backward(TimeDelta);
@@ -61,6 +61,45 @@ _int CCamera_Free::Late_Tick(_float TimeDelta)
 HRESULT CCamera_Free::Render()
 {
 	return S_OK;
+}
+
+void CCamera_Free::Aim()
+{
+	_vector vRight	= m_pMovementCom->Get_State(EState::Right);
+	_vector vUp		= XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	_vector vLook	= m_pMovementCom->Get_State(EState::Look);
+
+	_matrix RotateMatrix;
+
+	_long dwMouseMove = 0;
+
+	if (dwMouseMove = GET_MOUSE_X)
+	{
+		RotateMatrix = XMMatrixRotationAxis(vUp, XMConvertToRadians((_float)dwMouseMove * 0.05f));
+	
+		vLook = XMVector3TransformNormal(vLook, RotateMatrix);	
+		m_pMovementCom->Set_State(EState::Look, vLook);
+
+		vRight = XMVector3Cross(vUp, vLook);
+		m_pMovementCom->Set_State(EState::Right, vRight);
+
+		vUp = XMVector3Cross(vLook, vRight);
+		m_pMovementCom->Set_State(EState::Up, vUp);
+	}
+
+	if (dwMouseMove = GET_MOUSE_Y)
+	{
+		RotateMatrix = XMMatrixRotationAxis(vRight, XMConvertToRadians((_float)dwMouseMove * 0.05f));
+
+		vLook = XMVector3TransformNormal(vLook, RotateMatrix);
+		m_pMovementCom->Set_State(EState::Look, vLook);
+
+		vRight = XMVector3Cross(vUp, vLook);
+		m_pMovementCom->Set_State(EState::Right, vRight);
+
+		vUp = XMVector3Cross(vLook, vRight);
+		m_pMovementCom->Set_State(EState::Up, vUp);
+	}
 }
 
 HRESULT CCamera_Free::Ready_Component()

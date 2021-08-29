@@ -22,12 +22,6 @@
     <Filter Include="01.Maps\00.Loading">
       <UniqueIdentifier>{97f30d6d-9199-4f05-879d-e185620cd7e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Maps\01.Logo">
-      <UniqueIdentifier>{07a35e1c-7bdc-41e7-8134-e6e63f1dfce2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Maps\02.Stage1">
-      <UniqueIdentifier>{5f1c5b47-f0ca-4a8f-99d5-6657580ca0a4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\01.Logo">
       <UniqueIdentifier>{0ed5f72e-f4b8-49bf-a181-071dfb6e7b98}</UniqueIdentifier>
     </Filter>
@@ -70,6 +64,33 @@
     <Filter Include="02.GameObject\05.Monster">
       <UniqueIdentifier>{3228ebb7-601a-4537-8501-6e9d6e96577f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Maps\02.Stage1">
+      <UniqueIdentifier>{5f1c5b47-f0ca-4a8f-99d5-6657580ca0a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Maps\01.Logo%28MainMenu%29">
+      <UniqueIdentifier>{07a35e1c-7bdc-41e7-8134-e6e63f1dfce2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\01.Logo\00.Menu">
+      <UniqueIdentifier>{47579060-7f84-487f-a436-94ae65cea1f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\00.2D\01.PlayerSkill">
+      <UniqueIdentifier>{db9f75dd-e2f1-4599-9620-e7c6765d07a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\00.2D\02.Hp">
+      <UniqueIdentifier>{fbe49999-e618-456e-9949-5e07e862506f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\00.2D\03.WaveInfo">
+      <UniqueIdentifier>{3dbfbb4f-b927-4693-9585-c89d4a6589f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Protocol">
+      <UniqueIdentifier>{5ae64ff8-9f27-4b0a-a3c4-3a4ba9d72bc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Protocol\00.Stage_Manager">
+      <UniqueIdentifier>{b58efceb-9753-4fa5-9490-0c31d5584e00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\01.MainMenu">
+      <UniqueIdentifier>{fbd7821e-65fe-4bb7-b403-bfd8924aa28f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -91,7 +112,7 @@
       <Filter>98.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_Logo.h">
-      <Filter>01.Maps\01.Logo</Filter>
+      <Filter>01.Maps\01.Logo%28MainMenu%29</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_Loading.h">
       <Filter>01.Maps\00.Loading</Filter>
@@ -123,7 +144,27 @@
     <ClInclude Include="..\public\Camera_Manager.h">
       <Filter>04.Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Player.h" />
+    <ClInclude Include="..\public\Player.h">
+      <Filter>02.GameObject\03.Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UI_2D.h">
+      <Filter>03.UI, HUD\00.2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerSkill.h">
+      <Filter>03.UI, HUD\00.2D\01.PlayerSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\HpMp.h">
+      <Filter>03.UI, HUD\00.2D\02.Hp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\WaveInfo.h">
+      <Filter>03.UI, HUD\00.2D\03.WaveInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Wave_Manger.h">
+      <Filter>05.Protocol\00.Stage_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MainMenu.h">
+      <Filter>03.UI, HUD\01.MainMenu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -136,7 +177,7 @@
       <Filter>00.MainApp</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Logo.cpp">
-      <Filter>01.Maps\01.Logo</Filter>
+      <Filter>01.Maps\01.Logo%28MainMenu%29</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Loading.cpp">
       <Filter>01.Maps\00.Loading</Filter>
@@ -162,7 +203,27 @@
     <ClCompile Include="..\private\Camera_Manager.cpp">
       <Filter>04.Camera</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Player.cpp" />
+    <ClCompile Include="..\private\Player.cpp">
+      <Filter>02.GameObject\03.Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI_2D.cpp">
+      <Filter>03.UI, HUD\00.2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerSkill.cpp">
+      <Filter>03.UI, HUD\00.2D\01.PlayerSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\HpMp.cpp">
+      <Filter>03.UI, HUD\00.2D\02.Hp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\WaveInfo.cpp">
+      <Filter>03.UI, HUD\00.2D\03.WaveInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Wave_Manger.cpp">
+      <Filter>05.Protocol\00.Stage_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MainMenu.cpp">
+      <Filter>03.UI, HUD\01.MainMenu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

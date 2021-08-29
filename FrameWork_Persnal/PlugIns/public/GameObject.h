@@ -30,6 +30,7 @@ protected:
 
 protected:
 	HRESULT Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent** ppOut, void* pArg = nullptr);
+	HRESULT Add_Component_Array(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent*** pppOut, void* pArg = nullptr);
 
 private:
 	CComponent* Find_Component(const _tchar* pComponentTag);

@@ -9,6 +9,8 @@
 
 // 전역 변수:
 HWND g_hWnd;
+HINSTANCE g_hInst;
+
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
@@ -71,7 +73,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			}
 		}
 
-		if (pMainApp->Update_MainApp(0.0) & 0x80000000)
+		if (pMainApp->Update_MainApp(0.0002) & 0x80000000)
 			break;
 		
 		if (FAILED(pMainApp->Render_MainApp()))
@@ -146,6 +148,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    }
 
    g_hWnd = hWnd;
+   g_hInst = hInst;
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);

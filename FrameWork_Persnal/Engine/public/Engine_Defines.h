@@ -11,6 +11,8 @@
 #include "d3dxGlobal.h"	
 #include "d3dcompiler.h"	// 쉐이더
 #include <dinput.h>			// 키입력
+#pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "dinput8.lib")
 
 using namespace DirectX;
 
@@ -47,6 +49,7 @@ using namespace Engine;
 
 #define UPDATE_ERROR -1
 #define OBJECT_DEAD 1
+#define SCENE_CHANGE 2
 
 
 #define __ENGINE_DEFINES_H__

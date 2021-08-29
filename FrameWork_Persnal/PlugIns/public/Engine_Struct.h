@@ -32,6 +32,13 @@ namespace Engine
 		XMFLOAT2			vTexUV;
 	}VTXTEX;
 
+	/* vPosition + UVmap */
+	typedef struct tagVertexTexture_Cube
+	{
+		XMFLOAT3			vPosition;
+		XMFLOAT3			vTexUV;
+	}VTXTEX_CUBE;
+
 	typedef struct tagPolygonIndices16
 	{
 		unsigned short		_0, _1, _2;

@@ -138,10 +138,10 @@ void CToolView::OnInitialUpdate()
 
 
 	// 초기화 작업입닌당
-	if (FAILED(m_pGameInstance->Initialize(g_hWnd, CGraphic_Device::TYPE_WINMODE, g_iWinCX, g_iWinCY, &m_pDevice, &m_pDevice_Context)))
+	if (FAILED(m_pGameInstance->Initialize(nullptr, g_hWnd, CGraphic_Device::TYPE_WINMODE, g_iWinCX, g_iWinCY, &m_pDevice, &m_pDevice_Context)))
 		return;
 
-	if (m_pGameInstance->Reserve_Container((_uint)ELevel::End))
+	if (m_pGameInstance->Reserve_Container((_uint)ELevel_Tool::End))
 		return;
 
 	if (Ready_Component_PrototypeForStatic())
@@ -162,12 +162,12 @@ HRESULT CToolView::Ready_Component_PrototypeForStatic()
 		return E_FAIL;
 
 	/* Renderer */
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Main, TEXT("Component_Renderer"), m_pRenderer = CRenderer::Create(m_pDevice, m_pDevice_Context))))
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel_Tool::Main, TEXT("Component_Renderer"), m_pRenderer = CRenderer::Create(m_pDevice, m_pDevice_Context))))
 		return E_FAIL;
 	Safe_AddRef(m_pRenderer);
 
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Main, TEXT("Component_VIBuffer_Rect")
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel_Tool::Main, TEXT("Component_VIBuffer_Rect")
 		, CVIBuffer_Rect::Create(m_pDevice, m_pDevice_Context, L"../../Client/Bin/Shader/Shader_Default.hlsl", "DefaultTechnique"))))
 		return E_FAIL;
 

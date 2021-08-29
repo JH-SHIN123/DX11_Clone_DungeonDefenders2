@@ -23,12 +23,23 @@ _int CLayer::Tick(_float TimeDelta)
 {
 	_int iProgress = 0;
 
-	for (auto& iter : m_Objects)
+	for (auto& iter = m_Objects.begin(); iter != m_Objects.end();)
 	{
-		iProgress = iter->Tick(TimeDelta);
-
-		if (iProgress & 0x80000000)
-			return iProgress;
+		if (iProgress = (*iter)->Tick(TimeDelta))
+		{
+			switch (iProgress)
+			{
+			case OBJECT_DEAD:
+				Safe_Release(*iter);
+				iter = m_Objects.erase(iter);
+				break;
+			case SCENE_CHANGE:
+				return iProgress;
+			default:
+				return iProgress;
+			}
+		}
+		else ++iter;
 	}
 
 	return iProgress;
@@ -36,14 +47,25 @@ _int CLayer::Tick(_float TimeDelta)
 
 _int CLayer::Late_Tick(_float TimeDelta)
 {
-	_int		iProgress = 0;
+	_int iProgress = 0;
 
-	for (auto& pGameObject : m_Objects)
+	for (auto& iter = m_Objects.begin(); iter != m_Objects.end();)
 	{
-		iProgress = pGameObject->Late_Tick(TimeDelta);
-
-		if (iProgress & 0x80000000)
-			return iProgress;
+		if (iProgress = (*iter)->Late_Tick(TimeDelta))
+		{
+			switch (iProgress)
+			{
+			case OBJECT_DEAD:
+				Safe_Release(*iter);
+				iter = m_Objects.erase(iter);
+				break;
+			case SCENE_CHANGE:
+				return iProgress;
+			default:
+				return iProgress;
+			}
+		}
+		else ++iter;
 	}
 
 	return iProgress;

@@ -3,12 +3,12 @@
 USING(Engine)
 IMPLEMENT_SINGLETON(CInputDev)
 
-Engine::CInputDev::CInputDev(void)
+Engine::CInputDev::CInputDev()
 {
 
 }
 
-Engine::CInputDev::~CInputDev(void)
+Engine::CInputDev::~CInputDev()
 {
 	Free();
 }
@@ -17,20 +17,16 @@ HRESULT Engine::CInputDev::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 {
 
 	// DInput 컴객체를 생성하는 함수
-	if (FAILED(DirectInput8Create(hInst,
-		DIRECTINPUT_VERSION,
-		IID_IDirectInput8,
-		(void**)&m_pInputSDK,
-		NULL)))
+	if (FAILED(DirectInput8Create(hInst, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_pInputSDK, nullptr)))
 	{
-		MSG_BOX("Failed to Create (m_pInputSDK)");
+		MSG_BOX("Failed to Create DInput");
 		return E_FAIL;
 	}
 
 	// 키보드 객체 생성
 	if (FAILED(m_pInputSDK->CreateDevice(GUID_SysKeyboard, &m_pKeyBoard, nullptr)))
 	{
-		MSG_BOX("Failed to Create (m_pKeyBoard)");
+		MSG_BOX("Failed to Create DInput");
 		return E_FAIL;
 	}
 
@@ -47,7 +43,7 @@ HRESULT Engine::CInputDev::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 	// 마우스 객체 생성
 	if (FAILED(m_pInputSDK->CreateDevice(GUID_SysMouse, &m_pMouse, nullptr)))
 	{
-		MSG_BOX("Failed to Create (m_pMouse)");
+		MSG_BOX("Failed to Create DInput");
 		return E_FAIL;
 	}
 

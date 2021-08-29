@@ -19,12 +19,15 @@ CGameInstance::CGameInstance()
 
 
 
-HRESULT CGameInstance::Initialize(HWND hWnd, CGraphic_Device::WINMODE eWinMode, _uint iSizeX, _uint iSizeY, ID3D11Device** ppDevice, ID3D11DeviceContext** ppDevice_Context)
+HRESULT CGameInstance::Initialize(HINSTANCE hInst, HWND hWnd, CGraphic_Device::WINMODE eWinMode, _uint iSizeX, _uint iSizeY, ID3D11Device** ppDevice, ID3D11DeviceContext** ppDevice_Context)
 {
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
 	if (FAILED(m_pGraphic_Device->Ready_Graphic_Device(eWinMode, hWnd, iSizeX, iSizeY, ppDevice, ppDevice_Context)))
+		return E_FAIL;
+
+	if (FAILED(m_pInputDev_Manager->Ready_InputDev(hInst, hWnd)))
 		return E_FAIL;
 
 	return S_OK;
@@ -51,8 +54,10 @@ _int CGameInstance::Tick(_float TimeDelta)
 		nullptr == m_pGameObject_Manager)
 		return -1;
 
-	if (0x80000000 & m_pGameObject_Manager->Tick_GameObject(TimeDelta))
-		return -1;
+	_int iEvent = 0;
+
+	if (iEvent = m_pGameObject_Manager->Tick_GameObject(TimeDelta))
+		return iEvent;
 
 	//return 0;
 
@@ -114,6 +119,14 @@ HRESULT CGameInstance::Render_Level()
 		return E_FAIL;
 
 	return m_pLevel_Manager->Render();
+}
+
+CLevel * CGameInstance::Get_Scene()
+{
+	if (nullptr == m_pLevel_Manager)
+		return nullptr;
+
+	return m_pLevel_Manager->Get_Scene();
 }
 
 #pragma endregion 
@@ -202,6 +215,7 @@ void CGameInstance::Free()
 
 	// 삭제
 	Safe_Release(m_pPipeline_manager);
+	Safe_Release(m_pInputDev_Manager);
 
 	/* 게임인스턴스 안에 선언된 멤버함수의 정리를 수행한다. */
 	Safe_Release(m_pGraphic_Device);

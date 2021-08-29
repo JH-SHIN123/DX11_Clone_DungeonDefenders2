@@ -23,7 +23,7 @@ public:
 	virtual ~CGameInstance() = default;
 public:
 	/* 게임 초기화 과정을 거치낟. */
-	HRESULT Initialize(HWND hWnd, CGraphic_Device::WINMODE eWinMode, _uint iSizeX, _uint iSizeY, ID3D11Device** ppDevice = nullptr, ID3D11DeviceContext** ppDevice_Context = nullptr);
+	HRESULT Initialize(HINSTANCE hInst, HWND hWnd, CGraphic_Device::WINMODE eWinMode, _uint iSizeX, _uint iSizeY, ID3D11Device** ppDevice = nullptr, ID3D11DeviceContext** ppDevice_Context = nullptr);
 	HRESULT Reserve_Container(_uint	iNumLevels);
 	_int Tick(_float TimeDelta);
 	void Clear_This_Level(_uint iLevelIndex);
@@ -42,7 +42,7 @@ public:
 public:
 	HRESULT SetUp_CurrentLevel(class CLevel* pCurrentLevel);
 	HRESULT Render_Level();
-
+	CLevel* Get_Scene();
 #pragma endregion
 
 

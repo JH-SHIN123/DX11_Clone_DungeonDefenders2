@@ -1,4 +1,4 @@
 #pragma once
 
-enum class ELevel
+enum class ELevel_Tool
 { Main, End };

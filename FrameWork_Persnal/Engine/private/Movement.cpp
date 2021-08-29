@@ -42,7 +42,7 @@ void CMovement::Go_Straight(_float TimeDelta)
 	_vector vLook		= __super::Get_State(EState::Look);
 
 	vLook = XMVector4Normalize(vLook);
-
+	// 위치 = 위치 + (앞으로 보는 방향 * 시간값 * 초당 이속)
 	vPosition += vLook * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
 
 	Set_State(EState::Position, vPosition);
@@ -92,6 +92,18 @@ void CMovement::Go_Dir(_float TimeDelta, _fvector vTargetPos)
 	vDir = XMVector4Normalize(vDir);
 
 	vPosition += vDir * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
+
+	__super::Set_State(EState::Position, vPosition);
+}
+
+void CMovement::Go_Up(_float TimeDelta)
+{
+	_vector vPosition = __super::Get_State(EState::Position);
+	_vector vUp = __super::Get_State(EState::Up);
+
+	vUp = XMVector4Normalize(vUp);
+
+	vPosition += vUp * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
 
 	__super::Set_State(EState::Position, vPosition);
 }
