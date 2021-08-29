@@ -50,7 +50,7 @@ HRESULT CLevel_Stage1::Render()
 
 HRESULT CLevel_Stage1::Ready_Layer_Terrain(const _tchar * pLayerTag)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
 
 	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Terrain"), (_uint)ELevel::Stage1, pLayerTag);
 
@@ -59,28 +59,26 @@ HRESULT CLevel_Stage1::Ready_Layer_Terrain(const _tchar * pLayerTag)
 
 HRESULT CLevel_Stage1::Ready_Layer_UI(const _tchar * pLayerTag)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
 
-
+	// 스킬창 프레임
 	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_StatusPanel"), (_uint)ELevel::Stage1, L"Layer_FrameUI");
 
-
-	UI2D_DESC UI_Desc;
 	// X 67 Y 67
+	// 스킬창
+	UI2D_DESC UI_Desc;
 	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_SkillMage");
 	UI_Desc.vPos = _float2(-435.2f, -211.f);
 	UI_Desc.vScale = _float2(64.f, 64.f);
 	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_PlayerSkill_UI"), (_uint)ELevel::Stage1, L"Layer_UI", &UI_Desc);
 
-
-
+	// HPMP따로 만듬
 	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_HpMp");
 	UI_Desc.vPos = _float2(-581.f, -213.f);
 	UI_Desc.vScale = _float2(64.f, 128.f);
 	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Player_HpMp"), (_uint)ELevel::Stage1, L"Layer_UI_HpMp", &UI_Desc);
 
-
-
+	// 해당 스테이지의 정보를 보여줌
 	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_Panel_Level");
 	UI_Desc.vPos = _float2(510.f, -305.f);
 	UI_Desc.vScale = _float2(256.f, 100.f);
@@ -93,7 +91,7 @@ HRESULT CLevel_Stage1::Ready_Layer_UI(const _tchar * pLayerTag)
 
 HRESULT CLevel_Stage1::Ready_Layer_Camera_Free(const _tchar * pLayerTag)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
 
 	CAMERA_DESC			CameraDesc;
 	CameraDesc.vEye = _float3(0.f, 10.f, -7.f);
@@ -109,6 +107,19 @@ HRESULT CLevel_Stage1::Ready_Layer_Camera_Free(const _tchar * pLayerTag)
 	CameraDesc.StateDesc.fRotatePerSec = XMConvertToRadians(90.0f);
 
 	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Free"), (_uint)ELevel::Stage1, pLayerTag, &CameraDesc);
+
+	return S_OK;
+}
+
+HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
+{
+	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
+
+	MOVESTATE_DESC Data;
+	Data.vPos = _float4(10.f, 0.f, 10.f, 1.f);
+	Data.vScale = _float4(10.f, 10.f, 10.f, 1.f);
+
+	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Player"), (_uint)ELevel::Stage1, pLayerTag, &Data);
 
 	return S_OK;
 }
@@ -129,6 +140,4 @@ CLevel_Stage1 * CLevel_Stage1::Create(ID3D11Device * pDevice, ID3D11DeviceContex
 void CLevel_Stage1::Free()
 {
 	CLevel::Free();
-
-	
 }

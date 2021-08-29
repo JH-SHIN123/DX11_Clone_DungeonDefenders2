@@ -4,15 +4,9 @@ https://www.youtube.com/watch?v=xLwJFtEc2Ws
 
 DirectX 11 튜토리얼
 https://copynull.tistory.com/
+https://www.braynzarsoft.net/viewtutorial/q16390-braynzar-soft-directx-11-tutorials
 
 assimp 라이브러리
-
-
-방학동안 할것
-메인메뉴 UI완성 (내가 생각한 3D 큐브 UI)
-마우스 피킹, At 이동, dinput 사용
-3인칭
-적당한 배치 툴
 
 
 3d 큐브 UI

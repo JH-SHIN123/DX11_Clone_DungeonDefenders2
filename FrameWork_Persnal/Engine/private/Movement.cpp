@@ -22,7 +22,15 @@ HRESULT CMovement::NativeConstruct(void * pArg)
 	__super::NativeConstruct(pArg);
 
 	if (nullptr != pArg)
+	{
 		memcpy(&m_MoveStateDesc, pArg, sizeof(MOVESTATE_DESC));
+
+		_vector vScale = XMLoadFloat4(&m_MoveStateDesc.vScale);
+		Set_Scale(vScale);
+
+		_vector vPos = XMLoadFloat4(&m_MoveStateDesc.vPos);
+		Set_State(EState::Position,vScale);
+	}
 
 	return S_OK;
 }

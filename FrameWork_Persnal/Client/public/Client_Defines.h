@@ -22,6 +22,7 @@ using namespace Client;
 #include "Loading.h"
 
 #include "Client_Macro.h"
+#include "Client_Struct.h"
 
 #define __CLIENT_DEFINES_H__
 #endif // !__CLIENT_DEFINES_H__

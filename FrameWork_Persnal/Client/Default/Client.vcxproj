@@ -171,6 +171,7 @@
     <ClInclude Include="..\public\Camera_Manager.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Client_Macro.h" />
+    <ClInclude Include="..\public\Client_Struct.h" />
     <ClInclude Include="..\public\HpMp.h" />
     <ClInclude Include="..\public\Level_Loading.h" />
     <ClInclude Include="..\public\Level_Logo.h" />

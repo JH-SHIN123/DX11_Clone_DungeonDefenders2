@@ -165,6 +165,9 @@
     <ClInclude Include="..\public\MainMenu.h">
       <Filter>03.UI, HUD\01.MainMenu</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Client_Struct.h">
+      <Filter>98.Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
