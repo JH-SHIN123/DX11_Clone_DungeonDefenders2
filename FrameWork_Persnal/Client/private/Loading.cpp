@@ -6,10 +6,12 @@
 #include "VIBuffer_Terrain.h"
 
 #include "Terrain.h"
+#include "Player.h"
 #include "Status_Panel.h"
 #include "PlayerSkill.h"
 #include "HpMp.h"
 #include "WaveInfo.h"
+#include "Camera_Target.h"
 #include "Camera_Free.h"
 
 USING(Engine)
@@ -138,6 +140,14 @@ HRESULT CLoading::LoadingForStage()
 
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Free")
 		, CCamera_Free::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Target")
+		, CCamera_Target::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Player")
+		, CPlayer::Create(m_pDevice, m_pDevice_Context))))
 		return E_FAIL;
 
 

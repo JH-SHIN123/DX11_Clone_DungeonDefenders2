@@ -8,6 +8,8 @@
 #include "Component_Manager.h"
 #include "Pipeline_Manager.h"
 #include "InputDev.h"
+#include "Timer_Manager.h"
+#include "Frame_Manger.h"
 
 /* 싱글톤. */
 /* 엔진프로젝트 하나에 딱 한번만 할당된다. */
@@ -35,6 +37,7 @@ public:
 	HRESULT Clear_Back_Buffer(_float4 vClearColor);
 	HRESULT Clear_Depth_Stencil_Buffer();
 	HRESULT Present();
+	D3D11_VIEWPORT Get_ViewPort(D3D11_VIEWPORT* ViewPort);
 #pragma endregion
 
 
@@ -49,6 +52,8 @@ public:
 #pragma region GameObject_Manager	
 	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObject(_uint iPrototypeLevelIndex, const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, void* pArg = nullptr);
+	CGameObject* Get_GameObject(_uint iLevelIndex, const _tchar* pLayerTag); // Clone
+	list<CGameObject*>* Get_GameObject_List(_uint iLevelIndex, const _tchar* pLayerTag); // Clone
 #pragma endregion
 
 
@@ -66,6 +71,14 @@ public:
 	CInputDev* Get_InputDev() { return m_pInputDev_Manager; }
 #pragma  endregion
 
+#pragma  region Timer
+	CTimer_Manager* Get_Timer() { return m_pTimer_Manager; }
+#pragma  endregion
+
+#pragma  region Frame
+	CFrame_Manger* Get_Frame() { return m_pFrame_Manger; }
+#pragma  endregion
+
 
 private:
 	CGraphic_Device*				m_pGraphic_Device = nullptr;
@@ -74,6 +87,8 @@ private:
 	CComponent_Manager*				m_pComponent_Manager = nullptr;
 	CPipeline_Manager*				m_pPipeline_manager = nullptr;
 	CInputDev*						m_pInputDev_Manager = nullptr;
+	CTimer_Manager*					m_pTimer_Manager = nullptr;
+	CFrame_Manger*					m_pFrame_Manger = nullptr;
 
 public:
 	static _ulong	Release_Engine();

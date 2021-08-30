@@ -74,6 +74,24 @@ namespace Engine
 		const wchar_t*	m_pTargetTag;
 
 	};
+
+	class CDeleteMap
+	{
+	public:
+		explicit CDeleteMap(void) {}
+		~CDeleteMap(void) {}
+	public: // operator	
+		template <typename T>
+		void operator () (T& Pair)
+		{
+			_ulong dwRefCnt = 0;
+
+			dwRefCnt = Pair.second->Release();
+
+			if (0 == dwRefCnt)
+				Pair.second = NULL;
+		}
+	};
 }
 
 #define __ENGINE_FUNCTION_H__

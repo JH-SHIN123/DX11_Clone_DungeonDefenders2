@@ -9,6 +9,8 @@ CGameInstance::CGameInstance()
 	, m_pComponent_Manager(CComponent_Manager::GetInstance())
 	, m_pPipeline_manager(CPipeline_Manager::GetInstance())
 	, m_pInputDev_Manager(CInputDev::GetInstance())
+	, m_pTimer_Manager(CTimer_Manager::GetInstance())
+	, m_pFrame_Manger(CFrame_Manger::GetInstance())
 {
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pGameObject_Manager);
@@ -100,6 +102,10 @@ HRESULT CGameInstance::Present()
 
 	return m_pGraphic_Device->Present();
 }
+D3D11_VIEWPORT CGameInstance::Get_ViewPort(D3D11_VIEWPORT* ViewPort)
+{
+	return m_pGraphic_Device->Get_ViewPort(ViewPort);
+}
 #pragma endregion 
 
 #pragma region Level_Manager
@@ -150,6 +156,21 @@ HRESULT CGameInstance::Add_GameObject(_uint iPrototypeLevelIndex, const _tchar *
 	return m_pGameObject_Manager->Add_GameObject(iPrototypeLevelIndex, pPrototypeTag, iLevelIndex, pLayerTag, pArg);
 }
 
+CGameObject * CGameInstance::Get_GameObject(_uint iLevelIndex, const _tchar * pLayerTag)
+{
+	if (nullptr == m_pGameObject_Manager)
+		return nullptr;
+
+	return m_pGameObject_Manager->Get_GameObject(iLevelIndex, pLayerTag);
+}
+
+list<CGameObject*>* CGameInstance::Get_GameObject_List(_uint iLevelIndex, const _tchar * pLayerTag)
+{
+	if (nullptr == m_pGameObject_Manager)
+		return nullptr;
+
+	return m_pGameObject_Manager->Get_GameObject_List(iLevelIndex, pLayerTag);
+}
 
 #pragma endregion 
 
@@ -216,6 +237,8 @@ void CGameInstance::Free()
 	// 삭제
 	Safe_Release(m_pPipeline_manager);
 	Safe_Release(m_pInputDev_Manager);
+	Safe_Release(m_pTimer_Manager);
+	Safe_Release(m_pFrame_Manger);
 
 	/* 게임인스턴스 안에 선언된 멤버함수의 정리를 수행한다. */
 	Safe_Release(m_pGraphic_Device);

@@ -20,6 +20,9 @@ public:
 	virtual _int Late_Tick(_float TimeDelta);
 	virtual HRESULT Render();
 
+public:
+	class CComponent* Get_Component(const _tchar* pComponentTag);
+
 protected:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDevice_Context = nullptr;
@@ -33,7 +36,7 @@ protected:
 	HRESULT Add_Component_Array(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, CComponent*** pppOut, void* pArg = nullptr);
 
 private:
-	CComponent* Find_Component(const _tchar* pComponentTag);
+	class CComponent* Find_Component(const _tchar* pComponentTag);
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) = 0;

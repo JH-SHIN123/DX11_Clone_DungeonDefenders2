@@ -3,6 +3,7 @@
 #ifndef __ENGINE_DEFINES_H__
 
 #pragma warning (disable : 4251)
+#pragma warning (disable : 4005) // DIRECTINPUT_VERSION 매크로 재정의
 
 #include "D3D11.h"
 #include "DirectXMath.h"	// 수학
@@ -18,6 +19,8 @@ using namespace DirectX;
 
 #define DIRECTINPUT_VERSION	0x0800
 #include <list>
+#include <map>
+#include <vector>
 #include <unordered_map>
 #include <algorithm>
 using namespace std;
@@ -42,9 +45,9 @@ using namespace std;
 #include "Engine_Struct.h"
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
+#include "Engine_Easy_Defines.h"
 
 using namespace Engine;
-
 
 
 #define UPDATE_ERROR -1

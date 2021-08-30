@@ -67,6 +67,19 @@ void CTransform::Set_RotateAxis(_fvector vAxis, _float fRadian)
 	Set_State(EState::Look, XMVector3TransformNormal(vLook, RotateMatrix));
 }
 
+void CTransform::Set_RotateAxis_MyRadian(_fvector vAxis, _float fRadian)
+{
+	_vector	vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * Get_Scale(EState::Right);
+	_vector	vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * Get_Scale(EState::Up);
+	_vector	vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * Get_Scale(EState::Look);
+
+	_matrix	RotateMatrix = XMMatrixRotationAxis(vAxis, m_vRadian.y + fRadian);
+
+	Set_State(EState::Right, XMVector3TransformNormal(vRight, RotateMatrix));
+	Set_State(EState::Up, XMVector3TransformNormal(vUp, RotateMatrix));
+	Set_State(EState::Look, XMVector3TransformNormal(vLook, RotateMatrix));
+}
+
 void CTransform::RotateToTarget(_fvector vTargetPos)
 {
 	_vector	vRight, vUp, vLook;

@@ -20,7 +20,11 @@ public:
 
 	/* 원형객체를 검색하여 복제한 후, 레이어에 추가하나다,. */
 	HRESULT Add_GameObject(_uint iPrototypeLevelIndex, const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, void* pArg = nullptr);
-	
+
+	// Getter
+	CGameObject* Get_GameObject(_uint iLevelIndex, const _tchar* pLayerTag);
+	list<CGameObject*>* Get_GameObject_List(_uint iLevelIndex, const _tchar* pLayerTag);
+
 	_int Tick_GameObject(_float TimeDelta);
 	void Clear(_uint iLevelIndex);
 

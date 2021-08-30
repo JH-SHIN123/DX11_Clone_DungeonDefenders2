@@ -37,11 +37,11 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	void Key_Check();
+	void Key_Check(_float TimeDelta);
 
 private:
 	CRenderer*				m_pRendererCom = nullptr;
-	CVIBuffer_Terrain*		m_pVIBufferCom = nullptr;
+	CVIBuffer_Cube*			m_pVIBufferCom = nullptr;
 	CTextures*				m_pTextureCom = nullptr;
 	CMovement*				m_pMovementCom = nullptr;
 

@@ -97,10 +97,10 @@ void CHpMp::Damage_Check()
 	XMStoreFloat4(&vMaskPos, m_pMovementCom_Mask->Get_State(EState::Position));
 	//XMStoreFloat3(&vMaskPos, m_pMovementCom_Mask->Get_Scale(EState::Up));
 
-	if (GetAsyncKeyState('Q') & 0x8000)
-		vMaskPos.y -= 0.5f;
-	if (GetAsyncKeyState('W') & 0x8000)
-		vMaskPos.y += 0.5f;
+	//if (GetAsyncKeyState('Q') & 0x8000)
+	//	vMaskPos.y -= 0.5f;
+	//if (GetAsyncKeyState('W') & 0x8000)
+	//	vMaskPos.y += 0.5f;
 
 	m_pMovementCom_Mask->Set_State(EState::Position, XMVectorSet(vMaskPos.x, vMaskPos.y, 0.f, 1.f));
 }

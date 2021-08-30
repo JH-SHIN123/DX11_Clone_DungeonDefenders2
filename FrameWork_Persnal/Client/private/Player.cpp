@@ -31,6 +31,8 @@ _int CPlayer::Tick(_float TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	Key_Check(TimeDelta);
+
 	return _int();
 }
 
@@ -43,7 +45,7 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 
 HRESULT CPlayer::Render()
 {
-	if (m_pVIBufferCom)
+	if (nullptr == m_pVIBufferCom)
 		return UPDATE_ERROR;
 
 	m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
@@ -51,22 +53,36 @@ HRESULT CPlayer::Render()
 	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
 
 	m_pVIBufferCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
-	m_pVIBufferCom->Render(1);
+	m_pVIBufferCom->Render(0);
 
 	return S_OK;
 }
 
-void CPlayer::Key_Check()
+void CPlayer::Key_Check(_float TimeDelta)
 {
+	if (GET_KEY_INPUT(DIK_W))
+		m_pMovementCom->Go_Straight(TimeDelta);
+
+	if (GET_KEY_INPUT(DIK_S))
+		m_pMovementCom->Go_Backward(TimeDelta);
+
+	if (GET_KEY_INPUT(DIK_A))
+		m_pMovementCom->Go_Left(TimeDelta);
+
+	if (GET_KEY_INPUT(DIK_D))
+		m_pMovementCom->Go_Right(TimeDelta);
+
+	// 카메라 가져와서 회전 시키기
 }
 
 HRESULT CPlayer::Ready_Component(void* pArg)
 {
 	HRESULT hr = S_OK;
-
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect_Model"), TEXT("Com_Buffer"), (CComponent**)&m_pVIBufferCom);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, pArg);
 
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Texture_EnemyKillBar"), TEXT("Com_Texture_Enemy"), (CComponent**)&m_pTextureCom);
+	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_Devil"), TEXT("Com_Texture_0"), (CComponent**)&m_pTextureCom);
 
 
 

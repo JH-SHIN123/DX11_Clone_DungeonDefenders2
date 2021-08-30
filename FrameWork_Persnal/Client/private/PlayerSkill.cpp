@@ -69,7 +69,7 @@ HRESULT CPlayerSkill::Render()
 
 
 
-	for (_uint i = 0; i < m_iSkillNum; ++i)
+	for (_int i = 0; i < m_iSkillNum; ++i)
 	{
 		m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_Skill[i]->Get_WorldMatrix()), sizeof(_matrix));	
 		m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(i));

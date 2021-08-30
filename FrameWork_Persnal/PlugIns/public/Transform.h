@@ -38,6 +38,7 @@ public:	// Setter
 	void	Set_State(EState eState, _fvector vState);
 	void	Set_Scale(_fvector vScale); // only scale
 	void	Set_RotateAxis(_fvector vAxis, _float fRadian);
+	void	Set_RotateAxis_MyRadian(_fvector vAxis, _float fRadian);
 	void	Set_WorldMatrix(const _fmatrix& WorldMatrix) { XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix); }
 	void	Set_WorldMatrix(const _float4x4& WorldMatrix) { m_WorldMatrix = WorldMatrix; }
 
@@ -47,6 +48,7 @@ public:	// Rotate
 	
 private:
 	_float4x4		m_WorldMatrix;
+	_float3			m_vRadian = _float3(0.f, 0.f, 0.f);
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

@@ -82,6 +82,18 @@
     <Filter Include="02.Utility\02.Component\01.Buffer\02.Cube">
       <UniqueIdentifier>{8f0dde17-52c3-4a3d-b46b-dc7f970d8875}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.System\03.Timer">
+      <UniqueIdentifier>{0c71cee1-7bf9-49a1-943c-41847fbf259f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.System\03.Timer\Manager">
+      <UniqueIdentifier>{50a68369-ed6f-40ef-8ca2-c8222390dee5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.System\04.Frame">
+      <UniqueIdentifier>{aff7198e-6abc-459e-80df-cf4c91c4d7c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.System\04.Frame\Manager">
+      <UniqueIdentifier>{651e75c2-b72a-4d8f-92ce-11e9a720d9c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
@@ -171,6 +183,21 @@
     <ClInclude Include="VIBuffer_Cube.h">
       <Filter>02.Utility\02.Component\01.Buffer\02.Cube</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Timer_Manager.h">
+      <Filter>01.System\03.Timer\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Timer.h">
+      <Filter>01.System\03.Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Frame_Manger.h">
+      <Filter>01.System\04.Frame\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Frame.h">
+      <Filter>01.System\04.Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Engine_Easy_Defines.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -235,6 +262,18 @@
     </ClCompile>
     <ClCompile Include="VIBuffer_Cube.cpp">
       <Filter>02.Utility\02.Component\01.Buffer\02.Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Timer_Manager.cpp">
+      <Filter>01.System\03.Timer\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Timer.cpp">
+      <Filter>01.System\03.Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Frame_Manger.cpp">
+      <Filter>01.System\04.Frame\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Frame.cpp">
+      <Filter>01.System\04.Frame</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

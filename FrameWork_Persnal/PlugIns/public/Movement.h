@@ -58,6 +58,7 @@ public:
 public: // Getter
 
 public:	// Setter
+	void Set_SpeedPerSec(_float fSpeedPerSec) { m_MoveStateDesc.fSpeedPerSec = fSpeedPerSec; }
 
 public: // Move
 	void Go_Straight(_float TimeDelta);

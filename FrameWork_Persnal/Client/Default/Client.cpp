@@ -51,6 +51,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	if (nullptr == pMainApp)
 		return FALSE;
 
+	GET_TIMER->Ready_Timer(L"Timer_Immediate");
+	GET_TIMER->Ready_Timer(L"Timer_FPS60");
+	GET_FRAME->Ready_Frame(L"Frame60", 60.f);
+
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
 
@@ -73,11 +77,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			}
 		}
 
-		if (pMainApp->Update_MainApp(0.0002) & 0x80000000)
-			break;
-		
-		if (FAILED(pMainApp->Render_MainApp()))
-			break;
+		else
+		{
+			GET_TIMER->Set_TimeDelta(L"Timer_Immediate");
+			_float		fTimerImmediate = GET_TIMER->Get_TimeDelta(L"Timer_Immediate");
+
+			if (GET_FRAME->IsPermit_Call(L"Frame60", fTimerImmediate))
+			{
+				GET_TIMER->Set_TimeDelta(L"Timer_FPS60");
+				_float		fTimer60 = GET_TIMER->Get_TimeDelta(L"Timer_FPS60");
+
+				if (pMainApp->Update_MainApp((_double)fTimer60) & 0x80000000)
+					break;
+
+				if (FAILED(pMainApp->Render_MainApp()))
+					break;
+			}
+		}
 
 	}
 

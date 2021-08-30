@@ -23,6 +23,9 @@ HRESULT CLevel_Stage1::NativeConstruct()
 
 	if (FAILED(Ready_Layer_Camera_Free(TEXT("Layer_Camera_Free"))))
 		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+		return E_FAIL;
 		
 
 	return S_OK;
@@ -103,10 +106,10 @@ HRESULT CLevel_Stage1::Ready_Layer_Camera_Free(const _tchar * pLayerTag)
 	CameraDesc.fNear = 0.3f;
 	CameraDesc.fFar = 300.f;
 
-	CameraDesc.StateDesc.fSpeedPerSec = 100.f;
+	CameraDesc.StateDesc.fSpeedPerSec = 50.f;
 	CameraDesc.StateDesc.fRotatePerSec = XMConvertToRadians(90.0f);
 
-	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Free"), (_uint)ELevel::Stage1, pLayerTag, &CameraDesc);
+	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Target"), (_uint)ELevel::Stage1, pLayerTag, &CameraDesc);
 
 	return S_OK;
 }
@@ -117,7 +120,8 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
 
 	MOVESTATE_DESC Data;
 	Data.vPos = _float4(10.f, 0.f, 10.f, 1.f);
-	Data.vScale = _float4(10.f, 10.f, 10.f, 1.f);
+	Data.vScale = _float4(3.f, 3.f, 1.f, 1.f);
+	Data.fSpeedPerSec = 20.f;
 
 	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Player"), (_uint)ELevel::Stage1, pLayerTag, &Data);
 

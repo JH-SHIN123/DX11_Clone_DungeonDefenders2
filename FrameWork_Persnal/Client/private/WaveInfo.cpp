@@ -31,7 +31,7 @@ _int CWaveInfo::Tick(_float TimeDelta)
 {
 	if (m_eWaveState == EWaveState::Combat ||
 		m_eWaveState == EWaveState::Boss)
-		m_fBarAlphaTime += 0.03f;
+		m_fBarAlphaTime += TimeDelta;
 
 	if (m_fBarAlphaTime >= 1.f)
 		m_fBarAlphaTime = 1.f;
@@ -39,7 +39,7 @@ _int CWaveInfo::Tick(_float TimeDelta)
 	if (m_eWaveState == EWaveState::Build)
 	{
 		if(m_fBarAlphaTime >= 0.f)
-		m_fBarAlphaTime -= 0.03f;
+		m_fBarAlphaTime -= TimeDelta;
 	}
 
 	if (GetAsyncKeyState('E') & 0x8000)

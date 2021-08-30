@@ -35,7 +35,7 @@ _int CMainMenu::Tick(_float TimeDelta)
 
 	if (m_IsClick == true && m_IsMenu == false)
 	{
-		m_pMovementCom->Go_Up(0.0002f);
+		m_pMovementCom->Go_Up(TimeDelta);
 
 		_float fY = XMVectorGetY(m_pMovementCom->Get_State(EState::Position));
 		if (fY >= 220.f)
@@ -47,7 +47,7 @@ _int CMainMenu::Tick(_float TimeDelta)
 
 	if (m_IsClick == true)
 	{
-		m_fAlphaTime += 0.03f;
+		m_fAlphaTime += TimeDelta;
 
 		if (m_IsMove == true)
 		{
@@ -132,8 +132,7 @@ HRESULT CMainMenu::Render()
 HRESULT CMainMenu::Ready_Component(void * pArg)
 {
 	MOVESTATE_DESC Data;
-	Data.fSpeedPerSec = 8000.f;
-	m_pMovementCom->NativeConstruct(&Data);
+	m_pMovementCom->Set_SpeedPerSec(300.f);
 
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Logo
 		, TEXT("Component_Texture_Generic_Panel"), TEXT("Com_Texture_Generic_Panel"), (CComponent**)&m_pTextureCom_UI)))
@@ -146,22 +145,20 @@ HRESULT CMainMenu::Ready_Component(void * pArg)
 	m_pMovementCom_UI[0]->Set_State(EState::Position, XMVectorSet(0.f, -50.f, 0.f, 1.f));
 	XMStoreFloat4x4(&m_Mat, m_pMovementCom_UI[0]->Get_WorldMatrix());
 
-	Data.fSpeedPerSec = 30000.f;
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_UI_1"), (CComponent**)&m_pMovementCom_UI[1]);
 	m_pMovementCom_UI[1]->Set_Scale(XMVectorSet(512.f, 128.f, 0.f, 0.f));
 	m_pMovementCom_UI[1]->Set_State(EState::Position, XMVectorSet(-200.f, -500.f, 0.f, 1.f));
-	m_pMovementCom_UI[1]->NativeConstruct(&Data);
+	m_pMovementCom_UI[1]->Set_SpeedPerSec(670.f);
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_UI_2"), (CComponent**)&m_pMovementCom_UI[2]);
 	m_pMovementCom_UI[2]->Set_Scale(XMVectorSet(512.f, 128.f, 0.f, 0.f));
 	m_pMovementCom_UI[2]->Set_State(EState::Position, XMVectorSet(0.f, -800.f, 0.f, 1.f));
-	m_pMovementCom_UI[2]->NativeConstruct(&Data);
+	m_pMovementCom_UI[2]->Set_SpeedPerSec(700.f);
 
-	Data.fSpeedPerSec = 10000.f;
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_UI_3"), (CComponent**)&m_pMovementCom_UI[3]);
 	m_pMovementCom_UI[3]->Set_Scale(XMVectorSet(512.f, 128.f, 0.f, 0.f));
 	m_pMovementCom_UI[3]->Set_State(EState::Position, XMVectorSet(0.f, -700.f, 0.f, 1.f));
-	m_pMovementCom_UI[3]->NativeConstruct(&Data);
+	m_pMovementCom_UI[3]->Set_SpeedPerSec(400.f);
 
 	return S_OK;
 }

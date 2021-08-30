@@ -82,14 +82,17 @@
     <Filter Include="03.UI, HUD\00.2D\03.WaveInfo">
       <UniqueIdentifier>{3dbfbb4f-b927-4693-9585-c89d4a6589f9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Protocol">
-      <UniqueIdentifier>{5ae64ff8-9f27-4b0a-a3c4-3a4ba9d72bc5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Protocol\00.Stage_Manager">
-      <UniqueIdentifier>{b58efceb-9753-4fa5-9490-0c31d5584e00}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.UI, HUD\01.MainMenu">
       <UniqueIdentifier>{fbd7821e-65fe-4bb7-b403-bfd8924aa28f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Utility">
+      <UniqueIdentifier>{5ae64ff8-9f27-4b0a-a3c4-3a4ba9d72bc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Utility\00.Stage_Manager">
+      <UniqueIdentifier>{b58efceb-9753-4fa5-9490-0c31d5584e00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Utility\01.Calculator">
+      <UniqueIdentifier>{9b52f15a-8f7d-4887-afd7-8139266b7cd3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -160,13 +163,19 @@
       <Filter>03.UI, HUD\00.2D\03.WaveInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Wave_Manger.h">
-      <Filter>05.Protocol\00.Stage_Manager</Filter>
+      <Filter>05.Utility\00.Stage_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MainMenu.h">
       <Filter>03.UI, HUD\01.MainMenu</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Client_Struct.h">
       <Filter>98.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Camera_Target.h">
+      <Filter>04.Camera\01.Camera_Target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Calculator.h">
+      <Filter>05.Utility\01.Calculator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -222,10 +231,16 @@
       <Filter>03.UI, HUD\00.2D\03.WaveInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Wave_Manger.cpp">
-      <Filter>05.Protocol\00.Stage_Manager</Filter>
+      <Filter>05.Utility\00.Stage_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MainMenu.cpp">
       <Filter>03.UI, HUD\01.MainMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera_Target.cpp">
+      <Filter>04.Camera\01.Camera_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Calculator.cpp">
+      <Filter>05.Utility\01.Calculator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -246,6 +261,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Shader\Shader_Terrain.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shader\Shader_Model.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

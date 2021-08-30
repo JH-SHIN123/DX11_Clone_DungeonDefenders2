@@ -31,6 +31,7 @@ public:
 	HRESULT Clear_Back_Buffer(_float4 vClearColor);
 	HRESULT Clear_Depth_Stencil_Buffer();
 	HRESULT Present();
+	D3D11_VIEWPORT Get_ViewPort(D3D11_VIEWPORT* pViewPort) { m_pDevice_Context->RSGetViewports(0, pViewPort); return *pViewPort; }
 
 
 private:

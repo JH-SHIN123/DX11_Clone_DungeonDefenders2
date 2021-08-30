@@ -103,6 +103,11 @@ HRESULT CMainApp::Ready_Component_PrototypeForStatic()
 		, CVIBuffer_Rect::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Default.hlsl"), "DefaultTechnique"))))
 		return E_FAIL;
 
+	// For. VIBuffer_RECT Model
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect_Model")
+		, CVIBuffer_Rect::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"))))
+		return E_FAIL;
+
 	// 이건 나중에 해결해 보자 텍스처 UV를 _float3로 못씀
 	//if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_VIBuffer_Cube")
 	//	, CVIBuffer_Cube::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Cube.hlsl"), "DefaultTechnique"))))

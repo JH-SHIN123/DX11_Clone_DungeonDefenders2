@@ -167,8 +167,10 @@
   <ItemGroup>
     <ClInclude Include="..\Bin\Shader\Shader_Defines.hpp" />
     <ClInclude Include="..\public\BackGround_Logo.h" />
+    <ClInclude Include="..\public\Calculator.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\public\Camera_Manager.h" />
+    <ClInclude Include="..\public\Camera_Target.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
     <ClInclude Include="..\public\Client_Macro.h" />
     <ClInclude Include="..\public\Client_Struct.h" />
@@ -193,8 +195,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\BackGround_Logo.cpp" />
+    <ClCompile Include="..\private\Calculator.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\private\Camera_Manager.cpp" />
+    <ClCompile Include="..\private\Camera_Target.cpp" />
     <ClCompile Include="..\private\HpMp.cpp" />
     <ClCompile Include="..\private\Level_Loading.cpp" />
     <ClCompile Include="..\private\Level_Logo.cpp" />
@@ -226,6 +230,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\Shader\Shader_Default.hlsl" />
+    <FxCompile Include="..\Bin\Shader\Shader_Model.hlsl" />
     <FxCompile Include="..\Bin\Shader\Shader_Terrain.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

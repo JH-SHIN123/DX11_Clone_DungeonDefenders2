@@ -81,6 +81,38 @@ HRESULT CGameObject_Manager::Add_GameObject(_uint iPrototypeLevelIndex, const _t
 	return S_OK;
 }
 
+CGameObject * CGameObject_Manager::Get_GameObject(_uint iLevelIndex, const _tchar * pLayerTag)
+{
+	if (m_iNumLevels <= iLevelIndex)
+		return nullptr;
+
+	CLayer*		pLayer = Find_Layer(iLevelIndex, pLayerTag);
+
+	if (nullptr == pLayer)
+	{
+		MSG_BOX("게임오브젝트를 못 찾았다.");
+		return nullptr;
+	}
+
+	return pLayer->Get_GameObject();
+}
+
+list<CGameObject*>* CGameObject_Manager::Get_GameObject_List(_uint iLevelIndex, const _tchar * pLayerTag)
+{
+	if (m_iNumLevels <= iLevelIndex)
+		return nullptr;
+
+	CLayer*		pLayer = Find_Layer(iLevelIndex, pLayerTag);
+
+	if (nullptr == pLayer)
+	{
+		MSG_BOX("게임오브젝트를 못 찾았다.");
+		return nullptr;
+	}
+
+	return &pLayer->Get_GameObject_List();
+}
+
 _int CGameObject_Manager::Tick_GameObject(_float TimeDelta)
 {
 	_int iProgress = 0;

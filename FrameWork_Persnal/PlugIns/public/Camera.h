@@ -15,6 +15,7 @@ typedef struct tagCameraDesc
 	_float3		vEye;
 	_float3		vAt;
 	_float3		vAxisY;
+	_float3		vTargetDis;
 
 	/* 투영관련 정보. */
 	_float		fAspect;
@@ -44,12 +45,35 @@ public:
 	virtual	_int	Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
+public: // Setter
+	//void Set_CameraDesc_Second(const CAMERA_DESC& CamDesc) { m_CameraDesc_Second = CamDesc; }
+
+public:
+	void Set_ZoomIn(_float fFov, _float fZoomSpeed = 1.f);
+	void Set_ZoomOut(_float fFov, _float fZoomSpeed = 1.f);
+
+protected: // Tick
+	void Target_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag);
+	void TargetRotate_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag);
+
+	void Aim_Check();
+
+private:
+	void Zoom_Check(_float TimeDelta);
+
 protected:
 	 CMovement*				m_pMovementCom = nullptr;
 	 CPipeline_Manager*		m_pPipeline_Manager = nullptr;
 
 protected:
 	CAMERA_DESC				m_CameraDesc;
+	CAMERA_DESC				m_CameraDesc_Second;
+	_bool					m_IsZoomIn = false;
+	_bool					m_IsZoomOut = false;
+	_bool					m_IsZoomReverse = false;
+	_float					m_fZoomFov = 0.f;
+	_float					m_fZoomSpeed = 0.f;
+
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) PURE; // pArg == CAMERA_DESC

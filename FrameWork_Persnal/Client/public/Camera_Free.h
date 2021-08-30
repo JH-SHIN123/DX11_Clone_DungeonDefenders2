@@ -20,9 +20,6 @@ public:
 	virtual _int	Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
-public:
-	void Aim();
-
 private:
 	HRESULT	Ready_Component();
 
