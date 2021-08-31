@@ -160,10 +160,10 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 	m_pMovementCom->Set_State(EState::Position, vMyPos);
 
 	_vector vNewRight = XMVector4Normalize(m_pMovementCom->Get_State(EState::Right)) * pTarget->Get_Scale(EState::Right);
-	_vector vNewLook = XMVector4Normalize(m_pMovementCom->Get_State(EState::Look)) * pTarget->Get_Scale(EState::Look);
 
-	//m_CameraDesc.vAt = _float3(10.f, 2.f, 3.f);
-	//m_pMovementCom->Set_RotateAxis_MyRadian(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(10.f));
+	// vNewRight를 바탕으로 Look을 구해주자
+	_vector vRightUp_Cross = XMVector3Cross(vNewRight, XMVectorSet(0.f, 1.f, 0.f, 0.f)) ;
+	_vector vNewLook = XMVector4Normalize(vRightUp_Cross) * pTarget->Get_Scale(EState::Look);
 
 	pTarget->Set_State(EState::Right, vNewRight);
 	pTarget->Set_State(EState::Look, vNewLook);

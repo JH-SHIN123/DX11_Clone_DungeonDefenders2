@@ -70,10 +70,10 @@ _bool CPlayer::Get_Skill_Using(_int iSkillIndex)
 void CPlayer::Key_Check(_float TimeDelta)
 {
 	if (GET_KEY_INPUT(DIK_W))
-		m_pMovementCom->Go_Straight(TimeDelta);
+		m_pMovementCom->Go_LookDir(TimeDelta);
 
 	if (GET_KEY_INPUT(DIK_S))
-		m_pMovementCom->Go_Backward(TimeDelta);
+		m_pMovementCom->Go_LookDir(-TimeDelta);
 
 	if (GET_KEY_INPUT(DIK_A))
 		m_pMovementCom->Go_Left(TimeDelta);

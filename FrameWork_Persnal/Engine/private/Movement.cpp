@@ -116,6 +116,18 @@ void CMovement::Go_Up(_float TimeDelta)
 	__super::Set_State(EState::Position, vPosition);
 }
 
+void CMovement::Go_LookDir(_float TimeDelta)
+{
+	_vector vPosition = __super::Get_State(EState::Position);
+	_vector vLook = __super::Get_State(EState::Look);
+
+	vLook = XMVector4Normalize(vLook);
+
+	vPosition += vLook * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
+
+	__super::Set_State(EState::Position, vPosition);
+}
+
 void CMovement::RotateToAxis_Tick(_float TimeDelta, _fvector vAxis)
 {
 	_vector	vRight	= __super::Get_State(EState::Right);

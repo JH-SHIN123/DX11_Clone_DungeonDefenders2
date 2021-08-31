@@ -67,6 +67,8 @@ public: // Move
 	void Go_Left(_float TimeDelta);
 	void Go_Dir(_float TimeDelta, _fvector vTargetPos);
 	void Go_Up(_float TimeDelta);
+	void Go_LookDir(_float TimeDelta);
+
 
 public: // Rotate Tick
 	void RotateToAxis_Tick(_float TimeDelta, _fvector vAxis);
