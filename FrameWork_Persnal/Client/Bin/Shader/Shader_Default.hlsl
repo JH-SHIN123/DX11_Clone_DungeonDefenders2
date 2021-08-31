@@ -5,6 +5,7 @@
 texture2D		g_DiffuseTexture;
 texture2D		g_MaskTexture;
 float			g_AlphaTime;
+float			g_Texture_X;
 
 // 샘플러 : 텍스처를 어떻게 필터링하고 샘플링 할것인지 세팅하는것
 // RS보다 세밀한 설정느낌
@@ -95,6 +96,23 @@ VS_OUT VS_MAIN_UI_REVERCE(VS_IN In)
 	return Out;
 }
 
+VS_OUT VS_MAIN_UI_TEXTURE_X_TIME(VS_IN In)
+{
+	VS_OUT			Out = (VS_OUT)0;
+	matrix		matWV, matWVP;
+
+	matWV = mul(WorldMatrix, ViewMatrix);
+	matWVP = mul(matWV, ProjMatrix);
+
+	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+
+	Out.vTexUV = In.vTexUV; // 텍스처 UV
+	Out.vTexUV.x += g_Texture_X;
+
+
+	return Out;
+}
+
 struct PS_IN
 {
 	float4 vPosition : SV_POSITION;
@@ -151,20 +169,48 @@ PS_OUT PS_REDMASKING(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	if (In.vPosition.y >= 640.f ||
-		In.vPosition.y <= 500.f /*||
+	if (In.vPosition.y >= 640.f 
+		/*||	In.vPosition.y <= 500.f*/ /*||
 		In.vTexUV.y <= 0.2f*/)
 	{
 		Out.vColor.a = 0.f;
 		return Out;
 	}
 
-	float4 vFX_tex = g_MaskTexture.Sample(DiffuseSampler, In.vTexUV);
-	Out.vColor = g_MaskTexture.Sample(DiffuseSampler, In.vTexUV);
+	//float4 vFX_tex = g_MaskTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	float G = Out.vColor.g;
+
+	Out.vColor = (float4)0.f;
 
 	Out.vColor.r = 0.9f;
-//	Out.vColor.gb = 1.f;
-	Out.vColor.a = vFX_tex.g;
+	Out.vColor.a = G;
+
+	return Out;
+}
+
+PS_OUT PS_BLUEMASKING(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	if (In.vPosition.y >= 640.f
+		/*||	In.vPosition.y <= 500.f*/ /*||
+										  In.vTexUV.y <= 0.2f*/)
+	{
+		Out.vColor.a = 0.f;
+		return Out;
+	}
+
+	//float4 vFX_tex = g_MaskTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	float G = Out.vColor.g;
+
+	Out.vColor = (float4)0.f;
+
+	Out.vColor.b = 0.9f;
+	Out.vColor.a = G;
 
 	return Out;
 }
@@ -203,6 +249,17 @@ PS_OUT PS_TIMEDARK(PS_IN In)
 
 	if (vFX_tex.a >= g_AlphaTime)
 		Out.vColor.rgb -= 0.7f;
+
+	return Out;
+}
+
+PS_OUT PS_ALPHAMIN(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	Out.vColor.a = 0.3f;
 
 	return Out;
 }
@@ -251,13 +308,13 @@ technique11		DefaultTechnique
 		PixelShader = compile ps_5_0 PS_MAIN_BLUE();
 	}
 
-	pass Reverce_RedMask//4
+	pass TimeTextureX_RedMask//4
 	{
 		// 깊이버퍼 비교 X
 		SetRasterizerState(Rasterizer_Solid);
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-		VertexShader = compile vs_5_0 VS_MAIN_UI_REVERCE();
+		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE_X_TIME();
 		PixelShader = compile ps_5_0 PS_REDMASKING();
 	}
 
@@ -289,6 +346,36 @@ technique11		DefaultTechnique
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI();
 		PixelShader = compile ps_5_0 PS_TIMEDARK();
+	}
+
+	pass UI_ALPHAMIN//8
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		PixelShader = compile ps_5_0 PS_ALPHAMIN();
+	}
+
+	pass REVERSE_ALPHAMIN//9
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI_REVERCE();
+		PixelShader = compile ps_5_0 PS_ALPHAMIN();
+	}
+
+	pass TimeTextureX_BlueMask//10
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE_X_TIME();
+		PixelShader = compile ps_5_0 PS_BLUEMASKING();
 	}
 };
 

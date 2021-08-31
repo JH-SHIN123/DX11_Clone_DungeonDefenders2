@@ -19,22 +19,29 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void Damage_Check();
+	void HpMp_Check(_float TimeDelta);
 
 
 private:
 	HRESULT	Ready_Component(void* pArg);
 
 private:
+	CMovement*				m_pMovementCom_Mask = nullptr; // hp
 	CMovement*				m_pMovementCom_MP = nullptr;
-	CVIBuffer_Rect*			m_pBufferRectCom_MP = nullptr; // 일단은 이거 없어도 잘 씀
-
-	CMovement*				m_pMovementCom_Mask = nullptr;
-	//CTextures*				m_pTextureCom_Mask = nullptr;
+	CMovement*				m_pMovementCom_MP_Mask = nullptr; //mp
 
 private:
-	_float m_fDamage = 10.f;
+	_float		m_fDamage = 10.f;
 	_float2		m_vInterval;
+	_float		m_fTime = 0.f;
+
+	_float		m_fHp = 80.f;
+	_float		m_fHp_Max = 100.f;
+
+	_float		m_fMp = 80.f;
+	_float		m_fMp_Max = 100.f;
+
+	_float		m_fHpScale = 117.f;
 
 
 	// CUI_2D을(를) 통해 상속됨
