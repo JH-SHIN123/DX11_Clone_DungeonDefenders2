@@ -34,6 +34,7 @@ public: // Setter
 
 private:
 	void CoolDown_Check(_float TimeDelta);
+	void Phase_Check();
 
 private:
 	HRESULT	Ready_Component(void* pArg);

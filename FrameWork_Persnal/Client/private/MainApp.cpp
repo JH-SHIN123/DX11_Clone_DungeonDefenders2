@@ -125,7 +125,7 @@ HRESULT CMainApp::Ready_UI_Texture()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_HpMp")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/HpMp/%d.tga"), 3))))
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/HpMp/%d.tga"), 4))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_StatusPanel")

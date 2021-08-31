@@ -53,18 +53,17 @@ HRESULT CHpMp::Render()
 	if (nullptr == m_pBufferRectCom)
 		return UPDATE_ERROR;
 
-	// Back
-	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 	m_pBufferRectCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
 	m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
+
+	// Back
+	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
 	m_pBufferRectCom->Render(2);
 
-	// Hp Mask
+	// Hp Mask g_MaskTexture
 	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_Mask->Get_WorldMatrix()), sizeof(_matrix));
-	//m_pBufferRectCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
-	//m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
-	//m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
+	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
 	m_pBufferRectCom->Set_ShaderResourceView("g_MaskTexture", m_pTextureCom->Get_ShaderResourceView(2));
 	m_pBufferRectCom->Render(4);
 
@@ -97,10 +96,10 @@ void CHpMp::Damage_Check()
 	XMStoreFloat4(&vMaskPos, m_pMovementCom_Mask->Get_State(EState::Position));
 	//XMStoreFloat3(&vMaskPos, m_pMovementCom_Mask->Get_Scale(EState::Up));
 
-	//if (GetAsyncKeyState('Q') & 0x8000)
-	//	vMaskPos.y -= 0.5f;
-	//if (GetAsyncKeyState('W') & 0x8000)
-	//	vMaskPos.y += 0.5f;
+	if (GET_KEY_INPUT(DIK_Q))
+		vMaskPos.y -= 0.5f;
+	if (GET_KEY_INPUT(DIK_E))
+		vMaskPos.y += 0.5f;
 
 	m_pMovementCom_Mask->Set_State(EState::Position, XMVectorSet(vMaskPos.x, vMaskPos.y, 0.f, 1.f));
 }

@@ -106,6 +106,10 @@ void CPlayerSkill::CoolDown_Check(_float TimeDelta)
 	}
 }
 
+void CPlayerSkill::Phase_Check()
+{
+}
+
 HRESULT CPlayerSkill::Ready_Component(void* pArg)
 {
 	UI2D_DESC* pData = new UI2D_DESC;

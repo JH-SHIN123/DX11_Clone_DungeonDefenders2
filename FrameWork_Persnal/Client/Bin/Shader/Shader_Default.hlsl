@@ -160,11 +160,10 @@ PS_OUT PS_REDMASKING(PS_IN In)
 	}
 
 	float4 vFX_tex = g_MaskTexture.Sample(DiffuseSampler, In.vTexUV);
-	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vColor = g_MaskTexture.Sample(DiffuseSampler, In.vTexUV);
 
-	float4	vColor = (float4)0.f;
-
-	Out.vColor.g = 0.9f;
+	Out.vColor.r = 0.9f;
+//	Out.vColor.gb = 1.f;
 	Out.vColor.a = vFX_tex.g;
 
 	return Out;
@@ -258,7 +257,7 @@ technique11		DefaultTechnique
 		SetRasterizerState(Rasterizer_Solid);
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		VertexShader = compile vs_5_0 VS_MAIN_UI_REVERCE();
 		PixelShader = compile ps_5_0 PS_REDMASKING();
 	}
 
