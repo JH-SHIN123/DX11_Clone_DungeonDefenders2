@@ -36,6 +36,9 @@ public:
 	virtual _int	Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	_bool Get_Skill_Using(_int iSkillIndex);
+
 private:
 	void Key_Check(_float TimeDelta);
 
@@ -44,6 +47,9 @@ private:
 	CVIBuffer_Cube*			m_pVIBufferCom = nullptr;
 	CTextures*				m_pTextureCom = nullptr;
 	CMovement*				m_pMovementCom = nullptr;
+
+private:
+	_bool		m_IsSkill_Use[10] = { false };
 
 private:
 	HRESULT	Ready_Component(void* pArg);

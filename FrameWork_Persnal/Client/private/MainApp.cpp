@@ -142,6 +142,9 @@ HRESULT CMainApp::Ready_UI_Texture()
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_SkillMage")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/Skill_Mage/Skill_%d.tga"), 10))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_CoolDown")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Skill_Mage/CoolDown.png")))))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_EnemyKillBar")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StageInfo/EnemyKillBar.tga")))))

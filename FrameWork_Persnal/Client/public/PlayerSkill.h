@@ -29,17 +29,24 @@ public:
 	virtual HRESULT Render() override;
 
 public: // Setter
-	void Set_Cast(ECastType eCastType, _float fCastTime) { m_eCastType = eCastType, m_fCastTime = fCastTime; }
+	void	Set_Cast(ECastType eCastType, _float fCastTime) { m_eCastType = eCastType, m_fCastTime = fCastTime; }
+	_bool	Set_Skill_CoolDown(_uint iIndex, _float fCoolDownTime);
 
+private:
+	void CoolDown_Check(_float TimeDelta);
 
 private:
 	HRESULT	Ready_Component(void* pArg);
+	HRESULT Render_SkillIcon();
 
 private: // Skill Icon
 	CMovement*		m_pMovementCom_Skill[10] = { nullptr };
 	CTextures*		m_pTextureCom_CoolDown = nullptr;
 
 	_bool			m_IsCoolDown[10] = { false };
+	_float			m_fCoolDownTime[10] = { 0.f };
+	_float			m_fCoolDownTimeMax[10] = { 0.f };
+
 	_float			m_fUI_Interval = 67.f;
 	_int			m_iSkillNum = 10;
 

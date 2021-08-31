@@ -27,6 +27,7 @@ struct VS_IN
 	float2 vTexUV : TEXCOORD0;
 };
 
+
 struct VS_OUT
 {
 	// VS의 Input과 Output의 vPosition이 다르다
@@ -192,6 +193,21 @@ PS_OUT PS_TIME(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_TIMEDARK(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	float4 vFX_tex = g_MaskTexture.Sample(DiffuseSampler, In.vTexUV); // 쿨타임이미지
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV); // 원래 이미지
+
+	// 정규화된 시간이 특정 알파값보다 작다면 어둡게
+
+	if (vFX_tex.a >= g_AlphaTime)
+		Out.vColor.rgb -= 0.7f;
+
+	return Out;
+}
+
 // 네임스페이스 정도
 technique11		DefaultTechnique
 {
@@ -264,6 +280,16 @@ technique11		DefaultTechnique
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI();
 		PixelShader = compile ps_5_0 PS_TIME();
+	}
+
+	pass UI_TimeDark//7
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		PixelShader = compile ps_5_0 PS_TIMEDARK();
 	}
 };
 

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Player.h"
+#include "PlayerSkill.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -58,6 +59,14 @@ HRESULT CPlayer::Render()
 	return S_OK;
 }
 
+_bool CPlayer::Get_Skill_Using(_int iSkillIndex)
+{
+	if (iSkillIndex >= 10)
+		return false;
+
+	return m_IsSkill_Use[iSkillIndex];
+}
+
 void CPlayer::Key_Check(_float TimeDelta)
 {
 	if (GET_KEY_INPUT(DIK_W))
@@ -71,6 +80,16 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	if (GET_KEY_INPUT(DIK_D))
 		m_pMovementCom->Go_Right(TimeDelta);
+
+	if (GET_KEY_INPUT(DIK_1))
+	{
+		static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"))->Set_Skill_CoolDown(0, 10.f);
+		//static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"))->Set_Skill_CoolDown(1, 7.f);
+		//static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"))->Set_Skill_CoolDown(2, 5.f);
+		//static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"))->Set_Skill_CoolDown(3, 0.5f);
+
+	}
+
 
 	// 카메라 가져와서 회전 시키기
 }

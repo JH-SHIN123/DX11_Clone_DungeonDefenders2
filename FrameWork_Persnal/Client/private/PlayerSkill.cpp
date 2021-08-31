@@ -39,6 +39,7 @@ _int CPlayerSkill::Tick(_float TimeDelta)
 		m_fCastTime_Now = 0.f;
 	}
 
+	CoolDown_Check(TimeDelta);
 
 	return _int();
 }
@@ -68,15 +69,41 @@ HRESULT CPlayerSkill::Render()
 	m_pBufferRectCom->Render(5);
 
 
-
-	for (_int i = 0; i < m_iSkillNum; ++i)
-	{
-		m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_Skill[i]->Get_WorldMatrix()), sizeof(_matrix));	
-		m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(i));
-		m_pBufferRectCom->Render(1);
-	}
+	Render_SkillIcon();
 
 	return S_OK;
+}
+
+_bool CPlayerSkill::Set_Skill_CoolDown(_uint iIndex, _float fCoolDownTime)
+{
+	if (false == m_IsCoolDown[iIndex])
+	{
+		m_IsCoolDown[iIndex] = true;
+		m_fCoolDownTime[iIndex] = 0.f;
+		m_fCoolDownTimeMax[iIndex] = fCoolDownTime * 2.f;
+		return true;
+	}
+
+	else
+		return false;
+}
+
+void CPlayerSkill::CoolDown_Check(_float TimeDelta)
+{
+	for (_int i = 0; i < m_iSkillNum; ++i)
+	{
+		if (true == m_IsCoolDown[i])
+		{
+			m_fCoolDownTime[i] += TimeDelta;
+
+			if (m_fCoolDownTime[i] >= m_fCoolDownTimeMax[i] * 0.5f)
+			{
+				m_IsCoolDown[i] = false;
+				m_fCoolDownTime[i] = 0.f;
+				m_fCoolDownTimeMax[i] = 0.f;
+			}
+		}
+	}
 }
 
 HRESULT CPlayerSkill::Ready_Component(void* pArg)
@@ -115,7 +142,6 @@ HRESULT CPlayerSkill::Ready_Component(void* pArg)
 	if (hr != S_OK)
 		MSG_BOX("Ready_Component Failed (CPlayerSkill)");
 
-
 	// Skill Cast
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static
 		, TEXT("Component_Texture_Panel_newBar"), TEXT("Com_Texture_Panel_newBar"), (CComponent**)&m_pTextureCom_Cast)))
@@ -126,12 +152,42 @@ HRESULT CPlayerSkill::Ready_Component(void* pArg)
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static
 		, TEXT("Component_Transform"), TEXT("Com_Transform_Cast"), (CComponent**)&m_pTransformCom_Cast)))
 		return E_FAIL;
+
 	m_pTransformCom_Cast->Set_Scale(XMVectorSet(256.f, 64.f, 0.f, 0.f));
 	m_pTransformCom_Cast->Set_State(EState::Position, XMVectorSet(-40.f, -245.f, 0.f, 1.f));
 
+	// CoolDown
+	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static
+		, TEXT("Component_Texture_CoolDown"), TEXT("Com_Texture_CoolDown"), (CComponent**)&m_pTextureCom_CoolDown)))
+		return E_FAIL;
 
 	Safe_Delete(pData);
 	return hr;
+}
+
+HRESULT CPlayerSkill::Render_SkillIcon()
+{
+	_int PassNumber = 1;
+
+	m_pBufferRectCom->Set_ShaderResourceView("g_MaskTexture", m_pTextureCom_CoolDown->Get_ShaderResourceView(0));
+
+	for (_int i = 0; i < m_iSkillNum; ++i)
+	{
+		m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_Skill[i]->Get_WorldMatrix()), sizeof(_matrix));
+		m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(i));
+
+		if (true == m_IsCoolDown[i])
+		{
+			_float TimeDelta = m_fCoolDownTime[i] / m_fCoolDownTimeMax[i] + 0.5f;
+			m_pBufferRectCom->Set_Variable("g_AlphaTime", &TimeDelta, sizeof(_float));
+			PassNumber = 7;
+		}
+
+		m_pBufferRectCom->Render(PassNumber);
+		PassNumber = 1;
+	}
+
+	return S_OK;
 }
 
 CPlayerSkill * CPlayerSkill::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -164,6 +220,7 @@ void CPlayerSkill::Free()
 	}
 
 	Safe_Release(m_pTextureCom_Cast);
+	Safe_Release(m_pTextureCom_CoolDown);
 	Safe_Release(m_pTextureCom_Cast_Mask);
 	Safe_Release(m_pTransformCom_Cast);
 
