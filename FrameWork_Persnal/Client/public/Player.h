@@ -5,12 +5,12 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 
-BEGIN(Engine)
-class CRenderer;
-class CVIBuffer_Terrain;
-class CTextures;
-class CMovement;
-END
+//BEGIN(Engine)
+//class CRenderer;
+//class CVIBuffer_Terrain;
+//class CTextures;
+//class CMovement;
+//END
 
 BEGIN(Client)
 
@@ -43,10 +43,10 @@ private:
 	void Key_Check(_float TimeDelta);
 
 private:
-	CRenderer*				m_pRendererCom = nullptr;
-	CVIBuffer_Cube*			m_pVIBufferCom = nullptr;
-	CTextures*				m_pTextureCom = nullptr;
-	CMovement*				m_pMovementCom = nullptr;
+	CRenderer*			m_pRendererCom	= nullptr;
+	CVIBuffer_Cube*		m_pVIBufferCom	= nullptr;
+	CTextures*			m_pTextureCom	= nullptr;
+	CMovement*			m_pMovementCom	= nullptr;
 
 private:
 	_bool		m_IsSkill_Use[10] = { false };

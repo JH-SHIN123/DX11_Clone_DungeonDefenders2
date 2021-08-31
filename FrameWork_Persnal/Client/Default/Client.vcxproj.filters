@@ -94,6 +94,9 @@
     <Filter Include="05.Utility\01.Calculator">
       <UniqueIdentifier>{9b52f15a-8f7d-4887-afd7-8139266b7cd3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\00.Goblin">
+      <UniqueIdentifier>{9828e775-3fea-49b2-87ce-9e5c81c837cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -177,6 +180,9 @@
     <ClInclude Include="..\public\Calculator.h">
       <Filter>05.Utility\01.Calculator</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Monster.h">
+      <Filter>02.GameObject\05.Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -241,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Calculator.cpp">
       <Filter>05.Utility\01.Calculator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Monster.cpp">
+      <Filter>02.GameObject\05.Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

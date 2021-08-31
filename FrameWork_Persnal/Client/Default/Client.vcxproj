@@ -181,6 +181,7 @@
     <ClInclude Include="..\public\Loading.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\public\MainMenu.h" />
+    <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\PlayerSkill.h" />
     <ClInclude Include="..\public\Status_Panel.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="..\private\Loading.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\MainMenu.cpp" />
+    <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\PlayerSkill.cpp" />
     <ClCompile Include="..\private\Status_Panel.cpp" />
