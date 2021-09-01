@@ -97,6 +97,12 @@
     <Filter Include="02.GameObject\05.Monster\00.Goblin">
       <UniqueIdentifier>{9828e775-3fea-49b2-87ce-9e5c81c837cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Utility\02.Cursor_Manager">
+      <UniqueIdentifier>{f360a00d-762d-431c-8ba9-a92d56e8ba33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Utility\02.Cursor_Manager\00.Cursor">
+      <UniqueIdentifier>{101ec7e4-d3e2-4e92-9597-d55c5d9acf1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -183,6 +189,12 @@
     <ClInclude Include="..\public\Monster.h">
       <Filter>02.GameObject\05.Monster</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Cursor.h">
+      <Filter>05.Utility\02.Cursor_Manager\00.Cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Cursor_Manager.h">
+      <Filter>05.Utility\02.Cursor_Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -250,6 +262,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Monster.cpp">
       <Filter>02.GameObject\05.Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Cursor.cpp">
+      <Filter>05.Utility\02.Cursor_Manager\00.Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Cursor_Manager.cpp">
+      <Filter>05.Utility\02.Cursor_Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

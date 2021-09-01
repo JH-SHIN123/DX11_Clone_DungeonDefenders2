@@ -6,6 +6,10 @@ DirectX 11 튜토리얼
 https://copynull.tistory.com/
 https://www.braynzarsoft.net/viewtutorial/q16390-braynzar-soft-directx-11-tutorials
 
+DirectX 11 어플리케이션 전체화면 화면처리
+https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=sorkelf&logNo=40161605210
+https://mrhook.co.kr/154
+
 assimp 라이브러리
 
 

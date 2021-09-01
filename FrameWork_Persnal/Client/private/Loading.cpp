@@ -68,31 +68,32 @@ HRESULT CLoading::LoadingForLogo()
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
-	/* 컴포넌트 원형을 생성ㄹ하자. */
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_Devil")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Devil.png")))))
-		return E_FAIL;
+	HRESULT hr = S_OK;
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_Logo")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Logo.tga")))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_Generic_Panel")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Menu_%d.tga"), 3))))
-		return E_FAIL;
+	// Component
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_Devil")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Devil.png")));
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Prototype_BackGround_Logo")
-		, CBackGround_Logo::Create(m_pDevice, m_pDevice_Context))))
-		return E_FAIL;
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_Logo")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Logo.tga")));
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Prototype_MainMenu")
-		, CMainMenu::Create(m_pDevice, m_pDevice_Context))))
-		return E_FAIL;
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_Generic_Panel")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Menu_%d.tga"), 4));
 
 
+
+	// Prototype
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Prototype_BackGround_Logo"), CBackGround_Logo::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Prototype_MainMenu"), CMainMenu::Create(m_pDevice, m_pDevice_Context));
+
+
+
+	if (hr != S_OK)
+		MSG_BOX("LoadingForLogo Failed!");
 
 	m_isFinished = true;
 
-	return S_OK;
+	return hr;
 }
 
 HRESULT CLoading::LoadingForStage()
@@ -102,58 +103,42 @@ HRESULT CLoading::LoadingForStage()
 
 	SetWindowText(g_hWnd, TEXT("TMXPDLWL로딩 시작"));
 
+	HRESULT hr = S_OK;
+
 	// 앵간하면 GameObject가 Component를 가지는 구조가 되니까 Component를 먼저 생성하는게 깔끔함
-
-	/* 컴포넌트 원형을 생성하자. */
 	// 터레인은 생성 되면서 높이맵과 쉐이더 그리고 해당 쉐이더의 테크닉(네임스페이스 개념)을 받고있다
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_Terrain")
-		, CVIBuffer_Terrain::Create(m_pDevice, m_pDevice_Context, L"../Bin/Resources/Textures/Height.bmp", TEXT("../Bin/Shader/Shader_Terrain.hlsl"), "DefaultTechnique"))))
-		return E_FAIL;
 
-	
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Devil")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Devil.png")))))
-		return E_FAIL;
+	// Component
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_Terrain")
+		, CVIBuffer_Terrain::Create(m_pDevice, m_pDevice_Context, L"../Bin/Resources/Textures/Height.bmp", TEXT("../Bin/Shader/Shader_Terrain.hlsl"), "DefaultTechnique"));
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Devil")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Devil.png")));
 
 													
 
-	/* 객체 프로토타입을 생성하자. */
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Terrain")
-		, CTerrain::Create(m_pDevice, m_pDevice_Context))))
-		return E_FAIL;
+	// GameObject
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Terrain"), CTerrain::Create(m_pDevice, m_pDevice_Context));
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_StatusPanel")
-		, CStatus_Panel::Create(m_pDevice, m_pDevice_Context))))
-		return E_FAIL;
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_StatusPanel"), CStatus_Panel::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_PlayerSkill_UI"), CPlayerSkill::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Player_HpMp"), CHpMp::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_WaveInfo"), CWaveInfo::Create(m_pDevice, m_pDevice_Context));
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_PlayerSkill_UI")
-		, CPlayerSkill::Create(m_pDevice, m_pDevice_Context))))
-		return E_FAIL;
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Free"), CCamera_Free::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Target"), CCamera_Target::Create(m_pDevice, m_pDevice_Context));
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Player_HpMp")
-		, CHpMp::Create(m_pDevice, m_pDevice_Context))))
-		return E_FAIL;
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Player"), CPlayer::Create(m_pDevice, m_pDevice_Context));
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_WaveInfo")
-		, CWaveInfo::Create(m_pDevice, m_pDevice_Context))))
-		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Free")
-		, CCamera_Free::Create(m_pDevice, m_pDevice_Context))))
-		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Target")
-		, CCamera_Target::Create(m_pDevice, m_pDevice_Context))))
-		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Player")
-		, CPlayer::Create(m_pDevice, m_pDevice_Context))))
-		return E_FAIL;
-
+	if (hr != S_OK)
+		MSG_BOX("LoadingForStage Fail");
 
 	m_isFinished = true;
 
-	return S_OK;
+	return hr;
 }
 
 CLoading * CLoading::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, ELevel eNextSceneID)

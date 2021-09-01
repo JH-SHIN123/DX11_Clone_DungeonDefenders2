@@ -3,6 +3,7 @@
 #include "Level_Loading.h"
 #include "Level_Logo.h"
 #include "GameInstance.h"
+#include "Cursor_Manager.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -17,10 +18,10 @@ HRESULT CMainApp::Ready_MainApp()
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
+	// 알트 엔터로 전체화면을 했을 시에 대한 화면 처리를 해야한다. 
 	if (FAILED(m_pGameInstance->Initialize(g_hInst, g_hWnd, CGraphic_Device::TYPE_WINMODE, g_iWinCX, g_iWinCY, &m_pDevice, &m_pDevice_Context)))
 		return E_FAIL;
 
-	// Level의 수에 맞게 컨테이너의 크기를 다시 잡음
 	if (FAILED(m_pGameInstance->Reserve_Container((_uint)ELevel::End)))
 		return E_FAIL;
 
@@ -30,9 +31,13 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(Ready_UI_Texture()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Cursor()))
+		return E_FAIL;
+
 	if (FAILED(Ready_DefaultLevel(ELevel::Logo)))
 		return E_FAIL;
 	
+	ShowCursor(false);
 
 	return S_OK;
 }
@@ -44,6 +49,8 @@ _int CMainApp::Update_MainApp(_double TimeDelta)
 	// Tick함수 내에서 매 프레임마다 갱신해야 하는 것들이 전부 들어가 있다.
 	m_pGameInstance->Get_InputDev()->Update_InputDev();
 
+	// 마우스 업뎃
+	GET_CURSOR_MANAGER->Tick((_float)TimeDelta);
 	return m_pGameInstance->Tick((_float)TimeDelta);
 }
 
@@ -58,6 +65,7 @@ HRESULT CMainApp::Render_MainApp()
 
 	m_pRenderer->Draw_Renderer();
 	m_pGameInstance->Render_Level();
+	// 마우스 렌더
 
 	m_pGameInstance->Present();
 
@@ -96,7 +104,6 @@ HRESULT CMainApp::Ready_Component_PrototypeForStatic()
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Movement")
 		, CMovement::Create(m_pDevice, m_pDevice_Context))))
 		return E_FAIL;
-
 
 	// For. VIBuffer_RECT
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect")
@@ -181,16 +188,27 @@ HRESULT CMainApp::Ready_UI_Texture()
 	return S_OK;
 }
 
+HRESULT CMainApp::Ready_Cursor()
+{
+	const _tchar* TextureName = L"Component_Texture_Cursor";
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TextureName
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/Cursor/Icon_%d.tga"), 3))))
+		return E_FAIL;
+
+	CCursor_Manager::GetInstance()->Set_Cursor(CCursor::Create(m_pDevice, m_pDevice_Context, TextureName));
+
+	return S_OK;
+}
+
 CMainApp * CMainApp::Create()
 {
 	CMainApp*		pInstance = new CMainApp;
-
 	if (FAILED(pInstance->Ready_MainApp()))
 	{
 		MSG_BOX("Failed to Creating Instance (CMainApp) ");
 		Safe_Release(pInstance);
 	}
-
 	return pInstance;
 }
 
@@ -202,9 +220,11 @@ void CMainApp::Free()
 
 	Safe_Release(m_pGameInstance);
 
+	CCursor_Manager::DestroyInstance();
 	/* 엔진 내에서 사용된 객체들을 정리한다. */
 	CGameInstance::Release_Engine();	
 	
+	ShowCursor(true);
 }
 
 

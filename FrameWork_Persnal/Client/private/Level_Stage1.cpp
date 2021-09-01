@@ -23,7 +23,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 
 	if (FAILED(Ready_Layer_Camera_Free(TEXT("Layer_Camera_Free"))))
 		return E_FAIL;
-
+	
 	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
 		return E_FAIL;
 		

@@ -44,6 +44,8 @@ HRESULT CRenderer::Draw_Renderer()
 	Render_AlphaUI();
 	Render_FrameUI();
 	Render_AlphaUI_Second();
+	Render_SceneChange();
+	Render_Cursor();
 
 	return S_OK;
 }
@@ -177,6 +179,44 @@ HRESULT CRenderer::Render_AlphaUI_Second()
 	}
 
 	m_pRenderObjects[(_uint)ERenderGroup::AlphaUI_Scecond].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_SceneChange()
+{
+	HRESULT hr = S_OK;
+	for (auto& iter : m_pRenderObjects[(_uint)ERenderGroup::SceneChange])
+	{
+		if (nullptr != iter)
+			hr = iter->Render();
+
+		Safe_Release(iter);
+
+		if (FAILED(hr))
+			return E_FAIL;
+	}
+
+	m_pRenderObjects[(_uint)ERenderGroup::SceneChange].clear();
+	
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Cursor()
+{
+	HRESULT hr = S_OK;
+	for (auto& iter : m_pRenderObjects[(_uint)ERenderGroup::Cursor])
+	{
+		if (nullptr != iter)
+			hr = iter->Render();
+
+		Safe_Release(iter);
+
+		if (FAILED(hr))
+			return E_FAIL;
+	}
+
+	m_pRenderObjects[(_uint)ERenderGroup::Cursor].clear();
 
 	return S_OK;
 }

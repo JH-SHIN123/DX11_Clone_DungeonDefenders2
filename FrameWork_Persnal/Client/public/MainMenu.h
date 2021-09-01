@@ -4,6 +4,10 @@
 #include "UI_2D.h"
 
 BEGIN(Client)
+
+enum class EButtonSelect
+{Stage, Option, HighScore, Exit, End};
+
 class CMainMenu final: public CUI_2D
 {
 private:
@@ -20,19 +24,27 @@ public:
 private:
 	HRESULT	Ready_Component(void* pArg);
 	void	Key_Check();
-	void	Button_Position_Check();
+	void	Button_Position_Check(_float TimeDelta);
+	void	Render_Button_Info(_int iIndex);
 
 private:
 	_bool		m_IsClick				= false;
 	_bool		m_IsMenu				= false;
-	_bool		m_IsMove = false;
-	_bool		m_IsButtonPick[3] = { false };
-	_bool		m_IsNextScene = false;
-	RECT		m_tButtonRect[3];
+	_bool		m_IsMove				= false;
+	_bool		m_IsStage_Select		= false;
+	_bool		m_IsNextScene			= false;
 	_float		m_fAlphaTime = 0.f;
-	_float4x4	m_Mat;
 
+private:
+	_bool			m_IsButtonPick[3]		= { false };
+	RECT			m_tButtonRect[3];
+	_float			m_fButtonScaleTime[3]	= { 0.f };
+	EButtonSelect	m_eButtonSelect			= EButtonSelect::End;
+
+private:
+	CMovement*	m_pMovementCom_Board = nullptr;
 	CMovement*	m_pMovementCom_UI[7]	= { nullptr };
+	CMovement*	m_pMovementCom_UI_Info[7] = { nullptr };
 	CTextures*	m_pTextureCom_UI		= nullptr;
 
 public:

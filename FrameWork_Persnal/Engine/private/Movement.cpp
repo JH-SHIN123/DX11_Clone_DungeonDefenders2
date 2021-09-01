@@ -44,6 +44,21 @@ _int CMovement::Physics_Tick(_float TimeDelta)
 	return 0;
 }
 
+void CMovement::Set_Scale_Tick(_float TimeDelta, _fvector vScale, _bool IsScaleUp)
+{
+	if (true == IsScaleUp)
+	{
+		if(XMVectorGetX(vScale) >= __super::Get_Scale(EState::Right))
+			__super::Set_Scale(vScale * TimeDelta);
+	}
+
+	else
+	{
+		if (XMVectorGetX(vScale) <= __super::Get_Scale(EState::Right))
+			__super::Set_Scale(vScale * TimeDelta);
+	}
+}
+
 void CMovement::Go_Straight(_float TimeDelta)
 {
 	_vector vPosition	= __super::Get_State(EState::Position);

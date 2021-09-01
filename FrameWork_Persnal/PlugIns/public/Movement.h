@@ -59,6 +59,7 @@ public: // Getter
 
 public:	// Setter
 	void Set_SpeedPerSec(_float fSpeedPerSec) { m_MoveStateDesc.fSpeedPerSec = fSpeedPerSec; }
+	void Set_Scale_Tick(_float TimeDelta, _fvector vScale, _bool IsScaleUp);
 
 public: // Move
 	void Go_Straight(_float TimeDelta);
@@ -68,7 +69,6 @@ public: // Move
 	void Go_Dir(_float TimeDelta, _fvector vTargetPos);
 	void Go_Up(_float TimeDelta);
 	void Go_LookDir(_float TimeDelta);
-
 
 public: // Rotate Tick
 	void RotateToAxis_Tick(_float TimeDelta, _fvector vAxis);

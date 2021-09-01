@@ -46,7 +46,6 @@ _int CBackGround_Logo::Late_Tick(_float TimeDelta)
 
 			
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Priority, this);
-  //
 }
 
 HRESULT CBackGround_Logo::Render()
