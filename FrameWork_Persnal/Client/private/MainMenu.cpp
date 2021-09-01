@@ -68,7 +68,7 @@ _int CMainMenu::Tick(_float TimeDelta)
 				m_pMovementCom_UI[2]->Go_Dir(TimeDelta, vPos);
 
 			vPos = XMVectorSet(400.f, 285.f, 0.f, 1.f);
-			fLenght = XMVectorGetX(XMVector3Length(vPos - m_pMovementCom_UI[2]->Get_State(EState::Position)));
+			fLenght = XMVectorGetX(XMVector3Length(vPos - m_pMovementCom_UI[3]->Get_State(EState::Position)));
 			if (fLenght >= 10.f)
 				m_pMovementCom_UI[3]->Go_Dir(TimeDelta, vPos);
 
@@ -184,7 +184,7 @@ void CMainMenu::Key_Check()
 		m_IsClick = true;
 	}
 
-	for (_int i = 0; i < 3; ++i)
+	for (_int i = 0; i < 4; ++i)
 	{
 		if (m_IsButtonPick[i] == true)
 		{
@@ -209,7 +209,7 @@ void CMainMenu::Button_Position_Check(_float TimeDelta)
 	GetCursorPos(&pt);
 	ScreenToClient(g_hWnd, &pt);
 
-	for (_int i = 0; i < 3; ++i) // 이거 잘 만져야 함
+	for (_int i = 0; i < 4; ++i) // 이거 잘 만져야 함
 	{
 		_float4 vMyPos;
 		XMStoreFloat4(&vMyPos, m_pMovementCom_UI[i]->Get_State(EState::Position));

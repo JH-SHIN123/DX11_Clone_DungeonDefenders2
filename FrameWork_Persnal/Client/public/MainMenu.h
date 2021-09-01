@@ -36,9 +36,9 @@ private:
 	_float		m_fAlphaTime = 0.f;
 
 private:
-	_bool			m_IsButtonPick[3]		= { false };
-	RECT			m_tButtonRect[3];
-	_float			m_fButtonScaleTime[3]	= { 0.f };
+	_bool			m_IsButtonPick[4]		= { false };
+	RECT			m_tButtonRect[4];
+	_float			m_fButtonScaleTime[4]	= { 0.f };
 	EButtonSelect	m_eButtonSelect			= EButtonSelect::End;
 
 private:
