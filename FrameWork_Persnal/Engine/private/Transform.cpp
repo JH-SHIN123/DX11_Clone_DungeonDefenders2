@@ -7,6 +7,7 @@ CTransform::CTransform(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Con
 
 CTransform::CTransform(const CTransform & rhs)
 	: CComponent(rhs)
+	, m_WorldMatrix(rhs.m_WorldMatrix)
 {
 }
 
@@ -14,12 +15,18 @@ HRESULT CTransform::NativeConstruct_Prototype()
 {
 	CComponent::NativeConstruct_Prototype();
 
+	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 	return S_OK;
 }
 
 HRESULT CTransform::NativeConstruct(void * pArg)
 {
 	CComponent::NativeConstruct(pArg);
+
+	
+	//	if (nullptr != pArg)
+	//		memcpy(& n , pArg, sizeof(STATEDESC));
+
 
 	return S_OK;
 }

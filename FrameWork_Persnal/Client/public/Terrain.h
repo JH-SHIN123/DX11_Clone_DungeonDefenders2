@@ -9,6 +9,7 @@ BEGIN(Engine)
 class CRenderer;
 class CVIBuffer_Terrain;
 class CTextures;
+class CTransform;
 END
 
 BEGIN(Client)
@@ -34,6 +35,7 @@ private:
 	CRenderer*				m_pRendererCom = nullptr;
 	CVIBuffer_Terrain*		m_pVIBufferCom = nullptr;
 	CTextures*				m_pTextureCom = nullptr;
+	CTransform*				m_pTransformCom = nullptr;
 
 private:
 	HRESULT	Ready_Component();

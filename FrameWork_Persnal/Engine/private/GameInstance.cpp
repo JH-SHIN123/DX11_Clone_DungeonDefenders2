@@ -7,19 +7,19 @@ CGameInstance::CGameInstance()
 	, m_pLevel_Manager(CLevel_Manager::GetInstance())
 	, m_pGameObject_Manager(CGameObject_Manager::GetInstance())
 	, m_pComponent_Manager(CComponent_Manager::GetInstance())
-	, m_pPipeline_manager(CPipeline_Manager::GetInstance())
+	, m_pPipeline_Manager(CPipeline_Manager::GetInstance())
 	, m_pInputDev_Manager(CInputDev::GetInstance())
 	, m_pTimer_Manager(CTimer_Manager::GetInstance())
 	, m_pFrame_Manger(CFrame_Manger::GetInstance())
+	, m_pLight_Manager(CLight_Manager::GetInstance())
 {
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pGameObject_Manager);
 	Safe_AddRef(m_pLevel_Manager);
 	Safe_AddRef(m_pGraphic_Device);
-	Safe_AddRef(m_pPipeline_manager);
+	Safe_AddRef(m_pPipeline_Manager);
+	Safe_AddRef(m_pLight_Manager);
 }
-
-
 
 HRESULT CGameInstance::Initialize(HINSTANCE hInst, HWND hWnd, CGraphic_Device::WINMODE eWinMode, _uint iSizeX, _uint iSizeY, ID3D11Device** ppDevice, ID3D11DeviceContext** ppDevice_Context)
 {
@@ -58,8 +58,12 @@ _int CGameInstance::Tick(_float TimeDelta)
 
 	_int iEvent = 0;
 
+	m_pInputDev_Manager->Update_InputDev();
+
 	if (iEvent = m_pGameObject_Manager->Tick_GameObject(TimeDelta))
 		return iEvent;
+
+	m_pPipeline_Manager->Tick();
 
 	//return 0;
 
@@ -193,10 +197,47 @@ CComponent * CGameInstance::Clone_Component(_uint iNumLevels, const _tchar * pCo
 }
 _matrix CGameInstance::Get_Transform(ETransformState eState)
 {
-	if (nullptr == m_pPipeline_manager)
+	if (nullptr == m_pPipeline_Manager)
 		return XMMatrixIdentity();
 
-	return m_pPipeline_manager->Get_Transform(eState);
+	return m_pPipeline_Manager->Get_Transform(eState);
+}
+
+_vector CGameInstance::Get_CamPosition() const
+{
+	if (nullptr == m_pPipeline_Manager)
+		return _vector();
+
+	return m_pPipeline_Manager->Get_CamPosition();
+}
+
+#pragma endregion 
+
+#pragma region Light_Manager
+
+HRESULT CGameInstance::Reserve_Container_Light(_uint iNumLight)
+{
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
+	m_pLight_Manager->Reserve_Container((iNumLight));
+
+	return S_OK;
+}
+HRESULT CGameInstance::Add_Light(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const LIGHT_DESC & Light_Desc)
+{
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
+	m_pLight_Manager->Add_Light(pDevice, pDevice_Context, Light_Desc);
+	return S_OK;
+}
+LIGHT_DESC * CGameInstance::Get_LightDesc(_int iLightIndex)
+{
+	if (nullptr == m_pLight_Manager)
+		return nullptr;
+
+	return m_pLight_Manager->Get_LightDesc(iLightIndex);
 }
 #pragma endregion
 
@@ -218,6 +259,9 @@ _ulong CGameInstance::Release_Engine()
 	if (dwRefCnt = CComponent_Manager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Release CComponent_Manager");
 
+	if (dwRefCnt = CLight_Manager::GetInstance()->DestroyInstance())
+		MSG_BOX("Failed to Release CPipeline_Manager");
+
 	if (dwRefCnt = CPipeline_Manager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Release CPipeline_Manager");
 
@@ -233,9 +277,10 @@ void CGameInstance::Free()
 	Safe_Release(m_pLevel_Manager);
 	Safe_Release(m_pGameObject_Manager);
 	Safe_Release(m_pComponent_Manager);
+	Safe_Release(m_pLight_Manager);
 
 	// ªË¡¶
-	Safe_Release(m_pPipeline_manager);
+	Safe_Release(m_pPipeline_Manager);
 	Safe_Release(m_pInputDev_Manager);
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pFrame_Manger);

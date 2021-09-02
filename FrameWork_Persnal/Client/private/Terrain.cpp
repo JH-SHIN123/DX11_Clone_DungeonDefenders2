@@ -51,25 +51,10 @@ HRESULT CTerrain::Render()
 {
 	if (nullptr == m_pVIBufferCom)
 		return -1;
-/*
-	_float3			vTest(0.f, 0.f, 0.f);
-
-
-
-	_vector			vResult = XMLoadFloat3(&vTest);
-	XMVectorSetW(vResult, 1.f);*/
-	
-
-
-	_matrix			WorldMatrix, ViewMatrix, ProjMatrix, OrthMatrix;
-
-	WorldMatrix = XMMatrixIdentity();
-	ProjMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), (_float)g_iWinCX / g_iWinCY, 0.2f, 300.f);
-	OrthMatrix = XMMatrixOrthographicLH((_float)g_iWinCX, (_float)g_iWinCY, 0.2f, 300.f);
 
 	// 행렬이 들어갈때 전치 행렬로 바뀌기 때문에 전치행렬로 바뀌기 전에 직접 전치 행렬로 바꿔 전치전치 행렬이 된다.
 	// 당연히 전치전치행렬이라는 개소리는 없으며 일반 평범한 행렬이다. 360도 회전과 같음
-	m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(WorldMatrix), sizeof(_matrix));
+	m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransformCom->Get_WorldMatrix()), sizeof(_matrix));
 	m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
 	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
 
@@ -79,6 +64,18 @@ HRESULT CTerrain::Render()
 
 	// 0번째 쉐이더를 이용해 그릴게
 	// 쉐이더 세팅은 Prototype을 생성하면서 세팅을 함
+
+
+	LIGHT_DESC*	LightDesc = GET_GAMEINSTANCE->Get_LightDesc(0);
+
+	m_pVIBufferCom->Set_Variable("vLightDirection", &LightDesc->vDirection, sizeof(_float3));
+	m_pVIBufferCom->Set_Variable("vLightDiffuse", &LightDesc->vDiffuse, sizeof(_float4));
+	m_pVIBufferCom->Set_Variable("vLightAmbient", &LightDesc->vAmbient, sizeof(_float4));
+	m_pVIBufferCom->Set_Variable("vLightSpecular", &LightDesc->vSpecular, sizeof(_float4));
+
+	m_pVIBufferCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
+
+
 	m_pVIBufferCom->Render(0);
 
 	return S_OK;
@@ -98,18 +95,21 @@ HRESULT CTerrain::Ready_Component()
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
+	/* For.Transform */
+	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom)))
+		return E_FAIL;
+
 	/* For.VIBuffer */
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_Terrain"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
 	/* For.Textures */
-	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_Devil"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_Terrain"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
 
 
 
-	/* For.Transform */
 
 	Safe_Release(pGameInstance);
 
@@ -149,4 +149,5 @@ void CTerrain::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pVIBufferCom);
+	Safe_Release(m_pTransformCom);
 }

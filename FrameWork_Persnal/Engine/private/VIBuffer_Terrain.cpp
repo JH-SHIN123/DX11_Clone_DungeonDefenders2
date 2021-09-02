@@ -70,7 +70,8 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* pHeightMapPat
 		{
 			_uint		iIndex = i * m_dwNumVerticesX + j;
 
-			pVertices[iIndex].vPosition = _float3(j * fVertexInterval, (m_pPixels[iIndex] & 0x000000ff) / 20.0f, i * fVertexInterval);
+			pVertices[iIndex].vPosition = _float3(j * fVertexInterval, (m_pPixels[iIndex] & 0x000000ff) / 15.0f, i * fVertexInterval);
+			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTexUV = _float2((_float)j / (m_dwNumVerticesX - 1), (_float)i / (m_dwNumVerticesZ - 1));
 		}
 	}
@@ -91,16 +92,44 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* pHeightMapPat
 		for (_uint j = 0; j < m_dwNumVerticesX - 1; ++j)
 		{
 			_uint		iIndex = i * m_dwNumVerticesX + j;
+			_vector		vDest, vSour, vNormal;
 
 			pPolygonIndices[iNumPolygons]._0 = iIndex + m_dwNumVerticesX;
 			pPolygonIndices[iNumPolygons]._1 = iIndex + m_dwNumVerticesX + 1;
-			pPolygonIndices[iNumPolygons++]._2 = iIndex + 1;
+			pPolygonIndices[iNumPolygons]._2 = iIndex + 1;
+
+			// 윗 삼각형 하나를 둘러싸는 정점의 노말값을 채워주고 있다.
+			// 노말 += 외적((정규화 내적(정점1 - 정점2)) (정규화 내적(정점2 - 정점3)))
+			// 노말값을 정점을 세팅하면서 000으로 채웠기에 누적이 되는 구조를 취해도 무방하다.
+			vDest = XMLoadFloat3(&pVertices[pPolygonIndices[iNumPolygons]._2].vPosition) - XMLoadFloat3(&pVertices[pPolygonIndices[iNumPolygons]._1].vPosition);
+			vSour = XMLoadFloat3(&pVertices[pPolygonIndices[iNumPolygons]._1].vPosition) - XMLoadFloat3(&pVertices[pPolygonIndices[iNumPolygons]._0].vPosition);
+			vNormal = XMVector3Normalize(XMVector3Cross(vSour, vDest));
+
+			XMStoreFloat3(&pVertices[pPolygonIndices[iNumPolygons]._0].vNormal, XMLoadFloat3(&pVertices[pPolygonIndices[iNumPolygons]._0].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[pPolygonIndices[iNumPolygons]._1].vNormal, XMLoadFloat3(&pVertices[pPolygonIndices[iNumPolygons]._1].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[pPolygonIndices[iNumPolygons]._2].vNormal, XMLoadFloat3(&pVertices[pPolygonIndices[iNumPolygons]._2].vNormal) + vNormal);
+
+			++iNumPolygons;
 
 			pPolygonIndices[iNumPolygons]._0 = iIndex + m_dwNumVerticesX;
 			pPolygonIndices[iNumPolygons]._1 = iIndex + 1;
-			pPolygonIndices[iNumPolygons++]._2 = iIndex;
+			pPolygonIndices[iNumPolygons]._2 = iIndex;
+
+			// 아래 삼각형
+			vDest = XMLoadFloat3(&pVertices[pPolygonIndices[iNumPolygons]._2].vPosition) - XMLoadFloat3(&pVertices[pPolygonIndices[iNumPolygons]._1].vPosition);
+			vSour = XMLoadFloat3(&pVertices[pPolygonIndices[iNumPolygons]._1].vPosition) - XMLoadFloat3(&pVertices[pPolygonIndices[iNumPolygons]._0].vPosition);
+			vNormal = XMVector3Normalize(XMVector3Cross(vSour, vDest));
+
+			XMStoreFloat3(&pVertices[pPolygonIndices[iNumPolygons]._0].vNormal, XMLoadFloat3(&pVertices[pPolygonIndices[iNumPolygons]._0].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[pPolygonIndices[iNumPolygons]._1].vNormal, XMLoadFloat3(&pVertices[pPolygonIndices[iNumPolygons]._1].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[pPolygonIndices[iNumPolygons]._2].vNormal, XMLoadFloat3(&pVertices[pPolygonIndices[iNumPolygons]._2].vNormal) + vNormal);
+
+			++iNumPolygons;
 		}
 	}
+
+	for (_uint i = 0; i < dwNumVertices; ++i)
+		XMStoreFloat3(&pVertices[i].vNormal, XMVector3Normalize(XMLoadFloat3(&pVertices[i].vNormal)));
 
 	if (FAILED(CVIBuffer::SetUp_IndexSubResourceData(pPolygonIndices)))
 		return E_FAIL;

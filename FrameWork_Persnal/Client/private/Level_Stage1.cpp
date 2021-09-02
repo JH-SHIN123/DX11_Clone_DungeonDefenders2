@@ -15,6 +15,9 @@ HRESULT CLevel_Stage1::NativeConstruct()
 {
 	CLevel::NativeConstruct();
 
+	if (FAILED(Ready_Light()))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
 		return E_FAIL;
 
@@ -48,6 +51,30 @@ HRESULT CLevel_Stage1::Render()
 
 
 
+	return S_OK;
+}
+
+HRESULT CLevel_Stage1::Ready_Light()
+{
+	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	if (nullptr == pGameInstance)
+		return E_FAIL;
+
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->Reserve_Container_Light(2);
+
+	/* For.Directional */
+	LIGHT_DESC			LightDesc;
+	LightDesc.vDirection = XMFLOAT3(1.f, -1.f, 1.f);
+	LightDesc.vDiffuse = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.f);
+	LightDesc.vSpecular = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+
+	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pDevice_Context, LightDesc)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 

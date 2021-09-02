@@ -3,6 +3,7 @@
 // Easy Get To GameInstance Func In Engine
 
 #define GET_GAMEINSTANCE CGameInstance::GetInstance()
+
 #define GET_TIMER CGameInstance::GetInstance()->Get_Timer()
 #define GET_FRAME CGameInstance::GetInstance()->Get_Frame()
 

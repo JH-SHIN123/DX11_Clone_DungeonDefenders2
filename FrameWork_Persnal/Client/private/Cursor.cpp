@@ -89,8 +89,8 @@ void CCursor::Tracking_Mouse()
 	}
 
 	// 마우스 위치 + 오프셋조절
-	m_tMouse.x = fMouseX + fScaleX;
-	m_tMouse.y = fMouseY - fScaleY;
+	m_tMouse.x = LONG(fMouseX + fScaleX);
+	m_tMouse.y = LONG(fMouseY - fScaleY);
 	m_pTransformCom->Set_State(EState::Position, XMVectorSet(fMouseX + fScaleX, fMouseY - fScaleY, 0.f, 1.f));
 }
 

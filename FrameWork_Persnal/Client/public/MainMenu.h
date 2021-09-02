@@ -5,6 +5,13 @@
 
 BEGIN(Client)
 
+typedef struct tagStagePreViewDesc
+{
+	_int iStage		= 0;
+	_int iDifficult = 0;
+	_int iClass		= 0;
+}STAGE_PREVIEW_DESC;
+
 enum class EButtonSelect
 {Stage, Option, HighScore, Exit, End};
 
@@ -23,9 +30,18 @@ public:
 
 private:
 	HRESULT	Ready_Component(void* pArg);
+	HRESULT Ready_Button_Stage();
+
+private:
 	void	Key_Check();
 	void	Button_Position_Check(_float TimeDelta);
+	void	Button_Select_Check(_float TimeDelta);
+	void	Button_Stage_Check(_float TimeDelta);
+
+	void	Render_Button();
 	void	Render_Button_Info(_int iIndex);
+	void	Render_Button_Select(EButtonSelect eSelect);
+	void	Render_Button_Stage();
 
 private:
 	_bool		m_IsClick				= false;
@@ -33,7 +49,7 @@ private:
 	_bool		m_IsMove				= false;
 	_bool		m_IsStage_Select		= false;
 	_bool		m_IsNextScene			= false;
-	_float		m_fAlphaTime = 0.f;
+	_float		m_fAlphaTime			= 0.f;
 
 private:
 	_bool			m_IsButtonPick[4]		= { false };
@@ -42,10 +58,26 @@ private:
 	EButtonSelect	m_eButtonSelect			= EButtonSelect::End;
 
 private:
-	CMovement*	m_pMovementCom_Board = nullptr;
-	CMovement*	m_pMovementCom_UI[7]	= { nullptr };
-	CMovement*	m_pMovementCom_UI_Info[7] = { nullptr };
-	CTextures*	m_pTextureCom_UI		= nullptr;
+	_bool			m_IsButton_Select[4] = { false };
+	RECT			m_tButton_Select[4];
+
+private:
+	CMovement*	m_pMovementCom_Board		= nullptr;
+	CMovement*	m_pMovementCom_UI[4]		= { nullptr };
+	CMovement*	m_pMovementCom_UI_Info[4]	= { nullptr };
+	CMovement*	m_pMovementCom_UI_Select[4] = { nullptr };
+	CTextures*	m_pTextureCom_UI			= nullptr;
+
+private:
+	CTextures*	m_pTextureCom_UI_Stage_Button = nullptr;
+	CMovement*	m_pMovementCom_UI_Stage_Button[4] = { nullptr };
+
+	CTextures*	m_pTextureCom_UI_Stage_PreView[2] = { nullptr }; // 왼쪽에 띄울 스테이지 예시
+	CMovement*	m_pMovementCom_UI_Stage_PreView[2] = { nullptr };
+
+	_bool		m_IsSelect_Stage_Button[4] = { false };
+	RECT		m_tSelect_Stage_Button[4];
+	STAGE_PREVIEW_DESC		m_StageMakeInfo;
 
 public:
 	static CMainMenu* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

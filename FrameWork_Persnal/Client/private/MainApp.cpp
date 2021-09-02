@@ -37,7 +37,7 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(Ready_DefaultLevel(ELevel::Logo)))
 		return E_FAIL;
 	
-	ShowCursor(false);
+	//ShowCursor(false);
 
 	return S_OK;
 }
@@ -47,7 +47,6 @@ _int CMainApp::Update_MainApp(_double TimeDelta)
 	if (nullptr == m_pGameInstance)
 		return -1;
 	// Tick함수 내에서 매 프레임마다 갱신해야 하는 것들이 전부 들어가 있다.
-	m_pGameInstance->Get_InputDev()->Update_InputDev();
 
 	// 마우스 업뎃
 	GET_CURSOR_MANAGER->Tick((_float)TimeDelta);

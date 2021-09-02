@@ -3,6 +3,27 @@
 
 namespace Engine
 {
+	typedef struct tagLightDesc
+	{
+		// 방향성 광원
+		XMFLOAT3		vDirection;
+
+		// 점광원
+		XMFLOAT3		vPosition;
+		float			fRadius;
+		float			fAtt;		//감쇠값
+
+		// 스포트라이트 광원
+
+		// 필수 색상
+		XMFLOAT4		vDiffuse;
+		XMFLOAT4		vAmbient;
+		XMFLOAT4		vSpecular;
+
+		// 추가 옵션
+		bool		isActive;
+	} LIGHT_DESC;
+
 	typedef struct tagVertexNormalTexture
 	{
 		XMFLOAT3			vPosition;

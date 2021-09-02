@@ -19,6 +19,7 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	HRESULT	Ready_Light();
 	HRESULT Ready_Layer_Terrain(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_UI(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Camera_Free(const _tchar* pLayerTag);

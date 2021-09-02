@@ -94,6 +94,12 @@
     <Filter Include="01.System\04.Frame\Manager">
       <UniqueIdentifier>{651e75c2-b72a-4d8f-92ce-11e9a720d9c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Utility\04.Light">
+      <UniqueIdentifier>{5a12dd17-86f0-49b4-83f9-360b22ee7c3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\04.Light\Light">
+      <UniqueIdentifier>{8dfe6a0c-a81c-4f17-9ce2-e782fbad1225}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
@@ -198,6 +204,12 @@
     <ClInclude Include="..\public\Engine_Easy_Defines.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Light.h">
+      <Filter>02.Utility\04.Light\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Light_Manager.h">
+      <Filter>02.Utility\04.Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -274,6 +286,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Frame.cpp">
       <Filter>01.System\04.Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Light.cpp">
+      <Filter>02.Utility\04.Light\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Light_Manager.cpp">
+      <Filter>02.Utility\04.Light</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

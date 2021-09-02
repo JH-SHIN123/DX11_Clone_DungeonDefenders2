@@ -78,8 +78,15 @@ HRESULT CLoading::LoadingForLogo()
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Logo.tga")));
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_Generic_Panel")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Menu_%d.tga"), 4));
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Menu_%d.tga"), 7));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_UI_TabMenu")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/Tab_Menu/%d.tga"), 4));
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_UI_Stage_Select")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Stage_Select/Stage/%d.tga"), 2));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_UI_Stage_Select_Difficult")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Stage_Select/Difficult/%d.tga"), 3));
 
 
 	// Prototype
@@ -115,7 +122,9 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Devil")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Devil.png")));
 
-													
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Terrain")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/Grass_0.tga")));
+
 
 	// GameObject
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Terrain"), CTerrain::Create(m_pDevice, m_pDevice_Context));

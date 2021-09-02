@@ -76,7 +76,6 @@ _int CCamera::Tick(_float TimeDelta)
 	vAxisY = XMVectorSetW(vAxisY, 0.f);
 
 	_matrix ViewMatrix = XMMatrixLookAtLH(m_pMovementCom->Get_State(EState::Position), vAt, vAxisY);
-	//m_pMovementCom->Set_WorldMatrix(ViewMatrix);
 
 
 

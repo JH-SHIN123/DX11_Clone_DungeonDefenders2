@@ -90,7 +90,7 @@ HRESULT CGraphic_Device::Present()
 	if (nullptr == m_pSwapChain)
 		return E_FAIL;
 
-	m_pSwapChain->Present(1, 0);
+	m_pSwapChain->Present(0, 0);
 
 	return S_OK;
 }
@@ -198,6 +198,8 @@ HRESULT CGraphic_Device::Ready_Depth_Stencil_RenderTargetView(_uint iSizeX, _uin
 
 void CGraphic_Device::Free()
 {
+	m_pSwapChain->SetFullscreenState(FALSE, nullptr);
+
 	Safe_Release(m_pDepthStencilView);
 	Safe_Release(m_pBackBufferView);
 	Safe_Release(m_pSwapChain);
