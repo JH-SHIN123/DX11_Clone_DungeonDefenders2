@@ -131,11 +131,14 @@ HRESULT CMainApp::Ready_UI_Texture()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_HpMp")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/HpMp/%d.tga"), 4))))
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/HpMp/%d.tga"), 5))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_StatusPanel")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StatusPanel/StatusPanel.tga")))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_ExpBar")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StatusPanel/ExpBar/%d.tga"), 2))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Panel_newBar")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StatusPanel/Panel_newBar.tga")))))

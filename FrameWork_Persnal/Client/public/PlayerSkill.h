@@ -29,7 +29,7 @@ public:
 	virtual HRESULT Render() override;
 
 public: // Setter
-	void	Set_Cast(ECastType eCastType, _float fCastTime) { m_eCastType = eCastType, m_fCastTime = fCastTime; }
+	void	Set_Cast(ECastType eCastType, _float fCastTime) { m_eCastType = eCastType, m_fCastTime_Max = fCastTime; }
 	_bool	Set_Skill_CoolDown(_uint iIndex, _float fCoolDownTime);
 
 private:
@@ -52,14 +52,14 @@ private: // Skill Icon
 	_int			m_iSkillNum = 10;
 
 
-private: // Skill Cast
+private: // Skill Cast πÃ≈Õ±‚
 	CTextures*			m_pTextureCom_Cast = nullptr;
 	CTextures*			m_pTextureCom_Cast_Mask = nullptr;
 	CTransform*			m_pTransformCom_Cast = nullptr;
 
 	ECastType			m_eCastType = ECastType::End;
-	_float				m_fCastTime = 3.f;
-	_float				m_fCastTime_Now = 0.f;
+	_float				m_fCastTime_Max = 3.f;
+	_float				m_fCastTime = 0.f;
 
 
 

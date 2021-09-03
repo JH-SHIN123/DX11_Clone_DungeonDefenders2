@@ -29,18 +29,10 @@ HRESULT CWaveInfo::NativeConstruct(void * pArg)
 
 _int CWaveInfo::Tick(_float TimeDelta)
 {
-	if (m_eWaveState == EWaveState::Combat ||
-		m_eWaveState == EWaveState::Boss)
-		m_fBarAlphaTime += TimeDelta;
+	m_fBarAlphaTime += TimeDelta;
+	if (m_fBarAlphaTime >= 3.f)
+		m_fBarAlphaTime = 0.f;
 
-	if (m_fBarAlphaTime >= 1.f)
-		m_fBarAlphaTime = 1.f;
-
-	if (m_eWaveState == EWaveState::Build)
-	{
-		if(m_fBarAlphaTime >= 0.f)
-		m_fBarAlphaTime -= TimeDelta;
-	}
 
 	if (GetAsyncKeyState('E') & 0x8000)
 	{
@@ -51,6 +43,8 @@ _int CWaveInfo::Tick(_float TimeDelta)
 	{
 		m_eWaveState = EWaveState::Build;
 	}
+
+	Wave_Check(TimeDelta);
 
 
 	return _int();
@@ -81,8 +75,67 @@ HRESULT CWaveInfo::Render()
 	return S_OK;
 }
 
-void CWaveInfo::Wave_Check()
+void CWaveInfo::Wave_Check(_float TimeDelta)
 {
+	switch (m_eWaveState)
+	{
+	case Client::EWaveState::Clear:
+		Wave_Check_Clear(TimeDelta);
+		break;
+	case Client::EWaveState::Build:
+		Wave_Check_Build(TimeDelta);
+		break;
+	case Client::EWaveState::Combat:
+		Wave_Check_Combat(TimeDelta);
+		Enemy_Check();
+		break;
+	case Client::EWaveState::Boss:
+		Wave_Check_Boss(TimeDelta);
+		Enemy_Check();
+		break;
+	default:
+		break;
+	}
+	_vector vMeterPos = m_pMovementCom_Enemy->Get_State(EState::Position);
+}
+
+void CWaveInfo::Wave_Check_Clear(_float TimeDelta)
+{
+}
+
+void CWaveInfo::Wave_Check_Build(_float TimeDelta)
+{
+	_float fMeterPos = XMVectorGetY(m_pMovementCom_Enemy->Get_State(EState::Position));
+	_float fStopPos = abs(m_vKillBar_Pos.y - fMeterPos);
+
+	if (fStopPos <= 100.f)
+		m_pMovementCom_Enemy->Go_Up(TimeDelta);
+}
+
+void CWaveInfo::Wave_Check_Combat(_float TimeDelta)
+{
+	_float fMeterPos = XMVectorGetY(m_pMovementCom_Enemy->Get_State(EState::Position));
+	_float fStopPos = abs(m_vKillBar_Pos.y - fMeterPos);
+
+	if (fStopPos >= 5.f)
+		m_pMovementCom_Enemy->Go_Up(-TimeDelta);
+}
+
+void CWaveInfo::Wave_Check_Boss(_float TimeDelta)
+{
+	_float fMeterPos = XMVectorGetY(m_pMovementCom_Enemy->Get_State(EState::Position));
+	_float fStopPos = abs(m_vKillBar_Pos.y - fMeterPos);
+
+	if (fStopPos >= 5.f)
+		m_pMovementCom_Enemy->Go_Up(-TimeDelta);
+}
+
+void CWaveInfo::Enemy_Check()
+{
+	// 게임인스턴스에서 몬스터 현재개수, 최대 개수 받아옴
+	// Hp했던것 처럼 비율 만들면 됨!!!!!!!!@!!!!!@!@!@!@!@!@!@!@!@$@#%ㅋ^7ㅕ
+
+	m_fMeter_Ratio = (1.f - ((_float)m_iEnemyCount / m_iEnemyCount_Max));
 }
 
 void CWaveInfo::Wave_Render()
@@ -91,10 +144,17 @@ void CWaveInfo::Wave_Render()
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_WaveInfo->Get_ShaderResourceView(0));
 	m_pBufferRectCom->Render(1);
 
-	m_pBufferRectCom->Set_Variable("g_AlphaTime", &m_fBarAlphaTime, sizeof(_float));
+	// 같은 위치에 뽀골뽀골을 넣고 마스킹으로 자른다
+	_float2 Time = { -m_fBarAlphaTime, m_fBarAlphaTime * 0.3f };
+	m_pBufferRectCom->Set_Variable("g_TextureTime_UV", &Time, sizeof(_float2));
+	m_pBufferRectCom->Set_Variable("g_Textrue_UV", &m_fMeter_Ratio, sizeof(_float2));
 	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_Enemy->Get_WorldMatrix()), sizeof(_matrix));
+	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_Enemy_MeterTile->Get_ShaderResourceView(0));
+	m_pBufferRectCom->Set_ShaderResourceView("g_MaskTexture", m_pTextureCom_Enemy_Mask->Get_ShaderResourceView(0));
+	m_pBufferRectCom->Render(12);
+	
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_Enemy->Get_ShaderResourceView(0));
-	m_pBufferRectCom->Render(6);
+	m_pBufferRectCom->Render(1);
 }
 
 void CWaveInfo::Text_Render()
@@ -128,18 +188,20 @@ HRESULT CWaveInfo::Ready_Component(void * pArg)
 
 	HRESULT hr = S_OK;
 
-	pData->vPos = _float2(540.f, 255.f);
-	pData->vScale = _float2(192.f, 192.f);
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_WaveInfo"), (CComponent**)&m_pMovementCom_WaveInfo);
-	m_pMovementCom_WaveInfo->Set_Scale(XMVectorSet(pData->vScale.x, pData->vScale.y, 0.f, 0.f));
-	m_pMovementCom_WaveInfo->Set_State(EState::Position, XMVectorSet(pData->vPos.x, pData->vPos.y, 0.f, 1.f));
+	pData->Movement_Desc.vPos = _float4(540.f, 255.f, 0.f, 1.f);
+	pData->Movement_Desc.vScale = _float4(192.f, 192.f, 0.f, 0.f);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_WaveInfo"), (CComponent**)&m_pMovementCom_WaveInfo, &pData->Movement_Desc);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Texture_Panel_Wave"), TEXT("Com_Texture_Panel_Wave"), (CComponent**)&m_pTextureCom_WaveInfo);
 
 	// Enemy Bar
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_Enemy"), (CComponent**)&m_pMovementCom_Enemy);
-	m_pMovementCom_Enemy->Set_Scale(XMVectorSet(512.f, 64.f, 0.f, 0.f));
-	m_pMovementCom_Enemy->Set_State(EState::Position, XMVectorSet(m_vKillBar_Pos.x, m_vKillBar_Pos.y, 0.f, 1.f));
+	MOVESTATE_DESC Data;
+	Data.fSpeedPerSec = 100.f;
+	Data.vScale = _float4(512.f, 64.f, 0.f, 0.f);
+	Data.vPos = _float4(m_vKillBar_Pos.x, m_vKillBar_Pos.y, 0.f, 1.f);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_Enemy"), (CComponent**)&m_pMovementCom_Enemy, &Data);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Texture_EnemyKillBar"), TEXT("Com_Texture_Enemy"), (CComponent**)&m_pTextureCom_Enemy);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Texture_EnemyKillBarMask"), TEXT("Com_Texture_Enemy_Mask"), (CComponent**)&m_pTextureCom_Enemy_Mask);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Texture_MeterTile"), TEXT("Com_Texture_MeterTile"), (CComponent**)&m_pTextureCom_Enemy_MeterTile);
 
 	// Text Wave
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_Text_Wave"), (CComponent**)&m_pMovementCom_Text[0]);
@@ -199,9 +261,8 @@ void CWaveInfo::Free()
 {
 	Safe_Release(m_pMovementCom_Enemy);
 	Safe_Release(m_pTextureCom_Enemy);
-
-	Safe_Release(m_pMovementCom_Enemy_Mask);
 	Safe_Release(m_pTextureCom_Enemy_Mask);
+	Safe_Release(m_pTextureCom_Enemy_MeterTile);
 
 	Safe_Release(m_pMovementCom_WaveInfo);
 	Safe_Release(m_pTextureCom_WaveInfo);

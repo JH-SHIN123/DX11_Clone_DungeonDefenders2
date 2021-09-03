@@ -29,7 +29,13 @@ public: // Setter
 	void Set_Wave(EWaveState eWave) { m_eWaveState = eWave; }
 
 private:
-	void Wave_Check();
+	void Wave_Check(_float TimeDelta);
+	void Wave_Check_Clear(_float TimeDelta);
+	void Wave_Check_Build(_float TimeDelta);
+	void Wave_Check_Combat(_float TimeDelta);
+	void Wave_Check_Boss(_float TimeDelta);
+
+	void Enemy_Check();
 
 	void Wave_Render();
 	void Text_Render();
@@ -41,9 +47,8 @@ private:
 private:
 	CMovement*				m_pMovementCom_Enemy = nullptr;
 	CTextures*				m_pTextureCom_Enemy = nullptr;
-
-	CMovement*				m_pMovementCom_Enemy_Mask = nullptr;
 	CTextures*				m_pTextureCom_Enemy_Mask = nullptr;
+	CTextures*				m_pTextureCom_Enemy_MeterTile = nullptr;
 
 	CMovement*				m_pMovementCom_WaveInfo = nullptr;
 	CTextures*				m_pTextureCom_WaveInfo = nullptr;
@@ -56,11 +61,17 @@ private:
 	_float2			m_vKillBar_Pos = _float2(205.f, 320.f);
 	_float2			m_vBossBar_Pos = _float2(0.f, 310.f);
 	_float			m_fBarAlphaTime = 0.f;
+	_int			m_iEnemyCount = 50;
+	_int			m_iEnemyCount_Max = 100;
+	_float			m_fMeter_Ratio = 0.f;
 
 
 private:
 	_float2		m_vInterval;
 	EWaveState	m_eWaveState = EWaveState::End;
+
+private: // πÃ≈Õ±‚
+	//_bool	m_Is
 
 public:
 	static CWaveInfo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

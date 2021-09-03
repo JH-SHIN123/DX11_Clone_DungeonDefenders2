@@ -103,6 +103,9 @@
     <Filter Include="05.Utility\02.Cursor_Manager\00.Cursor">
       <UniqueIdentifier>{101ec7e4-d3e2-4e92-9597-d55c5d9acf1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.UI, HUD\00.2D\04.Masking_MeterBar">
+      <UniqueIdentifier>{d955dfe0-f789-4884-bbd5-a6f3d359aebd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -195,6 +198,9 @@
     <ClInclude Include="..\public\Cursor_Manager.h">
       <Filter>05.Utility\02.Cursor_Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Masking_MeterBar.h">
+      <Filter>03.UI, HUD\00.2D\04.Masking_MeterBar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -268,6 +274,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Cursor_Manager.cpp">
       <Filter>05.Utility\02.Cursor_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Masking_MeterBar.cpp">
+      <Filter>03.UI, HUD\00.2D\04.Masking_MeterBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

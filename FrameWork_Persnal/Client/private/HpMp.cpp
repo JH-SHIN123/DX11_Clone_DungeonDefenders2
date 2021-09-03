@@ -58,41 +58,8 @@ HRESULT CHpMp::Render()
 	m_pBufferRectCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
 	m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
 
-	// Back
-	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
-	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
-	m_pBufferRectCom->Render(2);
-
-	// Hp Mask
-	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_Mask->Get_WorldMatrix()), sizeof(_matrix));
-	m_pBufferRectCom->Set_Variable("g_Texture_X", &m_fTime, sizeof(_float));
-	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(2));
-	m_pBufferRectCom->Render(4);
-
-	// Cristal
-	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
-	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(1));
-	m_pBufferRectCom->Render(9);
-
-	// Mp
-	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_MP->Get_WorldMatrix()), sizeof(_matrix));
-	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
-	m_pBufferRectCom->Render(1);
-
-	// Mp Mask
-	_float fMP = -m_fTime;
-	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_MP_Mask->Get_WorldMatrix()), sizeof(_matrix));
-	m_pBufferRectCom->Set_Variable("g_Texture_X", &(fMP), sizeof(_float));
-	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(2));
-	m_pBufferRectCom->Render(10);
-	
-	// Cristal
-	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_MP->Get_WorldMatrix()), sizeof(_matrix));
-	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(1));
-	m_pBufferRectCom->Render(8);
-
-
-
+	Render_Hp();
+	Render_Mp();
 
 	return S_OK;
 }
@@ -133,6 +100,56 @@ void CHpMp::HpMp_Check(_float TimeDelta)
 
 }
 
+void CHpMp::Render_Hp()
+{
+	_float2 fTextureUV = { m_fTime , 0.f };
+
+	// Back
+	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
+	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
+	m_pBufferRectCom->Render(2);
+
+	// Hp Mask
+	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_Mask->Get_WorldMatrix()), sizeof(_matrix));
+	m_pBufferRectCom->Set_Variable("g_TextureTime_UV", &fTextureUV, sizeof(_float2));
+	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(2));
+	m_pBufferRectCom->Render(4);
+
+	//// 보글보글
+	//fTextureUV = _float2(0.f, m_fTime);
+	//m_pBufferRectCom->Set_Variable("g_TextureTime_UV", &fTextureUV, sizeof(_float2));
+	//m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(4));
+	//m_pBufferRectCom->Render(11);
+
+
+	// Cristal
+	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
+	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(1));
+	m_pBufferRectCom->Render(9);
+}
+
+void CHpMp::Render_Mp()
+{
+	_float2 fTextureUV = { m_fTime , 0.f };
+
+	// Mp
+	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_MP->Get_WorldMatrix()), sizeof(_matrix));
+	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
+	m_pBufferRectCom->Render(1);
+
+	// Mp Mask
+	fTextureUV.x *= -1;
+	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_MP_Mask->Get_WorldMatrix()), sizeof(_matrix));
+	m_pBufferRectCom->Set_Variable("g_TextureTime_UV", &fTextureUV, sizeof(_float2));
+	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(2));
+	m_pBufferRectCom->Render(10);
+
+	// Cristal
+	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_MP->Get_WorldMatrix()), sizeof(_matrix));
+	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(1));
+	m_pBufferRectCom->Render(8);
+}
+
 HRESULT CHpMp::Ready_Component(void* pArg)
 {
 	UI2D_DESC* pData = new UI2D_DESC;
@@ -145,18 +162,18 @@ HRESULT CHpMp::Ready_Component(void* pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_Mp"), (CComponent**)&m_pMovementCom_MP);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Texture_Mp_Mask"), (CComponent**)&m_pMovementCom_MP_Mask);
 
-	_vector vPosMp = XMVectorSet(pData->vPos.x + m_vInterval.x, pData->vPos.y + m_vInterval.y, 0.f, 1.f);
-	_vector vPosMask = XMVectorSet(pData->vPos.x, pData->vPos.y, 0.f, 1.f);
+	_vector vPosMp = XMVectorSet(pData->Movement_Desc.vPos.x + m_vInterval.x, pData->Movement_Desc.vPos.y + m_vInterval.y, 0.f, 1.f);
+	_vector vPosMask = XMVectorSet(pData->Movement_Desc.vPos.x, pData->Movement_Desc.vPos.y, 0.f, 1.f);
 
-	m_fHpScale = pData->vPos.y - (-330.f); // 117;
+	m_fHpScale = pData->Movement_Desc.vPos.y - (-330.f); // 117;
 
-	m_pMovementCom_MP->Set_Scale(XMVectorSet(pData->vScale.x, pData->vScale.y, 0.f, 0.f));
+	m_pMovementCom_MP->Set_Scale(XMVectorSet(pData->Movement_Desc.vScale.x, pData->Movement_Desc.vScale.y, 0.f, 0.f));
 	m_pMovementCom_MP->Set_State(EState::Position, vPosMp);
 
-	m_pMovementCom_Mask->Set_Scale(XMVectorSet(pData->vScale.x, pData->vScale.y, 0.f, 0.f));
+	m_pMovementCom_Mask->Set_Scale(XMVectorSet(pData->Movement_Desc.vScale.x, pData->Movement_Desc.vScale.y, 0.f, 0.f));
 	m_pMovementCom_Mask->Set_State(EState::Position, vPosMask);
 
-	m_pMovementCom_MP_Mask->Set_Scale(XMVectorSet(pData->vScale.x, pData->vScale.y, 0.f, 0.f));
+	m_pMovementCom_MP_Mask->Set_Scale(XMVectorSet(pData->Movement_Desc.vScale.x, pData->Movement_Desc.vScale.y, 0.f, 0.f));
 	m_pMovementCom_MP_Mask->Set_State(EState::Position, vPosMp);
 
 	Safe_Delete(pData);

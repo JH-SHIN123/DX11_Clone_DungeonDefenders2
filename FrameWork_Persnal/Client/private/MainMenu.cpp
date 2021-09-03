@@ -23,7 +23,7 @@ HRESULT CMainMenu::NativeConstruct_Prototype()
 
 HRESULT CMainMenu::NativeConstruct(void * pArg)
 {
-	__super::NativeConstruct(pArg, ELevel::Logo);
+	__super::NativeConstruct(pArg);
 
 	Ready_Component(pArg);
 

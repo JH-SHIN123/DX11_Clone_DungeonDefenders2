@@ -14,6 +14,7 @@ END
 
 BEGIN(Client)
 
+class CMasking_MeterBar;
 
 class CStatus_Panel final : public CGameObject
 {
@@ -42,6 +43,9 @@ private:
 	CTextures*				m_pTextureCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
 
+private: //ExpBar
+	CMasking_MeterBar*		m_pMeterBar_Exp = nullptr;
+	
 public:
 	static CStatus_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

@@ -183,6 +183,7 @@
     <ClInclude Include="..\public\Loading.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\public\MainMenu.h" />
+    <ClInclude Include="..\public\Masking_MeterBar.h" />
     <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\PlayerSkill.h" />
@@ -211,6 +212,7 @@
     <ClCompile Include="..\private\Loading.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\MainMenu.cpp" />
+    <ClCompile Include="..\private\Masking_MeterBar.cpp" />
     <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\PlayerSkill.cpp" />

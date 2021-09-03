@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Status_Panel.h"
 #include "GameInstance.h"
+#include "Masking_MeterBar.h"
 
 CStatus_Panel::CStatus_Panel(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -34,7 +35,7 @@ HRESULT CStatus_Panel::NativeConstruct(void * pArg)
 
 _int CStatus_Panel::Tick(_float TimeDelta)
 {
-
+	m_pMeterBar_Exp->Tick(TimeDelta);
 
 	return _int();
 }
@@ -55,12 +56,12 @@ HRESULT CStatus_Panel::Render()
 	m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
 	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
 
+	m_pMeterBar_Exp->Render();
 
 	// UI ÇÁ·¹ÀÓ
 	m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransformCom->Get_WorldMatrix()), sizeof(_matrix));
 	m_pVIBufferCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
 	m_pVIBufferCom->Render(1);
-
 
 
 
@@ -90,6 +91,21 @@ HRESULT CStatus_Panel::Ready_Component()
 		return E_FAIL;
 
 
+	MASK_METERBAR_DESC* pData = new MASK_METERBAR_DESC;
+	pData->eFillMode = EMeterBar_FillMode::ZeroToFull;
+	pData->HasFrameBar = false;
+	pData->fCount = 10.f;
+	pData->fCount_Max = 10.f;
+	pData->iPassMaskShader_Index = 12;
+	pData->UI_Desc.eLevel = ELevel::Static;
+	pData->UI_Desc.Movement_Desc.vPos = { -397.f, -334.f, 0.f, 1.f };
+	pData->UI_Desc.Movement_Desc.vScale = { 522.f, 64.f, 0.f, 0.f };
+	lstrcpy((pData->UI_Desc.szTextureName), L"Component_Texture_ExpBar");
+	m_pMeterBar_Exp = CMasking_MeterBar::Create(m_pDevice, m_pDevice_Context);
+	m_pMeterBar_Exp->NativeConstruct(pData);
+
+	Safe_Delete(pData);
+
 	return S_OK;
 }
 
@@ -118,7 +134,10 @@ CGameObject * CStatus_Panel::Clone_GameObject(void * pArg)
 void CStatus_Panel::Free()
 {
 	CGameObject::Free();
-	
+
+	Safe_Release(m_pMeterBar_Exp);
+
+
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pVIBufferCom);

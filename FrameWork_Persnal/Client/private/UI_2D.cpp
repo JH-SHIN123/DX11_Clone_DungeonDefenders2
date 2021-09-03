@@ -18,11 +18,11 @@ HRESULT CUI_2D::NativeConstruct_Prototype()
 	return S_OK;
 }
 
-HRESULT CUI_2D::NativeConstruct(void * pArg, ELevel eLevel)
+HRESULT CUI_2D::NativeConstruct(void * pArg)
 {
 	__super::NativeConstruct(pArg);
 
-	SetUp_Default_Component(pArg, eLevel);
+	SetUp_Default_Component(pArg);
 
 	return S_OK;
 }
@@ -46,20 +46,14 @@ HRESULT CUI_2D::Render()
 	m_pBufferRectCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
 	m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
 
-	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
-
-	m_pBufferRectCom->Render(1);
-
 	return S_OK;
 }
 
-HRESULT CUI_2D::SetUp_Default_Component(void * pArg, ELevel eLevel)
+HRESULT CUI_2D::SetUp_Default_Component(void * pArg)
 {
 	HRESULT hr = S_OK;
 
 	UI2D_DESC* pData = new UI2D_DESC;
-	pData->vScale	= _float2(100.f, 100.f);
-	pData->vPos		= _float2(0.f, 0.f);
 	lstrcpy(pData->szTextureName, L"Component_Texture_Failed");
 
 	if (nullptr != pArg)
@@ -72,17 +66,16 @@ HRESULT CUI_2D::SetUp_Default_Component(void * pArg, ELevel eLevel)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect"), TEXT("Com_VIBuffer_Rect"), (CComponent**)&m_pBufferRectCom);
 
 	/* For.Transform */
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &pData->Movement_Desc);
 
 	/* For.Texture */
-	hr = CGameObject::Add_Component((_uint)eLevel, pData->szTextureName, TEXT("Com_Texture"), (CComponent**)&m_pTextureCom);
+	hr = CGameObject::Add_Component((_uint)pData->eLevel, pData->szTextureName, TEXT("Com_Texture"), (CComponent**)&m_pTextureCom);
 	
 	if (hr != S_OK)
 		MSG_BOX("SetUp_Default_Component is Failed (UI_2D)");
 
-	m_pMovementCom->Set_Scale(XMVectorSet(pData->vScale.x, pData->vScale.y, 0.f, 0.f));
-	m_pMovementCom->Set_State(EState::Position, XMVectorSet(pData->vPos.x, pData->vPos.y, 0.f, 1.f));
 
+	m_UI2D_Desc = *pData;
 	Safe_Delete(pData);
 	return hr;
 }

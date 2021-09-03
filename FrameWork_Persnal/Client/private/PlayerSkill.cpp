@@ -32,11 +32,11 @@ _int CPlayerSkill::Tick(_float TimeDelta)
 {
 	// 플레이어 받아와서 무언가를 하자
 
-	m_fCastTime_Now += 0.01f;
+	m_fCastTime += TimeDelta;
 
-	if (m_fCastTime_Now >= 1.5f)
+	if (m_fCastTime >= 1.5f)
 	{
-		m_fCastTime_Now = 0.f;
+		m_fCastTime = 0.f;
 	}
 
 	CoolDown_Check(TimeDelta);
@@ -62,7 +62,7 @@ HRESULT CPlayerSkill::Render()
 	m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
 
 	// 캐스팅 바
-	m_pBufferRectCom->Set_Variable("g_AlphaTime", &m_fCastTime_Now, sizeof(_float));
+	m_pBufferRectCom->Set_Variable("g_AlphaTime", &m_fCastTime, sizeof(_float));
 	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransformCom_Cast->Get_WorldMatrix()), sizeof(_matrix));
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_Cast->Get_ShaderResourceView(0));
 	//m_pVIBufferCom->Set_ShaderResourceView("g_MaskTexture", nullptr);
@@ -130,15 +130,15 @@ HRESULT CPlayerSkill::Ready_Component(void* pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_Skill_8"), (CComponent**)&m_pMovementCom_Skill[8]);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_Skill_9"), (CComponent**)&m_pMovementCom_Skill[9]);
 
-	_vector vPos = XMVectorSet(pData->vPos.x, pData->vPos.y, 0.f, 1.f);
+	_vector vPos = XMVectorSet(pData->Movement_Desc.vPos.x, pData->Movement_Desc.vPos.y, 0.f, 1.f);
 	_vector vIntarval = XMVectorSet(67.3f, 0.f, 0.f, 0.f);
 
 	for (_int i = 0; i < m_iSkillNum; ++i)
 	{
 		if (5 == i)
-			vPos = XMVectorSet(pData->vPos.x, pData->vPos.y - 67.f, 0.f, 1.f);
+			vPos = XMVectorSet(pData->Movement_Desc.vPos.x, pData->Movement_Desc.vPos.y - 67.f, 0.f, 1.f);
 
-		m_pMovementCom_Skill[i]->Set_Scale(XMVectorSet(pData->vScale.x, pData->vScale.y, 0.f, 0.f));
+		m_pMovementCom_Skill[i]->Set_Scale(XMVectorSet(pData->Movement_Desc.vScale.x, pData->Movement_Desc.vScale.y, 0.f, 0.f));
 		m_pMovementCom_Skill[i]->Set_State(EState::Position, vPos);
 		vPos += vIntarval;
 	}

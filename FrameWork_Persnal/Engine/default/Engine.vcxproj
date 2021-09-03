@@ -197,6 +197,7 @@ xcopy			/y				..\Bin\*.dll		..\..\Tool\Bin\</Command>
     <ClInclude Include="..\public\Transform.h" />
     <ClInclude Include="..\public\VIBuffer.h" />
     <ClInclude Include="..\public\VIBuffer_Rect.h" />
+    <ClInclude Include="..\public\VIBuffer_Rect_Masking.h" />
     <ClInclude Include="..\public\VIBuffer_Terrain.h" />
     <ClInclude Include="VIBuffer_Cube.h" />
   </ItemGroup>
@@ -226,6 +227,7 @@ xcopy			/y				..\Bin\*.dll		..\..\Tool\Bin\</Command>
     <ClCompile Include="..\private\Transform.cpp" />
     <ClCompile Include="..\private\VIBuffer.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Rect_Masking.cpp" />
     <ClCompile Include="..\private\VIBuffer_Terrain.cpp" />
     <ClCompile Include="VIBuffer_Cube.cpp" />
   </ItemGroup>

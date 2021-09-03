@@ -21,6 +21,9 @@ public:
 public:
 	void HpMp_Check(_float TimeDelta);
 
+private:
+	void Render_Hp();
+	void Render_Mp();
 
 private:
 	HRESULT	Ready_Component(void* pArg);

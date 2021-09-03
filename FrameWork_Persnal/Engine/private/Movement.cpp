@@ -29,7 +29,7 @@ HRESULT CMovement::NativeConstruct(void * pArg)
 		Set_Scale(vScale);
 
 		_vector vPos = XMLoadFloat4(&m_MoveStateDesc.vPos);
-		Set_State(EState::Position,vScale);
+		Set_State(EState::Position, vPos);
 	}
 
 	return S_OK;

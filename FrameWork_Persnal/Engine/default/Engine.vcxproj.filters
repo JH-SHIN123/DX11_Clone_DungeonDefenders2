@@ -100,6 +100,12 @@
     <Filter Include="02.Utility\04.Light\Light">
       <UniqueIdentifier>{8dfe6a0c-a81c-4f17-9ce2-e782fbad1225}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Utility\02.Component\01.Buffer\03.Navgation_Mash">
+      <UniqueIdentifier>{886718c7-4496-4650-8f1e-22abd2d6d368}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\01.Buffer\04.Rect_Masking">
+      <UniqueIdentifier>{acb63762-1da8-4408-bbcb-4f52d6c01cea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
@@ -210,6 +216,9 @@
     <ClInclude Include="..\public\Light_Manager.h">
       <Filter>02.Utility\04.Light</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Rect_Masking.h">
+      <Filter>02.Utility\02.Component\01.Buffer\04.Rect_Masking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -292,6 +301,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Light_Manager.cpp">
       <Filter>02.Utility\04.Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Rect_Masking.cpp">
+      <Filter>02.Utility\02.Component\01.Buffer\04.Rect_Masking</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

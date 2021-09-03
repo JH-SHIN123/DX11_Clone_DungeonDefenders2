@@ -15,11 +15,9 @@ END
 BEGIN(Client)
 typedef struct tagUI2DDesc
 {
-	_float2 vPos;		// 최초 위치
-	_float2 vScale;		// 최초 이미지 크기
-	_bool	IsMove;		// 움직임?
-	_float2 vMovePos;	// 움직인다면 어디까지 움직이게
-	_tchar  szTextureName[MAX_PATH]; // 사용할 텍스처
+	MOVESTATE_DESC Movement_Desc;
+	_tchar  szTextureName[MAX_PATH] = L"";	// 사용할 텍스처
+	ELevel	eLevel = ELevel::Static;	// 텍스처 어따 만들었는지
 }UI2D_DESC;
 
 class CUI_2D abstract : public CGameObject
@@ -31,17 +29,16 @@ protected:
 
 public:
 	virtual HRESULT NativeConstruct_Prototype() override;
-	virtual HRESULT NativeConstruct(void* pArg, ELevel eLevel = ELevel::Static) ;
+	virtual HRESULT NativeConstruct(void* pArg);				// Initialize Default Components
 	virtual _int	Tick(_float TimeDelta) override;
 	virtual	_int	Late_Tick(_float TimeDelta) override;
-	virtual HRESULT Render() override;
+	virtual HRESULT Render() override;							// SetUp Default Spaces In Shader
 
 public: // Setter
 	void Set_IsRender(_bool IsRender) { m_IsRender = IsRender; }
-	void Set_IsMove(_bool IsMove) { m_UI2D_Desc.IsMove = IsMove; }
 
-protected: // 스무스 이동
-	HRESULT SetUp_Default_Component(void* pArg, ELevel eLevel);
+protected:
+	HRESULT SetUp_Default_Component(void* pArg);
 
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
@@ -54,7 +51,7 @@ protected:
 	_bool			m_IsRender = true;
 
 public:
-	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) PURE; // pArg == CAMERA_DESC
+	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) PURE;
 	virtual void Free() override;
 
 };

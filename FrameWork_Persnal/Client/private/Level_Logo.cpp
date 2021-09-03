@@ -73,8 +73,9 @@ HRESULT CLevel_Logo::Ready_Layer_MainMenu(const _tchar * pLayerTag)
 	UI2D_DESC UI_Desc;
 
 	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_Logo");
-	UI_Desc.vPos = _float2(0.2f, 50.f);
-	UI_Desc.vScale = _float2(512.f, 256.f);
+	UI_Desc.Movement_Desc.vPos = _float4(0.2f, 50.f, 0.f, 1.f);
+	UI_Desc.Movement_Desc.vScale = _float4(512.f, 256.f, 0.f, 0.f);
+	UI_Desc.eLevel = ELevel::Logo;
 	pGameInstance->Add_GameObject((_uint)ELevel::Logo, TEXT("Prototype_MainMenu"), (_uint)ELevel::Logo, L"Layer_UI", &UI_Desc);
 
 
