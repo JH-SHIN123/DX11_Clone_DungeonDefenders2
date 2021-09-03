@@ -9,15 +9,17 @@ BEGIN(Client)
 enum class EMeterBar_FillMode
 {ZeroToFull, FullToZero, End};
 
+enum class ECastingBar_Frame_Render
+{First, Second, End};
+
 typedef struct tagMask_MeterBar_desc
 {
-	_float				fCount;
-	_float				fCount_Max;
-	_bool				HasFrameBar;
-	_uint				iPassMaskShader_Index;
-	UI2D_DESC			UI_Desc;
-	EMeterBar_FillMode	eFillMode;
-
+	_float						fCount;
+	_float						fCount_Max;
+	_bool						HasFrameBar;
+	UI2D_DESC					UI_Desc;
+	EMeterBar_FillMode			eFillMode;
+	ECastingBar_Frame_Render	eFrame_Render;
 }MASK_METERBAR_DESC;
 
 
@@ -33,7 +35,7 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg) override;
 	virtual _int	Tick(_float TimeDelta) override;
 	virtual _int	Late_Tick(_float TimeDelta) override;
-	virtual HRESULT Render() override;
+	virtual HRESULT Render(_uint MaskShaderPass = 12, _uint UIFramePass = 1);
 
 public: // Getter
 	const _float	Get_Count() const			{ return m_MeterBar_Desc.fCount; }
@@ -44,6 +46,10 @@ public: // Getter
 
 public: // Setter
 	void Set_Count(_float fCount, _float fCount_Max);
+
+public:
+	void Render_Frame_First(_uint MaskShaderPass, _uint UIFramePass);
+	void Render_Frame_Second(_uint MaskShaderPass, _uint UIFramePass);
 
 private:
 	void Count_Check(_float TimeDelta);

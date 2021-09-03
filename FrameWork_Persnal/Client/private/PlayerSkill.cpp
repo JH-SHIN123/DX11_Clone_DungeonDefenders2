@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\PlayerSkill.h"
+#include "Masking_MeterBar.h"
 
 CPlayerSkill::CPlayerSkill(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CUI_2D(pDevice, pDevice_Context)
@@ -63,11 +64,7 @@ HRESULT CPlayerSkill::Render()
 
 	// 캐스팅 바
 	m_pBufferRectCom->Set_Variable("g_AlphaTime", &m_fCastTime, sizeof(_float));
-	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransformCom_Cast->Get_WorldMatrix()), sizeof(_matrix));
-	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_Cast->Get_ShaderResourceView(0));
-	//m_pVIBufferCom->Set_ShaderResourceView("g_MaskTexture", nullptr);
-	m_pBufferRectCom->Render(5);
-
+	m_pCasting_Bar->Render();
 
 	Render_SkillIcon();
 
@@ -143,27 +140,25 @@ HRESULT CPlayerSkill::Ready_Component(void* pArg)
 		vPos += vIntarval;
 	}
 
+	// CoolDown
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Texture_CoolDown"), TEXT("Com_Texture_CoolDown"), (CComponent**)&m_pTextureCom_CoolDown);
+
 	if (hr != S_OK)
 		MSG_BOX("Ready_Component Failed (CPlayerSkill)");
+	
+	MASK_METERBAR_DESC CastingBar;
+	CastingBar.eFillMode = EMeterBar_FillMode::ZeroToFull;
+	CastingBar.fCount		= 50.f;
+	CastingBar.fCount_Max	= 50.f;
+	CastingBar.HasFrameBar = true;
+	CastingBar.UI_Desc.eLevel = ELevel::Static;
+	CastingBar.UI_Desc.Movement_Desc.vPos = { -40.f, -245.f, 0.f, 1.f };
+	CastingBar.UI_Desc.Movement_Desc.vScale = { 256.f, 64.f, 0.f, 0.f };
+	lstrcpy(CastingBar.UI_Desc.szTextureName, L"Component_Texture_CastingBar");
 
-	// Skill Cast
-	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static
-		, TEXT("Component_Texture_Panel_newBar"), TEXT("Com_Texture_Panel_newBar"), (CComponent**)&m_pTextureCom_Cast)))
-		return E_FAIL;
-	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static
-		, TEXT("Component_Texture_newBarMask"), TEXT("Com_Texture_newBarMask"), (CComponent**)&m_pTextureCom_Cast_Mask)))
-		return E_FAIL;
-	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static
-		, TEXT("Component_Transform"), TEXT("Com_Transform_Cast"), (CComponent**)&m_pTransformCom_Cast)))
-		return E_FAIL;
+	m_pCasting_Bar = CMasking_MeterBar::Create(m_pDevice, m_pDevice_Context);
+	m_pCasting_Bar->NativeConstruct(&CastingBar);
 
-	m_pTransformCom_Cast->Set_Scale(XMVectorSet(256.f, 64.f, 0.f, 0.f));
-	m_pTransformCom_Cast->Set_State(EState::Position, XMVectorSet(-40.f, -245.f, 0.f, 1.f));
-
-	// CoolDown
-	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static
-		, TEXT("Component_Texture_CoolDown"), TEXT("Com_Texture_CoolDown"), (CComponent**)&m_pTextureCom_CoolDown)))
-		return E_FAIL;
 
 	Safe_Delete(pData);
 	return hr;
@@ -223,10 +218,9 @@ void CPlayerSkill::Free()
 		Safe_Release(m_pMovementCom_Skill[i]);
 	}
 
-	Safe_Release(m_pTextureCom_Cast);
+	Safe_Release(m_pCasting_Bar);
+
 	Safe_Release(m_pTextureCom_CoolDown);
-	Safe_Release(m_pTextureCom_Cast_Mask);
-	Safe_Release(m_pTransformCom_Cast);
 
 	__super::Free();
 }

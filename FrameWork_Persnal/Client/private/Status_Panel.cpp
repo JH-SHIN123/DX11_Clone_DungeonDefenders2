@@ -96,7 +96,6 @@ HRESULT CStatus_Panel::Ready_Component()
 	pData->HasFrameBar = false;
 	pData->fCount = 10.f;
 	pData->fCount_Max = 10.f;
-	pData->iPassMaskShader_Index = 12;
 	pData->UI_Desc.eLevel = ELevel::Static;
 	pData->UI_Desc.Movement_Desc.vPos = { -397.f, -334.f, 0.f, 1.f };
 	pData->UI_Desc.Movement_Desc.vScale = { 522.f, 64.f, 0.f, 0.f };

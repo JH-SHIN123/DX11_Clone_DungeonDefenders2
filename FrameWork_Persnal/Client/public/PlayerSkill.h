@@ -7,6 +7,8 @@
 
 BEGIN(Client)
 
+class CMasking_MeterBar;
+
 enum class ECastType
 {Buff, Build, Upgrade, End};
 
@@ -53,13 +55,13 @@ private: // Skill Icon
 
 
 private: // Skill Cast πÃ≈Õ±‚
-	CTextures*			m_pTextureCom_Cast = nullptr;
-	CTextures*			m_pTextureCom_Cast_Mask = nullptr;
-	CTransform*			m_pTransformCom_Cast = nullptr;
-
-	ECastType			m_eCastType = ECastType::End;
-	_float				m_fCastTime_Max = 3.f;
-	_float				m_fCastTime = 0.f;
+	//CTextures*			m_pTextureCom_Cast = nullptr;
+	//CTextures*			m_pTextureCom_Cast_Mask = nullptr;
+	//CTransform*			m_pTransformCom_Cast = nullptr;
+	CMasking_MeterBar*		m_pCasting_Bar = nullptr;
+	ECastType				m_eCastType = ECastType::End;
+	_float					m_fCastTime_Max = 3.f;
+	_float					m_fCastTime = 0.f;
 
 
 

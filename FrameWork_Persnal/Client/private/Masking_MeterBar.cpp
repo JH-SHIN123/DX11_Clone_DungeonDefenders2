@@ -9,7 +9,6 @@ CMasking_MeterBar::CMasking_MeterBar(ID3D11Device * pDevice, ID3D11DeviceContext
 CMasking_MeterBar::CMasking_MeterBar(const CMasking_MeterBar & rhs)
 	: CUI_2D(rhs)
 {
-	m_MeterBar_Desc.iPassMaskShader_Index = 12;
 	m_MeterBar_Desc.HasFrameBar = true;
 }
 
@@ -50,22 +49,31 @@ _int CMasking_MeterBar::Late_Tick(_float TimeDelta)
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::UI, this);
 }
 
-HRESULT CMasking_MeterBar::Render()
+HRESULT CMasking_MeterBar::Render(_uint MaskShaderPass, _uint UIFramePass )
 {
 	__super::Render();
+
+	switch (m_MeterBar_Desc.eFrame_Render)
+	{
+	case ECastingBar_Frame_Render::First:
+
+		break;
+	default:
+		break;
+	}
 
 	_float2 Time = { -m_fTime, m_fTime * 0.3333f };
 	m_pBufferRectCom->Set_Variable("g_TextureTime_UV", &Time, sizeof(_float2));
 	m_pBufferRectCom->Set_Variable("g_Textrue_UV", &m_fRatio, sizeof(_float2));
 	m_pBufferRectCom->Set_ShaderResourceView("g_MaskTexture", m_pTextureCom->Get_ShaderResourceView(0));
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(1));
-	m_pBufferRectCom->Render(m_MeterBar_Desc.iPassMaskShader_Index);
+	m_pBufferRectCom->Render(MaskShaderPass);
 
 	// UI Frame
 	if (m_MeterBar_Desc.HasFrameBar)
 	{
 		m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(2));
-		m_pBufferRectCom->Render(1);
+		m_pBufferRectCom->Render(UIFramePass);
 	}
 
 
@@ -76,6 +84,14 @@ void CMasking_MeterBar::Set_Count(_float fCount, _float fCount_Max)
 {
 	m_MeterBar_Desc.fCount = fCount;
 	m_MeterBar_Desc.fCount_Max = fCount_Max;
+}
+
+void CMasking_MeterBar::Render_Frame_First(_uint MaskShaderPass, _uint UIFramePass)
+{
+}
+
+void CMasking_MeterBar::Render_Frame_Second(_uint MaskShaderPass, _uint UIFramePass)
+{
 }
 
 void CMasking_MeterBar::Count_Check(_float TimeDelta)
