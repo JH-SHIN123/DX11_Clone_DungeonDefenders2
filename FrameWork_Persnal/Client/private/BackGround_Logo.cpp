@@ -4,6 +4,7 @@
 #include "Renderer.h"
 #include "VIBuffer_Rect.h"
 #include "Textures.h"
+#include "MyText.h"
 
 CBackGround_Logo::CBackGround_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)	
@@ -60,6 +61,8 @@ HRESULT CBackGround_Logo::Render()
 
 	// 어떤 쉐이더 쓸거임
 	m_pBuffer_Rect->Render(0);
+
+	m_pText->Render();
 
 	return S_OK;
 }
@@ -125,6 +128,7 @@ CGameObject * CBackGround_Logo::Clone_GameObject(void * pArg)
 
 void CBackGround_Logo::Free()
 {
+	Safe_Release(m_pText);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pBuffer_Rect);
 	Safe_Release(m_pTextureCom);

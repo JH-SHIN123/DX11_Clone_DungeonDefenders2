@@ -341,6 +341,26 @@ PS_OUT PS_MASKING_UV_RATIO(PS_IN_TEX2 In)
 	return Out;
 }
 
+PS_OUT PS_FONT(PS_IN_TEX2 In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	if (In.vTexUV_2.x >= g_Textrue_UV.x)
+	{
+		Out.vColor.a = 0.f;
+		return Out;
+	}
+	// 마스킹을 던져야 함
+	float4 vMask = g_MaskTexture.Sample(DiffuseSampler, In.vTexUV_2);
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	Out.vColor.r *= 1.f;
+	Out.vColor.gb *= 0.01f;
+	Out.vColor.a = vMask.g;
+
+	return Out;
+}
+
 // 네임스페이스 정도
 technique11		DefaultTechnique
 {

@@ -185,10 +185,13 @@
     <ClInclude Include="..\public\MainMenu.h" />
     <ClInclude Include="..\public\Masking_MeterBar.h" />
     <ClInclude Include="..\public\Monster.h" />
+    <ClInclude Include="..\public\MyFont.h" />
+    <ClInclude Include="..\public\MyText.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\PlayerSkill.h" />
     <ClInclude Include="..\public\Status_Panel.h" />
     <ClInclude Include="..\public\Terrain.h" />
+    <ClInclude Include="..\public\Text_Manager.h" />
     <ClInclude Include="..\public\UI_2D.h" />
     <ClInclude Include="..\public\WaveInfo.h" />
     <ClInclude Include="..\public\Wave_Manger.h" />
@@ -214,10 +217,13 @@
     <ClCompile Include="..\private\MainMenu.cpp" />
     <ClCompile Include="..\private\Masking_MeterBar.cpp" />
     <ClCompile Include="..\private\Monster.cpp" />
+    <ClCompile Include="..\private\MyFont.cpp" />
+    <ClCompile Include="..\private\MyText.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\PlayerSkill.cpp" />
     <ClCompile Include="..\private\Status_Panel.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
+    <ClCompile Include="..\private\Text_Manager.cpp" />
     <ClCompile Include="..\private\UI_2D.cpp" />
     <ClCompile Include="..\private\WaveInfo.cpp" />
     <ClCompile Include="..\private\Wave_Manger.cpp" />

@@ -4,6 +4,7 @@
 #include "Level_Logo.h"
 #include "GameInstance.h"
 #include "Cursor_Manager.h"
+#include "Text_Manager.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -36,7 +37,12 @@ HRESULT CMainApp::Ready_MainApp()
 
 	if (FAILED(Ready_DefaultLevel(ELevel::Logo)))
 		return E_FAIL;
-	
+
+	CText_Manager::GetInstance()->Ready_Font();
+	if (FAILED(GET_GAMEINSTANCE->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Font")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Data/Font/font.tga")))))
+		return E_FAIL;
+
 	//ShowCursor(false);
 
 	return S_OK;
@@ -218,6 +224,7 @@ void CMainApp::Free()
 
 	Safe_Release(m_pGameInstance);
 
+	CText_Manager::DestroyInstance();
 	CCursor_Manager::DestroyInstance();
 	/* 엔진 내에서 사용된 객체들을 정리한다. */
 	CGameInstance::Release_Engine();	

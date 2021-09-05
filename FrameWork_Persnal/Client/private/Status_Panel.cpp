@@ -2,6 +2,7 @@
 #include "..\public\Status_Panel.h"
 #include "GameInstance.h"
 #include "Masking_MeterBar.h"
+#include "MyText.h"
 
 CStatus_Panel::CStatus_Panel(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -64,7 +65,7 @@ HRESULT CStatus_Panel::Render()
 	m_pVIBufferCom->Render(1);
 
 
-
+	m_pText->Render();
 	return S_OK;
 }
 
@@ -105,6 +106,14 @@ HRESULT CStatus_Panel::Ready_Component()
 
 	Safe_Delete(pData);
 
+
+	// test
+	TEXT_DESC Data;
+	Data.iScaleCount = 300;
+	Data.MoveDesc.vPos = { 0.f,0.f,0.f,1.f };
+	lstrcpy(Data.szText, L"HELLO");
+	m_pText = CMyText::Create(m_pDevice, m_pDevice_Context, &Data);
+
 	return S_OK;
 }
 
@@ -135,7 +144,7 @@ void CStatus_Panel::Free()
 	CGameObject::Free();
 
 	Safe_Release(m_pMeterBar_Exp);
-
+	Safe_Release(m_pText);
 
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pRendererCom);

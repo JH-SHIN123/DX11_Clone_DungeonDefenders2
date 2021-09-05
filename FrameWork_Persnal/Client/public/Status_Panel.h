@@ -45,6 +45,9 @@ private:
 
 private: //ExpBar
 	CMasking_MeterBar*		m_pMeterBar_Exp = nullptr;
+
+private:
+	class CMyText*	m_pText = nullptr;
 	
 public:
 	static CStatus_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

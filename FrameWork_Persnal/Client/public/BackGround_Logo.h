@@ -35,6 +35,7 @@ private:
 	CRenderer*				m_pRendererCom = nullptr;
 	CTextures*				m_pTextureCom = nullptr;
 	CVIBuffer_Rect*			m_pBuffer_Rect = nullptr;
+	class CMyText*			m_pText = nullptr;
 
 private:
 	_bool		m_IsReverse = false;
@@ -50,6 +51,8 @@ public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;
 
 	virtual void Free();
+
+
 };
 
 END

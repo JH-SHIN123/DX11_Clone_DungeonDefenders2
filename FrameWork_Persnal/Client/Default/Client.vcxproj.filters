@@ -106,6 +106,15 @@
     <Filter Include="03.UI, HUD\00.2D\04.Masking_MeterBar">
       <UniqueIdentifier>{d955dfe0-f789-4884-bbd5-a6f3d359aebd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Utility\03.Text_Manager">
+      <UniqueIdentifier>{b2a5a428-79b0-4729-90ec-9a2c0f5f3552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Utility\03.Text_Manager\Text">
+      <UniqueIdentifier>{87944d3a-b839-46f1-a119-56e3a4049bed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Utility\03.Text_Manager\Text\Font">
+      <UniqueIdentifier>{6c356184-25d6-4a59-ab7a-5821a10d25f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -201,6 +210,15 @@
     <ClInclude Include="..\public\Masking_MeterBar.h">
       <Filter>03.UI, HUD\00.2D\04.Masking_MeterBar</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MyFont.h">
+      <Filter>05.Utility\03.Text_Manager\Text\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MyText.h">
+      <Filter>05.Utility\03.Text_Manager\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Text_Manager.h">
+      <Filter>05.Utility\03.Text_Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -277,6 +295,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Masking_MeterBar.cpp">
       <Filter>03.UI, HUD\00.2D\04.Masking_MeterBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MyFont.cpp">
+      <Filter>05.Utility\03.Text_Manager\Text\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MyText.cpp">
+      <Filter>05.Utility\03.Text_Manager\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Text_Manager.cpp">
+      <Filter>05.Utility\03.Text_Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
