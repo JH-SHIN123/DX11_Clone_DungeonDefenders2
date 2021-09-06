@@ -96,23 +96,23 @@ HRESULT CLevel_Stage1::Ready_Layer_UI(const _tchar * pLayerTag)
 
 	// X 67 Y 67
 	// 스킬창
-	//UI2D_DESC UI_Desc;
-	//lstrcpy(UI_Desc.szTextureName, L"Component_Texture_SkillMage");
-	//UI_Desc.Movement_Desc.vPos =	_float4(-435.2f, -211.f, 0.f, 1.f);
-	//UI_Desc.Movement_Desc.vScale = _float4(64.f, 64.f, 0.f, 0.f);
-	//pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_PlayerSkill_UI"), (_uint)ELevel::Stage1, L"Layer_UI", &UI_Desc);
-	//
-	//// HPMP따로 만듬
-	//lstrcpy(UI_Desc.szTextureName, L"Component_Texture_HpMp");
-	//UI_Desc.Movement_Desc.vPos = _float4(-581.f, -213.f, 0.f, 1.f);
-	//UI_Desc.Movement_Desc.vScale = _float4(64.f, 128.f, 0.f, 0.f);
-	//pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Player_HpMp"), (_uint)ELevel::Stage1, L"Layer_UI_HpMp", &UI_Desc);
-	//
-	//// 해당 스테이지의 정보를 보여줌
-	//lstrcpy(UI_Desc.szTextureName, L"Component_Texture_Panel_Level");
-	//UI_Desc.Movement_Desc.vPos = _float4(510.f, -305.f, 0.f, 1.f);
-	//UI_Desc.Movement_Desc.vScale = _float4(256.f, 100.f, 0.f, 0.f);
-	//pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_WaveInfo"), (_uint)ELevel::Stage1, L"Layer_WaveInfo", &UI_Desc);
+	UI2D_DESC UI_Desc;
+	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_SkillMage");
+	UI_Desc.Movement_Desc.vPos = _float4(-435.2f, -211.f, 0.f, 1.f);
+	UI_Desc.Movement_Desc.vScale = _float4(64.f, 64.f, 0.f, 0.f);
+	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_PlayerSkill_UI"), (_uint)ELevel::Stage1, L"Layer_UI", &UI_Desc);
+
+	// HPMP따로 만듬
+	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_HpMp");
+	UI_Desc.Movement_Desc.vPos = _float4(-581.f, -213.f, 0.f, 1.f);
+	UI_Desc.Movement_Desc.vScale = _float4(64.f, 128.f, 0.f, 0.f);
+	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Player_HpMp"), (_uint)ELevel::Stage1, L"Layer_UI_HpMp", &UI_Desc);
+
+	// 해당 스테이지의 정보를 보여줌
+	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_Panel_Level");
+	UI_Desc.Movement_Desc.vPos = _float4(510.f, -305.f, 0.f, 1.f);
+	UI_Desc.Movement_Desc.vScale = _float4(256.f, 100.f, 0.f, 0.f);
+	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_WaveInfo"), (_uint)ELevel::Stage1, L"Layer_WaveInfo", &UI_Desc);
 
 
 

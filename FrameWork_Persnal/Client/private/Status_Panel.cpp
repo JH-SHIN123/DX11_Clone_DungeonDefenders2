@@ -64,8 +64,6 @@ HRESULT CStatus_Panel::Render()
 	m_pVIBufferCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
 	m_pVIBufferCom->Render(1);
 
-
-	m_pText->Render();
 	return S_OK;
 }
 
@@ -106,14 +104,6 @@ HRESULT CStatus_Panel::Ready_Component()
 
 	Safe_Delete(pData);
 
-
-	// test
-	TEXT_DESC Data;
-	Data.iScaleCount = 300;
-	Data.MoveDesc.vPos = { 0.f,0.f,0.f,1.f };
-	lstrcpy(Data.szText, L"HELLO");
-	m_pText = CMyText::Create(m_pDevice, m_pDevice_Context, &Data);
-
 	return S_OK;
 }
 
@@ -144,7 +134,6 @@ void CStatus_Panel::Free()
 	CGameObject::Free();
 
 	Safe_Release(m_pMeterBar_Exp);
-	Safe_Release(m_pText);
 
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pRendererCom);

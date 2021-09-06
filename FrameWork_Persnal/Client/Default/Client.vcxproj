@@ -185,6 +185,7 @@
     <ClInclude Include="..\public\MainMenu.h" />
     <ClInclude Include="..\public\Masking_MeterBar.h" />
     <ClInclude Include="..\public\Monster.h" />
+    <ClInclude Include="..\public\MyButton.h" />
     <ClInclude Include="..\public\MyFont.h" />
     <ClInclude Include="..\public\MyText.h" />
     <ClInclude Include="..\public\Player.h" />
@@ -217,6 +218,7 @@
     <ClCompile Include="..\private\MainMenu.cpp" />
     <ClCompile Include="..\private\Masking_MeterBar.cpp" />
     <ClCompile Include="..\private\Monster.cpp" />
+    <ClCompile Include="..\private\MyButton.cpp" />
     <ClCompile Include="..\private\MyFont.cpp" />
     <ClCompile Include="..\private\MyText.cpp" />
     <ClCompile Include="..\private\Player.cpp" />

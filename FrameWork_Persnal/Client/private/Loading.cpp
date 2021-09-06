@@ -94,7 +94,6 @@ HRESULT CLoading::LoadingForLogo()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Prototype_MainMenu"), CMainMenu::Create(m_pDevice, m_pDevice_Context));
 
 
-
 	if (hr != S_OK)
 		MSG_BOX("LoadingForLogo Failed!");
 

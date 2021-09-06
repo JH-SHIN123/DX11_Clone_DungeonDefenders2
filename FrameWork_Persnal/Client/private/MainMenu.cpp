@@ -2,6 +2,7 @@
 #include "..\public\MainMenu.h"
 #include "Level_Loading.h"
 #include "Level_Logo.h"
+#include "MyButton.h"
 #include "Cursor_Manager.h"
 
 CMainMenu::CMainMenu(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -26,7 +27,6 @@ HRESULT CMainMenu::NativeConstruct(void * pArg)
 	__super::NativeConstruct(pArg);
 
 	Ready_Component(pArg);
-
 
 	return S_OK;
 }
@@ -93,6 +93,8 @@ _int CMainMenu::Late_Tick(_float TimeDelta)
 		return SCENE_CHANGE;
 	}
 
+	
+
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::UI, this);
 }
 
@@ -119,6 +121,7 @@ HRESULT CMainMenu::Render()
 		return S_OK;
 
 	Render_Button_Select(m_eButtonSelect);
+
 
 	return S_OK;
 }
@@ -165,8 +168,19 @@ HRESULT CMainMenu::Ready_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_UI_Info_3"), (CComponent**)&m_pMovementCom_UI_Info[3]);
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_UI_Select_0"), (CComponent**)&m_pMovementCom_UI_Select[0]);
-	m_pMovementCom_UI_Select[0]->Set_Scale(XMVectorSet(256.f, 128.f, 0.f, 0.f));
+	m_pMovementCom_UI_Select[0]->Set_Scale(XMVectorSet(128.f, 64.f, 0.f, 0.f));
 	m_pMovementCom_UI_Select[0]->Set_State(EState::Position, XMVectorSet(-340.f, -280.f, 0.f, 1.f));
+
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_UI_Select_1"), (CComponent**)&m_pMovementCom_UI_Select[1]);
+	m_pMovementCom_UI_Select[1]->Set_Scale(XMVectorSet(128.f, 64.f, 0.f, 0.f));
+	m_pMovementCom_UI_Select[1]->Set_State(EState::Position, XMVectorSet(0.f, -280.f, 0.f, 1.f));
+
+	BUTTON_DESC ButtonDesc;
+	ButtonDesc.UI_Desc.Movement_Desc.vScale = { 130.f, 40.f, 0.f, 0.f };
+	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -365.f, -280.f, 0.f, 1.f };
+	ButtonDesc.Text_Desc.iScaleCount = 2;
+	lstrcpy(ButtonDesc.Text_Desc.szText, L"BACK");
+	m_pButton_Back = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
 
 	Ready_Button_Stage();
 
@@ -206,10 +220,49 @@ HRESULT CMainMenu::Ready_Button_Stage()
 	m_pMovementCom_UI_Stage_PreView[1]->Set_Scale(XMVectorSet(32.f, 32.f, 0.f, 0.f));
 	m_pMovementCom_UI_Stage_PreView[1]->Set_State(EState::Position, XMVectorSet(250.f, 10.f, 0.f, 1.f));
 
-//	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_UI_Stage_PreView_3"), (CComponent**)&m_pMovementCom_UI_Stage_PreView[2]);
-//	m_pMovementCom_UI_Stage_PreView[2]->Set_Scale(XMVectorSet(128.f, 128.f, 0.f, 0.f));
-//	m_pMovementCom_UI_Stage_PreView[2]->Set_State(EState::Position, XMVectorSet(200.f, 0.f, 0.f, 1.f));
+	// Stage Button
+	BUTTON_DESC ButtonDesc;
+	ButtonDesc.UI_Desc.Movement_Desc.vScale = { 130.f, 40.f, 0.f, 0.f };
+	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -460.f, 15.f, 0.f, 1.f };
+	ButtonDesc.Text_Desc.iScaleCount = 2;
+	lstrcpy(ButtonDesc.Text_Desc.szText, L"STAGE 1");
+	m_pStage_Button[0] = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
 
+	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -460.f, -30.f, 0.f, 1.f };
+	ButtonDesc.Text_Desc.iScaleCount = 2;
+	lstrcpy(ButtonDesc.Text_Desc.szText, L"STAGE 2");
+	m_pStage_Button[1] = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
+
+	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -222.f, 15.f, 0.f, 1.f };
+	ButtonDesc.Text_Desc.iScaleCount = 2;
+	lstrcpy(ButtonDesc.Text_Desc.szText, L"EASY");
+	m_pStage_Button[2] = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
+	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -248.f, -30.f, 0.f, 1.f };
+	ButtonDesc.Text_Desc.iScaleCount = 2;
+	lstrcpy(ButtonDesc.Text_Desc.szText, L"NORMAL");
+	m_pStage_Button[3] = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
+	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -280.f, -79.f, 0.f, 1.f };
+	ButtonDesc.Text_Desc.iScaleCount = 2;
+	lstrcpy(ButtonDesc.Text_Desc.szText, L"OVER KILL");
+	m_pStage_Button[4] = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
+
+	ButtonDesc.UI_Desc.Movement_Desc.vPos = {-30.f, 15.f, 0.f, 1.f };
+	ButtonDesc.Text_Desc.iScaleCount = 2;
+	lstrcpy(ButtonDesc.Text_Desc.szText, L"MAGE");
+	m_pStage_Button[5] = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
+	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -50.f, -30.f, 0.f, 1.f };
+	ButtonDesc.Text_Desc.iScaleCount = 2;
+	lstrcpy(ButtonDesc.Text_Desc.szText, L"KNIGHT");
+	m_pStage_Button[6] = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
+
+
+
+	// Stage Start Button
+	ButtonDesc.UI_Desc.Movement_Desc.vScale = { 130.f, 40.f, 0.f, 0.f };
+	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -38.f, -280.f, 0.f, 1.f };
+	ButtonDesc.Text_Desc.iScaleCount = 2;
+	lstrcpy(ButtonDesc.Text_Desc.szText, L"START");
+	m_pButton_Start_Stage = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
 
 
 	return S_OK;
@@ -225,11 +278,15 @@ void CMainMenu::Key_Check()
 	for (_int i = 0; i < 4; ++i)
 	{
 		//m_eButtonSelect = EButtonSelect::End;
+		//if (m_IsButton_Select[0] == false && m_IsButton_Select[1] == false && m_IsButton_Select[2] == false)
+		//	return;
 
-		if (m_IsButtonPick[i] == true)
+		if (m_IsButtonPick[i] == true && m_eButtonSelect == EButtonSelect::End)
 		{
 			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 			{
+				m_IsButton_Select[i] = true;
+
 				switch (i)
 				{
 				case 0:
@@ -250,8 +307,6 @@ void CMainMenu::Key_Check()
 			}
 		}
 	}
-
-	
 }
 
 void CMainMenu::Button_Position_Check(_float TimeDelta)
@@ -275,6 +330,7 @@ void CMainMenu::Button_Position_Check(_float TimeDelta)
 
 		if (i < 3)
 		{
+			m_IsButton_Select[i] = false;
 			if (PtInRect(&m_tButtonRect[i], pt))
 			{
 				m_IsButtonPick[i] = true;
@@ -291,6 +347,7 @@ void CMainMenu::Button_Position_Check(_float TimeDelta)
 					m_fButtonScaleTime[i] = 1.f;
 				m_pMovementCom_UI[i]->Set_Scale_Tick(m_fButtonScaleTime[i], XMVectorSet(512.f, 128.f, 1.f, 0.f), false);
 			}
+			
 
 			m_pMovementCom_UI_Info[i]->Set_Scale(XMVectorSet(256.f, 128.f, 0.f, 0.f));
 			_vector vPos = m_pMovementCom_UI[i]->Get_State(EState::Position);
@@ -320,7 +377,7 @@ void CMainMenu::Button_Position_Check(_float TimeDelta)
 		}
 	}
 
-	for (_int i = 0; i < 1; ++i) // 버튼 선택시
+	for (_int i = 0; i < 2; ++i) // 공용버튼 선택시
 	{
 		_float4 vMyPos;
 		XMStoreFloat4(&vMyPos, m_pMovementCom_UI_Select[i]->Get_State(EState::Position));
@@ -332,17 +389,45 @@ void CMainMenu::Button_Position_Check(_float TimeDelta)
 		m_tButton_Select[i].top = (LONG)(vMyPos.y - (vScale.y * 0.5f));
 		m_tButton_Select[i].right = (LONG)(vMyPos.x + (vScale.x * 0.5f));
 		m_tButton_Select[i].bottom = (LONG)(vMyPos.y + (vScale.y * 0.5f));
-
 		if (PtInRect(&m_tButton_Select[i], pt))
 		{
-			if(GetAsyncKeyState(VK_LBUTTON) & 0x8000)
-				m_eButtonSelect = EButtonSelect::End;
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+			{
+				switch (i)
+				{
+				case 0:
+					m_eButtonSelect = EButtonSelect::End;
+					break;
+
+				case 1:
+				{
+					switch (m_eButtonSelect)
+					{
+					case Client::EButtonSelect::Stage:
+						m_IsNextScene = true;
+						break;
+					case Client::EButtonSelect::Option:
+						break;
+					case Client::EButtonSelect::HighScore:
+						break;
+					default:
+						m_eButtonSelect = EButtonSelect::End;
+						break;
+					}
+				}
+					break;
+
+				default:
+					break;
+				}		
+			}
 		}
 		else
 		{
 
 		}
 	}
+
 }
 
 void CMainMenu::Button_Select_Check(_float TimeDelta)
@@ -357,32 +442,37 @@ void CMainMenu::Button_Select_Check(_float TimeDelta)
 	case Client::EButtonSelect::HighScore:
 		break;
 	case Client::EButtonSelect::Exit:
-		break;
-	case Client::EButtonSelect::End:
+		DestroyWindow(g_hWnd);
 		break;
 	}
 }
 
 void CMainMenu::Button_Stage_Check(_float TimeDelta)
 {
-	// RECT 만들기
-	POINT pt = GET_CURSOR_XY;
-	GetCursorPos(&pt);
-	ScreenToClient(g_hWnd, &pt);
+	for (_int i = 0; i < 7; ++i)
+		m_pStage_Button[i]->Tick(TimeDelta);
 
-	for (_int i = 0; i < 4; ++i)
-	{
-		_float4 vMyPos;
-		XMStoreFloat4(&vMyPos, m_pMovementCom_UI_Stage_Button[i]->Get_State(EState::Position));
-		_float2 vScale = { m_pMovementCom_UI_Stage_Button[i]->Get_Scale(EState::Right), m_pMovementCom_UI_Stage_Button[i]->Get_Scale(EState::Up) };
-		vMyPos.x = (g_iWinCX * 0.5f) + vMyPos.x;
-		vMyPos.y = (g_iWinCY * 0.5f) - vMyPos.y;
+	m_pButton_Start_Stage->Tick(TimeDelta);
 
-		m_tSelect_Stage_Button[i].left = (LONG)(vMyPos.x - (vScale.x * 0.5f));
-		m_tSelect_Stage_Button[i].top = (LONG)(vMyPos.y - (vScale.y * 0.5f));
-		m_tSelect_Stage_Button[i].right = (LONG)(vMyPos.x + (vScale.x * 0.5f));
-		m_tSelect_Stage_Button[i].bottom = (LONG)(vMyPos.y + (vScale.y * 0.5f));
-	}
+	if (true == m_pStage_Button[0]->Get_IsPick())
+		m_StageMakeInfo.iStage = 0;
+	if (true == m_pStage_Button[1]->Get_IsPick())
+		m_StageMakeInfo.iStage = 1;
+
+	if (true == m_pStage_Button[2]->Get_IsPick())
+		m_StageMakeInfo.iDifficult = 0;
+	if (true == m_pStage_Button[3]->Get_IsPick())
+		m_StageMakeInfo.iDifficult = 1;
+	if (true == m_pStage_Button[4]->Get_IsPick())
+		m_StageMakeInfo.iDifficult = 2;
+
+	if (true == m_pStage_Button[5]->Get_IsPick())
+		m_StageMakeInfo.iClass = 0;
+	if (true == m_pStage_Button[6]->Get_IsPick())
+		m_StageMakeInfo.iClass = 1;
+
+
+
 
 }
 
@@ -431,14 +521,18 @@ void CMainMenu::Render_Button_Select(EButtonSelect eSelect)
 	{
 		// 뒤로가기 버튼임
 		m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_UI->Get_ShaderResourceView(1));
-		m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_UI_Select[0]->Get_WorldMatrix()), sizeof(_matrix));
-		
+		m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_UI_Select[0]->Get_WorldMatrix()), sizeof(_matrix));	
 		m_pBufferRectCom->Render(6);
+		m_pButton_Back->Render();
+
 
 		// 진짜 버튼
 		switch (eSelect)
 		{
 		case Client::EButtonSelect::Stage:
+			m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_UI_Select[1]->Get_WorldMatrix()), sizeof(_matrix));
+			m_pBufferRectCom->Render(6);
+
 			Render_Button_Stage();
 			break;
 		case Client::EButtonSelect::Option:
@@ -475,9 +569,11 @@ void CMainMenu::Render_Button_Stage()
 	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_UI_Stage_PreView[1]->Get_WorldMatrix()), sizeof(_matrix));
 	m_pBufferRectCom->Render(6);
 
-	//m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_UI_Stage_PreView[2]->Get_ShaderResourceView(m_StageMakeInfo.iClass));
-	//m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_UI_Stage_PreView[2]->Get_WorldMatrix()), sizeof(_matrix));
-	//m_pBufferRectCom->Render(6);
+	for (_int i = 0; i < 7; ++i)
+		m_pStage_Button[i]->Render();
+
+	m_pButton_Start_Stage->Render();
+
 }
 
 CMainMenu * CMainMenu::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -517,9 +613,18 @@ void CMainMenu::Free()
 			Safe_Release(m_pMovementCom_UI_Stage_PreView[i]);
 		}
 	}
+
+
+	for (_int i = 0; i < 7; ++i)
+	{
+		Safe_Release(m_pStage_Button[i]);
+	}
+
+	Safe_Release(m_pButton_Back);
 	Safe_Release(m_pMovementCom_Board);
 	Safe_Release(m_pTextureCom_UI);
 	Safe_Release(m_pTextureCom_UI_Stage_Button);
+	Safe_Release(m_pButton_Start_Stage);
 
 	__super::Free();
 }

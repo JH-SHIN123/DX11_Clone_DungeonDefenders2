@@ -69,7 +69,8 @@ HRESULT CUI_2D::SetUp_Default_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &pData->Movement_Desc);
 
 	/* For.Texture */
-	hr = CGameObject::Add_Component((_uint)pData->eLevel, pData->szTextureName, TEXT("Com_Texture"), (CComponent**)&m_pTextureCom);
+	if(2 < lstrlen(pData->szTextureName))
+		hr = CGameObject::Add_Component((_uint)pData->eLevel, pData->szTextureName, TEXT("Com_Texture"), (CComponent**)&m_pTextureCom);
 	
 	if (hr != S_OK)
 		MSG_BOX("SetUp_Default_Component is Failed (UI_2D)");

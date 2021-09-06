@@ -15,6 +15,8 @@ typedef struct tagStagePreViewDesc
 enum class EButtonSelect
 {Stage, Option, HighScore, Exit, End};
 
+class CMyButton;
+
 class CMainMenu final: public CUI_2D
 {
 private:
@@ -62,11 +64,16 @@ private:
 	RECT			m_tButton_Select[4];
 
 private:
-	CMovement*	m_pMovementCom_Board		= nullptr;
-	CMovement*	m_pMovementCom_UI[4]		= { nullptr };
-	CMovement*	m_pMovementCom_UI_Info[4]	= { nullptr };
-	CMovement*	m_pMovementCom_UI_Select[4] = { nullptr };
-	CTextures*	m_pTextureCom_UI			= nullptr;
+	CMovement*	m_pMovementCom_Board			= nullptr;		//백보드
+	CMovement*	m_pMovementCom_UI[4]			= { nullptr };	// UI 기본 버튼
+	CMovement*	m_pMovementCom_UI_Info[4]		= { nullptr };	// 설명
+	CMovement*	m_pMovementCom_UI_Select[4]		= { nullptr };	// 0 뒤로 1 스테이지 진입
+	CTextures*	m_pTextureCom_UI				= nullptr;
+	CMyButton*	m_pButton_Start_Stage			= nullptr;	// 스테이지 진입
+	CMyButton*	m_pButton_Back					= nullptr;	// 뒤로가기 폰트
+	//CMyButton*	m_pButton_Option				= nullptr;	// 옵션 리셋
+
+	//_bool		m_IsNewSelect = false;
 
 private:
 	CTextures*	m_pTextureCom_UI_Stage_Button = nullptr;
@@ -75,8 +82,7 @@ private:
 	CTextures*	m_pTextureCom_UI_Stage_PreView[2] = { nullptr }; // 왼쪽에 띄울 스테이지 예시
 	CMovement*	m_pMovementCom_UI_Stage_PreView[2] = { nullptr };
 
-	_bool		m_IsSelect_Stage_Button[4] = { false };
-	RECT		m_tSelect_Stage_Button[4];
+	CMyButton*	m_pStage_Button[7] = { nullptr };// 01 Stage 234 diffi
 	STAGE_PREVIEW_DESC		m_StageMakeInfo;
 
 public:

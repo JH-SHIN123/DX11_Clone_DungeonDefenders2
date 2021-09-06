@@ -93,15 +93,15 @@ void CMyText::Make_Font()
 			// 자연스러운 스케일
 			// 텍스처의uv는 구해졌다 이걸 비율대로 키운다?
 			// 근데 U가 압도적으로 길어서 이건 그닥
-			pFont->vScale.x = pFont->vScale.x * 512.f;
-			pFont->vScale.y = pFont->vScale.y * 32.f;
+			pFont->vScale.x = pFont->vScale.x * 512.f * m_Text_Desc.iScaleCount;
+			pFont->vScale.y = pFont->vScale.y * 32.f * m_Text_Desc.iScaleCount;
 			
 
 			XMStoreFloat4(&pFont->vPos, vPos);
 
 			CMyFont* pInstance = CMyFont::Create(m_pDevice, m_pDevice_Context, pFont);
 			m_pFonts.emplace_back(pInstance);
-			vPos += XMVectorSet(20.f, 0.f, 0.f, 0.f);
+			vPos += XMVectorSet(10.f * m_Text_Desc.iScaleCount, 0.f, 0.f, 0.f);
 		}
 
 		Safe_Delete(pFont);

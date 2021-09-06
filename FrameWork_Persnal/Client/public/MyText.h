@@ -25,7 +25,7 @@ class CMyFont;
 typedef struct tagTextDesc
 {
 	_float4			vColor;
-	_uint			iScaleCount;
+	_uint			iScaleCount = 1;
 	_tchar			szText[MAX_PATH];
 	MOVESTATE_DESC	MoveDesc;
 }TEXT_DESC;
