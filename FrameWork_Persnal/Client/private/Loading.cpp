@@ -88,6 +88,9 @@ HRESULT CLoading::LoadingForLogo()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_UI_Stage_Select_Difficult")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Stage_Select/Difficult/%d.tga"), 3));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_Option")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Option/%d.tga"), 6));
+
 
 	// Prototype
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Prototype_BackGround_Logo"), CBackGround_Logo::Create(m_pDevice, m_pDevice_Context));

@@ -3,6 +3,7 @@
 #include "Level_Loading.h"
 #include "Level_Logo.h"
 #include "MyButton.h"
+#include "Masking_MeterBar.h"
 #include "Cursor_Manager.h"
 
 CMainMenu::CMainMenu(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -74,6 +75,9 @@ _int CMainMenu::Tick(_float TimeDelta)
 
 	Button_Select_Check(TimeDelta);
 
+
+	m_pOption_BGM->Tick(TimeDelta);
+	m_pOption_SFX->Tick(TimeDelta);
 	return _int();
 }
 
@@ -183,7 +187,7 @@ HRESULT CMainMenu::Ready_Component(void * pArg)
 	m_pButton_Back = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
 
 	Ready_Button_Stage();
-
+	Ready_Option();
 	return S_OK;
 }
 
@@ -265,6 +269,40 @@ HRESULT CMainMenu::Ready_Button_Stage()
 	m_pButton_Start_Stage = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
 
 
+	return S_OK;
+}
+
+HRESULT CMainMenu::Ready_Option()
+{
+	HRESULT hr = S_OK;
+
+	MASK_METERBAR_DESC* pData = new MASK_METERBAR_DESC;
+	pData->eFrame_Render = ECastingBar_Frame_Render::First;
+	pData->eFillMode = EMeterBar_FillMode::ZeroToFull;
+	pData->HasFrameBar = true;
+	pData->fCount = 10.f;
+	pData->fCount_Max = 100.f;
+	pData->UI_Desc.eLevel = ELevel::Logo;
+	pData->UI_Desc.Movement_Desc.vPos = { -100.f, 20.f, 0.f, 1.f };
+	pData->UI_Desc.Movement_Desc.vScale = { 512.f, 64.f, 0.f, 0.f };
+	lstrcpy((pData->UI_Desc.szTextureName), L"Component_Texture_Option");
+	m_pOption_BGM = CMasking_MeterBar::Create(m_pDevice, m_pDevice_Context);
+	m_pOption_BGM->NativeConstruct(pData);
+
+	pData->eFrame_Render = ECastingBar_Frame_Render::First;
+	pData->eFillMode = EMeterBar_FillMode::ZeroToFull;
+	pData->HasFrameBar = true;
+	pData->fCount = 10.f;
+	pData->fCount_Max = 100.f;
+	pData->UI_Desc.eLevel = ELevel::Logo;
+	pData->UI_Desc.Movement_Desc.vPos = { -100.f, -80.f, 0.f, 1.f };
+	pData->UI_Desc.Movement_Desc.vScale = { 512.f, 64.f, 0.f, 0.f };
+	lstrcpy((pData->UI_Desc.szTextureName), L"Component_Texture_Option");
+	m_pOption_SFX = CMasking_MeterBar::Create(m_pDevice, m_pDevice_Context);
+	m_pOption_SFX->NativeConstruct(pData);
+
+
+	Safe_Delete(pData);
 	return S_OK;
 }
 
@@ -438,6 +476,7 @@ void CMainMenu::Button_Select_Check(_float TimeDelta)
 		Button_Stage_Check(TimeDelta);
 		break;
 	case Client::EButtonSelect::Option:
+		Button_Option_Check(TimeDelta);
 		break;
 	case Client::EButtonSelect::HighScore:
 		break;
@@ -470,9 +509,10 @@ void CMainMenu::Button_Stage_Check(_float TimeDelta)
 		m_StageMakeInfo.iClass = 0;
 	if (true == m_pStage_Button[6]->Get_IsPick())
 		m_StageMakeInfo.iClass = 1;
+}
 
-
-
+void CMainMenu::Button_Option_Check(_float TimeDelta)
+{
 
 }
 
@@ -536,6 +576,7 @@ void CMainMenu::Render_Button_Select(EButtonSelect eSelect)
 			Render_Button_Stage();
 			break;
 		case Client::EButtonSelect::Option:
+			Render_Button_Option();
 			break;
 		case Client::EButtonSelect::HighScore:
 			break;
@@ -576,6 +617,12 @@ void CMainMenu::Render_Button_Stage()
 
 }
 
+void CMainMenu::Render_Button_Option()
+{
+	m_pOption_BGM->Render();
+	m_pOption_SFX->Render();
+}
+
 CMainMenu * CMainMenu::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 {
 	CMainMenu* pInstance = new CMainMenu(pDevice, pDevice_Context);
@@ -614,12 +661,13 @@ void CMainMenu::Free()
 		}
 	}
 
-
 	for (_int i = 0; i < 7; ++i)
 	{
 		Safe_Release(m_pStage_Button[i]);
 	}
-
+	
+	Safe_Release(m_pOption_SFX);
+	Safe_Release(m_pOption_BGM);
 	Safe_Release(m_pButton_Back);
 	Safe_Release(m_pMovementCom_Board);
 	Safe_Release(m_pTextureCom_UI);

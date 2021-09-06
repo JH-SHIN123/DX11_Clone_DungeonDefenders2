@@ -33,17 +33,20 @@ public:
 private:
 	HRESULT	Ready_Component(void* pArg);
 	HRESULT Ready_Button_Stage();
+	HRESULT Ready_Option();
 
 private:
 	void	Key_Check();
 	void	Button_Position_Check(_float TimeDelta);
 	void	Button_Select_Check(_float TimeDelta);
 	void	Button_Stage_Check(_float TimeDelta);
+	void	Button_Option_Check(_float TimeDelta);
 
 	void	Render_Button();
 	void	Render_Button_Info(_int iIndex);
 	void	Render_Button_Select(EButtonSelect eSelect);
 	void	Render_Button_Stage();
+	void	Render_Button_Option();
 
 private:
 	_bool		m_IsClick				= false;
@@ -84,6 +87,12 @@ private:
 
 	CMyButton*	m_pStage_Button[7] = { nullptr };// 01 Stage 234 diffi
 	STAGE_PREVIEW_DESC		m_StageMakeInfo;
+
+private: // 옵션 - 음량 조절
+	class CMasking_MeterBar*	m_pOption_BGM = nullptr;
+	class CMasking_MeterBar*	m_pOption_SFX = nullptr;
+
+
 
 public:
 	static CMainMenu* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

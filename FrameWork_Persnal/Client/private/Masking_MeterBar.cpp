@@ -58,8 +58,17 @@ HRESULT CMasking_MeterBar::Render(_uint MaskShaderPass, _uint UIFramePass )
 	case ECastingBar_Frame_Render::First:
 
 		break;
+
 	default:
 		break;
+	}
+	if (m_MeterBar_Desc.HasFrameBar)
+	{
+		if (ECastingBar_Frame_Render::First == m_MeterBar_Desc.eFrame_Render)
+		{
+			m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(2));
+			m_pBufferRectCom->Render(UIFramePass);
+		}
 	}
 
 	_float2 Time = { -m_fTime, m_fTime * 0.3333f };
@@ -69,11 +78,13 @@ HRESULT CMasking_MeterBar::Render(_uint MaskShaderPass, _uint UIFramePass )
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(1));
 	m_pBufferRectCom->Render(MaskShaderPass);
 
-	// UI Frame
 	if (m_MeterBar_Desc.HasFrameBar)
 	{
-		m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(2));
-		m_pBufferRectCom->Render(UIFramePass);
+		if (ECastingBar_Frame_Render::Second == m_MeterBar_Desc.eFrame_Render)
+		{
+			m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(2));
+			m_pBufferRectCom->Render(UIFramePass);
+		}
 	}
 
 
