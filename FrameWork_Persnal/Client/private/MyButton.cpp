@@ -27,7 +27,7 @@ HRESULT CMyButton::NativeConstruct(void * pArg)
 
 	pData->Text_Desc.MoveDesc = pData->UI_Desc.Movement_Desc;
 	
-	if (pData->Text_Desc.szText)
+	if (1 < lstrlen(pData->Text_Desc.szText))
 	{
 		m_pText = CMyText::Create(m_pDevice, m_pDevice_Context, &pData->Text_Desc);
 	}
@@ -48,14 +48,14 @@ _int CMyButton::Late_Tick(_float TimeDelta)
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::FrameUI, this );
 }
 
-HRESULT CMyButton::Render()
+HRESULT CMyButton::Render(_uint iTextureIndex)
 {
 	if (nullptr != m_pText)
 		m_pText->Render();
 
 	if (nullptr != m_pTextureCom)
 	{
-		m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
+		m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(iTextureIndex));
 		m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 		m_pBufferRectCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
 		m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));

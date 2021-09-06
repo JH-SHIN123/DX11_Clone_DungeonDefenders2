@@ -25,7 +25,7 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg) override;
 	virtual _int Tick(_float TimeDelta) override;
 	virtual _int Late_Tick(_float TimeDelta) override;
-	virtual HRESULT Render() override;
+	virtual HRESULT Render(_uint iTextureIndex = 0);
 
 public:
 	_bool	Get_IsPick();

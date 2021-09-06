@@ -16,6 +16,8 @@ enum class EButtonSelect
 {Stage, Option, HighScore, Exit, End};
 
 class CMyButton;
+class CMyButton_NoText;
+class CMasking_MeterBar;
 
 class CMainMenu final: public CUI_2D
 {
@@ -89,8 +91,11 @@ private:
 	STAGE_PREVIEW_DESC		m_StageMakeInfo;
 
 private: // 옵션 - 음량 조절
-	class CMasking_MeterBar*	m_pOption_BGM = nullptr;
-	class CMasking_MeterBar*	m_pOption_SFX = nullptr;
+	CMasking_MeterBar*		m_pOption_BGM = nullptr;
+	CMasking_MeterBar*		m_pOption_SFX = nullptr;
+	CMyButton_NoText*		m_pButton_Option_BGM[2] = { nullptr };
+	CMyButton_NoText*		m_pButton_Option_SFX[2] = { nullptr };
+	_float2					m_vSound;
 
 
 

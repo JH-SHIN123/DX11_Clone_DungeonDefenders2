@@ -90,6 +90,8 @@ HRESULT CLoading::LoadingForLogo()
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_Option")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Option/%d.tga"), 6));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Logo, TEXT("Component_Texture_Option_Arrow")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MainMenu/Option/Arrow/%d.tga"), 2));
 
 
 	// Prototype

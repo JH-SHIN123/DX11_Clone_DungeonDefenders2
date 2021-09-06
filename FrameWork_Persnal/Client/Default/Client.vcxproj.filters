@@ -115,7 +115,10 @@
     <Filter Include="03.UI, HUD\00.2D\A0.Masking_MeterBar">
       <UniqueIdentifier>{d955dfe0-f789-4884-bbd5-a6f3d359aebd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.UI, HUD\00.2D\A1.MyButton">
+    <Filter Include="03.UI, HUD\00.2D\A2.MyButton">
+      <UniqueIdentifier>{05b87bbc-92fa-497d-a3e7-47d266171859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\00.2D\A1.MyButton%28Font%29">
       <UniqueIdentifier>{cbb297a4-74a8-4166-bc55-49b8a196ed7c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -223,7 +226,10 @@
       <Filter>05.Utility\03.Text_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MyButton.h">
-      <Filter>03.UI, HUD\00.2D\A1.MyButton</Filter>
+      <Filter>03.UI, HUD\00.2D\A1.MyButton%28Font%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MyButton_NoText.h">
+      <Filter>03.UI, HUD\00.2D\A2.MyButton</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -312,7 +318,10 @@
       <Filter>05.Utility\03.Text_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MyButton.cpp">
-      <Filter>03.UI, HUD\00.2D\A1.MyButton</Filter>
+      <Filter>03.UI, HUD\00.2D\A1.MyButton%28Font%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MyButton_NoText.cpp">
+      <Filter>03.UI, HUD\00.2D\A2.MyButton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

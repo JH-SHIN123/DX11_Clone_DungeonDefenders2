@@ -187,6 +187,7 @@
     <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\public\MyButton.h" />
     <ClInclude Include="..\public\MyFont.h" />
+    <ClInclude Include="..\public\MyButton_NoText.h" />
     <ClInclude Include="..\public\MyText.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\PlayerSkill.h" />
@@ -220,6 +221,7 @@
     <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\private\MyButton.cpp" />
     <ClCompile Include="..\private\MyFont.cpp" />
+    <ClCompile Include="..\private\MyButton_NoText.cpp" />
     <ClCompile Include="..\private\MyText.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\PlayerSkill.cpp" />

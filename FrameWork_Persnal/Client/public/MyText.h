@@ -26,7 +26,7 @@ typedef struct tagTextDesc
 {
 	_float4			vColor;
 	_uint			iScaleCount = 1;
-	_tchar			szText[MAX_PATH];
+	_tchar			szText[MAX_PATH] = L"";
 	MOVESTATE_DESC	MoveDesc;
 }TEXT_DESC;
 
