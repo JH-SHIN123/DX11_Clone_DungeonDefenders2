@@ -77,8 +77,6 @@ _int CCamera::Tick(_float TimeDelta)
 
 	_matrix ViewMatrix = XMMatrixLookAtLH(m_pMovementCom->Get_State(EState::Position), vAt, vAxisY);
 
-
-
 	m_pPipeline_Manager->Set_Transform(ETransformState::View, m_pMovementCom->Get_WorldMatrix_Inverse());
 	m_pPipeline_Manager->Set_Transform(ETransformState::Proj, XMMatrixPerspectiveFovLH(m_CameraDesc.fFovy, m_CameraDesc.fAspect, m_CameraDesc.fNear, m_CameraDesc.fFar));
 
@@ -166,6 +164,8 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 
 	pTarget->Set_State(EState::Right, vNewRight);
 	pTarget->Set_State(EState::Look, vNewLook);
+
+
 }
 
 void CCamera::Aim_Check()
@@ -192,19 +192,29 @@ void CCamera::Aim_Check()
 		m_pMovementCom->Set_State(EState::Up, vUp);
 	}
 
-	if (dwMouseMove = GET_MOUSE_Y)
+	if (dwMouseMove = GET_MOUSE_Y) // 요것이 문제다
 	{
-		RotateMatrix = XMMatrixRotationAxis(vRight, XMConvertToRadians((_float)dwMouseMove * 0.05f));
+		//RotateMatrix = XMMatrixRotationAxis(vRight, XMConvertToRadians((_float)dwMouseMove * 0.05f));
+		//
+		//vLook = XMVector3TransformNormal(vLook, RotateMatrix);
+		//m_pMovementCom->Set_State(EState::Look, vLook);
+		//
+		//vRight = XMVector3Cross(vUp, vLook);
+		//m_pMovementCom->Set_State(EState::Right, vRight);
+		//
+		//vUp = XMVector3Cross(vLook, vRight);
+		//m_pMovementCom->Set_State(EState::Up, vUp);
 
-		vLook = XMVector3TransformNormal(vLook, RotateMatrix);
-		m_pMovementCom->Set_State(EState::Look, vLook);
 
-		vRight = XMVector3Cross(vUp, vLook);
-		m_pMovementCom->Set_State(EState::Right, vRight);
+		//if (dwMouseMove >= 0)
+		//{
+		//	m_CameraDesc.vAt.y += 10.f;
+		//}
+		//else
+		//	m_CameraDesc.vAt.y -= 10.f;
 
-		vUp = XMVector3Cross(vLook, vRight);
-		m_pMovementCom->Set_State(EState::Up, vUp);
 	}
+
 
 }
 

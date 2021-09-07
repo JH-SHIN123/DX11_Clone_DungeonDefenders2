@@ -73,6 +73,8 @@ protected:
 	_bool					m_IsZoomReverse = false;
 	_float					m_fZoomFov = 0.f;
 	_float					m_fZoomSpeed = 0.f;
+	_float					m_fAxisRadian = 0.f;
+
 
 
 public:

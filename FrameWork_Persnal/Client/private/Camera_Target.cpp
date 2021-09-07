@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Camera_Target.h"
+#include "Player.h"
 
 CCamera_Target::CCamera_Target(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CCamera(pDevice, pDevice_Context)
@@ -32,8 +33,11 @@ HRESULT CCamera_Target::NativeConstruct(void * pArg)
 _int CCamera_Target::Tick(_float TimeDelta)
 {
 	Aim_Check();
-
+	//
+	//MouseMove_Check();
 	TargetRotate_Check((_uint)ELevel::Stage1, L"Layer_Player", L"Com_Movement");
+
+	
 
 	return __super::Tick(TimeDelta);
 }
@@ -48,6 +52,32 @@ _int CCamera_Target::Late_Tick(_float TimeDelta)
 HRESULT CCamera_Target::Render()
 {
 	return S_OK;
+}
+
+void CCamera_Target::MouseMove_Check()
+{
+	_vector vRight = m_pMovementCom->Get_State(EState::Right);
+	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f); // 임의의 축으로 회전을 한다면 카메라가 회전을 해버린당
+	_vector vLook = m_pMovementCom->Get_State(EState::Look);
+
+	_matrix RotateMatrix;
+
+	_long dwMouseMove = 0;
+
+	if (dwMouseMove = GET_MOUSE_X)
+	{
+		RotateMatrix = XMMatrixRotationAxis(vUp, XMConvertToRadians((_float)dwMouseMove * 0.05f));
+
+		vLook = XMVector3TransformNormal(vLook, RotateMatrix);
+		m_pMovementCom->Set_State(EState::Look, vLook);
+
+		vRight = XMVector3Cross(vUp, vLook);
+		m_pMovementCom->Set_State(EState::Right, vRight);
+
+		vUp = XMVector3Cross(vLook, vRight);
+		m_pMovementCom->Set_State(EState::Up, vUp);
+	}
+
 }
 
 HRESULT CCamera_Target::Ready_Component()

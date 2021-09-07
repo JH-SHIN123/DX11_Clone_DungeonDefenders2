@@ -5,22 +5,7 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 
-//BEGIN(Engine)
-//class CRenderer;
-//class CVIBuffer_Terrain;
-//class CTextures;
-//class CMovement;
-//END
-
 BEGIN(Client)
-
-typedef struct tagPlayerStatusDesc
-{
-	
-
-
-}PLAYER_DESC;
-
 
 class CPlayer final : public CGameObject
 {
@@ -41,6 +26,9 @@ public:
 
 private:
 	void Key_Check(_float TimeDelta);
+	void Turn_Check(_float TimeDelta);
+
+private:
 
 private:
 	CRenderer*			m_pRendererCom	= nullptr;
@@ -50,6 +38,10 @@ private:
 
 private:
 	_bool		m_IsSkill_Use[10] = { false };
+
+private: // 카메라에 값 넘기기용
+	_float4		m_vLook;
+	_float		m_fDis;
 
 private:
 	HRESULT	Ready_Component(void* pArg);

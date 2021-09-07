@@ -125,7 +125,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Camera_Free(const _tchar * pLayerTag)
 
 	CAMERA_DESC			CameraDesc;
 	CameraDesc.vEye = _float3(0.f, 10.f, -7.f);
-	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+	CameraDesc.vAt = _float3(15.f, 5.f, 10.f);
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
 	CameraDesc.fAspect = _float(g_iWinCX) / g_iWinCY;

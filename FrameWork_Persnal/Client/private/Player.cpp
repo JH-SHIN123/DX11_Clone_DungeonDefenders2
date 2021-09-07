@@ -91,6 +91,52 @@ void CPlayer::Key_Check(_float TimeDelta)
 	// 카메라 가져와서 회전 시키기
 }
 
+void CPlayer::Turn_Check(_float TimeDelta)
+{
+	_vector vRight = m_pMovementCom->Get_State(EState::Right);
+	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f); // 임의의 축으로 회전을 한다면 카메라가 회전을 해버린당
+	_vector vLook = m_pMovementCom->Get_State(EState::Look);
+
+	_matrix RotateMatrix;
+
+	_long dwMouseMove = 0;
+
+	if (dwMouseMove = GET_MOUSE_X)
+	{
+		RotateMatrix = XMMatrixRotationAxis(vUp, XMConvertToRadians((_float)dwMouseMove * 0.05f));
+
+		//vLook = XMVector3TransformNormal(vLook, RotateMatrix);
+		//m_pMovementCom->Set_State(EState::Look, vLook);
+		//
+		//vRight = XMVector3Cross(vUp, vLook);
+		//m_pMovementCom->Set_State(EState::Right, vRight);
+		//
+		//vUp = XMVector3Cross(vLook, vRight);
+		//m_pMovementCom->Set_State(EState::Up, vUp);
+	}
+
+	if (dwMouseMove = GET_MOUSE_Y) // 요것이 문제다
+	{
+		RotateMatrix = XMMatrixRotationAxis(vRight, XMConvertToRadians((_float)dwMouseMove * 0.05f));
+
+		if (dwMouseMove > 0)
+		{
+			m_vAxisRadian.y += XMConvertToRadians(5.f);
+		}
+
+		if (dwMouseMove <= 0)
+		{
+			m_vAxisRadian.y -= XMConvertToRadians(5.f);
+		}
+		//vLook = XMVector3TransformNormal(vLook, RotateMatrix);
+		//m_pMovementCom->Set_State(EState::Look, vLook);
+		//vRight = XMVector3Cross(vUp, vLook);
+		//m_pMovementCom->Set_State(EState::Right, vRight);
+		//vUp = XMVector3Cross(vLook, vRight);
+		//m_pMovementCom->Set_State(EState::Up, vUp);
+	}
+}
+
 HRESULT CPlayer::Ready_Component(void* pArg)
 {
 	HRESULT hr = S_OK;

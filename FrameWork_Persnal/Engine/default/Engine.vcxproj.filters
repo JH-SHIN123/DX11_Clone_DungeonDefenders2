@@ -109,6 +109,9 @@
     <Filter Include="02.Utility\02.Component\01.Buffer\05.Font">
       <UniqueIdentifier>{45735e79-d936-4839-a002-57c0a7c44cea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Utility\02.Component\05.Status">
+      <UniqueIdentifier>{735d8206-77a6-4f76-acd9-27cf7ffe1318}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
@@ -225,6 +228,9 @@
     <ClInclude Include="..\public\VIBuffer_Font.h">
       <Filter>02.Utility\02.Component\01.Buffer\05.Font</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Status.h">
+      <Filter>02.Utility\02.Component\05.Status</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -313,6 +319,9 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Font.cpp">
       <Filter>02.Utility\02.Component\01.Buffer\05.Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Status.cpp">
+      <Filter>02.Utility\02.Component\05.Status</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

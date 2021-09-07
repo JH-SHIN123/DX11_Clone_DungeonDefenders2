@@ -21,7 +21,7 @@ public:
 	virtual HRESULT Render() override;
 
 public: // Getter
-
+	void MouseMove_Check();
 
 private:
 	HRESULT	Ready_Component();

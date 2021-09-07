@@ -35,7 +35,7 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(Ready_Cursor()))
 		return E_FAIL;
 
-	if (FAILED(Ready_DefaultLevel(ELevel::Stage1)))
+	if (FAILED(Ready_DefaultLevel(ELevel::Logo)))
 		return E_FAIL;
 
 	CText_Manager::GetInstance()->Ready_Font();
