@@ -102,39 +102,11 @@ void CPlayer::Turn_Check(_float TimeDelta)
 	_long dwMouseMove = 0;
 
 	if (dwMouseMove = GET_MOUSE_X)
-	{
 		RotateMatrix = XMMatrixRotationAxis(vUp, XMConvertToRadians((_float)dwMouseMove * 0.05f));
 
-		//vLook = XMVector3TransformNormal(vLook, RotateMatrix);
-		//m_pMovementCom->Set_State(EState::Look, vLook);
-		//
-		//vRight = XMVector3Cross(vUp, vLook);
-		//m_pMovementCom->Set_State(EState::Right, vRight);
-		//
-		//vUp = XMVector3Cross(vLook, vRight);
-		//m_pMovementCom->Set_State(EState::Up, vUp);
-	}
-
-	if (dwMouseMove = GET_MOUSE_Y) // 요것이 문제다
-	{
+	if (dwMouseMove = GET_MOUSE_Y)
 		RotateMatrix = XMMatrixRotationAxis(vRight, XMConvertToRadians((_float)dwMouseMove * 0.05f));
 
-		if (dwMouseMove > 0)
-		{
-// 			m_vAxisRadian.y += XMConvertToRadians(5.f);
-		}
-
-		if (dwMouseMove <= 0)
-		{
-// 			m_vAxisRadian.y -= XMConvertToRadians(5.f);
-		}
-		//vLook = XMVector3TransformNormal(vLook, RotateMatrix);
-		//m_pMovementCom->Set_State(EState::Look, vLook);
-		//vRight = XMVector3Cross(vUp, vLook);
-		//m_pMovementCom->Set_State(EState::Right, vRight);
-		//vUp = XMVector3Cross(vLook, vRight);
-		//m_pMovementCom->Set_State(EState::Up, vUp);
-	}
 }
 
 HRESULT CPlayer::Ready_Component(void* pArg)
@@ -145,8 +117,6 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect_Model"), TEXT("Com_Buffer"), (CComponent**)&m_pVIBufferCom);
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_Devil"), TEXT("Com_Texture_0"), (CComponent**)&m_pTextureCom);
-
-
 
 	return S_OK;
 }

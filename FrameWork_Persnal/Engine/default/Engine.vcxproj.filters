@@ -112,6 +112,9 @@
     <Filter Include="02.Utility\02.Component\05.Status">
       <UniqueIdentifier>{735d8206-77a6-4f76-acd9-27cf7ffe1318}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Utility\05.ScreenCapture">
+      <UniqueIdentifier>{358108a0-b18f-4580-bf58-3529427440e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
@@ -231,6 +234,9 @@
     <ClInclude Include="..\public\Status.h">
       <Filter>02.Utility\02.Component\05.Status</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ScreenCapture.h">
+      <Filter>02.Utility\05.ScreenCapture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -322,6 +328,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Status.cpp">
       <Filter>02.Utility\02.Component\05.Status</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ScreenCapture.cpp">
+      <Filter>02.Utility\05.ScreenCapture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
