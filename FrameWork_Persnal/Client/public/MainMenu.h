@@ -76,9 +76,6 @@ private:
 	CTextures*	m_pTextureCom_UI				= nullptr;
 	CMyButton*	m_pButton_Start_Stage			= nullptr;	// 스테이지 진입
 	CMyButton*	m_pButton_Back					= nullptr;	// 뒤로가기 폰트
-	//CMyButton*	m_pButton_Option				= nullptr;	// 옵션 리셋
-
-	//_bool		m_IsNewSelect = false;
 
 private:
 	CTextures*	m_pTextureCom_UI_Stage_Button = nullptr;

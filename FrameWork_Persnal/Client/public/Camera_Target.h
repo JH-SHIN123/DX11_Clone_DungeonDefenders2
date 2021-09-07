@@ -1,7 +1,6 @@
 #pragma once
 #ifndef __CAMERA_TARGHET_H__
 
-
 #include "Client_Defines.h"
 #include "Camera.h"
 
@@ -19,6 +18,7 @@ public:
 	virtual _int	Tick(_float TimeDelta) override;
 	virtual _int	Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
+
 
 public: // Getter
 	void MouseMove_Check();

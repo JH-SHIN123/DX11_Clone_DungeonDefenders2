@@ -17,6 +17,9 @@ typedef struct tagCameraDesc
 	_float3		vAxisY;
 	_float3		vTargetDis;
 	_float		fDis;
+	_float		fXRotationLock_Min = 0.f;
+	_float		fXRotationLock_Max = 360.f;
+
 
 	/* 투영관련 정보. */
 	_float		fAspect;
@@ -29,8 +32,8 @@ typedef struct tagCameraDesc
 
 }CAMERA_DESC;
 
-enum class ECameraState
-{Position, At, Up, End};
+enum class ECameraViewMode
+{ThirdPerson, TopView, TopToTPS ,End};
 
 class ENGINE_DLL CCamera abstract :	public CGameObject
 {
@@ -52,15 +55,26 @@ public: // Setter
 public:
 	void Set_ZoomIn(_float fFov, _float fZoomSpeed = 1.f);
 	void Set_ZoomOut(_float fFov, _float fZoomSpeed = 1.f);
+	void Set_CameraView_Mode(ECameraViewMode eViewMode) { m_eCameraMode_Next = eViewMode; }
 
 protected: // Tick
-	void Target_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag);
-	void TargetRotate_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag);
+	void	Target_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag);
+	void	TargetRotate_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag);
 
-	void Aim_Check();
+protected:
+	void	View_Check();
+
+
+private: //
+	void	View_ThirdPerson();	// main camera view
+	void	View_TopView();		//sub camera view
+	void	View_Change_Top_ThirdPerson();
 
 private:
 	void Zoom_Check(_float TimeDelta);
+
+private:
+	void SetUp_PipeLine_Matrix();
 
 protected:
 	 CMovement*				m_pMovementCom = nullptr;
@@ -74,10 +88,14 @@ protected:
 	_bool					m_IsZoomReverse = false;
 	_float					m_fZoomFov = 0.f;
 	_float					m_fZoomSpeed = 0.f;
-	_float					m_fAxisRadian = 0.f;
-	_float3					m_fAxisZ; 
+
+protected:
+	ECameraViewMode			m_eCameraMode_Now = ECameraViewMode::ThirdPerson;
+	ECameraViewMode			m_eCameraMode_Next = ECameraViewMode::ThirdPerson;
 
 
+protected:
+	//_float4  
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) PURE; // pArg == CAMERA_DESC

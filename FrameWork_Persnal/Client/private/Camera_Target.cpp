@@ -27,17 +27,16 @@ HRESULT CCamera_Target::NativeConstruct(void * pArg)
 	m_CameraDesc.fDis = 5.f;
 	Ready_Component();
 
+	Set_CameraView_Mode(Engine::ECameraViewMode::ThirdPerson);
 	return S_OK;
 }
 
 _int CCamera_Target::Tick(_float TimeDelta)
 {
-	Aim_Check();
-	//
-	//MouseMove_Check();
-	TargetRotate_Check((_uint)ELevel::Stage1, L"Layer_Player", L"Com_Movement");
+	View_Check();
 
 	
+	TargetRotate_Check((_uint)ELevel::Stage1, L"Layer_Player", L"Com_Movement");
 
 	return __super::Tick(TimeDelta);
 }

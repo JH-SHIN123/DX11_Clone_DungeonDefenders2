@@ -31,7 +31,6 @@ _int CCamera_Free::Tick(_float TimeDelta)
 	if (nullptr == m_pMovementCom)
 		return -1;
 
-	Aim_Check();
 
 	if (GetKeyState(VK_LEFT) & 0x8000)
 		m_pMovementCom->Go_Left(TimeDelta);
