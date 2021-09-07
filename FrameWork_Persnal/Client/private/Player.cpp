@@ -121,12 +121,12 @@ void CPlayer::Turn_Check(_float TimeDelta)
 
 		if (dwMouseMove > 0)
 		{
-			m_vAxisRadian.y += XMConvertToRadians(5.f);
+// 			m_vAxisRadian.y += XMConvertToRadians(5.f);
 		}
 
 		if (dwMouseMove <= 0)
 		{
-			m_vAxisRadian.y -= XMConvertToRadians(5.f);
+// 			m_vAxisRadian.y -= XMConvertToRadians(5.f);
 		}
 		//vLook = XMVector3TransformNormal(vLook, RotateMatrix);
 		//m_pMovementCom->Set_State(EState::Look, vLook);

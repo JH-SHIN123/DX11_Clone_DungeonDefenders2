@@ -150,9 +150,10 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 	_vector vUp = XMVector4Normalize(pTarget->Get_State(EState::Up));
 	_vector vLook = XMVector4Normalize(pTarget->Get_State(EState::Look));
 
-	_vector vMyPos = vTargetPos + (vRight * m_CameraDesc.vTargetDis.x);
-	vMyPos += (vUp * m_CameraDesc.vTargetDis.y);
-	vMyPos += (vLook * m_CameraDesc.vTargetDis.z);
+	// 이게 문제?
+	_float  fDis = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_CameraDesc.vTargetDis)));
+	_vector vMyLook = XMLoadFloat3(&m_fAxisZ);
+	_vector vMyPos = vTargetPos + (vMyLook * -fDis);
 
 	m_pMovementCom->Set_State(EState::Position, vMyPos);
 
@@ -164,6 +165,7 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 
 	pTarget->Set_State(EState::Right, vNewRight);
 	pTarget->Set_State(EState::Look, vNewLook);
+	//m_pMovementCom->Set_State(EState::Look, vNewLook);
 
 
 }
@@ -192,7 +194,7 @@ void CCamera::Aim_Check()
 		m_pMovementCom->Set_State(EState::Up, vUp);
 	}
 
-	if (dwMouseMove = GET_MOUSE_Y) // 요것이 문제다
+	if (dwMouseMove = GET_MOUSE_Y)
 	{
 		//RotateMatrix = XMMatrixRotationAxis(vRight, XMConvertToRadians((_float)dwMouseMove * 0.05f));
 		//
@@ -205,13 +207,29 @@ void CCamera::Aim_Check()
 		//vUp = XMVector3Cross(vLook, vRight);
 		//m_pMovementCom->Set_State(EState::Up, vUp);
 
+		// 여기서 임의로 만든 회전 값을 그대로 쓰지 말고
 
-		//if (dwMouseMove >= 0)
-		//{
-		//	m_CameraDesc.vAt.y += 10.f;
-		//}
-		//else
-		//	m_CameraDesc.vAt.y -= 10.f;
+		RotateMatrix = XMMatrixRotationAxis(vRight, XMConvertToRadians((_float)dwMouseMove * 0.05f));
+
+		XMStoreFloat3(&m_fAxisZ, vLook);
+
+		vLook = XMVector3TransformNormal(vLook, RotateMatrix);
+		m_pMovementCom->Set_State(EState::Look, vLook);
+
+		vRight = XMVector3Cross(vUp, vLook);
+		m_pMovementCom->Set_State(EState::Right, vRight);
+
+		vUp = XMVector3Cross(vLook, vRight);
+		m_pMovementCom->Set_State(EState::Up, vUp);
+
+
+		if (dwMouseMove >= 0)
+		{		
+			m_fAxisRadian += XMConvertToRadians((_float)dwMouseMove * 0.05f);
+		}
+		else
+			m_fAxisRadian -= XMConvertToRadians((_float)dwMouseMove * 0.05f);
+
 
 	}
 
