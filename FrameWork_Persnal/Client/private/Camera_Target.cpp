@@ -23,8 +23,8 @@ HRESULT CCamera_Target::NativeConstruct(void * pArg)
 {
 	__super::NativeConstruct(pArg);
 
-	m_CameraDesc.vTargetDis = _float3(2.f, 2.f, -7.f);
-
+	m_CameraDesc.vTargetDis = _float3(0.3f, 0.5f, -1.1f);
+	m_CameraDesc.fDis = 5.f;
 	Ready_Component();
 
 	return S_OK;

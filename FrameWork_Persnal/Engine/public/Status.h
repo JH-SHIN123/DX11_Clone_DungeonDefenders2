@@ -43,10 +43,10 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg) override;
 	_uint	Tick(_float TimeDelta);
 
-public:
+public: // Getter
 
 
-public:
+public: // Setter
 	void Set_Damage(const HIT_DESC& pDamage);
 
 private:

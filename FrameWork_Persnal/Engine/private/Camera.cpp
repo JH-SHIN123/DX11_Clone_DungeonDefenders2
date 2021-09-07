@@ -62,6 +62,7 @@ HRESULT CCamera::NativeConstruct(void * pArg)
 
 	m_pMovementCom->Set_State(EState::Position, vEye);
 
+	m_fAxisZ = { 0.f,0.f,0.f };
 	return S_OK;
 }
 
@@ -70,14 +71,21 @@ _int CCamera::Tick(_float TimeDelta)
 	__super::Tick(TimeDelta);
 
 	_vector vAt = XMLoadFloat3(&m_CameraDesc.vAt);
-	vAt = XMVectorSetW(vAt, 1.f);
+	//vAt = XMVectorSetW(vAt, 1.f);
 
 	_vector vAxisY = XMLoadFloat3(&m_CameraDesc.vAxisY);
-	vAxisY = XMVectorSetW(vAxisY, 0.f);
+	vAxisY = XMVectorSet(0.f,1.f,0.f, 0.f);
 
 	_matrix ViewMatrix = XMMatrixLookAtLH(m_pMovementCom->Get_State(EState::Position), vAt, vAxisY);
 
-	m_pPipeline_Manager->Set_Transform(ETransformState::View, m_pMovementCom->Get_WorldMatrix_Inverse());
+	m_pPipeline_Manager->Set_Transform(ETransformState::View, ViewMatrix);
+
+
+
+
+
+//	m_pPipeline_Manager->Set_Transform(ETransformState::View, m_pMovementCom->Get_WorldMatrix_Inverse());
+
 	m_pPipeline_Manager->Set_Transform(ETransformState::Proj, XMMatrixPerspectiveFovLH(m_CameraDesc.fFovy, m_CameraDesc.fAspect, m_CameraDesc.fNear, m_CameraDesc.fFar));
 
 	return _int();
@@ -122,7 +130,10 @@ void CCamera::Target_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* C
 	CMovement* pTarget = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject(iLevel, LayerTag))->Get_Component(ComponentTag));
 
 	if (nullptr == pTarget)
+	{
+		//m_pMovementCom->Set_State(EState::Position, vMyPos);
 		return;
+	}
 
 	_vector vTargetPos = pTarget->Get_State(EState::Position);
 
@@ -142,7 +153,10 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 	CMovement* pTarget = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject(iLevel, LayerTag))->Get_Component(ComponentTag));
 
 	if (nullptr == pTarget)
+	{
+		m_CameraDesc.vAt = { 0.f,0.f,0.f };
 		return;
+	}
 
 	_vector vTargetPos = pTarget->Get_State(EState::Position);
 
@@ -150,10 +164,17 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 	_vector vUp = XMVector4Normalize(pTarget->Get_State(EState::Up));
 	_vector vLook = XMVector4Normalize(pTarget->Get_State(EState::Look));
 
-	// 이게 문제?
-	_float  fDis = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_CameraDesc.vTargetDis)));
-	_vector vMyLook = XMLoadFloat3(&m_fAxisZ);
-	_vector vMyPos = vTargetPos + (vMyLook * -fDis);
+	_vector vMyLook = XMVector4Normalize(m_pMovementCom->Get_State(EState::Look));
+	_vector vMyPos = vTargetPos;// +(vRight * m_CameraDesc.vTargetDis.x);
+								//vMyPos += (vUp * m_CameraDesc.vTargetDis.y);
+								//vMyPos += (vLook * m_CameraDesc.vTargetDis.z);
+// 	vMyPos += XMVector3Normalize(m_pMovementCom->Get_State(EState::Right) * m_CameraDesc.vTargetDis.x);
+// 	vMyPos += XMVector3Normalize(m_pMovementCom->Get_State(EState::Up) * m_CameraDesc.vTargetDis.y);
+// 	vMyPos += XMVector3Normalize(m_pMovementCom->Get_State(EState::Look) * m_CameraDesc.vTargetDis.z);
+	vMyPos += XMVector3Normalize(XMLoadFloat3(&m_CameraDesc.vTargetDis)) * m_CameraDesc.fDis;
+	//_vector vDisPos = XMVector3Normalize(XMLoadFloat3(&m_CameraDesc.vTargetDis));
+	//vMyPos += vDisPos * m_CameraDesc.fDis;
+
 
 	m_pMovementCom->Set_State(EState::Position, vMyPos);
 
@@ -166,6 +187,22 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 	pTarget->Set_State(EState::Right, vNewRight);
 	pTarget->Set_State(EState::Look, vNewLook);
 
+	
+	//XMVectorGetX((vTargetPos) + vRightUp_Cross* 5.f);
+	//0.f;// XMVectorGetY((vTargetPos));
+	//XMVectorGetZ((vTargetPos) + vNewLook * 5.f);// + m_CameraDesc.vAt_OffSet.z;
+
+	_vector vAt = m_pMovementCom->Get_State(EState::Position) + (XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * 20.f);
+
+
+	/* at은 그대로고 카메라의 Pos를 다시 잡자*/
+	// 회전 했을떄도 맞춰줘야 함
+
+	XMStoreFloat3(&m_CameraDesc.vAt, vAt);
+
+	//m_CameraDesc.vAt.x = XMVectorGetX(vTargetPos);// + XMVector3Normalize(m_pMovementCom->Get_State(EState::Right) * m_CameraDesc.vTargetDis.x));
+	//m_CameraDesc.vAt.y = XMVectorGetY(vTargetPos);// + XMVector3Normalize(m_pMovementCom->Get_State(EState::Up) * m_CameraDesc.vTargetDis.y));
+	//m_CameraDesc.vAt.z = XMVectorGetZ(vTargetPos);// + XMVector3Normalize(m_pMovementCom->Get_State(EState::Look) * m_CameraDesc.vTargetDis.z));
 }
 
 void CCamera::Aim_Check()
@@ -181,10 +218,10 @@ void CCamera::Aim_Check()
 	if (dwMouseMove = GET_MOUSE_X)
 	{
 		RotateMatrix = XMMatrixRotationAxis(vUp, XMConvertToRadians((_float)dwMouseMove * 0.05f));
+		XMStoreFloat3(&m_CameraDesc.vTargetDis,XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetDis), RotateMatrix));
 
 		vLook = XMVector3TransformNormal(vLook, RotateMatrix);
 		XMStoreFloat3(&m_fAxisZ, vLook);
-
 		m_pMovementCom->Set_State(EState::Look, vLook);
 
 		vRight = XMVector3Cross(vUp, vLook);
@@ -209,10 +246,11 @@ void CCamera::Aim_Check()
 
 		// 여기서 임의로 만든 회전 값을 그대로 쓰지 말고
 
+
 		RotateMatrix = XMMatrixRotationAxis(vRight, XMConvertToRadians((_float)dwMouseMove * 0.05f));
+		XMStoreFloat3(&m_CameraDesc.vTargetDis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetDis), RotateMatrix));
 
 		vLook = XMVector3TransformNormal(vLook, RotateMatrix);
-
 		XMStoreFloat3(&m_fAxisZ, vLook);
 		m_pMovementCom->Set_State(EState::Look, vLook);
 

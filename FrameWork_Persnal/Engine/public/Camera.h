@@ -16,6 +16,7 @@ typedef struct tagCameraDesc
 	_float3		vAt;
 	_float3		vAxisY;
 	_float3		vTargetDis;
+	_float		fDis;
 
 	/* 투영관련 정보. */
 	_float		fAspect;
