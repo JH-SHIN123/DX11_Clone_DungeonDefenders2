@@ -4,6 +4,7 @@
 
 #pragma warning (disable : 4251)
 #pragma warning (disable : 4005) // DIRECTINPUT_VERSION 매크로 재정의
+#pragma warning (disable : 4099) // DIRECTINPUT_VERSION 매크로 재정의
 
 #include "D3D11.h"
 #include "DirectXMath.h"	// 수학
@@ -14,6 +15,12 @@
 #include <dinput.h>			// 키입력
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "dinput8.lib")
+
+// 메쉬 로드 라이브러리들
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 
 using namespace DirectX;
 

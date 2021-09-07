@@ -3,6 +3,7 @@
 
 namespace Engine
 {
+#pragma region Light
 	typedef struct tagLightDesc
 	{
 		// 방향성 광원
@@ -23,6 +24,29 @@ namespace Engine
 		// 추가 옵션
 		bool		isActive;
 	} LIGHT_DESC;
+#pragma endregion
+
+#pragma region VIBuffer
+	typedef struct tagInputLayoutDesc
+	{
+		ID3D11InputLayout*			pLayout = nullptr;
+		ID3DX11EffectPass*			pPass = nullptr;
+	} INPUTLAYOUTDESC;
+
+	typedef struct tagMeshTexture
+	{
+		class CTextures*			pMaterialTexture[AI_TEXTURE_TYPE_MAX];
+	}MESHTEXTURE;
+
+	typedef struct tagVertexMesh
+	{
+		XMFLOAT3			vPosition;
+		XMFLOAT3			vNormal;
+		XMFLOAT3			vTangent;
+		XMFLOAT2			vTexUV;
+		XMUINT4				vBlendIndex;
+		XMFLOAT4			vBlendWeight;
+	}VTXMESH;
 
 	typedef struct tagVertexNormalTexture
 	{
@@ -69,8 +93,7 @@ namespace Engine
 	{
 		unsigned long		_0, _1, _2;
 	}POLYGONINDICES32;
-
-
+#pragma endregion
 
 }
 

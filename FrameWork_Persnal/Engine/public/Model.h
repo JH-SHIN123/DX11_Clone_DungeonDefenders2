@@ -1,0 +1,92 @@
+#pragma once
+
+#ifndef __MODEL_H__
+
+#include "Component.h"
+
+BEGIN(Engine)
+class CModel final : public CComponent
+{
+private:
+	explicit CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
+	explicit CModel(const CModel& rhs);
+	virtual ~CModel() = default;
+
+public:
+
+	_uint Get_NumVertices() const {
+		return m_Vertices.size();
+	}
+
+	_uint Get_NumPolygonIndices() const {
+		return m_PolygonIndices.size();
+	}
+
+public:
+	virtual HRESULT NativeConstruct_Prototype(const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName); /* 버퍼를 생성한다.*/
+	virtual HRESULT NativeConstruct(void* pArg) override;
+
+public:
+	HRESULT Ready_VIBuffer(const _tchar* pShaderFilePath, const char* pTechniqueName);
+	HRESULT Add_Vertex(VTXMESH* pVertex);
+	HRESULT Add_PolgygonIndices(POLYGONINDICES32* pPolygonIndices);
+	HRESULT Add_MeshContainer(const char* pMeshName, _uint iStartPolygonIndex, _uint iStartVertexIndex, _uint iMaterialIndex);
+	HRESULT Add_Materials(MESHTEXTURE* pMeshMaterialTexture);
+	HRESULT Reserve_VIBuffer(_uint iNumVertices, _uint iNumFace);
+	HRESULT SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC * pInputElementDesc, _uint iNumElement, const _tchar * pShaderFilePath, const char * pTechniqueName);
+
+
+private:
+	class CModelLoader*		m_pModelLoader = nullptr;
+
+private:
+	vector<VTXMESH*>					m_Vertices;
+	typedef vector<VTXMESH*>			VERTICES;
+
+	vector<POLYGONINDICES32*>			m_PolygonIndices;
+	typedef vector<POLYGONINDICES32*>	POLYGONINDICES;
+
+private:
+	vector<class CMeshContainer*>				m_Meshes;
+	typedef vector<class CMeshContainer*>		MESHES;
+
+	vector<MESHTEXTURE*>				m_Materials;
+	typedef vector<MESHTEXTURE*>		MATERIALS;
+
+protected: /* For.Vertices */
+	ID3D11Buffer*				m_pVB = nullptr;
+	D3D11_BUFFER_DESC			m_VBDesc;
+	D3D11_SUBRESOURCE_DATA		m_VBSubresourceData;
+	_uint						m_iNumVertices = 0;
+	_uint						m_iStride = 0;
+	_uint						m_iNumVertexBuffers = 0;
+
+
+
+
+protected: /* For.Indices */
+	ID3D11Buffer*				m_pIB = nullptr;
+	D3D11_BUFFER_DESC			m_IBDesc;
+	D3D11_SUBRESOURCE_DATA		m_IBSubresourceData;
+	_uint						m_iNumPolygons;
+	_uint						m_iIndicesStride;
+	DXGI_FORMAT					m_eIndexFormat;
+	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;
+
+protected: /* For.Shader */
+	ID3DX11Effect*				m_pEffect = nullptr;
+
+	vector<INPUTLAYOUTDESC>		m_InputLayouts;
+
+
+
+
+public:
+	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName);
+	virtual CComponent* Clone(void* pArg) override;
+	virtual void Free() override;
+};
+
+END
+#define __MODEL_H__
+#endif // !__MODEL_H__

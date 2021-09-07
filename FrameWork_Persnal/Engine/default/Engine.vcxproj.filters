@@ -115,6 +115,18 @@
     <Filter Include="02.Utility\05.ScreenCapture">
       <UniqueIdentifier>{358108a0-b18f-4580-bf58-3529427440e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Utility\06.ModelLoader">
+      <UniqueIdentifier>{33b679e3-3a64-4d3c-a47d-2196d2f52ed3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\06.Mesh">
+      <UniqueIdentifier>{90eb2e0a-b6ab-4e87-810b-362a13997fac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\06.Mesh\00.Model">
+      <UniqueIdentifier>{d461e301-e891-4103-b0af-18b9b3d763b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\06.Mesh\99.MeshContainer">
+      <UniqueIdentifier>{6e84f8e9-fc15-4cc9-b0c8-44a3de0c0586}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
@@ -237,6 +249,12 @@
     <ClInclude Include="..\public\ScreenCapture.h">
       <Filter>02.Utility\05.ScreenCapture</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ModelLoader.h">
+      <Filter>02.Utility\06.ModelLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Model.h">
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -331,6 +349,12 @@
     </ClCompile>
     <ClCompile Include="..\private\ScreenCapture.cpp">
       <Filter>02.Utility\05.ScreenCapture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ModelLoader.cpp">
+      <Filter>02.Utility\06.ModelLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Model.cpp">
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
