@@ -165,8 +165,6 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 
 	pTarget->Set_State(EState::Right, vNewRight);
 	pTarget->Set_State(EState::Look, vNewLook);
-	//m_pMovementCom->Set_State(EState::Look, vNewLook);
-
 
 }
 
@@ -185,6 +183,8 @@ void CCamera::Aim_Check()
 		RotateMatrix = XMMatrixRotationAxis(vUp, XMConvertToRadians((_float)dwMouseMove * 0.05f));
 
 		vLook = XMVector3TransformNormal(vLook, RotateMatrix);
+		XMStoreFloat3(&m_fAxisZ, vLook);
+
 		m_pMovementCom->Set_State(EState::Look, vLook);
 
 		vRight = XMVector3Cross(vUp, vLook);
@@ -211,9 +211,9 @@ void CCamera::Aim_Check()
 
 		RotateMatrix = XMMatrixRotationAxis(vRight, XMConvertToRadians((_float)dwMouseMove * 0.05f));
 
-		XMStoreFloat3(&m_fAxisZ, vLook);
-
 		vLook = XMVector3TransformNormal(vLook, RotateMatrix);
+
+		XMStoreFloat3(&m_fAxisZ, vLook);
 		m_pMovementCom->Set_State(EState::Look, vLook);
 
 		vRight = XMVector3Cross(vUp, vLook);
