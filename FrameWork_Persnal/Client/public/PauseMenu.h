@@ -20,6 +20,7 @@ public:
 
 private:
 	HRESULT	Ready_Component();
+	void Button_Check();
 
 private:
 	CTextures*			m_pTextureCom_AlphaBlack = nullptr;
@@ -28,6 +29,9 @@ private:
 private: //Button 4
 	vector<class CMyButton_NoText*>		m_pButton;
 	_int				m_iButtonCount = 4;
+
+private:
+	_bool				m_IsSceneChange = false;
 
 public:
 	static CPauseMenu* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

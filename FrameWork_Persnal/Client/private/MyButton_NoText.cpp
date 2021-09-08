@@ -56,7 +56,7 @@ HRESULT CMyButton_NoText::Render(_uint iTextureIndex)
 	return S_OK;
 }
 
-_bool CMyButton_NoText::Get_IsPick()
+_bool CMyButton_NoText::Get_IsClick()
 {
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{

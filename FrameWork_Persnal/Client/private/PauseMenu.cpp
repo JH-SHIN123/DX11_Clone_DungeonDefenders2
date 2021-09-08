@@ -2,6 +2,7 @@
 #include "..\public\PauseMenu.h"
 #include "MyButton_NoText.h"
 #include "Data_Manager.h"
+#include "Level_Logo.h"
 
 CPauseMenu::CPauseMenu(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CUI_2D(pDevice, pDevice_Context)
@@ -50,6 +51,13 @@ _int CPauseMenu::Late_Tick(_float TimeDelta)
 {
 	for (auto& iter : m_pButton)
 		iter->Late_Tick(TimeDelta);
+
+	if (true == m_IsSceneChange)
+	{
+		static_cast<CLevel_Logo*>(GET_GAMEINSTANCE->Get_Scene())->Scene_Change(ELevel::Stage1); // 짬통에 이 정보를 넣어놓자
+
+		return SCENE_CHANGE;
+	}
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::AlphaUI_Scecond, this);
 }
@@ -103,6 +111,30 @@ HRESULT CPauseMenu::Ready_Component()
 
 
 	return S_OK;
+}
+
+void CPauseMenu::Button_Check()
+{
+	for (_int i = 0; i < m_iButtonCount; ++i)
+	{
+		if (true == m_pButton[i]->Get_IsClick())
+		{
+			switch (i)
+			{
+			case 0:	// 스탯창
+				break;
+			case 1:	// 게임재개
+				break;
+			case 2: // 다시시작
+				break;
+			case 3: // 메인메뉴
+				m_IsSceneChange = true;
+				break;
+			default:
+				break;
+			}
+		}
+	}
 }
 
 CPauseMenu * CPauseMenu::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

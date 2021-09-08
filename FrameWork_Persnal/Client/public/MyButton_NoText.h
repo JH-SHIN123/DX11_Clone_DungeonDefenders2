@@ -19,7 +19,7 @@ public:
 	virtual HRESULT Render(_uint iTextureIndex = 0);
 
 public:
-	_bool	Get_IsPick();
+	_bool	Get_IsClick();
 
 private:
 	HRESULT	Ready_Component();

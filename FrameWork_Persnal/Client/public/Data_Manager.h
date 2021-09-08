@@ -17,6 +17,17 @@ public:
 	virtual ~CData_Manager() = default;
 
 
+#pragma region Level
+public:	// 씬전환 중개자,
+	void Set_NowScene(ELevel eNowLevel);					// 씬의 초기화부분에서 같이 세팅
+	void Change_Scene(ELevel eNextLevel);					// 오브젝트에서 씬전환 콜 
+	_bool Get_IsChange_Scene() { return m_IsChangeScene; }	// 씬의 Render에서 씬전환
+	
+private:
+	ELevel	m_NowLevel = ELevel::End;
+	_bool	m_IsChangeScene = false;
+#pragma endregion
+
 #pragma region Rank
 
 public:

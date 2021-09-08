@@ -496,12 +496,7 @@ void CMainMenu::Button_Position_Check(_float TimeDelta)
 				}		
 			}
 		}
-		else
-		{
-
-		}
 	}
-
 }
 
 void CMainMenu::Button_Select_Check(_float TimeDelta)
@@ -551,7 +546,7 @@ void CMainMenu::Button_Option_Check(_float TimeDelta)
 {
 	// uv를 건들자
 
-	if (m_pButton_Option_BGM[0]->Get_IsPick())
+	if (m_pButton_Option_BGM[0]->Get_IsClick())
 	{
 		m_vSound.x -= TimeDelta * 10.f;
 
@@ -561,7 +556,7 @@ void CMainMenu::Button_Option_Check(_float TimeDelta)
 		m_pOption_BGM->Set_Count(m_vSound.x, 100.f);
 	}
 
-	if (m_pButton_Option_BGM[1]->Get_IsPick())
+	if (m_pButton_Option_BGM[1]->Get_IsClick())
 	{
 		m_vSound.x += TimeDelta * 10.f;
 
@@ -571,7 +566,7 @@ void CMainMenu::Button_Option_Check(_float TimeDelta)
 		m_pOption_BGM->Set_Count(m_vSound.x, 100.f);
 	}
 
-	if (m_pButton_Option_SFX[0]->Get_IsPick())
+	if (m_pButton_Option_SFX[0]->Get_IsClick())
 	{
 		m_vSound.y -= TimeDelta * 10.f;
 
@@ -581,7 +576,7 @@ void CMainMenu::Button_Option_Check(_float TimeDelta)
 		m_pOption_SFX->Set_Count(m_vSound.y, 100.f);
 	}
 
-	if (m_pButton_Option_SFX[1]->Get_IsPick())
+	if (m_pButton_Option_SFX[1]->Get_IsClick())
 	{
 		m_vSound.y += TimeDelta * 10.f;
 
