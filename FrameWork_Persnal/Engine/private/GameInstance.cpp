@@ -29,8 +29,11 @@ HRESULT CGameInstance::Initialize(HINSTANCE hInst, HWND hWnd, CGraphic_Device::W
 	if (FAILED(m_pGraphic_Device->Ready_Graphic_Device(eWinMode, hWnd, iSizeX, iSizeY, ppDevice, ppDevice_Context)))
 		return E_FAIL;
 
-	if (FAILED(m_pInputDev_Manager->Ready_InputDev(hInst, hWnd)))
-		return E_FAIL;
+	if (nullptr != hInst)
+	{
+		if (FAILED(m_pInputDev_Manager->Ready_InputDev(hInst, hWnd)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

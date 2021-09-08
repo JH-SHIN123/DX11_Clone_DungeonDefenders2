@@ -58,20 +58,27 @@ HRESULT Engine::CInputDev::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 	// 장치에 대한 access 버전을 받아오는 함수
 	m_pMouse->Acquire();
 
+	m_IsReady_InputDev = true;
 
 	return S_OK;
 }
 
 void Engine::CInputDev::Update_InputDev(void)
 {
-	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
-	m_pMouse->GetDeviceState(sizeof(m_tMouseState), &m_tMouseState);
+	if (true == m_IsReady_InputDev)
+	{
+		m_pKeyBoard->GetDeviceState(256, m_byKeyState);
+		m_pMouse->GetDeviceState(sizeof(m_tMouseState), &m_tMouseState);
+	}
 }
 
 void Engine::CInputDev::Free(void)
 {
-	Safe_Release(m_pKeyBoard);
-	Safe_Release(m_pMouse);
-	Safe_Release(m_pInputSDK);
+	if (true == m_IsReady_InputDev)
+	{
+		Safe_Release(m_pKeyBoard);
+		Safe_Release(m_pMouse);
+		Safe_Release(m_pInputSDK);
+	}
 }
 

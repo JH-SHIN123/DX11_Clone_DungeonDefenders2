@@ -42,6 +42,8 @@ private:
 	_byte					m_byKeyState[256];
 	DIMOUSESTATE			m_tMouseState;
 
+	_bool		m_IsReady_InputDev = false;
+
 public:
 	virtual void		Free();
 

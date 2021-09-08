@@ -8,6 +8,7 @@
 #include "MainFrm.h"
 #include "ToolView.h"
 #include "Form.h"
+#include "GameInstance.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -38,6 +39,7 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
+	CGameInstance::Release_Engine();
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
