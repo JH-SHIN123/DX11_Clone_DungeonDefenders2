@@ -55,7 +55,7 @@ public:
 	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObject(_uint iPrototypeLevelIndex, const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, void* pArg = nullptr);
 	CGameObject* Get_GameObject(_uint iLevelIndex, const _tchar* pLayerTag); // Clone
-	list<CGameObject*>* Get_GameObject_List(_uint iLevelIndex, const _tchar* pLayerTag); // Clone
+	//list<CGameObject*>* Get_GameObject_List(_uint iLevelIndex, const _tchar* pLayerTag); // Clone
 #pragma endregion
 
 

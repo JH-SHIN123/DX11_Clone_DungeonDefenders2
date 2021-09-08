@@ -168,13 +168,13 @@ CGameObject * CGameInstance::Get_GameObject(_uint iLevelIndex, const _tchar * pL
 	return m_pGameObject_Manager->Get_GameObject(iLevelIndex, pLayerTag);
 }
 
-list<CGameObject*>* CGameInstance::Get_GameObject_List(_uint iLevelIndex, const _tchar * pLayerTag)
-{
-	if (nullptr == m_pGameObject_Manager)
-		return nullptr;
-
-	return m_pGameObject_Manager->Get_GameObject_List(iLevelIndex, pLayerTag);
-}
+//list<CGameObject*>* CGameInstance::Get_GameObject_List(_uint iLevelIndex, const _tchar * pLayerTag)
+//{
+//	if (nullptr == m_pGameObject_Manager)
+//		return nullptr;
+//
+//	return m_pGameObject_Manager->Get_GameObject_List(iLevelIndex, pLayerTag);
+//}
 
 #pragma endregion 
 

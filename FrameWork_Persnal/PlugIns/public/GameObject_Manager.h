@@ -23,7 +23,7 @@ public:
 
 	// Getter
 	CGameObject* Get_GameObject(_uint iLevelIndex, const _tchar* pLayerTag);
-	list<CGameObject*>* Get_GameObject_List(_uint iLevelIndex, const _tchar* pLayerTag);
+	//list<CGameObject*>* Get_GameObject_List(_uint iLevelIndex, const _tchar* pLayerTag);
 
 	_int Tick_GameObject(_float TimeDelta);
 	void Clear(_uint iLevelIndex);
@@ -42,6 +42,8 @@ private:
 private:
 	CGameObject* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 	CLayer* Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag);
+	CLayer* Find_Layer_List(_uint iLevelIndex, const _tchar* pLayerTag);
+
 public:
 	virtual void Free() override;
 };

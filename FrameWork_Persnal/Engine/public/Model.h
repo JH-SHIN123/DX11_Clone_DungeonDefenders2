@@ -13,8 +13,8 @@ private:
 	virtual ~CModel() = default;
 
 public:
-	_uint Get_NumVertices() const { return m_Vertices.size(); }
-	_uint Get_NumPolygonIndices() const { return m_PolygonIndices.size(); }
+	_uint Get_NumVertices() const { return (_uint)m_Vertices.size(); }
+	_uint Get_NumPolygonIndices() const { return (_uint)m_PolygonIndices.size(); }
 
 public:
 	virtual HRESULT NativeConstruct_Prototype(const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName); /* 버퍼를 생성한다.*/

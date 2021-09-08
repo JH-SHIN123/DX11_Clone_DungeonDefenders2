@@ -26,14 +26,14 @@ HRESULT CModelLoader::Load_ModelFromFile(ID3D11Device * pDevice, ID3D11DeviceCon
 		return E_FAIL;
 
 	/* 읽어진 메시의 갯수만큼 메시(내가 사용하고자하는 형태로 변환된) 를 생성한다.  */
-	for (_int i = 0; i < pScene->mNumMeshes; ++i)
+	for (_uint i = 0; i < pScene->mNumMeshes; ++i)
 	{
 		if (FAILED(Create_MeshContainer(pModel, pScene->mMeshes[i])))
 			return E_FAIL;
 	}
 
 	/* 머티레얼을 로드하낟. */
-	for (_int i = 0; i < pScene->mNumMaterials; ++i)
+	for (_uint i = 0; i < pScene->mNumMaterials; ++i)
 	{
 		if (FAILED(Create_Materials(pDevice, pDevice_Context, pModel, pScene->mMaterials[i], pMeshFilePath)))
 			return E_FAIL;
@@ -57,7 +57,7 @@ HRESULT CModelLoader::Create_MeshContainer(CModel * pModel, aiMesh * pMesh)
 
 	/* 현재 메시에 정의된 정점들을 로드한다. (정점하나의 정보가 상당히 많다)*/
 	// 아마 내가 더 필요한 정보가 있다라면 mempcy를 더 하면 되것지 머
-	for (_int i = 0; i < pMesh->mNumVertices; ++i)
+	for (_uint i = 0; i < pMesh->mNumVertices; ++i)
 	{
 		VTXMESH*		pVertex = new VTXMESH;
 		ZeroMemory(pVertex, sizeof(VTXMESH));
@@ -81,7 +81,7 @@ HRESULT CModelLoader::Create_MeshContainer(CModel * pModel, aiMesh * pMesh)
 	_uint iStartPolygonIndex = pModel->Get_NumPolygonIndices(); // 처음에는 0이 들어와야겠지
 
 	/* 현재 메시에 정의된 인덱스들을 로드한다. */
-	for (_int i = 0; i < pMesh->mNumFaces; ++i)
+	for (_uint i = 0; i < pMesh->mNumFaces; ++i)
 	{
 		/* 인덱스 세개씩 값을 채워나간다. */
 		POLYGONINDICES32* pIndices = new POLYGONINDICES32;
@@ -129,7 +129,7 @@ HRESULT CModelLoader::Create_Materials(ID3D11Device * pDevice, ID3D11DeviceConte
 		strcat(szFullPath, szTextureFileName);
 
 		_tchar			szFullPath_w[MAX_PATH] = TEXT("");
-		MultiByteToWideChar(CP_ACP, 0, szFullPath, strlen(szFullPath), szFullPath_w, MAX_PATH);
+		MultiByteToWideChar(CP_ACP, 0, szFullPath, (_int)strlen(szFullPath), szFullPath_w, MAX_PATH);
 
 		if (0 == strcmp(szExt, ".dds"))
 			pMaterialTexture->pMaterialTexture[i] = CTextures::Create(pDevice, pDevice_Context, ETextureType::Dds, szFullPath_w);

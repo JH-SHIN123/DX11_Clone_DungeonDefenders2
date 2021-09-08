@@ -15,6 +15,8 @@ Engine::CInputDev::~CInputDev()
 
 HRESULT Engine::CInputDev::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 {
+	if (nullptr == hInst)
+		return S_OK;
 
 	// DInput 컴객체를 생성하는 함수
 	if (FAILED(DirectInput8Create(hInst, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_pInputSDK, nullptr)))

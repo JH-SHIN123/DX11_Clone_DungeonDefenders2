@@ -97,21 +97,21 @@ CGameObject * CGameObject_Manager::Get_GameObject(_uint iLevelIndex, const _tcha
 	return pLayer->Get_GameObject();
 }
 
-list<CGameObject*>* CGameObject_Manager::Get_GameObject_List(_uint iLevelIndex, const _tchar * pLayerTag)
-{
-	if (m_iNumLevels <= iLevelIndex)
-		return nullptr;
-
-	CLayer*		pLayer = Find_Layer(iLevelIndex, pLayerTag);
-
-	if (nullptr == pLayer)
-	{
-		MSG_BOX("게임오브젝트를 못 찾았다.");
-		return nullptr;
-	}
-
-	return &pLayer->Get_GameObject_List();
-}
+//list<CGameObject*>* CGameObject_Manager::Get_GameObject_List(_uint iLevelIndex, const _tchar * pLayerTag)
+//{
+//	if (m_iNumLevels <= iLevelIndex)
+//		return nullptr;
+//
+//	CLayer*		pLayer = Find_Layer(iLevelIndex, pLayerTag);
+//
+//	if (nullptr == pLayer)
+//	{
+//		MSG_BOX("게임오브젝트를 못 찾았다.");
+//		return nullptr;
+//	}
+//
+//	return &pLayer->Get_GameObject_List();
+//}
 
 _int CGameObject_Manager::Tick_GameObject(_float TimeDelta)
 {
@@ -173,6 +173,19 @@ CLayer * CGameObject_Manager::Find_Layer(_uint iLevelIndex, const _tchar * pLaye
 
 	if (iter == m_pLayers[iLevelIndex].end())
 		return nullptr;
+
+	return iter->second;
+}
+
+CLayer * CGameObject_Manager::Find_Layer_List(_uint iLevelIndex, const _tchar * pLayerTag)
+{
+	auto	iter = find_if(m_pLayers[iLevelIndex].begin(), m_pLayers[iLevelIndex].end(), CTagFinder(pLayerTag));
+
+	if (iter == m_pLayers[iLevelIndex].end())
+	{
+		MSG_BOX("곧 터집니다 3..2..1....");
+		return nullptr;
+	}
 
 	return iter->second;
 }

@@ -47,7 +47,7 @@ HRESULT CModel::Ready_VIBuffer(const _tchar * pShaderFilePath, const char * pTec
 
 	ZeroMemory(&m_VBDesc, sizeof(D3D11_BUFFER_DESC));
 
-	m_iNumVertices = m_Vertices.size();
+	m_iNumVertices = (_uint)m_Vertices.size();
 	m_iStride = sizeof(VTXMESH);
 
 	m_VBDesc.ByteWidth = m_iStride * m_iNumVertices;
@@ -67,7 +67,7 @@ HRESULT CModel::Ready_VIBuffer(const _tchar * pShaderFilePath, const char * pTec
 
 	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
 	m_iIndicesStride = sizeof(POLYGONINDICES32);
-	m_iNumPolygons = m_PolygonIndices.size();
+	m_iNumPolygons = (_uint)m_PolygonIndices.size();
 	m_eTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	m_IBDesc.ByteWidth = m_iIndicesStride * m_iNumPolygons;
@@ -129,7 +129,7 @@ HRESULT CModel::Add_PolgygonIndices(POLYGONINDICES32 * pPolygonIndices)
 
 HRESULT CModel::Add_MeshContainer(const char * pMeshName, _uint iStartPolygonIndex, _uint iStartVertexIndex, _uint iMaterialIndex)
 {
-	CMeshContainer*		pMeshContainer = CMeshContainer::Create(m_pDevice, m_pDevice_Context, pMeshName, iStartPolygonIndex, m_PolygonIndices.size() - iStartPolygonIndex, iStartVertexIndex, iMaterialIndex);
+	CMeshContainer*		pMeshContainer = CMeshContainer::Create(m_pDevice, m_pDevice_Context, pMeshName, iStartPolygonIndex, (_uint)m_PolygonIndices.size() - iStartPolygonIndex, iStartVertexIndex, iMaterialIndex);
 	if (nullptr == pMeshContainer)
 		return E_FAIL;
 
@@ -192,7 +192,7 @@ HRESULT CModel::SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC * pInputElementDesc,
 
 	m_InputLayouts.reserve(TechniqueDesc.Passes);
 
-	for (int i = 0; i < TechniqueDesc.Passes; ++i)
+	for (_uint i = 0; i < TechniqueDesc.Passes; ++i)
 	{
 		INPUTLAYOUTDESC			InputLayoutDesc;
 

@@ -1,10 +1,11 @@
 #pragma once
 
 #ifndef __ENGINE_DEFINES_H__
+#define DIRECTINPUT_VERSION	0x0800
 
 #pragma warning (disable : 4251)
-#pragma warning (disable : 4005) // DIRECTINPUT_VERSION 매크로 재정의
-#pragma warning (disable : 4099) // DIRECTINPUT_VERSION 매크로 재정의
+//#pragma warning (disable : 4005) // DIRECTINPUT_VERSION 매크로 재정의
+#pragma warning (disable : 4996) // 문자열 변환 워닝
 
 #include "D3D11.h"
 #include "DirectXMath.h"	// 수학
@@ -13,7 +14,8 @@
 #include "d3dxGlobal.h"	
 #include "d3dcompiler.h"	// 쉐이더
 #include <dinput.h>			// 키입력
-#pragma comment(lib, "dxguid.lib")
+
+//#pragma comment(lib, "dxguid.lib") #pragma warning (disable : 4099) // 라이브러리PDB 파일 디버깅 정보 없음 워닝
 #pragma comment(lib, "dinput8.lib")
 
 // 메쉬 로드 라이브러리들
@@ -24,7 +26,6 @@
 
 using namespace DirectX;
 
-#define DIRECTINPUT_VERSION	0x0800
 #include <list>
 #include <map>
 #include <vector>

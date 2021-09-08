@@ -27,12 +27,6 @@ namespace Engine
 #pragma endregion
 
 #pragma region VIBuffer
-	typedef struct tagInputLayoutDesc
-	{
-		ID3D11InputLayout*			pLayout = nullptr;
-		ID3DX11EffectPass*			pPass = nullptr;
-	} INPUTLAYOUTDESC;
-
 	typedef struct tagMeshTexture
 	{
 		class CTextures*			pMaterialTexture[AI_TEXTURE_TYPE_MAX];
@@ -62,14 +56,6 @@ namespace Engine
 		XMMATRIX projection;
 	};
 
-	/* For.Shader Layout */
-	typedef struct tagInputLayoutDesc
-	{
-		ID3D11InputLayout*			pLayout = nullptr;
-		ID3DX11EffectPass*			pPass = nullptr;
-	} INPUTLAYOUTDESC;
-
-
 	/* vPosition + UVmap */
 	typedef struct tagVertexTexture
 	{
@@ -95,6 +81,15 @@ namespace Engine
 	}POLYGONINDICES32;
 #pragma endregion
 
+#pragma region Shader
+	/* For.Shader Layout */
+	typedef struct tagInputLayoutDesc
+	{
+		ID3D11InputLayout*			pLayout = nullptr;
+		ID3DX11EffectPass*			pPass = nullptr;
+	} INPUTLAYOUTDESC;
+
+#pragma  endregion
 }
 
 #endif 
