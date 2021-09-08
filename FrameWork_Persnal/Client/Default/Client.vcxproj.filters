@@ -130,6 +130,9 @@
     <Filter Include="05.Utility\05.InGame_Manager">
       <UniqueIdentifier>{78ab7490-380e-46cb-91a4-7e40286580b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.UI, HUD\00.2D\05.StatusMenu">
+      <UniqueIdentifier>{ae0ef76c-ba75-448a-a81f-15c5b25d3c8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -246,7 +249,12 @@
     <ClInclude Include="..\public\PauseMenu.h">
       <Filter>03.UI, HUD\00.2D\04.PauseMenu</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\InGame_Manager.h" />
+    <ClInclude Include="..\public\InGame_Manager.h">
+      <Filter>05.Utility\05.InGame_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StatusMenu.h">
+      <Filter>03.UI, HUD\00.2D\05.StatusMenu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -345,7 +353,12 @@
     <ClCompile Include="..\private\PauseMenu.cpp">
       <Filter>03.UI, HUD\00.2D\04.PauseMenu</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\InGame_Manager.cpp" />
+    <ClCompile Include="..\private\InGame_Manager.cpp">
+      <Filter>05.Utility\05.InGame_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StatusMenu.cpp">
+      <Filter>03.UI, HUD\00.2D\05.StatusMenu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

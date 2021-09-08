@@ -5,6 +5,7 @@
 #include "GameInstance.h"
 #include "Cursor_Manager.h"
 #include "Text_Manager.h"
+#include "Data_Manager.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -35,7 +36,7 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(Ready_Cursor()))
 		return E_FAIL;
 
-	if (FAILED(Ready_DefaultLevel(ELevel::Logo)))
+	if (FAILED(Ready_DefaultLevel(ELevel::Stage1)))
 		return E_FAIL;
 
 	CText_Manager::GetInstance()->Ready_Font();
@@ -56,6 +57,9 @@ _int CMainApp::Update_MainApp(_double TimeDelta)
 
 	// 마우스 업뎃
 	GET_CURSOR_MANAGER->Tick((_float)TimeDelta);
+	if (CData_Manager::GetInstance()->Get_Tick_Stop() == true)
+		TimeDelta = 0.f;
+
 	return m_pGameInstance->Tick((_float)TimeDelta);
 }
 
@@ -131,70 +135,71 @@ HRESULT CMainApp::Ready_Component_PrototypeForStatic()
 
 HRESULT CMainApp::Ready_UI_Texture()
 {
-	// For.Texture Load Failed Texture
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Failed")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Failed.png")))))
-		return E_FAIL;
+	HRESULT hr = S_OK;
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_HpMp")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/HpMp/%d.tga"), 5))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_StatusPanel")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StatusPanel/StatusPanel.tga")))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_ExpBar")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StatusPanel/ExpBar/%d.tga"), 2))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_CastingBar")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/Casting/%d.tga"), 3))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_SkillMage")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/Skill_Mage/Skill_%d.tga"), 10))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_CoolDown")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Skill_Mage/CoolDown.png")))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_EnemyKillBar")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StageInfo/EnemyKillBar.tga")))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_EnemyKillBarMask")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StageInfo/EnemyKillBarMask.tga")))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_MeterTile")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StageInfo/MeterTile.tga")))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Panel_Level")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StageInfo/Panel_Level.tga")))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Panel_Wave")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StageInfo/Panel_Wave.tga")))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_WaveInfo_Text_Wave")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/WaveInfo_Text/Wave_%d.png")))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_WaveInfo_Text_Phase")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/WaveInfo_Text/Phase_%d.png"), 2))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_WaveInfo_Text_DefenseUnits")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/WaveInfo_Text/DefenseUnits_%d.png")))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_WaveInfo_Text_Score")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/Score/Score.png")))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_PauseMenu")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/PauseMenu/%d.tga"), 4))))
-		return E_FAIL;
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Failed")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Failed.png")));
 
 
-	return S_OK;
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_HpMp")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/HpMp/%d.tga"), 5));
+
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_StatusPanel")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StatusPanel/StatusPanel.tga")));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_ExpBar")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StatusPanel/ExpBar/%d.tga"), 2));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_CastingBar")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/Casting/%d.tga"), 3));
+
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_SkillMage")
+		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/Skill_Mage/Skill_%d.tga"), 10));
+
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_CoolDown")
+		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Skill_Mage/CoolDown.png")));
+
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_EnemyKillBar")
+		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StageInfo/EnemyKillBar.tga")));
+
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_EnemyKillBarMask")
+		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StageInfo/EnemyKillBarMask.tga")));
+
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_MeterTile")
+		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StageInfo/MeterTile.tga")));
+
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Panel_Level")
+		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StageInfo/Panel_Level.tga")));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Panel_Wave")
+		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StageInfo/Panel_Wave.tga")));
+
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_WaveInfo_Text_Wave")
+		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/WaveInfo_Text/Wave_%d.png")));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_WaveInfo_Text_Phase")
+		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/WaveInfo_Text/Phase_%d.png"), 2));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_WaveInfo_Text_DefenseUnits")
+		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/WaveInfo_Text/DefenseUnits_%d.png")));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_WaveInfo_Text_Score")
+		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/Score/Score.png")));
+
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_PauseMenu")
+		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/PauseMenu/%d.tga"), 4));
+
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Black")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Black.png")));
+
+	if (hr != S_OK)
+		MSG_BOX("CMainApp::Ready_UI_Texture() is Failed");
+
+	return hr;
 }
 
 HRESULT CMainApp::Ready_Cursor()
@@ -230,6 +235,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGameInstance);
 
 	CText_Manager::DestroyInstance();
+	CData_Manager::DestroyInstance();
 	CCursor_Manager::DestroyInstance();
 	/* 엔진 내에서 사용된 객체들을 정리한다. */
 	CGameInstance::Release_Engine();	

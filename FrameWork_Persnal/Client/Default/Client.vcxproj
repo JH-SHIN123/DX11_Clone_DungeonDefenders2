@@ -194,6 +194,7 @@
     <ClInclude Include="..\public\PauseMenu.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\PlayerSkill.h" />
+    <ClInclude Include="..\public\StatusMenu.h" />
     <ClInclude Include="..\public\Status_Panel.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\Text_Manager.h" />
@@ -231,6 +232,7 @@
     <ClCompile Include="..\private\PauseMenu.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\PlayerSkill.cpp" />
+    <ClCompile Include="..\private\StatusMenu.cpp" />
     <ClCompile Include="..\private\Status_Panel.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\Text_Manager.cpp" />

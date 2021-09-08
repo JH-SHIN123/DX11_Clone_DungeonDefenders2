@@ -92,15 +92,6 @@ public:
 	CFrame_Manger* Get_Frame() { return m_pFrame_Manger; }
 #pragma  endregion
 
-#pragma region UnTick
-public:
-	_bool Get_Tick() { return m_IsTick; }
-	void  Set_Tick(_bool IsTick) { m_IsTick = IsTick; }
-
-private:
-	_bool	m_IsTick = true;
-#pragma endregion
-
 
 private:
 	CGraphic_Device*				m_pGraphic_Device = nullptr;

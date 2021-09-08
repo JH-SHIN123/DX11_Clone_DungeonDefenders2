@@ -23,11 +23,11 @@ private:
 
 private:
 	CTextures*			m_pTextureCom_AlphaBlack = nullptr;
-	CTransform*			m_pTransformCom_AlphaBlack = nullptr;
-	_int				m_iButtonCount = 3;
+	_float4x4			m_matAlphaBlack;
 
-private: //Button 3
+private: //Button 4
 	vector<class CMyButton_NoText*>		m_pButton;
+	_int				m_iButtonCount = 4;
 
 public:
 	static CPauseMenu* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

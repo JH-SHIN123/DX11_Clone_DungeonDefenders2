@@ -4,6 +4,7 @@
 #include "Loading.h"
 #include "Camera_Free.h"
 #include "UI_2D.h"
+#include "Data_Manager.h"
 
 CLevel_Stage1::CLevel_Stage1(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CLevel(pDevice, pDevice_Context)
@@ -38,15 +39,24 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 {
 	CLevel::Tick(Timedelta);
 
-	if (GET_KEY_INPUT(DIK_TAB))
+	if (GET_KEY_INPUT(DIK_F1) && true == CData_Manager::GetInstance()->Get_Tick_Stop())
+	{
+
+		CData_Manager::GetInstance()->Set_Tick_Stop(false);
+	}
+
+	if (GET_KEY_INPUT(DIK_F2) && false == CData_Manager::GetInstance()->Get_Tick_Stop())
 	{
 		// ÅÇÅ° ÆÛÁî
 		UI2D_DESC UI_Desc;
 
 		lstrcpy(UI_Desc.szTextureName, L"Component_Texture_PauseMenu");
-		UI_Desc.Movement_Desc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
-		UI_Desc.Movement_Desc.vScale = _float4(256.f, 100.f, 0.f, 0.f);
+		UI_Desc.Movement_Desc.vPos = _float4(0.f, 50.f, 0.f, 1.f);
+		UI_Desc.Movement_Desc.vScale = _float4(512.f, 512.f, 0.f, 0.f);
+		UI_Desc.eLevel = ELevel::Static;
 		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_PauseMenu"), (_uint)ELevel::Stage1, L"Layer_Pause", &UI_Desc);
+
+		CData_Manager::GetInstance()->Set_Tick_Stop(true);
 	}
 
 

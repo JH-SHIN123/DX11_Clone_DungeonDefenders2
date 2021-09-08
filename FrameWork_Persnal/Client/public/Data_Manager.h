@@ -29,7 +29,15 @@ private:
 #pragma endregion
 
 
+#pragma region UnTick
+public:
+	_bool Get_Tick_Stop() { return m_IsTick_Stop; }
+	void  Set_Tick_Stop(_bool IsTick) { m_IsTick_Stop = IsTick; }
+	void  Switch_Tick_Stop() { m_IsTick_Stop = !m_IsTick_Stop; }
 
+private:
+	_bool	m_IsTick_Stop = false;
+#pragma endregion
 
 public:
 	virtual void Free();

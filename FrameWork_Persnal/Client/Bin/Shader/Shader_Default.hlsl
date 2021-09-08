@@ -315,8 +315,7 @@ PS_OUT PS_ALPHAMIDDLE(PS_IN In)
 
 	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
-	Out.vColor.r = 1.f;
-	Out.vColor.a = 1.f;
+	Out.vColor.a = 0.6f;
 
 	return Out;
 }
