@@ -255,6 +255,9 @@
     <ClInclude Include="..\public\Model.h">
       <Filter>02.Utility\02.Component\06.Mesh\00.Model</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MeshContainer.h">
+      <Filter>02.Utility\02.Component\06.Mesh\99.MeshContainer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -355,6 +358,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Model.cpp">
       <Filter>02.Utility\02.Component\06.Mesh\00.Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MeshContainer.cpp">
+      <Filter>02.Utility\02.Component\06.Mesh\99.MeshContainer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

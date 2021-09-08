@@ -13,14 +13,8 @@ private:
 	virtual ~CModel() = default;
 
 public:
-
-	_uint Get_NumVertices() const {
-		return m_Vertices.size();
-	}
-
-	_uint Get_NumPolygonIndices() const {
-		return m_PolygonIndices.size();
-	}
+	_uint Get_NumVertices() const { return m_Vertices.size(); }
+	_uint Get_NumPolygonIndices() const { return m_PolygonIndices.size(); }
 
 public:
 	virtual HRESULT NativeConstruct_Prototype(const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName); /* 버퍼를 생성한다.*/
@@ -40,18 +34,18 @@ private:
 	class CModelLoader*		m_pModelLoader = nullptr;
 
 private:
-	vector<VTXMESH*>					m_Vertices;
-	typedef vector<VTXMESH*>			VERTICES;
+	typedef vector<VTXMESH*>				VERTICES;		// 모델의 모든 정점을 깡그리 다 담고있음
+	VERTICES		m_Vertices;
 
-	vector<POLYGONINDICES32*>			m_PolygonIndices;
-	typedef vector<POLYGONINDICES32*>	POLYGONINDICES;
+	typedef vector<POLYGONINDICES32*>		POLYGONINDICES;	// 모델의 모든 인덱스를 깡그리 다 담고있음
+	POLYGONINDICES	m_PolygonIndices;
 
 private:
-	vector<class CMeshContainer*>				m_Meshes;
-	typedef vector<class CMeshContainer*>		MESHES;
+	typedef vector<class CMeshContainer*>	MESHES;			// 매쉬 하나가 구성되는데에 필요한 정점, 인덱스를 가지고있다.
+	MESHES			m_Meshes;								//
 
-	vector<MESHTEXTURE*>				m_Materials;
-	typedef vector<MESHTEXTURE*>		MATERIALS;
+	typedef vector<MESHTEXTURE*>			MATERIALS;
+	MATERIALS		m_Materials;
 
 protected: /* For.Vertices */
 	ID3D11Buffer*				m_pVB = nullptr;
@@ -60,9 +54,6 @@ protected: /* For.Vertices */
 	_uint						m_iNumVertices = 0;
 	_uint						m_iStride = 0;
 	_uint						m_iNumVertexBuffers = 0;
-
-
-
 
 protected: /* For.Indices */
 	ID3D11Buffer*				m_pIB = nullptr;
@@ -75,11 +66,7 @@ protected: /* For.Indices */
 
 protected: /* For.Shader */
 	ID3DX11Effect*				m_pEffect = nullptr;
-
 	vector<INPUTLAYOUTDESC>		m_InputLayouts;
-
-
-
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName);

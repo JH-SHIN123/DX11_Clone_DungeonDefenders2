@@ -198,6 +198,7 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     <ClInclude Include="..\public\Level_Manager.h" />
     <ClInclude Include="..\public\Light.h" />
     <ClInclude Include="..\public\Light_Manager.h" />
+    <ClInclude Include="..\public\MeshContainer.h" />
     <ClInclude Include="..\public\Model.h" />
     <ClInclude Include="..\public\ModelLoader.h" />
     <ClInclude Include="..\public\Movement.h" />
@@ -233,6 +234,7 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     <ClCompile Include="..\private\Level_Manager.cpp" />
     <ClCompile Include="..\private\Light.cpp" />
     <ClCompile Include="..\private\Light_Manager.cpp" />
+    <ClCompile Include="..\private\MeshContainer.cpp" />
     <ClCompile Include="..\private\Model.cpp" />
     <ClCompile Include="..\private\ModelLoader.cpp" />
     <ClCompile Include="..\private\Movement.cpp" />
