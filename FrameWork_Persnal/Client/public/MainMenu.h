@@ -1,6 +1,7 @@
 #pragma once
 #ifndef __MAINMENU_H__
 
+#include "Data_Manager.h"
 #include "UI_2D.h"
 
 BEGIN(Client)
@@ -94,7 +95,10 @@ private: // 옵션 - 음량 조절
 	CMyButton_NoText*		m_pButton_Option_SFX[2] = { nullptr };
 	_float2					m_vSound;
 
-
+private: // 하이스코어 10위까지
+	RANK_DESC			m_RankDesc[10];
+	CTextures*			m_pTextureCom_UI_Rank		= nullptr;
+	CMovement*			m_pMovementCom_UI_Rank[10]	= { nullptr };
 
 public:
 	static CMainMenu* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

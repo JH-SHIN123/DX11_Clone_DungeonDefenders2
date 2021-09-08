@@ -13,6 +13,7 @@
 #include "WaveInfo.h"
 #include "Camera_Target.h"
 #include "Camera_Free.h"
+#include "PauseMenu.h"
 
 USING(Engine)
 
@@ -137,6 +138,7 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_PlayerSkill_UI"), CPlayerSkill::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Player_HpMp"), CHpMp::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_WaveInfo"), CWaveInfo::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_PauseMenu"), CPauseMenu::Create(m_pDevice, m_pDevice_Context));
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Free"), CCamera_Free::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Target"), CCamera_Target::Create(m_pDevice, m_pDevice_Context));

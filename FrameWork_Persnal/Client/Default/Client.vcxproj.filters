@@ -115,11 +115,20 @@
     <Filter Include="03.UI, HUD\00.2D\A0.Masking_MeterBar">
       <UniqueIdentifier>{d955dfe0-f789-4884-bbd5-a6f3d359aebd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.UI, HUD\00.2D\A2.MyButton">
-      <UniqueIdentifier>{05b87bbc-92fa-497d-a3e7-47d266171859}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.UI, HUD\00.2D\A1.MyButton%28Font%29">
       <UniqueIdentifier>{cbb297a4-74a8-4166-bc55-49b8a196ed7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Utility\04.Data_Manager">
+      <UniqueIdentifier>{c9eb091c-14b3-44b5-8b95-4231530c4189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\00.2D\04.PauseMenu">
+      <UniqueIdentifier>{a6b30309-245f-4f28-b789-74b6a29b04c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\00.2D\A2.MyButton_NoText">
+      <UniqueIdentifier>{05b87bbc-92fa-497d-a3e7-47d266171859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Utility\05.InGame_Manager">
+      <UniqueIdentifier>{78ab7490-380e-46cb-91a4-7e40286580b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -229,8 +238,15 @@
       <Filter>03.UI, HUD\00.2D\A1.MyButton%28Font%29</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MyButton_NoText.h">
-      <Filter>03.UI, HUD\00.2D\A2.MyButton</Filter>
+      <Filter>03.UI, HUD\00.2D\A2.MyButton_NoText</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Data_Manager.h">
+      <Filter>05.Utility\04.Data_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PauseMenu.h">
+      <Filter>03.UI, HUD\00.2D\04.PauseMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\InGame_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -321,8 +337,15 @@
       <Filter>03.UI, HUD\00.2D\A1.MyButton%28Font%29</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MyButton_NoText.cpp">
-      <Filter>03.UI, HUD\00.2D\A2.MyButton</Filter>
+      <Filter>03.UI, HUD\00.2D\A2.MyButton_NoText</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Data_Manager.cpp">
+      <Filter>05.Utility\04.Data_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PauseMenu.cpp">
+      <Filter>03.UI, HUD\00.2D\04.PauseMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\InGame_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

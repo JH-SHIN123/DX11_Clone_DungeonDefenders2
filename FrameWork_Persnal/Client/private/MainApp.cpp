@@ -189,6 +189,11 @@ HRESULT CMainApp::Ready_UI_Texture()
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/Score/Score.png")))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_PauseMenu")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/PauseMenu/%d.tga"), 4))))
+		return E_FAIL;
+
+
 	return S_OK;
 }
 

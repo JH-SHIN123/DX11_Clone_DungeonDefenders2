@@ -38,6 +38,17 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 {
 	CLevel::Tick(Timedelta);
 
+	if (GET_KEY_INPUT(DIK_TAB))
+	{
+		// ÅÇÅ° ÆÛÁî
+		UI2D_DESC UI_Desc;
+
+		lstrcpy(UI_Desc.szTextureName, L"Component_Texture_PauseMenu");
+		UI_Desc.Movement_Desc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
+		UI_Desc.Movement_Desc.vScale = _float4(256.f, 100.f, 0.f, 0.f);
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_PauseMenu"), (_uint)ELevel::Stage1, L"Layer_Pause", &UI_Desc);
+	}
+
 
 	return 0;
 }

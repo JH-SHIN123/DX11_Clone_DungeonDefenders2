@@ -176,7 +176,9 @@
     <ClInclude Include="..\public\Client_Struct.h" />
     <ClInclude Include="..\public\Cursor.h" />
     <ClInclude Include="..\public\Cursor_Manager.h" />
+    <ClInclude Include="..\public\Data_Manager.h" />
     <ClInclude Include="..\public\HpMp.h" />
+    <ClInclude Include="..\public\InGame_Manager.h" />
     <ClInclude Include="..\public\Level_Loading.h" />
     <ClInclude Include="..\public\Level_Logo.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
@@ -189,6 +191,7 @@
     <ClInclude Include="..\public\MyFont.h" />
     <ClInclude Include="..\public\MyButton_NoText.h" />
     <ClInclude Include="..\public\MyText.h" />
+    <ClInclude Include="..\public\PauseMenu.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\PlayerSkill.h" />
     <ClInclude Include="..\public\Status_Panel.h" />
@@ -210,7 +213,9 @@
     <ClCompile Include="..\private\Camera_Target.cpp" />
     <ClCompile Include="..\private\Cursor.cpp" />
     <ClCompile Include="..\private\Cursor_Manager.cpp" />
+    <ClCompile Include="..\private\Data_Manager.cpp" />
     <ClCompile Include="..\private\HpMp.cpp" />
+    <ClCompile Include="..\private\InGame_Manager.cpp" />
     <ClCompile Include="..\private\Level_Loading.cpp" />
     <ClCompile Include="..\private\Level_Logo.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />
@@ -223,6 +228,7 @@
     <ClCompile Include="..\private\MyFont.cpp" />
     <ClCompile Include="..\private\MyButton_NoText.cpp" />
     <ClCompile Include="..\private\MyText.cpp" />
+    <ClCompile Include="..\private\PauseMenu.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\PlayerSkill.cpp" />
     <ClCompile Include="..\private\Status_Panel.cpp" />
