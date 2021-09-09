@@ -27,6 +27,8 @@ private:
 	HRESULT	Ready_Component();
 	void	Button_Render();
 	void	ButtonFrame_Render();
+	void	Status_Render();
+	void	StatusFrame_Render();
 
 private: // Exp
 	CMasking_MeterBar*		m_pExpBar = nullptr;
@@ -39,7 +41,10 @@ private: // HpMp
 	vector<CTransform*>					m_pTransform_HpMpFrame;
 	_int								m_iButtonCount_HpMp = 2;
 
-private:
+private: // Status UI
+	vector<class CMyButton_NoText*>		m_pButton_Status;
+	vector<CTransform*>					m_pTransform_StatusFrame;
+	_int								m_iButtonCount_Status = 4;
 
 
 private: // Exit

@@ -27,6 +27,9 @@ HRESULT CStatusMenu::NativeConstruct(void * pArg)
 	m_pButton_HpMp.reserve(m_iButtonCount_HpMp);
 	m_pTransform_HpMpFrame.resize(m_iButtonCount_HpMp);
 
+	m_pButton_Status.reserve(m_iButtonCount_Status);
+	m_pTransform_StatusFrame.resize(m_iButtonCount_Status);
+
 	Ready_Component();
 
 	return S_OK;
@@ -62,6 +65,9 @@ HRESULT CStatusMenu::Render()
 
 	Button_Render();
 	ButtonFrame_Render();
+
+	Status_Render();
+	StatusFrame_Render();
 
 
 	m_pPlayerPortrait->Render(13);
@@ -125,6 +131,34 @@ HRESULT CStatusMenu::Ready_Component()
 
 
 
+	// Status
+	ButtonDesc.Movement_Desc.vScale = { 64.f, 64.f, 0.f, 0.f };
+	ButtonDesc.eLevel = ELevel::Static;
+	lstrcpy(ButtonDesc.szTextureName, L"Component_Texture_Status_Icon");
+	ButtonDesc.Movement_Desc.vPos = { -230.f, -15.f, 0.f, 1.f };
+	Trans_Desc.vScale = { 220.f, 128.f, 0.f, 0.f };
+	Trans_Desc.vPos = ButtonDesc.Movement_Desc.vPos;
+	fOffSetX = 150.f;
+
+	_tchar szCom[MAX_PATH] = L"Com_Transform_StatusFrame_%d";
+	for (_int i = 0; i < m_iButtonCount_Status; ++i)
+	{
+		_tchar szName[MAX_PATH] = L"";
+
+		wsprintf(szName, szCom, i);
+		m_pButton_Status.emplace_back(CMyButton_NoText::Create(m_pDevice, m_pDevice_Context, &ButtonDesc));
+		ButtonDesc.Movement_Desc.vPos.x += fOffSetX;
+	}
+	
+	CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Transform"), (L"Com_Transform_StatusFrame_0"), (CComponent**)&m_pTransform_StatusFrame[0], &Trans_Desc);
+	Trans_Desc.vPos.x += fOffSetX;
+	CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Transform"), (L"Com_Transform_StatusFrame_1"), (CComponent**)&m_pTransform_StatusFrame[1], &Trans_Desc);
+	Trans_Desc.vPos.x += fOffSetX;
+	CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Transform"), (L"Com_Transform_StatusFrame_2"), (CComponent**)&m_pTransform_StatusFrame[2], &Trans_Desc);
+	Trans_Desc.vPos.x += fOffSetX;
+	CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Transform"), (L"Com_Transform_StatusFrame_3"), (CComponent**)&m_pTransform_StatusFrame[3], &Trans_Desc);
+	Trans_Desc.vPos.x += fOffSetX;
+
 
 	return S_OK;
 }
@@ -137,14 +171,30 @@ void CStatusMenu::Button_Render()
 
 void CStatusMenu::ButtonFrame_Render()
 {
-	m_pBufferRectCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
-	m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
-
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(3));
 	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransform_HpMpFrame[0]->Get_WorldMatrix()), sizeof(_matrix));
 	m_pBufferRectCom->Render(1);
 
 	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransform_HpMpFrame[1]->Get_WorldMatrix()), sizeof(_matrix));
+	m_pBufferRectCom->Render(1);
+}
+
+void CStatusMenu::Status_Render()
+{
+	m_pButton_Status[0]->Render(0);
+	m_pButton_Status[1]->Render(1);
+	m_pButton_Status[2]->Render(2);
+	m_pButton_Status[3]->Render(3);
+
+}
+
+void CStatusMenu::StatusFrame_Render()
+{
+	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(4));
+	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransform_StatusFrame[0]->Get_WorldMatrix()), sizeof(_matrix));
+	m_pBufferRectCom->Render(1);
+
+	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransform_StatusFrame[1]->Get_WorldMatrix()), sizeof(_matrix));
 	m_pBufferRectCom->Render(1);
 
 }
@@ -177,6 +227,8 @@ void CStatusMenu::Free()
 
 	Safe_Release_Vector(m_pTransform_HpMpFrame);
 	Safe_Release_Vector(m_pButton_HpMp);
+	Safe_Release_Vector(m_pTransform_StatusFrame);
+	Safe_Release_Vector(m_pButton_Status);
 
 	Safe_Release(m_pPlayerPortrait);
 	Safe_Release(m_pExpBar);
