@@ -1,5 +1,7 @@
 #include "..\public\Model.h"
+#include "Textures.h"
 #include "ModelLoader.h"
+#include "HierarchyNode.h"
 #include "MeshContainer.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -9,10 +11,65 @@ CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 
 CModel::CModel(const CModel & rhs)
 	: CComponent(rhs)
+	, m_pModelLoader(rhs.m_pModelLoader)
+	, m_pVB(rhs.m_pVB)
+	, m_VBDesc(rhs.m_VBDesc)
+	, m_VBSubresourceData(rhs.m_VBSubresourceData)
+	, m_iNumVertices(rhs.m_iNumVertices)
+	, m_iStride(rhs.m_iStride)
+	, m_iNumVertexBuffers(rhs.m_iNumVertexBuffers)
+	, m_pVertices(rhs.m_pVertices)
+	, m_pIB(rhs.m_pIB)
+	, m_IBDesc(rhs.m_IBDesc)
+	, m_IBSubresourceData(rhs.m_IBSubresourceData)
+	, m_iNumPolygons(rhs.m_iNumPolygons)
+	, m_iIndicesStride(rhs.m_iIndicesStride)
+	, m_eIndexFormat(rhs.m_eIndexFormat)
+	, m_eTopology(rhs.m_eTopology)
+	, m_pEffect(rhs.m_pEffect)
+	, m_InputLayouts(rhs.m_InputLayouts)
+	, m_Vertices(rhs.m_Vertices)
+	, m_PolygonIndices(rhs.m_PolygonIndices)
+	, m_pPolygonIndices(rhs.m_pPolygonIndices)
+	, m_Meshes(rhs.m_Meshes)
+	, m_SortMeshesByMaterial(rhs.m_SortMeshesByMaterial)
+	, m_Materials(rhs.m_Materials)
 {
+	Safe_AddRef(m_pEffect);
+	Safe_AddRef(m_pIB);
+	Safe_AddRef(m_pVB);
+
+	for (auto& InputLayout : m_InputLayouts)
+	{
+		Safe_AddRef(InputLayout.pPass);
+		Safe_AddRef(InputLayout.pLayout);
+	}
+
+	for (auto& pMeshContainer : m_Meshes)
+		Safe_AddRef(pMeshContainer);
+
+	for (auto& pMeshContainers : m_SortMeshesByMaterial)
+	{
+		for (auto& pMeshContainer : pMeshContainers)
+			Safe_AddRef(pMeshContainer);
+	}
+
+	for (auto& pMeshTexture : m_Materials)
+	{
+		for (_int i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)
+			Safe_AddRef(pMeshTexture->pMaterialTexture[i]);
+	}
 }
 
-HRESULT CModel::NativeConstruct_Prototype(const char * pMeshFilePath, const char * pMeshFileName, const _tchar * pShaderFilePath, const char * pTechniqueName)
+CMeshContainer * CModel::Get_MeshContainer(_uint iMeshIndex)
+{
+	if (iMeshIndex >= m_Meshes.size())
+		return nullptr;
+
+	return m_Meshes[iMeshIndex];
+}
+
+HRESULT CModel::NativeConstruct_Prototype(const char * pMeshFilePath, const char * pMeshFileName, const _tchar * pShaderFilePath, const char * pTechniqueName, _fmatrix PivotMatrix)
 {
 	if (nullptr == m_pModelLoader)
 		return E_FAIL;
@@ -21,12 +78,23 @@ HRESULT CModel::NativeConstruct_Prototype(const char * pMeshFilePath, const char
 
 	// 모델로더 싱글톤을 이용해 자신(메쉬)에게 필요한 정보를 받아온다. 
 	// 진짜 다받아온다
-	if (FAILED(m_pModelLoader->Load_ModelFromFile(m_pDevice, m_pDevice_Context, this, pMeshFilePath, pMeshFileName)))
+	const aiScene*	pScene = m_pModelLoader->Load_ModelFromFile(m_pDevice, m_pDevice_Context, this, pMeshFilePath, pMeshFileName);
+	if (nullptr == pScene)
 		return E_FAIL;
 
-	// 
-	if (FAILED(Ready_VIBuffer(pShaderFilePath, pTechniqueName)))
+	/* 렌더링의 편의를 위해 재질이 같은 메시들을 모아둔다. */
+	if (FAILED(Sort_MeshesByMaterial()))
 		return E_FAIL;
+
+	/* 뼈대정보를 로드한다. */
+	if (FAILED(SetUp_SkinnedInfo(pScene)))
+		return E_FAIL;
+
+
+	if (FAILED(Ready_VIBuffer(pShaderFilePath, pTechniqueName, PivotMatrix)))
+		return E_FAIL;
+
+
 
 	return S_OK;
 }
@@ -38,10 +106,9 @@ HRESULT CModel::NativeConstruct(void * pArg)
 	return S_OK;
 }
 
-HRESULT CModel::Ready_VIBuffer(const _tchar * pShaderFilePath, const char * pTechniqueName)
+HRESULT CModel::Ready_VIBuffer(const _tchar * pShaderFilePath, const char * pTechniqueName, _fmatrix PivotMatrix)
 {
 	// VIBuffer의 세팅과 비슷하다 크게 달라지는건 아직 없다.
-
 	/* For. VertexBuffer */
 	m_iNumVertexBuffers = 1;
 
@@ -58,8 +125,24 @@ HRESULT CModel::Ready_VIBuffer(const _tchar * pShaderFilePath, const char * pTec
 	m_VBDesc.StructureByteStride = m_iStride;
 
 	ZeroMemory(&m_VBSubresourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-	m_VBSubresourceData.pSysMem = &m_Vertices[0];
-	m_VBSubresourceData.SysMemPitch = m_iStride * m_iNumVertices;
+	m_pVertices = new VTXMESH[m_iNumVertices];
+
+	for (_uint i = 0; i < m_iNumVertices; ++i)
+	{
+		// 흠...
+		_vector		vTransformPosition = XMVector3TransformCoord(XMLoadFloat3(&m_Vertices[i]->vPosition), PivotMatrix);
+
+		XMStoreFloat3(&m_Vertices[i]->vPosition, vTransformPosition);
+
+		m_pVertices[i] = *m_Vertices[i];
+	}
+
+
+	for (auto& pVertex : m_Vertices)
+		Safe_Delete(pVertex);
+	m_Vertices.clear();
+
+	m_VBSubresourceData.pSysMem = m_pVertices;
 
 	/* For. IndexBuffer */
 
@@ -78,9 +161,16 @@ HRESULT CModel::Ready_VIBuffer(const _tchar * pShaderFilePath, const char * pTec
 	m_IBDesc.StructureByteStride = 0;
 
 	ZeroMemory(&m_IBSubresourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+	m_pPolygonIndices = new POLYGONINDICES32[m_iNumPolygons];
 
-	m_IBSubresourceData.pSysMem = &m_PolygonIndices[0];
-	m_IBSubresourceData.SysMemPitch = m_iIndicesStride * m_iNumPolygons;
+	for (_uint i = 0; i < m_iNumPolygons; ++i)
+		m_pPolygonIndices[i] = *m_PolygonIndices[i];
+
+	for (auto& pPolygonIndices : m_PolygonIndices)
+		Safe_Delete(pPolygonIndices);
+	m_PolygonIndices.clear();
+
+	m_IBSubresourceData.pSysMem = m_pPolygonIndices;
 
 	if (nullptr == m_pDevice)
 		return E_FAIL;
@@ -88,17 +178,16 @@ HRESULT CModel::Ready_VIBuffer(const _tchar * pShaderFilePath, const char * pTec
 	if (FAILED(m_pDevice->CreateBuffer(&m_VBDesc, &m_VBSubresourceData, &m_pVB)))
 		return E_FAIL;
 
-
 	if (FAILED(m_pDevice->CreateBuffer(&m_IBDesc, &m_IBSubresourceData, &m_pIB)))
 		return E_FAIL;
 
 	D3D11_INPUT_ELEMENT_DESC			ElementDesc[] = {
-		{ "POSITION",	 0, DXGI_FORMAT_R32G32B32_FLOAT,	0,	0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL",		 0, DXGI_FORMAT_R32G32B32_FLOAT,	0,	12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TANGENT",	 0, DXGI_FORMAT_R32G32B32_FLOAT,	0,	24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD",	 0, DXGI_FORMAT_R32G32_FLOAT,		0,	36, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDINDEX",	 0, DXGI_FORMAT_R32G32B32A32_UINT,	0,	44, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,	60, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "POSITION",		0, DXGI_FORMAT_R32G32B32_FLOAT,		0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL",			0, DXGI_FORMAT_R32G32B32_FLOAT,		0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TANGENT",		0, DXGI_FORMAT_R32G32B32_FLOAT,		0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD",		0, DXGI_FORMAT_R32G32_FLOAT,		0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDINDEX",		0, DXGI_FORMAT_R32G32B32A32_UINT,	0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDWEIGHT",	0, DXGI_FORMAT_R32G32B32A32_FLOAT,	0, 60, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	if (FAILED(SetUp_InputLayOuts(ElementDesc, 6, pShaderFilePath, pTechniqueName)))
@@ -148,6 +237,16 @@ HRESULT CModel::Add_Materials(MESHTEXTURE * pMeshMaterialTexture)
 	return S_OK;
 }
 
+HRESULT CModel::Add_HierarchyNode(CHierarcyNode * pHierarchyNode)
+{
+	if (nullptr == pHierarchyNode)
+		return E_FAIL;
+
+	m_HierarchyNodes.push_back(pHierarchyNode);
+
+	return S_OK;
+}
+
 HRESULT CModel::Reserve_VIBuffer(_uint iNumVertices, _uint iNumFace)
 {
 	m_Vertices.reserve(iNumVertices);
@@ -155,6 +254,34 @@ HRESULT CModel::Reserve_VIBuffer(_uint iNumVertices, _uint iNumFace)
 	m_PolygonIndices.reserve(iNumFace);
 
 	return S_OK;
+}
+
+HRESULT CModel::Set_Variable(const char * pConstanceName, void * pData, _int iByteSize)
+{
+	if (nullptr == m_pEffect)
+		return E_FAIL;
+
+	ID3DX11EffectVariable*	pVariable = m_pEffect->GetVariableByName(pConstanceName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	return pVariable->SetRawValue(pData, 0, iByteSize);
+}
+
+HRESULT CModel::Set_ShaderResourceView(const char * pConstanceName, _uint iMaterialIndex, aiTextureType eMaterialType, _uint iTextureIndex)
+{
+	if (nullptr == m_pEffect)
+		return E_FAIL;
+
+	ID3DX11EffectShaderResourceVariable*	pVariable = m_pEffect->GetVariableByName(pConstanceName)->AsShaderResource();
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	ID3D11ShaderResourceView*		pShaderResourceView = m_Materials[iMaterialIndex]->pMaterialTexture[eMaterialType]->Get_ShaderResourceView(iTextureIndex);
+	if (nullptr == pShaderResourceView)
+		return E_FAIL;
+
+	return pVariable->SetResource(pShaderResourceView);
 }
 
 HRESULT CModel::SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC * pInputElementDesc, _uint iNumElement, const _tchar * pShaderFilePath, const char * pTechniqueName)
@@ -184,7 +311,7 @@ HRESULT CModel::SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC * pInputElementDesc,
 	if (FAILED(pTechnique->GetDesc(&TechniqueDesc)))
 		return E_FAIL;
 
-	//D3D11_RASTERIZER_DESC
+	// D3D11_RASTERIZER_DESC
 
 	// D3D11_DEPTH_STENCIL_DESC
 
@@ -213,10 +340,103 @@ HRESULT CModel::SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC * pInputElementDesc,
 	return S_OK;
 }
 
-CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const char * pMeshFilePath, const char * pMeshFileName, const _tchar * pShaderFilePath, const char * pTechniqueName)
+HRESULT CModel::Sort_MeshesByMaterial()
+{
+	_uint		iNumMaterials = (_uint)m_Materials.size();
+
+	m_SortMeshesByMaterial.resize(iNumMaterials);
+
+	for (auto& pMeshContainer : m_Meshes)
+	{
+		_uint	iMaterialIndex = pMeshContainer->Get_MaterialIndex();
+		if (iMaterialIndex >= iNumMaterials)
+			return E_FAIL;
+
+		m_SortMeshesByMaterial[iMaterialIndex].push_back(pMeshContainer);
+		Safe_AddRef(pMeshContainer);
+	}
+
+	return S_OK;
+}
+
+HRESULT CModel::SetUp_SkinnedInfo(const aiScene * pScene)
+{
+	for (_uint i = 0; i < pScene->mNumMeshes; ++i)
+	{
+		aiMesh*	pMesh = pScene->mMeshes[i];
+
+		for (_uint j = 0; j < pMesh->mNumBones; ++j)
+		{
+			aiBone*		pBone = pMesh->mBones[j];
+			if (nullptr == pBone)
+				return E_FAIL;
+
+			BONEDESC*		pBoneDesc = new BONEDESC;
+			ZeroMemory(pBoneDesc, sizeof(BONEDESC));
+
+			CHierarcyNode*	pHierarchyNode = Find_HierarchyNode(pBone->mName.data);
+			pBoneDesc->pHierarchyNode = pHierarchyNode;
+			Safe_AddRef(pHierarchyNode);
+
+			memcpy(&pBoneDesc->OffsetMatrix, &pBone->mOffsetMatrix, sizeof(_float4x4));
+
+			m_Bones.push_back(pBoneDesc);
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CModel::Bind_VIBuffer()
+{
+	if (nullptr == m_pDevice ||
+		nullptr == m_pDevice_Context)
+		return E_FAIL;
+
+	_uint		iOffset = 0;
+
+	m_pDevice_Context->IASetVertexBuffers(0, m_iNumVertexBuffers, &m_pVB, &m_iStride, &iOffset);
+	m_pDevice_Context->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
+	m_pDevice_Context->IASetPrimitiveTopology(m_eTopology);
+
+	return S_OK;
+}
+
+HRESULT CModel::Render_Model(_uint iMaterialIndex, _uint iPassIndex)
+{
+	m_pDevice_Context->IASetInputLayout(m_InputLayouts[iPassIndex].pLayout);
+
+	for (auto& pMeshContainer : m_SortMeshesByMaterial[iMaterialIndex])
+	{
+		if (FAILED(m_InputLayouts[iPassIndex].pPass->Apply(0, m_pDevice_Context)))
+			return E_FAIL;
+
+		m_pDevice_Context->DrawIndexed(3 * pMeshContainer->Get_NumPolygons(), 3 * pMeshContainer->Get_StartPolygonIndex(), pMeshContainer->Get_StartVertexIndex());
+	}
+
+	return S_OK;
+}
+
+CHierarcyNode * CModel::Find_HierarchyNode(const char * pNodeName)
+{
+	auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarcyNode* pHierarchyNode)->bool
+	{
+		if (0 == strcmp(pNodeName, pHierarchyNode->Get_Name()))
+			return true;
+		else
+			return false;
+	});
+
+	if (iter == m_HierarchyNodes.end())
+		return nullptr;
+	else
+		return *iter;
+}
+
+CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const char * pMeshFilePath, const char * pMeshFileName, const _tchar * pShaderFilePath, const char * pTechniqueName, _fmatrix PivotMatrix)
 {
 	CModel*		pInstance = new CModel(pDevice, pDevice_Context);
-	if (FAILED(pInstance->NativeConstruct_Prototype(pMeshFilePath, pMeshFileName, pShaderFilePath, pTechniqueName)))
+	if (FAILED(pInstance->NativeConstruct_Prototype(pMeshFilePath, pMeshFileName, pShaderFilePath, pTechniqueName, PivotMatrix)))
 	{
 		MSG_BOX("Failed to Creating Instance (CModel) ");
 		Safe_Release(pInstance);
@@ -238,6 +458,43 @@ CComponent * CModel::Clone(void * pArg)
 void CModel::Free()
 {
 	__super::Free();
+
+	if (false == m_IsClone)
+	{
+		Safe_Delete_Array(m_pVertices);
+		Safe_Delete_Array(m_pPolygonIndices);
+	}
+
+	for (auto& InputLayout : m_InputLayouts)
+	{
+		Safe_Release(InputLayout.pPass);
+		Safe_Release(InputLayout.pLayout);
+	}
+	m_InputLayouts.clear();
+
+	Safe_Release(m_pEffect);
+	Safe_Release(m_pIB);
+	Safe_Release(m_pVB);
+
+	for (auto& pMeshContainer : m_Meshes)
+		Safe_Release(pMeshContainer);
+	m_Meshes.clear();
+
+	for (auto& pMeshContainers : m_SortMeshesByMaterial)
+	{
+		for (auto& pMeshContainer : pMeshContainers)
+			Safe_Release(pMeshContainer);
+		pMeshContainers.clear();
+	}
+	m_SortMeshesByMaterial.clear();
+
+
+	for (auto& pMaterial : m_Materials)
+	{
+		for (_int i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)
+			Safe_Release(pMaterial->pMaterialTexture[i]);
+	}
+	m_Materials.clear();
 
 	Safe_Release(m_pModelLoader);
 

@@ -10,6 +10,9 @@ DirectX 11 어플리케이션 전체화면 화면처리
 https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=sorkelf&logNo=40161605210
 https://mrhook.co.kr/154
 
+assimp 강좌
+https://silent3gp.blogspot.com/2018/02/assimp-1-assimp.html
+
 assimp 라이브러리
 
 

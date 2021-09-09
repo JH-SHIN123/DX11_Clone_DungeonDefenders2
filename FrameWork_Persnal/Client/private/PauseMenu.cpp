@@ -61,7 +61,7 @@ _int CPauseMenu::Late_Tick(_float TimeDelta)
 		return SCENE_CHANGE;
 	}
 
-	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::AlphaUI_Scecond, this);
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Option_UI_1, this);
 }
 
 HRESULT CPauseMenu::Render()

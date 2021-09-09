@@ -7,7 +7,7 @@
 BEGIN(Engine)
 
 enum class ENGINE_DLL ERenderGroup
-{ Priority, NoneAlpha, Alpha, UI, AlphaUI, FrameUI, AlphaUI_Scecond, SceneChange, Cursor ,End};
+{ Priority, NoneAlpha, Alpha, UI, AlphaUI, FrameUI, AlphaUI_Scecond, Option_UI_1, Option_UI_2, SceneChange, Cursor ,End};
 
 class ENGINE_DLL CRenderer final : public CComponent
 {
@@ -32,6 +32,8 @@ private:
 	HRESULT	Render_AlphaUI();
 	HRESULT	Render_FrameUI();
 	HRESULT	Render_AlphaUI_Second();
+	HRESULT Render_Option_UI_1();
+	HRESULT Render_Option_UI_2();
 	HRESULT	Render_SceneChange();
 	HRESULT	Render_Cursor();
 

@@ -194,6 +194,7 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     <ClInclude Include="..\public\GameObject.h" />
     <ClInclude Include="..\public\GameObject_Manager.h" />
     <ClInclude Include="..\public\Graphic_Device.h" />
+    <ClInclude Include="..\public\HierarchyNode.h" />
     <ClInclude Include="..\public\InputDev.h" />
     <ClInclude Include="..\public\Layer.h" />
     <ClInclude Include="..\public\Level.h" />
@@ -230,6 +231,7 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     <ClCompile Include="..\private\GameObject.cpp" />
     <ClCompile Include="..\private\GameObject_Manager.cpp" />
     <ClCompile Include="..\private\Graphic_Device.cpp" />
+    <ClCompile Include="..\private\HierarchyNode.cpp" />
     <ClCompile Include="..\private\InputDev.cpp" />
     <ClCompile Include="..\private\Layer.cpp" />
     <ClCompile Include="..\private\Level.cpp" />

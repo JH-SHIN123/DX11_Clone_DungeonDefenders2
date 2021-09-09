@@ -39,6 +39,8 @@ private: // HpMp
 	vector<CTransform*>					m_pTransform_HpMpFrame;
 	_int								m_iButtonCount_HpMp = 2;
 
+private:
+
 
 private: // Exit
 	CMyButton_NoText*		m_pButton_Exit = nullptr;

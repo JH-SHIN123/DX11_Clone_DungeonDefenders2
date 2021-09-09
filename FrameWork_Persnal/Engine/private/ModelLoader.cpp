@@ -1,6 +1,8 @@
 #include "..\public\ModelLoader.h"
 #include "Model.h"
 #include "Textures.h"
+#include "MeshContainer.h"
+#include "HierarchyNode.h" 
 
 IMPLEMENT_SINGLETON(CModelLoader)
 
@@ -8,7 +10,7 @@ CModelLoader::CModelLoader()
 {
 }
 
-HRESULT CModelLoader::Load_ModelFromFile(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, CModel * pModel, const char * pMeshFilePath, const char * pMeshFileName)
+const aiScene* CModelLoader::Load_ModelFromFile(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, CModel * pModel, const char* pMeshFilePath, const char* pMeshFileName)
 {
 	// 모델 만들기중 첫번째로 우선 파일을 읽어오자
 	char			szFullPath[MAX_PATH] = "";
@@ -23,29 +25,35 @@ HRESULT CModelLoader::Load_ModelFromFile(ID3D11Device * pDevice, ID3D11DeviceCon
 	// 메쉬는 파일로부터 읽어진 상황 이제 사용 할 수 있게 변환을 거쳐야 한다.
 	const aiScene*		pScene = Importer.ReadFile(szFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
 	if (nullptr == pScene)
-		return E_FAIL;
+		return nullptr;
 
 	/* 읽어진 메시의 갯수만큼 메시(내가 사용하고자하는 형태로 변환된) 를 생성한다.  */
 	for (_uint i = 0; i < pScene->mNumMeshes; ++i)
 	{
 		if (FAILED(Create_MeshContainer(pModel, pScene->mMeshes[i])))
-			return E_FAIL;
+			return nullptr;
 	}
 
 	/* 머티레얼을 로드하낟. */
 	for (_uint i = 0; i < pScene->mNumMaterials; ++i)
 	{
 		if (FAILED(Create_Materials(pDevice, pDevice_Context, pModel, pScene->mMaterials[i], pMeshFilePath)))
-			return E_FAIL;
+			return nullptr;
 	}
 
-	/* 뼈대정보를 로드한다. */
+	/* 노드들의 계층구조를 생성한다. */
+	if (nullptr != pScene->mRootNode)
+	{
+		if (FAILED(Create_HierarchyNode(pModel, pScene->mRootNode)))
+			return nullptr;
+	}
+
 
 	/* 애니메이션를 로드한다. */
 
 
 
-	return S_OK;
+	return pScene;
 }
 
 HRESULT CModelLoader::Create_MeshContainer(CModel * pModel, aiMesh * pMesh)
@@ -96,7 +104,7 @@ HRESULT CModelLoader::Create_MeshContainer(CModel * pModel, aiMesh * pMesh)
 	}
 
 	// 메쉬 하나의 정점, 인덱스 정보 세팅이 끝났다
-	// 1메쉬 = 1메쉬 컨테이너 객체
+	// 1메쉬 = 1메쉬컨테이너 객체
 	pModel->Add_MeshContainer(pMesh->mName.data, iStartPolygonIndex, iStartVertexIndex, pMesh->mMaterialIndex);
 
 	// 이제 메쉬 하나 만들었다.
@@ -142,6 +150,36 @@ HRESULT CModelLoader::Create_Materials(ID3D11Device * pDevice, ID3D11DeviceConte
 	pModel->Add_Materials(pMaterialTexture);
 
 	return S_OK;
+}
+
+HRESULT CModelLoader::Create_HierarchyNode(CModel * pModel, aiNode * pNode, CHierarcyNode * pParent, _uint iDepth)
+{
+	_matrix		TransformationMatrix;
+
+	memcpy(&TransformationMatrix, &pNode->mTransformation, sizeof(_matrix));
+
+	CHierarcyNode*		pHierarchyNode = CHierarcyNode::Create(pNode->mName.data, TransformationMatrix, pParent, iDepth);
+	if (nullptr == pHierarchyNode)
+		return E_FAIL;
+
+	for (_uint i = 0; i < pNode->mNumMeshes; ++i)
+	{
+		CMeshContainer*		pMeshContainer = pModel->Get_MeshContainer(pNode->mMeshes[i]);
+
+		pMeshContainer->Set_LinkedNodePointer(pHierarchyNode);
+	}
+
+	pModel->Add_HierarchyNode(pHierarchyNode);
+
+	for (_uint i = 0; i < pNode->mNumChildren; ++i)
+		Create_HierarchyNode(pModel, pNode->mChildren[i], pHierarchyNode, iDepth + 1);
+
+	return S_OK;
+}
+
+HRESULT CModelLoader::Create_SkinedInfo()
+{
+	return E_NOTIMPL;
 }
 
 void CModelLoader::Free()

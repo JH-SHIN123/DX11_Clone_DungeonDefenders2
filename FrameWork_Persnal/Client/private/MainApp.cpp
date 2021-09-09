@@ -187,7 +187,7 @@ HRESULT CMainApp::Ready_UI_Texture()
 		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/WaveInfo_Text/DefenseUnits_%d.png")));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_WaveInfo_Text_Score")
 		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/Score/Score.png")));
-
+	
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_PauseMenu")
 		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/PauseMenu/%d.tga"), 3));

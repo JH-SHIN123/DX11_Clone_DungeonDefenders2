@@ -47,7 +47,7 @@ _int CStatusMenu::Late_Tick(_float TimeDelta)
 	if (true == m_IsExit)
 		return OBJECT_DEAD;
 
-	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::AlphaUI_Scecond, this);
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Option_UI_2, this);
 }
 
 HRESULT CStatusMenu::Render()

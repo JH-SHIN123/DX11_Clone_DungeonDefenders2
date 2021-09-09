@@ -13,39 +13,67 @@ private:
 	virtual ~CModel() = default;
 
 public:
-	_uint Get_NumVertices() const { return (_uint)m_Vertices.size(); }
-	_uint Get_NumPolygonIndices() const { return (_uint)m_PolygonIndices.size(); }
+	_uint Get_NumVertices()			const { return (_uint)m_Vertices.size(); }
+	_uint Get_NumPolygonIndices()	const { return (_uint)m_PolygonIndices.size(); }
+	_uint Get_NumMaterials()		const { return (_uint)m_Materials.size(); }
+
+	class CMeshContainer* Get_MeshContainer(_uint iMeshIndex);
+
 
 public:
-	virtual HRESULT NativeConstruct_Prototype(const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName); /* 버퍼를 생성한다.*/
+	virtual HRESULT NativeConstruct_Prototype(const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix); /* 버퍼를 생성한다.*/
 	virtual HRESULT NativeConstruct(void* pArg) override;
 
 public:
-	HRESULT Ready_VIBuffer(const _tchar* pShaderFilePath, const char* pTechniqueName);
+	HRESULT Ready_VIBuffer(const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix);
 	HRESULT Add_Vertex(VTXMESH* pVertex);
 	HRESULT Add_PolgygonIndices(POLYGONINDICES32* pPolygonIndices);
 	HRESULT Add_MeshContainer(const char* pMeshName, _uint iStartPolygonIndex, _uint iStartVertexIndex, _uint iMaterialIndex);
 	HRESULT Add_Materials(MESHTEXTURE* pMeshMaterialTexture);
+	HRESULT Add_HierarchyNode(class CHierarcyNode* pHierarchyNode);
 	HRESULT Reserve_VIBuffer(_uint iNumVertices, _uint iNumFace);
-	HRESULT SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC * pInputElementDesc, _uint iNumElement, const _tchar * pShaderFilePath, const char * pTechniqueName);
 
+	HRESULT Set_Variable(const char* pConstanceName, void* pData, _int iByteSize);
+	HRESULT Set_ShaderResourceView(const char * pConstanceName, _uint iMaterialIndex, aiTextureType eMaterialType, _uint iTextureIndex = 0);
+
+	HRESULT SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC * pInputElementDesc, _uint iNumElement, const _tchar * pShaderFilePath, const char * pTechniqueName);
+	HRESULT Sort_MeshesByMaterial();
+	HRESULT SetUp_SkinnedInfo(const aiScene* pScene);
+	HRESULT Bind_VIBuffer();
+
+	HRESULT Render_Model(_uint iMaterialIndex, _uint iPassIndex);
+
+
+
+private:
+	class CHierarcyNode* Find_HierarchyNode(const char* pNodeName);
 
 private:
 	class CModelLoader*		m_pModelLoader = nullptr;
 
 private:
-	typedef vector<VTXMESH*>				VERTICES;		// 모델의 모든 정점을 깡그리 다 담고있음
+	typedef vector<VTXMESH*>		VERTICES;		// 모델의 모든 정점을 깡그리 다 담고있음
 	VERTICES		m_Vertices;
+	VTXMESH*		m_pVertices = nullptr;
+
 
 	typedef vector<POLYGONINDICES32*>		POLYGONINDICES;	// 모델의 모든 인덱스를 깡그리 다 담고있음
-	POLYGONINDICES	m_PolygonIndices;
+	POLYGONINDICES			m_PolygonIndices;
+	POLYGONINDICES32*		m_pPolygonIndices = nullptr;
+
 
 private:
 	typedef vector<class CMeshContainer*>	MESHES;			// 매쉬 하나가 구성되는데에 필요한 정점, 인덱스를 가지고있다.
 	MESHES			m_Meshes;								//
 
+	vector<vector<CMeshContainer*>>			m_SortMeshesByMaterial;
+
 	typedef vector<MESHTEXTURE*>			MATERIALS;
 	MATERIALS		m_Materials;
+
+	vector<class CHierarcyNode*>		m_HierarchyNodes;
+	vector<BONEDESC*>					m_Bones;
+
 
 protected: /* For.Vertices */
 	ID3D11Buffer*				m_pVB = nullptr;
@@ -69,7 +97,7 @@ protected: /* For.Shader */
 	vector<INPUTLAYOUTDESC>		m_InputLayouts;
 
 public:
-	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName);
+	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix = XMMatrixIdentity());
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };

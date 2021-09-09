@@ -26,11 +26,17 @@ namespace Engine
 	} LIGHT_DESC;
 #pragma endregion
 
-#pragma region VIBuffer
+#pragma region Mesh
 	typedef struct tagMeshTexture
 	{
 		class CTextures*			pMaterialTexture[AI_TEXTURE_TYPE_MAX];
 	}MESHTEXTURE;
+
+	typedef struct tagBoneDesc
+	{
+		class CHierarcyNode*		pHierarchyNode;
+		XMFLOAT4X4					OffsetMatrix;
+	}BONEDESC;
 
 	typedef struct tagVertexMesh
 	{
@@ -41,7 +47,9 @@ namespace Engine
 		XMUINT4				vBlendIndex;
 		XMFLOAT4			vBlendWeight;
 	}VTXMESH;
+#pragma endregion
 
+#pragma region VIBuffer
 	typedef struct tagVertexNormalTexture
 	{
 		XMFLOAT3			vPosition;

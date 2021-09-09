@@ -124,8 +124,11 @@
     <Filter Include="02.Utility\02.Component\06.Mesh\00.Model">
       <UniqueIdentifier>{d461e301-e891-4103-b0af-18b9b3d763b8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Utility\02.Component\06.Mesh\99.MeshContainer">
+    <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\00.MeshContainer">
       <UniqueIdentifier>{6e84f8e9-fc15-4cc9-b0c8-44a3de0c0586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\01.HierarchyNode">
+      <UniqueIdentifier>{ac3110b5-aa98-48a5-a067-0effa0d63a70}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -256,7 +259,10 @@
       <Filter>02.Utility\02.Component\06.Mesh\00.Model</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MeshContainer.h">
-      <Filter>02.Utility\02.Component\06.Mesh\99.MeshContainer</Filter>
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\00.MeshContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\HierarchyNode.h">
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\01.HierarchyNode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -360,7 +366,10 @@
       <Filter>02.Utility\02.Component\06.Mesh\00.Model</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MeshContainer.cpp">
-      <Filter>02.Utility\02.Component\06.Mesh\99.MeshContainer</Filter>
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\00.MeshContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\HierarchyNode.cpp">
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\01.HierarchyNode</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
