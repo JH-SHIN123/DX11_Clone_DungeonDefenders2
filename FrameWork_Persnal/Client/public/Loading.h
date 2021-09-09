@@ -35,6 +35,9 @@ public:
 	HRESULT LoadingForLogo();
 	HRESULT LoadingForStage();
 
+public:
+	HRESULT Loading_UI();
+
 private:
 	HANDLE				m_hThread;
 	CRITICAL_SECTION	m_CriticalSection;

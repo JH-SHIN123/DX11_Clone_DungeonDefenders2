@@ -5,6 +5,11 @@
 #include "UI_2D.h"
 
 BEGIN(Client)
+
+class CMyButton_NoText;
+class CMasking_MeterBar;
+class CMasking_UI;
+
 class CStatusMenu final : public CUI_2D
 {
 private:
@@ -18,20 +23,26 @@ public:
 	virtual _int	Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
-public:
-	void Set_IsCreateToPause(_bool IsCreateToPause) { m_IsCreateToPause = IsCreateToPause; }
-
 private:
 	HRESULT	Ready_Component();
+	void	Button_Render();
+	void	ButtonFrame_Render();
 
-private:
-	CTextures*			m_pTextureCom_AlphaBlack = nullptr;
-	_float4x4			m_matAlphaBlack;
-	_bool				m_IsCreateToPause = false;
+private: // Exp
+	CMasking_MeterBar*		m_pExpBar = nullptr;
 
-private: //Button 4
-	vector<class CMyButton_NoText*>		m_pButton;
-	_int				m_iButtonCount = 4;
+private: // Portrait
+	CMasking_UI*		m_pPlayerPortrait = nullptr;
+
+private: // HpMp
+	vector<class CMyButton_NoText*>		m_pButton_HpMp;
+	vector<CTransform*>					m_pTransform_HpMpFrame;
+	_int								m_iButtonCount_HpMp = 2;
+
+
+private: // Exit
+	CMyButton_NoText*		m_pButton_Exit = nullptr;
+	_bool					m_IsExit = false;
 
 public:
 	static CStatusMenu* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

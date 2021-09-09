@@ -23,9 +23,13 @@ HRESULT CTransform::NativeConstruct(void * pArg)
 {
 	CComponent::NativeConstruct(pArg);
 
-	
-	//	if (nullptr != pArg)
-	//		memcpy(& n , pArg, sizeof(STATEDESC));
+	TRANSFORM_DESC Data;
+	if (nullptr != pArg)
+	{
+		memcpy(&Data, pArg, sizeof(TRANSFORM_DESC));
+		Set_Scale(XMLoadFloat4(&Data.vScale));
+		Set_State(EState::Position, XMLoadFloat4(&Data.vPos));
+	}
 
 
 	return S_OK;

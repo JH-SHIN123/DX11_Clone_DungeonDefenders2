@@ -23,6 +23,7 @@ using namespace Client;
 
 #include "Client_Macro.h"
 #include "Client_Struct.h"
+#include "Client_Typedef.h"
 #include <fstream>
 
 #define __CLIENT_DEFINES_H__

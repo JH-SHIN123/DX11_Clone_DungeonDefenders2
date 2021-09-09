@@ -15,6 +15,13 @@ enum class EState
 enum class ERotateEuler
 {Right, Up, Look, End};
 
+typedef struct tagTransformDesc
+{
+	_float4 vPos;
+	_float4 vScale;
+
+}TRANSFORM_DESC;
+
 class ENGINE_DLL CTransform : public CComponent
 {
 protected:

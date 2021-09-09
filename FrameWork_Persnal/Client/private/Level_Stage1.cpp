@@ -54,11 +54,10 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 		UI_Desc.Movement_Desc.vPos = _float4(0.f, 50.f, 0.f, 1.f);
 		UI_Desc.Movement_Desc.vScale = _float4(512.f, 512.f, 0.f, 0.f);
 		UI_Desc.eLevel = ELevel::Static;
-		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_PauseMenu"), (_uint)ELevel::Stage1, L"Layer_Pause", &UI_Desc);
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_PauseMenu"), (_uint)ELevel::Stage1, L"Layer_Pause", &UI_Desc);
 
 		CData_Manager::GetInstance()->Set_Tick_Stop(true);
 	}
-
 
 	return 0;
 }
@@ -113,7 +112,7 @@ HRESULT CLevel_Stage1::Ready_Layer_UI(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
 
 	// 스킬창 프레임
-	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_StatusPanel"), (_uint)ELevel::Stage1, L"Layer_FrameUI");
+	pGameInstance->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_StatusPanel"), (_uint)ELevel::Stage1, L"Layer_FrameUI");
 
 	// X 67 Y 67
 	// 스킬창
@@ -121,19 +120,19 @@ HRESULT CLevel_Stage1::Ready_Layer_UI(const _tchar * pLayerTag)
 	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_SkillMage");
 	UI_Desc.Movement_Desc.vPos = _float4(-435.2f, -211.f, 0.f, 1.f);
 	UI_Desc.Movement_Desc.vScale = _float4(64.f, 64.f, 0.f, 0.f);
-	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_PlayerSkill_UI"), (_uint)ELevel::Stage1, L"Layer_UI", &UI_Desc);
+	pGameInstance->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_PlayerSkill_UI"), (_uint)ELevel::Stage1, L"Layer_UI", &UI_Desc);
 
 	// HPMP따로 만듬
 	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_HpMp");
 	UI_Desc.Movement_Desc.vPos = _float4(-581.f, -213.f, 0.f, 1.f);
 	UI_Desc.Movement_Desc.vScale = _float4(64.f, 128.f, 0.f, 0.f);
-	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Player_HpMp"), (_uint)ELevel::Stage1, L"Layer_UI_HpMp", &UI_Desc);
+	pGameInstance->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_Player_HpMp"), (_uint)ELevel::Stage1, L"Layer_UI_HpMp", &UI_Desc);
 
 	// 해당 스테이지의 정보를 보여줌
 	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_Panel_Level");
 	UI_Desc.Movement_Desc.vPos = _float4(510.f, -305.f, 0.f, 1.f);
 	UI_Desc.Movement_Desc.vScale = _float4(256.f, 100.f, 0.f, 0.f);
-	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_WaveInfo"), (_uint)ELevel::Stage1, L"Layer_WaveInfo", &UI_Desc);
+	pGameInstance->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_WaveInfo"), (_uint)ELevel::Stage1, L"Layer_WaveInfo", &UI_Desc);
 
 
 
@@ -157,7 +156,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Camera_Free(const _tchar * pLayerTag)
 	CameraDesc.StateDesc.fSpeedPerSec = 50.f;
 	CameraDesc.StateDesc.fRotatePerSec = XMConvertToRadians(90.0f);
 
-	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Target"), (_uint)ELevel::Stage1, pLayerTag, &CameraDesc);
+	pGameInstance->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_Camera_Target"), (_uint)ELevel::Stage1, pLayerTag, &CameraDesc);
 
 	return S_OK;
 }
@@ -171,7 +170,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
 	Data.vScale = _float4(3.f, 3.f, 1.f, 1.f);
 	Data.fSpeedPerSec = 20.f;
 
-	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Player"), (_uint)ELevel::Stage1, pLayerTag, &Data);
+	pGameInstance->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_Player"), (_uint)ELevel::Stage1, pLayerTag, &Data);
 
 	return S_OK;
 }

@@ -112,12 +112,6 @@
     <Filter Include="05.Utility\03.Text_Manager\Text\Font">
       <UniqueIdentifier>{6c356184-25d6-4a59-ab7a-5821a10d25f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.UI, HUD\00.2D\A0.Masking_MeterBar">
-      <UniqueIdentifier>{d955dfe0-f789-4884-bbd5-a6f3d359aebd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.UI, HUD\00.2D\A1.MyButton%28Font%29">
-      <UniqueIdentifier>{cbb297a4-74a8-4166-bc55-49b8a196ed7c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05.Utility\04.Data_Manager">
       <UniqueIdentifier>{c9eb091c-14b3-44b5-8b95-4231530c4189}</UniqueIdentifier>
     </Filter>
@@ -132,6 +126,15 @@
     </Filter>
     <Filter Include="03.UI, HUD\00.2D\05.StatusMenu">
       <UniqueIdentifier>{ae0ef76c-ba75-448a-a81f-15c5b25d3c8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\00.2D\A3.MyButton%28Font%29">
+      <UniqueIdentifier>{cbb297a4-74a8-4166-bc55-49b8a196ed7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\00.2D\A1.Masking_UI">
+      <UniqueIdentifier>{a9b2a5f0-2516-4dba-bd89-371d576b75ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\00.2D\A0.Masking_MeterBar%28Time%29">
+      <UniqueIdentifier>{d955dfe0-f789-4884-bbd5-a6f3d359aebd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -226,7 +229,7 @@
       <Filter>05.Utility\02.Cursor_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Masking_MeterBar.h">
-      <Filter>03.UI, HUD\00.2D\A0.Masking_MeterBar</Filter>
+      <Filter>03.UI, HUD\00.2D\A0.Masking_MeterBar%28Time%29</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MyFont.h">
       <Filter>05.Utility\03.Text_Manager\Text\Font</Filter>
@@ -238,7 +241,7 @@
       <Filter>05.Utility\03.Text_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MyButton.h">
-      <Filter>03.UI, HUD\00.2D\A1.MyButton%28Font%29</Filter>
+      <Filter>03.UI, HUD\00.2D\A3.MyButton%28Font%29</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MyButton_NoText.h">
       <Filter>03.UI, HUD\00.2D\A2.MyButton_NoText</Filter>
@@ -254,6 +257,12 @@
     </ClInclude>
     <ClInclude Include="..\public\StatusMenu.h">
       <Filter>03.UI, HUD\00.2D\05.StatusMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Client_Typedef.h">
+      <Filter>98.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Masking_UI.h">
+      <Filter>03.UI, HUD\00.2D\A1.Masking_UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -330,7 +339,7 @@
       <Filter>05.Utility\02.Cursor_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Masking_MeterBar.cpp">
-      <Filter>03.UI, HUD\00.2D\A0.Masking_MeterBar</Filter>
+      <Filter>03.UI, HUD\00.2D\A0.Masking_MeterBar%28Time%29</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MyFont.cpp">
       <Filter>05.Utility\03.Text_Manager\Text\Font</Filter>
@@ -342,7 +351,7 @@
       <Filter>05.Utility\03.Text_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MyButton.cpp">
-      <Filter>03.UI, HUD\00.2D\A1.MyButton%28Font%29</Filter>
+      <Filter>03.UI, HUD\00.2D\A3.MyButton%28Font%29</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MyButton_NoText.cpp">
       <Filter>03.UI, HUD\00.2D\A2.MyButton_NoText</Filter>
@@ -358,6 +367,9 @@
     </ClCompile>
     <ClCompile Include="..\private\StatusMenu.cpp">
       <Filter>03.UI, HUD\00.2D\05.StatusMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Masking_UI.cpp">
+      <Filter>03.UI, HUD\00.2D\A1.Masking_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

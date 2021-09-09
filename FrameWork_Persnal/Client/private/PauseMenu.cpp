@@ -44,6 +44,8 @@ _int CPauseMenu::Tick(_float TimeDelta)
 	for (auto& iter : m_pButton)
 		iter->Tick(TimeDelta);
 
+	Button_Check();
+
 	return _int();
 }
 
@@ -122,6 +124,15 @@ void CPauseMenu::Button_Check()
 			switch (i)
 			{
 			case 0:	// 스탯창
+			{
+				UI2D_DESC UI_Desc;
+
+				lstrcpy(UI_Desc.szTextureName, L"Component_Texture_Status");
+				UI_Desc.Movement_Desc.vPos = _float4(0.f, 50.f, 0.f, 1.f);
+				UI_Desc.Movement_Desc.vScale = _float4(768.f, 512.f, 0.f, 0.f);
+				UI_Desc.eLevel = ELevel::Static;
+				GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_StatusMenu"), (_uint)ELevel::Stage1, L"Layer_StatusMenu", &UI_Desc);
+			}
 				break;
 			case 1:	// 게임재개
 				break;

@@ -141,6 +141,22 @@ VS_OUT_TEX2 VS_MAIN_UI_TEXTURE2_UV_TIME(VS_IN In)
 
 	return Out;
 }
+
+VS_OUT_TEX2 VS_MAIN_UI_TEXTURE2(VS_IN In)
+{
+	VS_OUT_TEX2			Out = (VS_OUT_TEX2)0;
+	matrix		matWV, matWVP;
+
+	matWV = mul(WorldMatrix, ViewMatrix);
+	matWVP = mul(matWV, ProjMatrix);
+
+	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+
+	Out.vTexUV = In.vTexUV;
+	Out.vTexUV_2 = In.vTexUV;
+
+	return Out;
+}
 ////////////////////////////////////////////////////////////VS
 
 
@@ -340,6 +356,24 @@ PS_OUT PS_MASKING_UV_RATIO(PS_IN_TEX2 In)
 	return Out;
 }
 
+PS_OUT PS_MASKING_DEFAULT(PS_IN_TEX2 In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	if (In.vTexUV_2.x >= g_Textrue_UV.x)
+	{
+		Out.vColor.a = 0.f;
+		return Out;
+	}
+	// 마스킹을 던져야 함
+	float4 vMask = g_MaskTexture.Sample(DiffuseSampler, In.vTexUV_2);
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	Out.vColor.a = vMask.g;
+
+	return Out;
+}
+
 PS_OUT PS_FONT(PS_IN_TEX2 In)
 {
 	PS_OUT		Out = (PS_OUT)0;
@@ -492,6 +526,16 @@ technique11		DefaultTechnique
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE2_UV_TIME();
 		PixelShader = compile ps_5_0 PS_MASKING_UV_RATIO();
+	}
+
+	pass TEXTURE2_MASKINGDEFAULT // 13
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE2();
+		PixelShader = compile ps_5_0 PS_MASKING_DEFAULT();
 	}
 };
 

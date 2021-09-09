@@ -2,11 +2,13 @@
 
 #ifndef __CCOMPONENT_MANAGER_H__
 
-#include "Component.h"
+#include "Model.h"
+#include "Status.h"
 #include "Renderer.h"
 #include "Textures.h"
-#include "Transform.h"
 #include "Movement.h"
+#include "Transform.h"
+#include "Component.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Font.h"

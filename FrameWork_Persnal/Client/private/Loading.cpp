@@ -14,6 +14,7 @@
 #include "Camera_Target.h"
 #include "Camera_Free.h"
 #include "PauseMenu.h"
+#include "StatusMenu.h"
 
 USING(Engine)
 
@@ -134,16 +135,17 @@ HRESULT CLoading::LoadingForStage()
 	// GameObject
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Terrain"), CTerrain::Create(m_pDevice, m_pDevice_Context));
 
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_StatusPanel"), CStatus_Panel::Create(m_pDevice, m_pDevice_Context));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_PlayerSkill_UI"), CPlayerSkill::Create(m_pDevice, m_pDevice_Context));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Player_HpMp"), CHpMp::Create(m_pDevice, m_pDevice_Context));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_WaveInfo"), CWaveInfo::Create(m_pDevice, m_pDevice_Context));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_PauseMenu"), CPauseMenu::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_StatusPanel"), CStatus_Panel::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_PlayerSkill_UI"), CPlayerSkill::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Player_HpMp"), CHpMp::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_WaveInfo"), CWaveInfo::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_PauseMenu"), CPauseMenu::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_StatusMenu"), CStatusMenu::Create(m_pDevice, m_pDevice_Context));
 
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Free"), CCamera_Free::Create(m_pDevice, m_pDevice_Context));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Camera_Target"), CCamera_Target::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Camera_Free"), CCamera_Free::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Camera_Target"), CCamera_Target::Create(m_pDevice, m_pDevice_Context));
 
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Player"), CPlayer::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Player"), CPlayer::Create(m_pDevice, m_pDevice_Context));
 
 
 
@@ -154,6 +156,11 @@ HRESULT CLoading::LoadingForStage()
 	m_isFinished = true;
 
 	return hr;
+}
+
+HRESULT CLoading::Loading_UI()
+{
+	return E_NOTIMPL;
 }
 
 CLoading * CLoading::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, ELevel eNextSceneID)

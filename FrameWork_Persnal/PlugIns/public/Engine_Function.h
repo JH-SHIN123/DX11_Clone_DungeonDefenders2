@@ -51,7 +51,21 @@ namespace Engine
 		dwRefCnt = pInstance->AddRef();
 	
 		return dwRefCnt;
-	}	
+	}
+	//
+	template<typename T>
+	unsigned long Safe_Release_Vector(T& pInstance)
+	{
+		unsigned long dwRefCnt = 0;
+
+		for (auto& iter : pInstance)
+			dwRefCnt = Safe_Release(iter);
+		pInstance.clear();
+
+		return dwRefCnt;
+	}
+
+
 
 	class CTagFinder
 	{
