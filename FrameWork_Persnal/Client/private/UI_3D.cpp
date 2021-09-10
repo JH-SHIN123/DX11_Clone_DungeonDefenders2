@@ -79,10 +79,10 @@ HRESULT CUI_3D::SetUp_Default_Component(void * pArg)
 void CUI_3D::BillBoarding()
 {
 	// 카메라 right 방향 * 타겟 X크기
-	_vector vNewRight = XMVector4Normalize(GET_CAMERA_RIGHT) * m_pMovementCom->Get_Scale(EState::Right);
-	_vector vRightUp_Cross = XMVector3Cross(vNewRight, XMVectorSet(0.f, 1.f, 0.f, 0.f));
-	_vector vNewLook = XMVector4Normalize(vRightUp_Cross) * m_pMovementCom->Get_Scale(EState::Look);
-	_vector vNewUp = XMVector4Normalize(XMVector3Cross(vNewLook, vNewRight)) * m_pMovementCom->Get_Scale(EState::Up);
+	_vector vNewRight		= XMVector4Normalize(GET_CAMERA_RIGHT) * m_pMovementCom->Get_Scale(EState::Right);
+	_vector vRightUp_Cross	= XMVector3Cross(vNewRight, XMVectorSet(0.f, 1.f, 0.f, 0.f));
+	_vector vNewLook		= XMVector4Normalize(vRightUp_Cross) * m_pMovementCom->Get_Scale(EState::Look);
+	_vector vNewUp			= XMVector4Normalize(XMVector3Cross(vNewLook, vNewRight)) * m_pMovementCom->Get_Scale(EState::Up);
 
 	m_pMovementCom->Set_State(EState::Right, vNewRight);
 	m_pMovementCom->Set_State(EState::Look, vNewLook);

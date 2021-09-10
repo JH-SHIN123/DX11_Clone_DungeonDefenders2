@@ -27,10 +27,10 @@ public:
 private:
 	void Key_Check(_float TimeDelta);
 	void Turn_Check(_float TimeDelta);
+	void Level_Check();
 
 private:
-
-private:
+	CStatus*			m_pStatusCom	= nullptr;
 	CRenderer*			m_pRendererCom	= nullptr;
 	CMovement*			m_pMovementCom	= nullptr;
 	CTextures*			m_pTextureCom	= nullptr;
@@ -38,10 +38,6 @@ private:
 
 private:
 	_bool		m_IsSkill_Use[10] = { false };
-
-private: // 카메라에 값 넘기기용
-	_float4		m_vLook;
-	_float		m_fDis;
 
 private:
 	HRESULT	Ready_Component(void* pArg);

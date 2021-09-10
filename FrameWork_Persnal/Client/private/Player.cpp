@@ -41,6 +41,8 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
+	Level_Check();
+
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
 
@@ -85,27 +87,26 @@ void CPlayer::Key_Check(_float TimeDelta)
 	{
 		static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"))->Set_Skill_CoolDown(0, 10.f);
 	}
-
-
-	// 카메라 가져와서 회전 시키기
 }
 
 void CPlayer::Turn_Check(_float TimeDelta)
 {
-	_vector vRight = m_pMovementCom->Get_State(EState::Right);
-	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f); // 임의의 축으로 회전을 한다면 카메라가 회전을 해버린당
-	_vector vLook = m_pMovementCom->Get_State(EState::Look);
-
-	_matrix RotateMatrix;
-
 	_long dwMouseMove = 0;
 
 	if (dwMouseMove = GET_MOUSE_X)
-		RotateMatrix = XMMatrixRotationAxis(vUp, XMConvertToRadians((_float)dwMouseMove * 0.05f));
+	{
+		
+	}
 
 	if (dwMouseMove = GET_MOUSE_Y)
-		RotateMatrix = XMMatrixRotationAxis(vRight, XMConvertToRadians((_float)dwMouseMove * 0.05f));
+	{
 
+	}
+}
+
+void CPlayer::Level_Check()
+{
+	
 }
 
 HRESULT CPlayer::Ready_Component(void* pArg)
@@ -114,6 +115,7 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, pArg);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect_Model"), TEXT("Com_Buffer"), (CComponent**)&m_pBufferRectCom);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Movement"), (CComponent**)&m_pStatusCom);
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_Devil"), TEXT("Com_Texture_0"), (CComponent**)&m_pTextureCom);
 
@@ -144,9 +146,10 @@ CGameObject * CPlayer::Clone_GameObject(void * pArg)
 
 void CPlayer::Free()
 {
+	Safe_Release(m_pStatusCom);
+	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pMovementCom);
-	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pBufferRectCom);
 
 	__super::Free();

@@ -44,6 +44,9 @@ public:
 	_uint	Tick(_float TimeDelta);
 
 public:
+	void Level_Check();
+
+public:
 	_int		Make_Final_Attack(_int iAtt_Basic); // 최종 데미지가 나온다
 	HIT_DESC	Make_Final_Damage(_int iFinalDamage, EDamageType eDamageType, _float fHitTime);
 

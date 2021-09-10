@@ -38,7 +38,7 @@ _int CMonster::Tick(_float TimeDelta)
 
 _int CMonster::Late_Tick(_float TimeDelta)
 {
-	m_pMeterBar_Hp->Set_Count((_float)m_pStatus->Get_Hp(), (_float)m_pStatus->Get_HpMax());
+	m_pMeterBar_Hp->Set_Count((_float)m_pStatusCom->Get_Hp(), (_float)m_pStatusCom->Get_HpMax());
 
 
 
@@ -61,7 +61,7 @@ HRESULT CMonster::Ready_Component(void * pArg)
 	HRESULT hr = S_OK;
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom);
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Movement"), (CComponent**)&m_pStatus, &Data.Stat_Desc);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Movement"), (CComponent**)&m_pStatusCom, &Data.Stat_Desc);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &Data.Movement_Desc);
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect_Model"), TEXT("Com_Buffer"), (CComponent**)&m_pBufferRectCom);
@@ -89,7 +89,7 @@ CGameObject * CMonster::Clone_GameObject(void * pArg)
 
 void CMonster::Free()
 {
-	Safe_Release(m_pStatus);
+	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pMovementCom);
 

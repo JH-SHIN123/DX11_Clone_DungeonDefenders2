@@ -40,7 +40,7 @@ private:
 	HRESULT	Ready_Component(void* pArg);
 
 private:
-	CStatus*				m_pStatus		= nullptr;
+	CStatus*				m_pStatusCom	= nullptr;
 	CRenderer*				m_pRendererCom	= nullptr;
 	CMovement*				m_pMovementCom	= nullptr;
 	CMasking_MeterBar_3D*	m_pMeterBar_Hp	= nullptr;

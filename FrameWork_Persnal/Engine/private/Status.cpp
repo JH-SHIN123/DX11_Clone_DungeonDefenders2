@@ -34,6 +34,23 @@ _uint CStatus::Tick(_float TimeDelta)
 	return _uint();
 }
 
+void CStatus::Level_Check()
+{
+	// 레벨업은 전투 끝나야지만 함
+
+	if (m_Status_Desc.iExp >= m_Status_Desc.iExp_Max)
+	{
+		++m_Status_Desc.iLevel;
+		m_Status_Desc.iAtt_Basic	= (_int)(m_Status_Desc.iAtt_Basic * 1.15f);
+		m_Status_Desc.iHp_Max		= (_int)(m_Status_Desc.iHp_Max * 1.3f);
+		m_Status_Desc.iHp			= m_Status_Desc.iHp_Max;
+		m_Status_Desc.iMp_Max		+= m_Status_Desc.iMp_Max >> 1;
+
+		m_Status_Desc.iExp			-= m_Status_Desc.iExp_Max;
+		m_Status_Desc.iExp_Max		= (m_Status_Desc.iExp_Max * 1.2f);
+	}
+}
+
 void CStatus::Set_Damage(const HIT_DESC & pDamage)
 {
 	m_IsHit = true;

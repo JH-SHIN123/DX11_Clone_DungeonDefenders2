@@ -21,6 +21,9 @@ public:
 	CData_Manager();
 	virtual ~CData_Manager() = default;
 
+public: // Tick
+	void PlayerLevel_Check();
+
 
 #pragma region Level
 public:	// 씬전환 중개자,

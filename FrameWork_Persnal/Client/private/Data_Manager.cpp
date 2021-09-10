@@ -21,6 +21,10 @@ void CData_Manager::Minus_StatUp_Count(_int iMinusCount)
 		m_iStatUp_Count = 0;
 }
 
+void CData_Manager::PlayerLevel_Check()
+{
+}
+
 void CData_Manager::Set_NowScene(ELevel eNowLevel)
 {
 	m_NowLevel = eNowLevel;
