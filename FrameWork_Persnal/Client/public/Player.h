@@ -32,9 +32,9 @@ private:
 
 private:
 	CRenderer*			m_pRendererCom	= nullptr;
-	CVIBuffer_Cube*		m_pVIBufferCom	= nullptr;
-	CTextures*			m_pTextureCom	= nullptr;
 	CMovement*			m_pMovementCom	= nullptr;
+	CTextures*			m_pTextureCom	= nullptr;
+	CVIBuffer_Cube*		m_pBufferRectCom = nullptr;
 
 private:
 	_bool		m_IsSkill_Use[10] = { false };

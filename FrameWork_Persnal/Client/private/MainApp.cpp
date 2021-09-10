@@ -6,6 +6,7 @@
 #include "Cursor_Manager.h"
 #include "Text_Manager.h"
 #include "Data_Manager.h"
+#include "Animate_Effect.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -130,6 +131,12 @@ HRESULT CMainApp::Ready_Component_PrototypeForStatic()
 	//	return E_FAIL;
 
 
+
+
+	//Animate_Effect
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Animate_Effect"), CAnimate_Effect::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -186,7 +193,7 @@ HRESULT CMainApp::Ready_UI_Texture()
 	
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_PauseMenu")
-		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/PauseMenu/%d.tga"), 3));
+		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/PauseMenu/%d.tga"), 2));
 
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Status")
@@ -196,11 +203,19 @@ HRESULT CMainApp::Ready_UI_Texture()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Status_Portrait")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/Status/Portrait/%d.tga"), 3));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Status_Icon")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/Status/Stat/%d.tga"), 4));
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/Status/Stat/%d.tga"), 5));
+
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Button_Public")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/Button/%d.tga"), 3));
 
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Black")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Black.png")));
+
+	// Animate Texture
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_TextureEX_Status_Up")
+		, CTextures_Extend::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Status/Stat/Stat_Up/%d.png"), 20));
 
 
 

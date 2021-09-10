@@ -23,6 +23,13 @@ public:
 public:
 	class CComponent* Get_Component(const _tchar* pComponentTag);
 
+public:
+	void	Set_IsDelete_This(_bool IsDeleteThis) { m_IsDelete_This = IsDeleteThis; }
+	_bool	Get_IsDelete_This() const { return m_IsDelete_This; }
+
+protected:
+	_bool		m_IsDelete_This = false;
+
 protected:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDevice_Context = nullptr;

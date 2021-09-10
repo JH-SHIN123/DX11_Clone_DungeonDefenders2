@@ -1,0 +1,137 @@
+#include "stdafx.h"
+#include "..\public\Masking_MeterBar_3D.h"
+
+CMasking_MeterBar_3D::CMasking_MeterBar_3D(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
+	: CUI_3D(pDevice, pDevice_Context)
+{
+}
+
+CMasking_MeterBar_3D::CMasking_MeterBar_3D(const CMasking_MeterBar_3D & rhs)
+	: CUI_3D(rhs)
+{
+}
+
+HRESULT CMasking_MeterBar_3D::NativeConstruct_Prototype()
+{
+	return E_FAIL;
+}
+
+HRESULT CMasking_MeterBar_3D::NativeConstruct(void * pArg)
+{
+	memcpy(&m_MeterBar_Desc, pArg, sizeof(MASK_METERBAR_DESC_3D));
+
+	__super::NativeConstruct(&m_MeterBar_Desc.UI_Desc);
+
+	return S_OK;
+}
+
+_int CMasking_MeterBar_3D::Tick(_float TimeDelta)
+{
+	Count_Check(TimeDelta);
+
+	__super::BillBoarding();
+
+	return _int();
+}
+
+_int CMasking_MeterBar_3D::Late_Tick(_float TimeDelta)
+{
+	return _int();
+}
+
+HRESULT CMasking_MeterBar_3D::Render(_uint MaskShaderPass, _uint UIFramePass)
+{
+	__super::Render();
+
+	switch (m_MeterBar_Desc.eFrame_Render)
+	{
+	case ECastingBar_Frame_Render::First:
+
+		break;
+
+	default:
+		break;
+	}
+	if (m_MeterBar_Desc.HasFrameBar)
+	{
+		if (ECastingBar_Frame_Render::First == m_MeterBar_Desc.eFrame_Render)
+		{
+			m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(2));
+			m_pBufferRectCom->Render(UIFramePass);
+		}
+	}
+
+	_float2 Time = { -m_fTime, m_fTime * 0.3333f };
+	m_pBufferRectCom->Set_Variable("g_TextureTime_UV", &Time, sizeof(_float2));
+	m_pBufferRectCom->Set_Variable("g_Textrue_UV", &m_fRatio, sizeof(_float2));
+	m_pBufferRectCom->Set_ShaderResourceView("g_MaskTexture", m_pTextureCom->Get_ShaderResourceView(0));
+	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(1));
+	m_pBufferRectCom->Render(MaskShaderPass);
+
+	if (m_MeterBar_Desc.HasFrameBar)
+	{
+		if (ECastingBar_Frame_Render::Second == m_MeterBar_Desc.eFrame_Render)
+		{
+			m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(2));
+			m_pBufferRectCom->Render(UIFramePass);
+		}
+	}
+
+
+	return S_OK;
+}
+
+void CMasking_MeterBar_3D::Set_Count(_float fCount, _float fCount_Max)
+{
+	m_MeterBar_Desc.fCount = fCount;
+	m_MeterBar_Desc.fCount_Max = fCount_Max;
+}
+
+void CMasking_MeterBar_3D::Render_Frame_First(_uint MaskShaderPass, _uint UIFramePass)
+{
+}
+
+void CMasking_MeterBar_3D::Render_Frame_Second(_uint MaskShaderPass, _uint UIFramePass)
+{
+}
+
+void CMasking_MeterBar_3D::Count_Check(_float TimeDelta)
+{
+	// Full To Zero
+	switch (m_MeterBar_Desc.eFillMode)
+	{
+	case EMeterBar_FillMode::ZeroToFull:
+		m_fRatio = (m_MeterBar_Desc.fCount / m_MeterBar_Desc.fCount_Max);
+		break;
+	case EMeterBar_FillMode::FullToZero:
+		m_fRatio = (1.f - (m_MeterBar_Desc.fCount / m_MeterBar_Desc.fCount_Max));
+		break;
+	default:
+		break;
+	}
+
+	m_fTime += TimeDelta;
+	if (m_fTime >= 3.f)
+		m_fTime = 0.f;
+}
+
+CMasking_MeterBar_3D * CMasking_MeterBar_3D::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, void * pArg)
+{
+	CMasking_MeterBar_3D* pInstance = new CMasking_MeterBar_3D(pDevice, pDevice_Context);
+	if (FAILED(pInstance->NativeConstruct(pArg)))
+	{
+		MSG_BOX("Failed to Creating Instance (CMasking_MeterBar_3D) ");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+CGameObject * CMasking_MeterBar_3D::Clone_GameObject(void * pArg)
+{
+	return nullptr;
+}
+
+void CMasking_MeterBar_3D::Free()
+{
+	__super::Free();
+}

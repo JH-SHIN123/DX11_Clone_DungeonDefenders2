@@ -214,6 +214,30 @@ _vector CGameInstance::Get_CamPosition() const
 	return m_pPipeline_Manager->Get_CamPosition();
 }
 
+_fvector CGameInstance::Get_CamRight_Dir() const
+{
+	if (nullptr == m_pPipeline_Manager)
+		return _fvector();
+
+	return m_pPipeline_Manager->Get_CamRight_Dir();
+}
+
+_fvector CGameInstance::Get_CamUp_Dir() const
+{
+	if (nullptr == m_pPipeline_Manager)
+		return _fvector();
+
+	return m_pPipeline_Manager->Get_CamUp_Dir();
+}
+
+_fvector CGameInstance::Get_CamLook_Dir() const
+{
+	if (nullptr == m_pPipeline_Manager)
+		return _fvector();
+
+	return m_pPipeline_Manager->Get_CamLook_Dir();
+}
+
 #pragma endregion 
 
 #pragma region Light_Manager

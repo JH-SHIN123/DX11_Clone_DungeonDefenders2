@@ -7,7 +7,7 @@
 BEGIN(Engine)
 
 enum class ETransformState
-{View, Proj, End};
+{ View, Proj, End};
 
 class ENGINE_DLL CPipeline_Manager final :	public CBase
 {
@@ -21,7 +21,11 @@ public:
 
 public:	// Getter
 	_matrix Get_Transform(ETransformState eState) const { return XMLoadFloat4x4(&m_StateMatrices[(_uint)eState]); }
-	_fvector Get_CamPosition() const {return XMLoadFloat4((_float4*)&m_CameraWorldMatrix.m[3][0]);}
+	_fvector Get_CamRight_Dir() const	{ return XMLoadFloat4((_float4*)&m_CameraWorldMatrix.m[0][0]); }
+	_fvector Get_CamUp_Dir()	const	{ return XMLoadFloat4((_float4*)&m_CameraWorldMatrix.m[1][0]); }
+	_fvector Get_CamLook_Dir()	const	{ return XMLoadFloat4((_float4*)&m_CameraWorldMatrix.m[2][0]); }
+	_fvector Get_CamPosition()	const	{ return XMLoadFloat4((_float4*)&m_CameraWorldMatrix.m[3][0]); }
+
 
 public:	// Setter
 	void Set_Transform(ETransformState eState, _fmatrix TransformStateMatrix) { XMStoreFloat4x4(&m_StateMatrices[(_uint)eState], TransformStateMatrix); }

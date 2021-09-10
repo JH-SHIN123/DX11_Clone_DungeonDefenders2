@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Camera_Target.h"
 #include "Player.h"
+#include "Data_Manager.h"
 
 CCamera_Target::CCamera_Target(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CCamera(pDevice, pDevice_Context)
@@ -37,8 +38,8 @@ _int CCamera_Target::Tick(_float TimeDelta)
 {
 	View_Check();
 
-	
-	TargetRotate_Check((_uint)ELevel::Stage1, L"Layer_Player", L"Com_Movement");
+	if(false == CData_Manager::GetInstance()->Get_Tick_Stop())
+		TargetRotate_Check((_uint)ELevel::Stage1, L"Layer_Player", L"Com_Movement");
 
 	return __super::Tick(TimeDelta);
 }
@@ -78,7 +79,6 @@ void CCamera_Target::MouseMove_Check()
 		vUp = XMVector3Cross(vLook, vRight);
 		m_pMovementCom->Set_State(EState::Up, vUp);
 	}
-
 }
 
 HRESULT CCamera_Target::Ready_Component()

@@ -37,6 +37,10 @@ namespace Engine
 	typedef		XMMATRIX				_matrix;		// Local
 	typedef		FXMMATRIX				_fmatrix;		// Parameter 1st
 	typedef		CXMMATRIX				_cmatrix;		// Parameter 2nd ~ 
+
+	typedef		XMINT2					_int2;
+	typedef		XMINT3					_int3;
+	typedef		XMINT4					_int4;
 }
 
 #define __Engine_Typedef_h__

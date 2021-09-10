@@ -210,6 +210,7 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     <ClInclude Include="..\public\ScreenCapture.h" />
     <ClInclude Include="..\public\Status.h" />
     <ClInclude Include="..\public\Textures.h" />
+    <ClInclude Include="..\public\Textures_Extend.h" />
     <ClInclude Include="..\public\Timer.h" />
     <ClInclude Include="..\public\Timer_Manager.h" />
     <ClInclude Include="..\public\Transform.h" />
@@ -247,6 +248,7 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     <ClCompile Include="..\private\ScreenCapture.cpp" />
     <ClCompile Include="..\private\Status.cpp" />
     <ClCompile Include="..\private\Textures.cpp" />
+    <ClCompile Include="..\private\Textures_Extend.cpp" />
     <ClCompile Include="..\private\Timer.cpp" />
     <ClCompile Include="..\private\Timer_Manager.cpp" />
     <ClCompile Include="..\private\Transform.cpp" />

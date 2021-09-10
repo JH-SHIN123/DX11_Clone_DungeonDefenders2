@@ -130,6 +130,9 @@
     <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\01.HierarchyNode">
       <UniqueIdentifier>{ac3110b5-aa98-48a5-a067-0effa0d63a70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Utility\02.Component\07.Textures_Extend">
+      <UniqueIdentifier>{b68b0e58-f805-4bee-8879-a3914148a790}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
@@ -264,6 +267,9 @@
     <ClInclude Include="..\public\HierarchyNode.h">
       <Filter>02.Utility\02.Component\06.Mesh\00.Model\01.HierarchyNode</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Textures_Extend.h">
+      <Filter>02.Utility\02.Component\07.Textures_Extend</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -370,6 +376,9 @@
     </ClCompile>
     <ClCompile Include="..\private\HierarchyNode.cpp">
       <Filter>02.Utility\02.Component\06.Mesh\00.Model\01.HierarchyNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Textures_Extend.cpp">
+      <Filter>02.Utility\02.Component\07.Textures_Extend</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

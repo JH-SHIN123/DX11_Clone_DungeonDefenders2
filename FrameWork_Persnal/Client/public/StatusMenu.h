@@ -25,10 +25,16 @@ public:
 
 private:
 	HRESULT	Ready_Component();
+	void	Status_Tick();
 	void	Button_Render();
 	void	ButtonFrame_Render();
 	void	Status_Render();
 	void	StatusFrame_Render();
+	void	StatusPick_Render();
+	void	Status_UpGrade();
+
+private:
+	_bool			m_IsCreatToOption = false;
 
 private: // Exp
 	CMasking_MeterBar*		m_pExpBar = nullptr;
@@ -37,19 +43,24 @@ private: // Portrait
 	CMasking_UI*		m_pPlayerPortrait = nullptr;
 
 private: // HpMp
-	vector<class CMyButton_NoText*>		m_pButton_HpMp;
-	vector<CTransform*>					m_pTransform_HpMpFrame;
+	vector<class CMyButton_NoText*>		m_vecButton_HpMp;
+	vector<CTransform*>					m_vecTransform_HpMpFrame;
 	_int								m_iButtonCount_HpMp = 2;
 
 private: // Status UI
-	vector<class CMyButton_NoText*>		m_pButton_Status;
-	vector<CTransform*>					m_pTransform_StatusFrame;
-	_int								m_iButtonCount_Status = 4;
-
+	vector<class CMyButton_NoText*>		m_vecButton_Status;
+	vector<CTransform*>					m_vecTransform_StatusFrame;
+	_int								m_iButtonCount_Status = 4; // 마지막은 스킬 포인트 UI
+	_bool								m_IsPick[4] = { false };
 
 private: // Exit
 	CMyButton_NoText*		m_pButton_Exit = nullptr;
+	CMyButton_NoText*		m_pSkillPoint = nullptr;
 	_bool					m_IsExit = false;
+
+
+private:
+
 
 public:
 	static CStatusMenu* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

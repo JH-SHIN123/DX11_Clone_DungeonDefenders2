@@ -394,6 +394,18 @@ PS_OUT PS_FONT(PS_IN_TEX2 In)
 	return Out;
 }
 
+PS_OUT PS_TEX_ALPHA(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	// 픽셀의 색 = Texture의 UV 좌표에서 g_DiffuseTexture의 색을 따라가되 DiffuseSampler라는 이름의 샘플러를 사용 할 것
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vColor.a = Out.vColor.r;
+	//Out.vColor.a = 1.f;
+
+	return Out;
+}
+
 // 네임스페이스 정도
 technique11		DefaultTechnique
 {
@@ -536,6 +548,16 @@ technique11		DefaultTechnique
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE2();
 		PixelShader = compile ps_5_0 PS_MASKING_DEFAULT();
+	}
+
+	pass UI_TexAlpha //14
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		PixelShader = compile ps_5_0 PS_TEX_ALPHA();
 	}
 };
 

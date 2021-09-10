@@ -166,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Bin\Shader\Shader_Defines.hpp" />
+    <ClInclude Include="..\public\Animate_Effect.h" />
     <ClInclude Include="..\public\BackGround_Logo.h" />
     <ClInclude Include="..\public\Calculator.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
@@ -186,6 +187,7 @@
     <ClInclude Include="..\public\Loading.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\public\MainMenu.h" />
+    <ClInclude Include="..\public\Masking_MeterBar_3D.h" />
     <ClInclude Include="..\public\Masking_UI.h" />
     <ClInclude Include="..\public\Masking_MeterBar.h" />
     <ClInclude Include="..\public\Monster.h" />
@@ -201,6 +203,7 @@
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\Text_Manager.h" />
     <ClInclude Include="..\public\UI_2D.h" />
+    <ClInclude Include="..\public\UI_3D.h" />
     <ClInclude Include="..\public\WaveInfo.h" />
     <ClInclude Include="..\public\Wave_Manger.h" />
     <ClInclude Include="Client.h" />
@@ -209,6 +212,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\Animate_Effect.cpp" />
     <ClCompile Include="..\private\BackGround_Logo.cpp" />
     <ClCompile Include="..\private\Calculator.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
@@ -225,6 +229,7 @@
     <ClCompile Include="..\private\Loading.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\MainMenu.cpp" />
+    <ClCompile Include="..\private\Masking_MeterBar_3D.cpp" />
     <ClCompile Include="..\private\Masking_UI.cpp" />
     <ClCompile Include="..\private\Masking_MeterBar.cpp" />
     <ClCompile Include="..\private\Monster.cpp" />
@@ -240,6 +245,7 @@
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\Text_Manager.cpp" />
     <ClCompile Include="..\private\UI_2D.cpp" />
+    <ClCompile Include="..\private\UI_3D.cpp" />
     <ClCompile Include="..\private\WaveInfo.cpp" />
     <ClCompile Include="..\private\Wave_Manger.cpp" />
     <ClCompile Include="Client.cpp" />

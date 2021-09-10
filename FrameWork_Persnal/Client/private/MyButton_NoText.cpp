@@ -38,10 +38,10 @@ _int CMyButton_NoText::Tick(_float TimeDelta)
 
 _int CMyButton_NoText::Late_Tick(_float TimeDelta)
 {
-	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::FrameUI, this);
+	return 0; //m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::FrameUI, this);
 }
 
-HRESULT CMyButton_NoText::Render(_uint iTextureIndex)
+HRESULT CMyButton_NoText::Render(_uint iTextureIndex, _uint ShaderPass)
 {
 	if (nullptr != m_pTextureCom)
 	{
@@ -50,7 +50,11 @@ HRESULT CMyButton_NoText::Render(_uint iTextureIndex)
 		//m_pBufferRectCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
 		//m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
 
-		m_pBufferRectCom->Render(1);
+		m_pBufferRectCom->Render(ShaderPass);
+
+// 		D3D11_SHADER_RESOURCE_VIEW_DESC Data;
+// 		m_pTextureCom->Get_ShaderResourceView(iTextureIndex)->GetDesc(&Data);
+// 		Data.Texture2DMS.UnusedField_NothingToDefine
 	}
 
 	return S_OK;
@@ -63,6 +67,14 @@ _bool CMyButton_NoText::Get_IsClick()
 		if (m_IsPick == true)
 			return true;
 	}
+	return false;
+}
+
+_bool CMyButton_NoText::Get_IsPick()
+{
+	if (m_IsPick == true)
+		return true;
+	
 	return false;
 }
 

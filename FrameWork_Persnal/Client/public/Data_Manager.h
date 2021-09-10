@@ -11,6 +11,9 @@
 
 BEGIN(Client)
 
+enum class eNow_UI
+{ Option, Status, End };
+
 class CData_Manager final :	public CBase
 {
 	DECLARE_SINGLETON(CData_Manager)
@@ -47,16 +50,29 @@ private:
 
 
 
-//#pragma region Player_Skill
-//public:
-//	_bool Get_Tick_Stop() { return m_IsTick_Stop; }
-//	void  Set_Tick_Stop(_bool IsTick) { m_IsTick_Stop = IsTick; }
-//	void  Switch_Tick_Stop() { m_IsTick_Stop = !m_IsTick_Stop; }
-//
-//private:
-//	_bool	m_IsTick_Stop = false;
-//#pragma endregion
+#pragma region StatUp
+public:	// ½ºÅ³Âï±â
+	void Add_StatUp_Count(_int iAddCount = 3) { m_iStatUp_Count += iAddCount; }
+	void Minus_StatUp_Count(_int iMinusCount = 1);
+	_int Get_StatUp_Count() const { return m_iStatUp_Count; }
+	void Add_Skill_Level(_int iSkillIndex) { ++m_iSkillLevel[iSkillIndex]; }
+	_int Get_Skill_Level(_int iSkillIndex) const { return m_iSkillLevel[iSkillIndex]; }
 
+private:
+	_int 		m_iStatUp_Count;
+	_int		m_iSkillLevel[4];
+#pragma endregion
+
+
+
+#pragma region Now_UI
+public:
+	void Set_Now_UI(eNow_UI eUI) { m_eNow_UI = eUI; }
+	eNow_UI Get_Now_UI() const { return m_eNow_UI; }
+
+private:
+	eNow_UI		m_eNow_UI;
+#pragma endregion
 
 
 

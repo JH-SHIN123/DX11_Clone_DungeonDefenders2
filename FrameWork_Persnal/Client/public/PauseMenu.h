@@ -26,10 +26,10 @@ private:
 	CTextures*			m_pTextureCom_AlphaBlack = nullptr;
 	_float4x4			m_matAlphaBlack;
 
-private: //Button 4
-	vector<class CMyButton_NoText*>		m_pButton;
+private: //스탯, 계속, 다시하기, 메인메뉴
+	vector<class CMyButton_NoText*>		m_vecButton;
 	_int				m_iButtonCount = 4;
-
+	_bool				m_IsDestroyOption_UI = false;
 private:
 	_bool				m_IsSceneChange = false;
 

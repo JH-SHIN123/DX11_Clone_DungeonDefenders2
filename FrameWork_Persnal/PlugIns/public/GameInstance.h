@@ -68,6 +68,9 @@ public:
 #pragma  region Pipeline_Manager
 	_matrix Get_Transform(ETransformState eState);
 	_vector Get_CamPosition() const;
+	_fvector Get_CamRight_Dir() const;
+	_fvector Get_CamUp_Dir() const;
+	_fvector Get_CamLook_Dir() const;
 #pragma  endregion
 
 

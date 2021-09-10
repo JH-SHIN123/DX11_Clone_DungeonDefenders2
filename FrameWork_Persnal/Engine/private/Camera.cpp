@@ -142,11 +142,11 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 
 	_vector vTargetPos = pTarget->Get_State(EState::Position);
 
-	_vector vRight = XMVector4Normalize(pTarget->Get_State(EState::Right));
-	_vector vUp = XMVector4Normalize(pTarget->Get_State(EState::Up));
-	_vector vLook = XMVector4Normalize(pTarget->Get_State(EState::Look));
+	//_vector vRight = XMVector4Normalize(pTarget->Get_State(EState::Right));
+	//_vector vUp = XMVector4Normalize(pTarget->Get_State(EState::Up));
+	//_vector vLook = XMVector4Normalize(pTarget->Get_State(EState::Look));
+	//_vector vMyLook = XMVector4Normalize(m_pMovementCom->Get_State(EState::Look));
 
-	_vector vMyLook = XMVector4Normalize(m_pMovementCom->Get_State(EState::Look));
 	_vector vMyPos = vTargetPos + XMVector3Normalize(XMLoadFloat3(&m_CameraDesc.vTargetDis)) * m_CameraDesc.fDis;
 
 	m_pMovementCom->Set_State(EState::Position, vMyPos);

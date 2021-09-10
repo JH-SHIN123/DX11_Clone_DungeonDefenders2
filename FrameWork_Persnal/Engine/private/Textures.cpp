@@ -44,13 +44,12 @@ HRESULT CTextures::NativeConstruct_Prototype(ETextureType eType, const _tchar * 
 	{
 		// 텍스처 Load
 		DirectX::ScratchImage		Image;
-
+		
 		// Load한 텍스처를 리소스 화
 		ID3D11Resource*				pResource = nullptr;
 
 		// 리소스를 최종적으로 사용 가능한 형태로 다루게하는 쉐이더리소스뷰
 		ID3D11ShaderResourceView*	pShaderResourceView = nullptr;
-
 		wsprintf(szTextureFileName, pTextureFilePath, i);
 
 		HRESULT hr = 0;

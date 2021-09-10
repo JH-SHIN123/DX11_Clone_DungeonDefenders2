@@ -25,13 +25,15 @@ HRESULT CPauseMenu::NativeConstruct(void * pArg)
 {
 	__super::NativeConstruct(pArg);
 
-	m_pButton.reserve(m_iButtonCount);
+	m_vecButton.reserve(m_iButtonCount);
 
 	XMStoreFloat4x4(&m_matAlphaBlack, XMMatrixIdentity());
 	m_matAlphaBlack.m[0][0] = g_iWinCX;
 	m_matAlphaBlack.m[1][1] = g_iWinCY;
 
 	Ready_Component();
+
+	CData_Manager::GetInstance()->Set_Now_UI(eNow_UI::Option);
 
 	return S_OK;
 }
@@ -41,7 +43,10 @@ _int CPauseMenu::Tick(_float TimeDelta)
 	if (false == CData_Manager::GetInstance()->Get_Tick_Stop())
 		return OBJECT_DEAD;
 
-	for (auto& iter : m_pButton)
+	if (eNow_UI::Option != CData_Manager::GetInstance()->Get_Now_UI())
+		return 0;
+
+	for (auto& iter : m_vecButton)
 		iter->Tick(TimeDelta);
 
 	Button_Check();
@@ -51,14 +56,20 @@ _int CPauseMenu::Tick(_float TimeDelta)
 
 _int CPauseMenu::Late_Tick(_float TimeDelta)
 {
-	for (auto& iter : m_pButton)
-		iter->Late_Tick(TimeDelta);
+	//for (auto& iter : m_pButton)
+	//	iter->Late_Tick(TimeDelta);
 
 	if (true == m_IsSceneChange)
 	{
 		static_cast<CLevel_Logo*>(GET_GAMEINSTANCE->Get_Scene())->Scene_Change(ELevel::Stage1); // 짬통에 이 정보를 넣어놓자
 
 		return SCENE_CHANGE;
+	}
+
+	if (true == m_IsDestroyOption_UI)
+	{
+		CData_Manager::GetInstance()->Set_Now_UI(eNow_UI::End);
+		CData_Manager::GetInstance()->Set_Tick_Stop(false);
 	}
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Option_UI_1, this);
@@ -83,7 +94,7 @@ HRESULT CPauseMenu::Render()
 	m_pBufferRectCom->Render(1);
 
 
-	for (auto& iter : m_pButton)
+	for (auto& iter : m_vecButton)
 		iter->Render(1);
 
 
@@ -102,7 +113,7 @@ HRESULT CPauseMenu::Ready_Component()
 	_float fOffSetY = -82.f;
 	for (_int i = 0; i < m_iButtonCount; ++i)
 	{
-		m_pButton.emplace_back(CMyButton_NoText::Create(m_pDevice, m_pDevice_Context, &ButtonDesc));
+		m_vecButton.emplace_back(CMyButton_NoText::Create(m_pDevice, m_pDevice_Context, &ButtonDesc));
 
 		ButtonDesc.Movement_Desc.vPos.y += fOffSetY;
 	}
@@ -119,7 +130,7 @@ void CPauseMenu::Button_Check()
 {
 	for (_int i = 0; i < m_iButtonCount; ++i)
 	{
-		if (true == m_pButton[i]->Get_IsClick())
+		if (true == m_vecButton[i]->Get_IsClick())
 		{
 			switch (i)
 			{
@@ -135,8 +146,9 @@ void CPauseMenu::Button_Check()
 			}
 				break;
 			case 1:	// 게임재개
+				m_IsDestroyOption_UI = true;
 				break;
-			case 2: // 다시시작
+			case 2: // 다시시작은 보류 ㅋㅋ
 				break;
 			case 3: // 메인메뉴
 				m_IsSceneChange = true;
@@ -172,11 +184,7 @@ CGameObject * CPauseMenu::Clone_GameObject(void * pArg)
 
 void CPauseMenu::Free()
 {
-	for (auto& iter : m_pButton)
-	{
-		Safe_Release(iter);
-	}
-	m_pButton.clear();
+	Safe_Release_Vector(m_vecButton);
 
 	Safe_Release(m_pTextureCom_AlphaBlack);
 

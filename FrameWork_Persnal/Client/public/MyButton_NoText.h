@@ -16,10 +16,12 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg) override;
 	virtual _int Tick(_float TimeDelta) override;
 	virtual _int Late_Tick(_float TimeDelta) override;
-	virtual HRESULT Render(_uint iTextureIndex = 0);
+	virtual HRESULT Render(_uint iTextureIndex = 0, _uint ShaderPass = 1);
 
 public:
 	_bool	Get_IsClick();
+	_bool	Get_IsPick();
+	void	Get_Button_Pos(_float4* pPos) {	XMStoreFloat4(pPos, m_pMovementCom->Get_State(EState::Position)); }
 
 private:
 	HRESULT	Ready_Component();

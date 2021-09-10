@@ -136,6 +136,15 @@
     <Filter Include="03.UI, HUD\00.2D\A0.Masking_MeterBar%28Time%29">
       <UniqueIdentifier>{d955dfe0-f789-4884-bbd5-a6f3d359aebd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.UI, HUD\00.2D\A4.Animate_Effect">
+      <UniqueIdentifier>{3c5ee71d-2034-45fe-bca9-6aa3e890c7e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\02.3D">
+      <UniqueIdentifier>{6e829950-a9b5-469f-b8fb-80f39776b6ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\02.3D\A0.Masking_MeterBar_3D">
+      <UniqueIdentifier>{8855d6c6-002b-4688-8994-9faacd857436}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -264,6 +273,15 @@
     <ClInclude Include="..\public\Masking_UI.h">
       <Filter>03.UI, HUD\00.2D\A1.Masking_UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Animate_Effect.h">
+      <Filter>03.UI, HUD\00.2D\A4.Animate_Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UI_3D.h">
+      <Filter>03.UI, HUD\02.3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Masking_MeterBar_3D.h">
+      <Filter>03.UI, HUD\02.3D\A0.Masking_MeterBar_3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -370,6 +388,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Masking_UI.cpp">
       <Filter>03.UI, HUD\00.2D\A1.Masking_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Animate_Effect.cpp">
+      <Filter>03.UI, HUD\00.2D\A4.Animate_Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI_3D.cpp">
+      <Filter>03.UI, HUD\02.3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Masking_MeterBar_3D.cpp">
+      <Filter>03.UI, HUD\02.3D\A0.Masking_MeterBar_3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
