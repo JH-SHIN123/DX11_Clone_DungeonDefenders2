@@ -22,13 +22,15 @@ public:
 
 public:
 	HRESULT NativeConstruct(const char* pMeshName, _uint iStartPolygonIndex, _uint iNumPolgygons, _uint iStartVertexIndex, _uint iMaterialIndex);
+	HRESULT Add_BoneDesc(BONEDESC* pBoneDesc);
+	void	Compute_BoneMatrices(_matrix* pBoneMatrices);
 
 private:
-	ID3D11Device*				m_pDevice = nullptr;
-	ID3D11DeviceContext*		m_pDevice_Context = nullptr;
+	ID3D11Device*			m_pDevice = nullptr;
+	ID3D11DeviceContext*	m_pDevice_Context = nullptr;
 
 private:
-	class CHierarcyNode*		m_pLinkedNode = nullptr;
+	class CHierarcyNode*	m_pLinkedNode = nullptr;
 
 private:
 	char					m_szMeshName[MAX_PATH] = "";
@@ -36,6 +38,10 @@ private:
 	_uint					m_iNumPolgygons = 0;
 	_uint					m_iStartVertexIndex = 0;
 	_uint					m_iMaterialIndex = 0;
+
+private:
+	vector<BONEDESC*>		m_Bones;
+
 
 public:
 	static CMeshContainer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const char* pMeshName,

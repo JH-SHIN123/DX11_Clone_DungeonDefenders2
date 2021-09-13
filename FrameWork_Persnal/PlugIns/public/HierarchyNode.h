@@ -13,13 +13,17 @@ public:
 
 public:
 	const char* Get_Name() const { return m_szNodeName; }
+	const _uint Get_Depth() const { return m_iDepth; }
+	_fmatrix Get_CombindTransformationMatrix() const { return XMLoadFloat4x4(&m_CombinedTransformationMatrix); }
 
 public:
 	HRESULT NativeConstruct(char* pName, _fmatrix TransformationMatrix, CHierarcyNode* pParent, _uint iDepth);
+	void Update_CombindTransformationMatrix();
 
 private:
 	char			m_szNodeName[MAX_PATH] = "";	
 	_float4x4		m_TransformationMatrix;
+	_float4x4		m_CombinedTransformationMatrix;
 	CHierarcyNode*	m_pParent = nullptr;
 	_uint			m_iDepth = 0;				// 몇대째인지 (재귀호출을 할것이기 때문에 재귀호출 회수 = 깊이)
 

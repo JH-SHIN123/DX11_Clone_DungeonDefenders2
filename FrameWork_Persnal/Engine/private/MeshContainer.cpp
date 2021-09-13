@@ -30,6 +30,24 @@ HRESULT CMeshContainer::NativeConstruct(const char * pMeshName, _uint iStartPoly
 	return S_OK;
 }
 
+HRESULT CMeshContainer::Add_BoneDesc(BONEDESC * pBoneDesc)
+{
+	if (nullptr == pBoneDesc)
+		return E_FAIL;
+
+	m_Bones.push_back(pBoneDesc);
+
+	return S_OK;
+}
+
+void CMeshContainer::Compute_BoneMatrices(_matrix * pBoneMatrices)
+{
+	_uint		iIndex = 0;
+
+	for (auto& pBoneDesc : m_Bones)
+		pBoneMatrices[iIndex++] = XMLoadFloat4x4(&pBoneDesc->OffsetMatrix) * pBoneDesc->pHierarchyNode->Get_CombindTransformationMatrix();
+}
+
 CMeshContainer * CMeshContainer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const char * pMeshName, _uint iStartPolygonIndex, _uint iNumPolgygons, _uint iStartVertexIndex, _uint iMaterialIndex)
 {
 	CMeshContainer*		pInstance = new CMeshContainer(pDevice, pDevice_Context);

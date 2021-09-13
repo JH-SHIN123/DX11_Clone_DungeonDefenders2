@@ -15,7 +15,7 @@ typedef struct tagCameraDesc
 	_float3		vEye;
 	_float3		vAt;
 	_float3		vAxisY;
-	_float3		vTargetDis;
+	_float3		vTargetAxis;
 	_float		fDis;
 	_float		fXRotationLock_Min = 0.f;
 	_float		fXRotationLock_Max = 360.f;
@@ -62,13 +62,13 @@ protected: // Tick
 	void	TargetRotate_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag);
 
 protected:
-	void	View_Check();
+	void	View_Check(_float TimeDelata);
 
 
 private: //
-	void	View_ThirdPerson();	// main camera view
-	void	View_TopView();		//sub camera view
-	void	View_Change_Top_ThirdPerson();
+	void	View_ThirdPerson(_float TimeDelata);	// main camera view
+	void	View_TopView(_float TimeDelata);		//sub camera view
+	void	View_Change_Top_ThirdPerson(_float TimeDelata);
 
 private:
 	void Zoom_Check(_float TimeDelta);
@@ -88,6 +88,10 @@ protected:
 	_bool					m_IsZoomReverse = false;
 	_float					m_fZoomFov = 0.f;
 	_float					m_fZoomSpeed = 0.f;
+	_float					m_fDisSecond = 2.f;
+	//_float					m_fAxisX_Lenght = 0.f;
+	//_float3					m_vNoRotate_TargetAxis;
+	//_float3					m_vCalculate_TargetAxis;
 
 protected:
 	ECameraViewMode			m_eCameraMode_Now = ECameraViewMode::ThirdPerson;

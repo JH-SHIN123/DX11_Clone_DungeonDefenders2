@@ -33,6 +33,9 @@ HRESULT CCamera::NativeConstruct(void * pArg)
 	{
 		memcpy(&m_CameraDesc, pArg, sizeof(CAMERA_DESC));
 		m_CameraDesc_Second = m_CameraDesc;
+		//m_fAxisX_Lenght
+		//m_vNoRotate_TargetAxis = m_CameraDesc.vTargetAxis;
+		//m_vCalculate_TargetAxis = m_CameraDesc.vTargetAxis;
 	}
 
 	if (nullptr == (m_pMovementCom = CMovement::Create(m_pDevice, m_pDevice_Context)))
@@ -123,9 +126,9 @@ void CCamera::Target_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* C
 	_vector vUp = XMVector4Normalize(pTarget->Get_State(EState::Up));
 	_vector vLook = XMVector4Normalize(pTarget->Get_State(EState::Look));
 
-	_vector vMyPos = vTargetPos + (vRight * m_CameraDesc.vTargetDis.x);
-	vMyPos = vTargetPos + (vUp * m_CameraDesc.vTargetDis.y);
-	vMyPos = vTargetPos + (vLook * m_CameraDesc.vTargetDis.z);
+	_vector vMyPos = vTargetPos + (vRight * m_CameraDesc.vTargetAxis.x);
+	vMyPos = vTargetPos + (vUp * m_CameraDesc.vTargetAxis.y);
+	vMyPos = vTargetPos + (vLook * m_CameraDesc.vTargetAxis.z);
 
 	m_pMovementCom->Set_State(EState::Position, vMyPos);
 }
@@ -142,12 +145,8 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 
 	_vector vTargetPos = pTarget->Get_State(EState::Position);
 
-	//_vector vRight = XMVector4Normalize(pTarget->Get_State(EState::Right));
-	//_vector vUp = XMVector4Normalize(pTarget->Get_State(EState::Up));
-	//_vector vLook = XMVector4Normalize(pTarget->Get_State(EState::Look));
-	//_vector vMyLook = XMVector4Normalize(m_pMovementCom->Get_State(EState::Look));
-
-	_vector vMyPos = vTargetPos + XMVector3Normalize(XMLoadFloat3(&m_CameraDesc.vTargetDis)) * m_CameraDesc.fDis;
+	_vector vTargetAxis = XMLoadFloat3(&m_CameraDesc.vTargetAxis);
+	_vector vMyPos = vTargetPos + XMVector3Normalize(vTargetAxis) * m_CameraDesc.fDis;
 
 	m_pMovementCom->Set_State(EState::Position, vMyPos);
 
@@ -163,31 +162,27 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 	XMStoreFloat3(&m_CameraDesc.vAt, vAt);
 }
 
-void CCamera::View_Check()
+void CCamera::View_Check(_float TimeDelata)
 {
 	switch (m_eCameraMode_Next)
 	{
 	case Engine::ECameraViewMode::ThirdPerson:
-		View_ThirdPerson();
+		View_ThirdPerson(TimeDelata);
 		break;
 	case Engine::ECameraViewMode::TopView:
-		View_TopView();
+		View_TopView(TimeDelata);
 		break;
 	case Engine::ECameraViewMode::TopToTPS:
-		View_Change_Top_ThirdPerson();
+		View_Change_Top_ThirdPerson(TimeDelata);
 		break;
 	case Engine::ECameraViewMode::End:
 		break;
 	default:
 		break;
 	}
-	
-
-
-
 }
 
-void CCamera::View_ThirdPerson()
+void CCamera::View_ThirdPerson(_float TimeDelata)
 {
 	_vector vRight = m_pMovementCom->Get_State(EState::Right);
 	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f); // 임의의 축으로 회전을 한다면 카메라가 회전을 해버린당
@@ -200,7 +195,8 @@ void CCamera::View_ThirdPerson()
 	if (dwMouseMove = GET_MOUSE_X)
 	{
 		RotateMatrix = XMMatrixRotationAxis(vUp, XMConvertToRadians((_float)dwMouseMove * 0.05f));
-		XMStoreFloat3(&m_CameraDesc.vTargetDis,XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetDis), RotateMatrix));
+		XMStoreFloat3(&m_CameraDesc.vTargetAxis,XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetAxis), RotateMatrix));
+		XMStoreFloat3(&m_CameraDesc_Second.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc_Second.vTargetAxis), RotateMatrix));
 
 		vLook = XMVector3TransformNormal(vLook, RotateMatrix);
 		m_pMovementCom->Set_State(EState::Look, vLook);
@@ -223,15 +219,43 @@ void CCamera::View_ThirdPerson()
 		_float fCetha = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(vNormal_Look, XMVectorSet(0.f, 1.f, 0.f, 0.f)))));
 		if (m_CameraDesc.fXRotationLock_Min <= fCetha && fCetha <= m_CameraDesc.fXRotationLock_Max)
 		{
-			XMStoreFloat3(&m_CameraDesc.vTargetDis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetDis), RotateMatrix));
+			XMStoreFloat3(&m_CameraDesc.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetAxis), RotateMatrix));
+			XMStoreFloat3(&m_CameraDesc_Second.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc_Second.vTargetAxis), RotateMatrix));
+
 			m_pMovementCom->Set_State(EState::Right, vRight);
 			m_pMovementCom->Set_State(EState::Look, vLook);
 			m_pMovementCom->Set_State(EState::Up, vUp);
 		}
 	}
+
+
+	if (m_CameraDesc.fDis > m_CameraDesc_Second.fDis)
+	{
+		m_CameraDesc.fDis -= m_fDisSecond * TimeDelata; // 8.9
+
+		_vector vTargetAxis = XMLoadFloat3(&m_CameraDesc.vTargetAxis);
+		vTargetAxis += XMVector3Normalize(vRight) * 0.005f;
+
+		XMStoreFloat3(&m_CameraDesc.vTargetAxis, vTargetAxis);
+	}
+
+	else if (m_CameraDesc.fDis < m_CameraDesc_Second.fDis)
+	{
+		m_CameraDesc.fDis += m_fDisSecond * TimeDelata; // 8.9
+	
+		_vector vTargetAxis = XMLoadFloat3(&m_CameraDesc.vTargetAxis);
+		vTargetAxis -= XMVector3Normalize(vRight) * 0.005f;
+	
+		XMStoreFloat3(&m_CameraDesc.vTargetAxis, vTargetAxis);
+	}
+
+	_float fDisCheck = abs(m_CameraDesc.fDis - m_CameraDesc_Second.fDis);
+	if (fDisCheck <= 0.5f)
+		m_CameraDesc.fDis = m_CameraDesc_Second.fDis;
+
 }
 
-void CCamera::View_TopView()
+void CCamera::View_TopView(_float TimeDelata)
 {
 	_vector vRight = m_pMovementCom->Get_State(EState::Right);
 	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f); // 임의의 축으로 회전을 한다면 카메라가 회전을 해버린당
@@ -247,17 +271,29 @@ void CCamera::View_TopView()
 	_vector vNormal_Look = XMVector3Normalize(vLook);
 	_float fCetha = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(vNormal_Look, XMVectorSet(0.f, 1.f, 0.f, 0.f)))));
 
-	if (fCetha <= 165.f)
+	if (fCetha <= 165.f) // 움직여야 할 때
 	{
-		XMStoreFloat3(&m_CameraDesc.vTargetDis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetDis), RotateMatrix));
+		XMStoreFloat3(&m_CameraDesc.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetAxis), RotateMatrix));
+		XMStoreFloat3(&m_CameraDesc_Second.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc_Second.vTargetAxis), RotateMatrix));
+
 		m_pMovementCom->Set_State(EState::Right, vRight);
 		m_pMovementCom->Set_State(EState::Look, vLook);
 		m_pMovementCom->Set_State(EState::Up, vUp);
 	}
 
+
+	if (m_CameraDesc.fDis <= 9.f)
+	{
+		m_CameraDesc.fDis += m_fDisSecond * TimeDelata; // 8.9
+
+		_vector vTargetAxis = XMLoadFloat3(&m_CameraDesc.vTargetAxis);
+		vTargetAxis -= XMVector3Normalize(vRight) * 0.005f;
+
+		XMStoreFloat3(&m_CameraDesc.vTargetAxis, vTargetAxis);
+	}
 }
 
-void CCamera::View_Change_Top_ThirdPerson()
+void CCamera::View_Change_Top_ThirdPerson(_float TimeDelata)
 {
 	_vector vRight = m_pMovementCom->Get_State(EState::Right);
 	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f); // 임의의 축으로 회전을 한다면 카메라가 회전을 해버린당
@@ -275,12 +311,28 @@ void CCamera::View_Change_Top_ThirdPerson()
 	_vector vNormal_Look = XMVector3Normalize(vLook);
 	_float fCetha = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(vNormal_Look, XMVectorSet(0.f, 1.f, 0.f, 0.f)))));
 
-	XMStoreFloat3(&m_CameraDesc.vTargetDis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetDis), RotateMatrix));
+	XMStoreFloat3(&m_CameraDesc.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetAxis), RotateMatrix));
+	XMStoreFloat3(&m_CameraDesc_Second.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc_Second.vTargetAxis), RotateMatrix));
+
 	m_pMovementCom->Set_State(EState::Right, vRight);
 	m_pMovementCom->Set_State(EState::Look, vLook);
 	m_pMovementCom->Set_State(EState::Up, vUp);
 
-	_float fDegree = m_CameraDesc.fXRotationLock_Max + m_CameraDesc.fXRotationLock_Max * 0.5f;
+	_float fDegree = (m_CameraDesc.fXRotationLock_Max + m_CameraDesc.fXRotationLock_Min) * 0.5f;
+	m_CameraDesc.fDis -= m_fDisSecond * TimeDelata;
+
+
+
+	if (m_CameraDesc.fDis >= m_CameraDesc_Second.fDis)
+	{
+		m_CameraDesc.fDis -= m_fDisSecond * TimeDelata; // 8.9
+
+		_vector vTargetAxis = XMLoadFloat3(&m_CameraDesc.vTargetAxis);
+		vTargetAxis += XMVector3Normalize(vRight) * 0.005f;
+
+		XMStoreFloat3(&m_CameraDesc.vTargetAxis, vTargetAxis);
+	}
+
 	if (fCetha <= fDegree)
 		m_eCameraMode_Next = ECameraViewMode::ThirdPerson;
 }

@@ -24,10 +24,6 @@ HRESULT CCamera_Target::NativeConstruct(void * pArg)
 {
 	__super::NativeConstruct(pArg);
 
-	m_CameraDesc.vTargetDis = _float3(0.3f, 0.5f, -1.1f);
-	m_CameraDesc.fXRotationLock_Min = 70.f;
-	m_CameraDesc.fXRotationLock_Max = 155.f;
-	m_CameraDesc.fDis = 5.f;
 	Ready_Component();
 
 	Set_CameraView_Mode(Engine::ECameraViewMode::ThirdPerson);
@@ -36,7 +32,17 @@ HRESULT CCamera_Target::NativeConstruct(void * pArg)
 
 _int CCamera_Target::Tick(_float TimeDelta)
 {
-	View_Check();
+	View_Check(TimeDelta);
+
+	if (GetAsyncKeyState('B') & 0x8000)
+		m_eCameraMode_Next = ECameraViewMode::ThirdPerson;
+
+	if (GetAsyncKeyState('N') & 0x8000)
+		m_eCameraMode_Next = ECameraViewMode::TopView;
+
+	if (GetAsyncKeyState('M') & 0x8000)
+		m_eCameraMode_Next = ECameraViewMode::TopToTPS;
+
 
 	if(false == CData_Manager::GetInstance()->Get_Tick_Stop())
 		TargetRotate_Check((_uint)ELevel::Stage1, L"Layer_Player", L"Com_Movement");

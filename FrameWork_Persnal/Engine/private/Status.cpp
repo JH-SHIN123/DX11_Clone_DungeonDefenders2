@@ -47,7 +47,7 @@ void CStatus::Level_Check()
 		m_Status_Desc.iMp_Max		+= m_Status_Desc.iMp_Max >> 1;
 
 		m_Status_Desc.iExp			-= m_Status_Desc.iExp_Max;
-		m_Status_Desc.iExp_Max		= (m_Status_Desc.iExp_Max * 1.2f);
+		m_Status_Desc.iExp_Max		= (_int)(m_Status_Desc.iExp_Max * 1.2f);
 	}
 }
 
@@ -80,14 +80,27 @@ void CStatus::Damage_Check(_float TimeDelta)
 
 CStatus * CStatus::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 {
-	return nullptr;
+	CStatus* pInstance = new CStatus(pDevice, pDevice_Context);
+	if (FAILED(pInstance->NativeConstruct_Prototype()))
+	{
+		MSG_BOX("Failed to Creating Instance (CStatus) ");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
 }
 
 CComponent * CStatus::Clone(void * pArg)
 {
-	return nullptr;
+	CStatus* pClone = new CStatus(*this);
+	if (FAILED(pClone->NativeConstruct(pArg)))
+	{
+		MSG_BOX("Failed to Creating Clone (CStatus) ");
+		Safe_Release(pClone);
+	}
+	return pClone;
 }
 
 void CStatus::Free()
 {
+	__super::Free();
 }

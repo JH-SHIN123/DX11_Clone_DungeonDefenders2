@@ -18,6 +18,17 @@ HRESULT CHierarcyNode::NativeConstruct(char * pName, _fmatrix TransformationMatr
 	return S_OK;
 }
 
+void CHierarcyNode::Update_CombindTransformationMatrix()
+{
+	if (nullptr != m_pParent)
+	{
+		// 부모 노드의 행렬을 받아와 내 행렬에 값을 넣어주자
+		XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(&m_pParent->m_CombinedTransformationMatrix));
+	}
+	else
+		m_CombinedTransformationMatrix = m_TransformationMatrix;
+}
+
 CHierarcyNode * CHierarcyNode::Create(char * pName, _fmatrix TransformationMatrix, CHierarcyNode * pParent, _uint iDepth)
 {
 	CHierarcyNode*		pInstance = new CHierarcyNode();

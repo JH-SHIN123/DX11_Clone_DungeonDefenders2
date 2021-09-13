@@ -387,6 +387,14 @@ HRESULT CModel::SetUp_SkinnedInfo(const aiScene * pScene)
 	return S_OK;
 }
 
+HRESULT CModel::Update_CombindTransformationMatrix()
+{
+	for (auto& iter : m_HierarchyNodes)
+		iter->Update_CombindTransformationMatrix();
+
+	return S_OK;
+}
+
 HRESULT CModel::Bind_VIBuffer()
 {
 	if (nullptr == m_pDevice ||
@@ -497,5 +505,4 @@ void CModel::Free()
 	m_Materials.clear();
 
 	Safe_Release(m_pModelLoader);
-
 }

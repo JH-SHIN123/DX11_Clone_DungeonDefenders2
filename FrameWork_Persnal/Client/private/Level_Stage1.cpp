@@ -148,6 +148,11 @@ HRESULT CLevel_Stage1::Ready_Layer_Camera_Free(const _tchar * pLayerTag)
 	CameraDesc.vAt = _float3(5.f, 5.f, 10.f);
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
+	CameraDesc.vTargetAxis = _float3(0.3f, 0.5f, -1.1f);
+	CameraDesc.fXRotationLock_Min = 70.f;
+	CameraDesc.fXRotationLock_Max = 155.f;
+	CameraDesc.fDis = 5.f;
+
 	CameraDesc.fAspect = _float(g_iWinCX) / g_iWinCY;
 	CameraDesc.fFovy = XMConvertToRadians(90.0f);
 	CameraDesc.fNear = 0.3f;

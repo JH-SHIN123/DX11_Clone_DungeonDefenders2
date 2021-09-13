@@ -39,11 +39,32 @@ public:
 	HRESULT SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC * pInputElementDesc, _uint iNumElement, const _tchar * pShaderFilePath, const char * pTechniqueName);
 	HRESULT Sort_MeshesByMaterial();
 	HRESULT SetUp_SkinnedInfo(const aiScene* pScene);
+	HRESULT Update_CombindTransformationMatrix();
 	HRESULT Bind_VIBuffer();
 
 	HRESULT Render_Model(_uint iMaterialIndex, _uint iPassIndex);
 
 
+protected: /* For.Vertices */
+	ID3D11Buffer*				m_pVB = nullptr;
+	D3D11_BUFFER_DESC			m_VBDesc;
+	D3D11_SUBRESOURCE_DATA		m_VBSubresourceData;
+	_uint						m_iNumVertices = 0;
+	_uint						m_iStride = 0;
+	_uint						m_iNumVertexBuffers = 0;
+
+protected: /* For.Indices */
+	ID3D11Buffer*				m_pIB = nullptr;
+	D3D11_BUFFER_DESC			m_IBDesc;
+	D3D11_SUBRESOURCE_DATA		m_IBSubresourceData;
+	_uint						m_iNumPolygons;
+	_uint						m_iIndicesStride;
+	DXGI_FORMAT					m_eIndexFormat;
+	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;
+
+protected: /* For.Shader */
+	ID3DX11Effect*				m_pEffect = nullptr;
+	vector<INPUTLAYOUTDESC>		m_InputLayouts;
 
 private:
 	class CHierarcyNode* Find_HierarchyNode(const char* pNodeName);
@@ -71,30 +92,8 @@ private:
 	typedef vector<MESHTEXTURE*>			MATERIALS;
 	MATERIALS		m_Materials;
 
-	vector<class CHierarcyNode*>		m_HierarchyNodes;
-	vector<BONEDESC*>					m_Bones;
-
-
-protected: /* For.Vertices */
-	ID3D11Buffer*				m_pVB = nullptr;
-	D3D11_BUFFER_DESC			m_VBDesc;
-	D3D11_SUBRESOURCE_DATA		m_VBSubresourceData;
-	_uint						m_iNumVertices = 0;
-	_uint						m_iStride = 0;
-	_uint						m_iNumVertexBuffers = 0;
-
-protected: /* For.Indices */
-	ID3D11Buffer*				m_pIB = nullptr;
-	D3D11_BUFFER_DESC			m_IBDesc;
-	D3D11_SUBRESOURCE_DATA		m_IBSubresourceData;
-	_uint						m_iNumPolygons;
-	_uint						m_iIndicesStride;
-	DXGI_FORMAT					m_eIndexFormat;
-	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;
-
-protected: /* For.Shader */
-	ID3DX11Effect*				m_pEffect = nullptr;
-	vector<INPUTLAYOUTDESC>		m_InputLayouts;
+	vector<class CHierarcyNode*>			m_HierarchyNodes;
+	vector<BONEDESC*>						m_Bones;
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix = XMMatrixIdentity());
