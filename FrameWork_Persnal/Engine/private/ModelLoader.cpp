@@ -10,50 +10,48 @@ CModelLoader::CModelLoader()
 {
 }
 
-const aiScene* CModelLoader::Load_ModelFromFile(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, CModel * pModel, const char* pMeshFilePath, const char* pMeshFileName)
+HRESULT CModelLoader::Load_ModelFromFile(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, CModel * pModel, const char* pMeshFilePath, const char* pMeshFileName)
 {
-	// 모델 만들기중 첫번째로 우선 파일을 읽어오자
 	char			szFullPath[MAX_PATH] = "";
 
-	// 경로와 파일이름을 따로 받았는데 이는 모델의 구성에 필요한
-	// 머테리얼(텍스처)값이나 뼈대정보 또는 애니메이션따위를 로드하기 위함이다.
 	strcpy(szFullPath, pMeshFilePath);
 	strcat(szFullPath, pMeshFileName);
 
 	Assimp::Importer			Importer;
 
-	// 메쉬는 파일로부터 읽어진 상황 이제 사용 할 수 있게 변환을 거쳐야 한다.
 	const aiScene*		pScene = Importer.ReadFile(szFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
 	if (nullptr == pScene)
-		return nullptr;
+		return E_FAIL;
 
-	/* 읽어진 메시의 갯수만큼 메시(내가 사용하고자하는 형태로 변환된) 를 생성한다.  */
+	/* 읽어진 메시의 갯수만큼 메시(내가 사용ㅇ하고자하는 형태로 변환된) 를 생성한다.  */
 	for (_uint i = 0; i < pScene->mNumMeshes; ++i)
 	{
 		if (FAILED(Create_MeshContainer(pModel, pScene->mMeshes[i])))
-			return nullptr;
+			return E_FAIL;
 	}
 
 	/* 머티레얼을 로드하낟. */
 	for (_uint i = 0; i < pScene->mNumMaterials; ++i)
 	{
 		if (FAILED(Create_Materials(pDevice, pDevice_Context, pModel, pScene->mMaterials[i], pMeshFilePath)))
-			return nullptr;
+			return E_FAIL;
 	}
 
 	/* 노드들의 계층구조를 생성한다. */
 	if (nullptr != pScene->mRootNode)
 	{
 		if (FAILED(Create_HierarchyNode(pModel, pScene->mRootNode)))
-			return nullptr;
+			return E_FAIL;
 	}
 
+	/* 뼈대정보를 로드한다. */
+	if (FAILED(pModel->SetUp_SkinnedInfo(pScene)))
+		return E_FAIL;
 
 	/* 애니메이션를 로드한다. */
+	pModel->SetUp_Animation(pScene);
 
-
-
-	return pScene;
+	return S_OK;
 }
 
 HRESULT CModelLoader::Create_MeshContainer(CModel * pModel, aiMesh * pMesh)
@@ -184,4 +182,5 @@ HRESULT CModelLoader::Create_SkinedInfo()
 
 void CModelLoader::Free()
 {
+
 }

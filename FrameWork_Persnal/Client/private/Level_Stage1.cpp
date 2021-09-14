@@ -88,7 +88,7 @@ HRESULT CLevel_Stage1::Ready_Light()
 	LIGHT_DESC			LightDesc;
 	LightDesc.vDirection = XMFLOAT3(1.f, -1.f, 1.f);
 	LightDesc.vDiffuse = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.f);
+	LightDesc.vAmbient = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.f);
 	LightDesc.vSpecular = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pDevice_Context, LightDesc)))
@@ -145,7 +145,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Camera_Free(const _tchar * pLayerTag)
 
 	CAMERA_DESC			CameraDesc;
 	CameraDesc.vEye = _float3(0.f, 10.f, -7.f);
-	CameraDesc.vAt = _float3(5.f, 5.f, 10.f);
+	CameraDesc.vAt = _float3(0.f, -5.f, 0.f);
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
 	CameraDesc.vTargetAxis = _float3(0.3f, 0.5f, -1.1f);
@@ -161,6 +161,8 @@ HRESULT CLevel_Stage1::Ready_Layer_Camera_Free(const _tchar * pLayerTag)
 	CameraDesc.StateDesc.fSpeedPerSec = 50.f;
 	CameraDesc.StateDesc.fRotatePerSec = XMConvertToRadians(90.0f);
 
+	//pGameInstance->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_Camera_Free"), (_uint)ELevel::Stage1, pLayerTag, &CameraDesc);
+	CameraDesc.vAt = _float3(5.f, 5.f, 10.f);
 	pGameInstance->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_Camera_Target"), (_uint)ELevel::Stage1, pLayerTag, &CameraDesc);
 
 	return S_OK;

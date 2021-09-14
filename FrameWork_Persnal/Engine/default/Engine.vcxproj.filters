@@ -133,6 +133,12 @@
     <Filter Include="02.Utility\02.Component\07.Textures_Extend">
       <UniqueIdentifier>{b68b0e58-f805-4bee-8879-a3914148a790}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\02.Animation">
+      <UniqueIdentifier>{5bba31e7-8211-4ee0-be54-4bf18bb41c12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\02.Animation\Channel">
+      <UniqueIdentifier>{3e9e4869-3841-4829-88f0-1364357aac60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
@@ -270,6 +276,12 @@
     <ClInclude Include="..\public\Textures_Extend.h">
       <Filter>02.Utility\02.Component\07.Textures_Extend</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Animation.h">
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\02.Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AnimChannel.h">
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\02.Animation\Channel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -379,6 +391,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Textures_Extend.cpp">
       <Filter>02.Utility\02.Component\07.Textures_Extend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Animation.cpp">
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\02.Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AnimChannel.cpp">
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\02.Animation\Channel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

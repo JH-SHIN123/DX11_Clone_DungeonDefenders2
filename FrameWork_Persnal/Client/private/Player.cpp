@@ -56,7 +56,7 @@ HRESULT CPlayer::Render()
 	m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
 
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
-	m_pBufferRectCom->Render(0);
+	m_pBufferRectCom->Render(1);
 
 	return S_OK;
 }

@@ -327,11 +327,17 @@ void CCamera::View_Change_Top_ThirdPerson(_float TimeDelata)
 	{
 		m_CameraDesc.fDis -= m_fDisSecond * TimeDelata; // 8.9
 
+	}
+
+	if (abs(m_CameraDesc.vTargetAxis.x) < abs(m_CameraDesc_Second.vTargetAxis.x))
+	{
 		_vector vTargetAxis = XMLoadFloat3(&m_CameraDesc.vTargetAxis);
 		vTargetAxis += XMVector3Normalize(vRight) * 0.005f;
 
 		XMStoreFloat3(&m_CameraDesc.vTargetAxis, vTargetAxis);
 	}
+	else
+		m_CameraDesc.vTargetAxis = m_CameraDesc_Second.vTargetAxis;
 
 	if (fCetha <= fDegree)
 		m_eCameraMode_Next = ECameraViewMode::ThirdPerson;

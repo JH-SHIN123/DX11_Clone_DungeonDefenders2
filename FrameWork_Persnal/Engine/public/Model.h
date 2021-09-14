@@ -5,7 +5,7 @@
 #include "Component.h"
 
 BEGIN(Engine)
-class CModel final : public CComponent
+class ENGINE_DLL CModel final : public CComponent
 {
 private:
 	explicit CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
@@ -37,6 +37,7 @@ public:
 	HRESULT Set_ShaderResourceView(const char * pConstanceName, _uint iMaterialIndex, aiTextureType eMaterialType, _uint iTextureIndex = 0);
 
 	HRESULT SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC * pInputElementDesc, _uint iNumElement, const _tchar * pShaderFilePath, const char * pTechniqueName);
+	HRESULT SetUp_Animation(const aiScene* pScene);
 	HRESULT Sort_MeshesByMaterial();
 	HRESULT SetUp_SkinnedInfo(const aiScene* pScene);
 	HRESULT Update_CombindTransformationMatrix();
@@ -45,29 +46,7 @@ public:
 	HRESULT Render_Model(_uint iMaterialIndex, _uint iPassIndex);
 
 
-protected: /* For.Vertices */
-	ID3D11Buffer*				m_pVB = nullptr;
-	D3D11_BUFFER_DESC			m_VBDesc;
-	D3D11_SUBRESOURCE_DATA		m_VBSubresourceData;
-	_uint						m_iNumVertices = 0;
-	_uint						m_iStride = 0;
-	_uint						m_iNumVertexBuffers = 0;
 
-protected: /* For.Indices */
-	ID3D11Buffer*				m_pIB = nullptr;
-	D3D11_BUFFER_DESC			m_IBDesc;
-	D3D11_SUBRESOURCE_DATA		m_IBSubresourceData;
-	_uint						m_iNumPolygons;
-	_uint						m_iIndicesStride;
-	DXGI_FORMAT					m_eIndexFormat;
-	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;
-
-protected: /* For.Shader */
-	ID3DX11Effect*				m_pEffect = nullptr;
-	vector<INPUTLAYOUTDESC>		m_InputLayouts;
-
-private:
-	class CHierarcyNode* Find_HierarchyNode(const char* pNodeName);
 
 private:
 	class CModelLoader*		m_pModelLoader = nullptr;
@@ -93,7 +72,35 @@ private:
 	MATERIALS		m_Materials;
 
 	vector<class CHierarcyNode*>			m_HierarchyNodes;
-	vector<BONEDESC*>						m_Bones;
+
+protected:
+	_uint						m_iNumAnimations;
+	vector<class CAnimation*>	m_Animations;
+
+
+protected: /* For.Vertices */
+	ID3D11Buffer*				m_pVB = nullptr;
+	D3D11_BUFFER_DESC			m_VBDesc;
+	D3D11_SUBRESOURCE_DATA		m_VBSubresourceData;
+	_uint						m_iNumVertices = 0;
+	_uint						m_iStride = 0;
+	_uint						m_iNumVertexBuffers = 0;
+
+protected: /* For.Indices */
+	ID3D11Buffer*				m_pIB = nullptr;
+	D3D11_BUFFER_DESC			m_IBDesc;
+	D3D11_SUBRESOURCE_DATA		m_IBSubresourceData;
+	_uint						m_iNumPolygons;
+	_uint						m_iIndicesStride;
+	DXGI_FORMAT					m_eIndexFormat;
+	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;
+
+protected: /* For.Shader */
+	ID3DX11Effect*				m_pEffect = nullptr;
+	vector<INPUTLAYOUTDESC>		m_InputLayouts;
+
+private:
+	class CHierarcyNode* Find_HierarchyNode(const char* pNodeName);
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix = XMMatrixIdentity());

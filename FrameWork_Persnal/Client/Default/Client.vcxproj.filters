@@ -145,6 +145,9 @@
     <Filter Include="03.UI, HUD\02.3D\A0.Masking_MeterBar_3D">
       <UniqueIdentifier>{8855d6c6-002b-4688-8994-9faacd857436}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\02.Stage\NewFilter1">
+      <UniqueIdentifier>{d0b3d142-f1d2-47cc-be2a-000f876fb4b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">

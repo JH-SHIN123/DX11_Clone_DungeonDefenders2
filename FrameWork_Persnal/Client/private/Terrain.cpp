@@ -49,34 +49,60 @@ _int CTerrain::Late_Tick(_float TimeDelta)
 
 HRESULT CTerrain::Render()
 {
-	if (nullptr == m_pVIBufferCom)
-		return -1;
-
-	// 행렬이 들어갈때 전치 행렬로 바뀌기 때문에 전치행렬로 바뀌기 전에 직접 전치 행렬로 바꿔 전치전치 행렬이 된다.
-	// 당연히 전치전치행렬이라는 개소리는 없으며 일반 평범한 행렬이다. 360도 회전과 같음
-	m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransformCom->Get_WorldMatrix()), sizeof(_matrix));
-	m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
-	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
-
-	// 이미지 세팅 g_DiffuseTexture에다가 m_pTextureCom의 0번째의 리소스를 넣어주시오.
-	m_pVIBufferCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
-
-
-	// 0번째 쉐이더를 이용해 그릴게
-	// 쉐이더 세팅은 Prototype을 생성하면서 세팅을 함
-
-
-	LIGHT_DESC*	LightDesc = GET_GAMEINSTANCE->Get_LightDesc(0);
-
-	m_pVIBufferCom->Set_Variable("vLightDirection", &LightDesc->vDirection, sizeof(_float3));
-	m_pVIBufferCom->Set_Variable("vLightDiffuse", &LightDesc->vDiffuse, sizeof(_float4));
-	m_pVIBufferCom->Set_Variable("vLightAmbient", &LightDesc->vAmbient, sizeof(_float4));
-	m_pVIBufferCom->Set_Variable("vLightSpecular", &LightDesc->vSpecular, sizeof(_float4));
-
-	m_pVIBufferCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
+	//// 행렬이 들어갈때 전치 행렬로 바뀌기 때문에 전치행렬로 바뀌기 전에 직접 전치 행렬로 바꿔 전치전치 행렬이 된다.
+	//// 당연히 전치전치행렬이라는 개소리는 없으며 일반 평범한 행렬이다. 360도 회전과 같음
+	//m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransformCom->Get_WorldMatrix()), sizeof(_matrix));
+	//m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
+	//m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
+	//// 이미지 세팅 g_DiffuseTexture에다가 m_pTextureCom의 0번째의 리소스를 넣어주시오.
+	//m_pVIBufferCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
+	//// 0번째 쉐이더를 이용해 그릴게
+	//// 쉐이더 세팅은 Prototype을 생성하면서 세팅을 함
+	//LIGHT_DESC*	LightDesc = GET_GAMEINSTANCE->Get_LightDesc(0);
+	//m_pVIBufferCom->Set_Variable("vLightDirection", &LightDesc->vDirection, sizeof(_float3));
+	//m_pVIBufferCom->Set_Variable("vLightDiffuse", &LightDesc->vDiffuse, sizeof(_float4));
+	//m_pVIBufferCom->Set_Variable("vLightAmbient", &LightDesc->vAmbient, sizeof(_float4));
+	//m_pVIBufferCom->Set_Variable("vLightSpecular", &LightDesc->vSpecular, sizeof(_float4));
+	//m_pVIBufferCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
+	//m_pVIBufferCom->Render(0);
 
 
-	m_pVIBufferCom->Render(0);
+	if (nullptr == m_pModelCom)
+		return E_FAIL;
+
+	/* 현재 파이프라인에 정점, 인덱스 버퍼를 셋한다. */
+	m_pModelCom->Bind_VIBuffer();
+
+	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransformCom->Get_WorldMatrix()), sizeof(_matrix));
+	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
+	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
+
+	LIGHT_DESC*		LightDesc = GET_GAMEINSTANCE->Get_LightDesc(0);
+
+	// m_pVIBufferCom->Set_Variable("vLightDirection", &LightDesc.vDirection, sizeof(_float3));
+	m_pModelCom->Set_Variable("vLightPosition", &LightDesc->vPosition, sizeof(_float3));
+	m_pModelCom->Set_Variable("fRange", &LightDesc->fRadius, sizeof(_float));
+
+	m_pModelCom->Set_Variable("vLightDiffuse", &LightDesc->vDiffuse, sizeof(_float4));
+	m_pModelCom->Set_Variable("vLightAmbient", &LightDesc->vAmbient, sizeof(_float4));
+	m_pModelCom->Set_Variable("vLightSpecular", &LightDesc->vSpecular, sizeof(_float4));
+
+	m_pModelCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
+
+	_uint iNumMaterials = m_pModelCom->Get_NumMaterials();
+
+	for (_uint i = 0; i < iNumMaterials; ++i)
+	{
+		if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_NORMALS)))
+		//	return E_FAIL;
+		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_SPECULAR)))
+		//	return E_FAIL;
+
+		m_pModelCom->Render_Model(i, 0);
+	}
+
 
 	return S_OK;
 }
@@ -107,6 +133,8 @@ HRESULT CTerrain::Ready_Component()
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_Terrain"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
+	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Mesh_Level_1"), TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+		return E_FAIL;
 
 
 
@@ -146,6 +174,7 @@ void CTerrain::Free()
 {
 	CGameObject::Free();
 
+	Safe_Release(m_pModelCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pVIBufferCom);

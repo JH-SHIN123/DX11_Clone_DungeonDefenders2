@@ -22,6 +22,8 @@ HRESULT CCamera_Free::NativeConstruct(void * pArg)
 {
 	__super::NativeConstruct(pArg);
 
+	Set_CameraView_Mode(Engine::ECameraViewMode::ThirdPerson);
+
 	return S_OK;
 }
 

@@ -33,9 +33,12 @@ public:
 
 private:
 	CRenderer*				m_pRendererCom = nullptr;
-	CVIBuffer_Terrain*		m_pVIBufferCom = nullptr;
+	CModel*					m_pModelCom = nullptr;
 	CTextures*				m_pTextureCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
+
+private:
+	CVIBuffer_Terrain*		m_pVIBufferCom = nullptr;
 
 private:
 	HRESULT	Ready_Component();

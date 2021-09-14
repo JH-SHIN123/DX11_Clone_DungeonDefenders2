@@ -47,6 +47,15 @@ namespace Engine
 		XMUINT4				vBlendIndex;
 		XMFLOAT4			vBlendWeight;
 	}VTXMESH;
+
+	typedef struct tagKeyFrame
+	{
+		XMFLOAT3		vScale;
+		XMFLOAT4		vRotation;
+		XMFLOAT3		vPosition;
+		double			Time;		/* 동작이 표현되야할 시간. */
+	}KEYFRAME;
+
 #pragma endregion
 
 #pragma region VIBuffer

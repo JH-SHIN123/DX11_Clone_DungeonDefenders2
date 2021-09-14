@@ -122,8 +122,9 @@ HRESULT CMainApp::Ready_Component_PrototypeForStatic()
 
 	// For. VIBuffer_RECT Model
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect_Model")
-		, CVIBuffer_Rect::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"))))
+		, CVIBuffer_Rect::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Default.hlsl"), "DefaultTechnique"))))
 		return E_FAIL;
+
 
 	/* For. Status */
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Status")

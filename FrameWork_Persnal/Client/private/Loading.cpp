@@ -148,6 +148,13 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Player"), CPlayer::Create(m_pDevice, m_pDevice_Context));
 
 
+	_matrix			PivotMatrix = XMMatrixScaling(0.05f, 0.05f, 0.05f) *
+		XMMatrixRotationX(XMConvertToRadians(90.0f)) *
+		XMMatrixRotationY(XMConvertToRadians(90.0f));
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Level_1"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Magus.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique", PivotMatrix));
+
 
 
 	if (hr != S_OK)

@@ -3,10 +3,15 @@
 #include "ModelLoader.h"
 #include "HierarchyNode.h"
 #include "MeshContainer.h"
+#include "Animation.h"
+#include "AnimChannel.h"
+#include "Textures.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CComponent(pDevice, pDevice_Context)
+	, m_pModelLoader(CModelLoader::GetInstance())
 {
+	Safe_AddRef(m_pModelLoader);
 }
 
 CModel::CModel(const CModel & rhs)
@@ -78,21 +83,22 @@ HRESULT CModel::NativeConstruct_Prototype(const char * pMeshFilePath, const char
 
 	// 모델로더 싱글톤을 이용해 자신(메쉬)에게 필요한 정보를 받아온다. 
 	// 진짜 다받아온다
-	const aiScene*	pScene = m_pModelLoader->Load_ModelFromFile(m_pDevice, m_pDevice_Context, this, pMeshFilePath, pMeshFileName);
-	if (nullptr == pScene)
-		return E_FAIL;
+	if (FAILED(m_pModelLoader->Load_ModelFromFile(m_pDevice, m_pDevice_Context, this, pMeshFilePath, pMeshFileName)))
+		return E_FAIL;	
 
 	/* 렌더링의 편의를 위해 재질이 같은 메시들을 모아둔다. */
 	if (FAILED(Sort_MeshesByMaterial()))
-		return E_FAIL;
+		return E_FAIL;	
 
-	/* 뼈대정보를 로드한다. */
-	if (FAILED(SetUp_SkinnedInfo(pScene)))
-		return E_FAIL;
-
+	/* 부모 노드의 상태행렬들을 순차적으로 자식에게 누적시키기위해. */
+	sort(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [](CHierarcyNode* pDest, CHierarcyNode* pSour) 
+	{
+		return pDest->Get_Depth() < pSour->Get_Depth();
+	});
 
 	if (FAILED(Ready_VIBuffer(pShaderFilePath, pTechniqueName, PivotMatrix)))
 		return E_FAIL;
+
 
 
 
@@ -277,7 +283,11 @@ HRESULT CModel::Set_ShaderResourceView(const char * pConstanceName, _uint iMater
 	if (nullptr == pVariable)
 		return E_FAIL;
 
-	ID3D11ShaderResourceView*		pShaderResourceView = m_Materials[iMaterialIndex]->pMaterialTexture[eMaterialType]->Get_ShaderResourceView(iTextureIndex);
+	CTextures*		pTexture = m_Materials[iMaterialIndex]->pMaterialTexture[eMaterialType];
+	if (nullptr == pTexture)
+		return S_OK;
+
+	ID3D11ShaderResourceView*		pShaderResourceView = pTexture->Get_ShaderResourceView(iTextureIndex);
 	if (nullptr == pShaderResourceView)
 		return E_FAIL;
 
@@ -340,6 +350,93 @@ HRESULT CModel::SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC * pInputElementDesc,
 	return S_OK;
 }
 
+HRESULT CModel::SetUp_Animation(const aiScene * pScene)
+{
+	if (nullptr == pScene)
+		return E_FAIL;
+
+	m_iNumAnimations = pScene->mNumAnimations;
+	if (0 == m_iNumAnimations)
+		return S_OK;
+
+	for (_uint i = 0; i < m_iNumAnimations; ++i)
+	{
+		aiAnimation*		pAnim = pScene->mAnimations[i];
+		if (nullptr == pAnim)
+			return E_FAIL;
+
+		CAnimation*		pAnimation = CAnimation::Create(pAnim->mName.data, pAnim->mDuration, pAnim->mTicksPerSecond);
+		if (nullptr == pAnimation)
+			return E_FAIL;
+
+		_uint		iNumChannel = pAnim->mNumChannels;
+
+		for (_uint j = 0; j < iNumChannel; ++j)
+		{
+			aiNodeAnim*			pNodeAnim = pAnim->mChannels[j];
+
+			CAnimChannel*		pChannel = CAnimChannel::Create(pNodeAnim->mNodeName.data);
+			if (nullptr == pChannel)
+				return E_FAIL;
+
+			_uint		iNumKeyFrames = pNodeAnim->mNumPositionKeys;
+			iNumKeyFrames = max(iNumKeyFrames, pNodeAnim->mNumScalingKeys);
+			iNumKeyFrames = max(iNumKeyFrames, pNodeAnim->mNumRotationKeys);
+
+			for (_uint k = 0; k < iNumKeyFrames; ++k)
+			{
+				KEYFRAME*		pKeyFrame = new KEYFRAME;
+				ZeroMemory(pKeyFrame, sizeof(KEYFRAME));
+
+				if (pNodeAnim->mNumPositionKeys > k)
+				{
+
+				}
+
+
+				/* 1. 크기 * 이동 */
+				/* 2. 크기 * 회전 * 이동 */
+				/* 3. 크기 * 회전 * 이동 */
+
+				for (_uint l = 0; l < pNodeAnim->mNumPositionKeys; ++l)
+				{
+					memcpy(&pKeyFrame->vPosition, &pNodeAnim->mPositionKeys[k].mValue, sizeof(_float3));
+					pKeyFrame->Time = pNodeAnim->mPositionKeys[k].mTime;
+				}
+
+
+
+
+				for (_uint l = 0; l < pNodeAnim->mNumRotationKeys; ++l)
+				{
+					if (pKeyFrame->Time == pNodeAnim->mRotationKeys[l].mTime)
+					{
+						pKeyFrame->vRotation.w = pNodeAnim->mRotationKeys[l].mValue.w;
+						pKeyFrame->vRotation.x = pNodeAnim->mRotationKeys[l].mValue.x;
+						pKeyFrame->vRotation.y = pNodeAnim->mRotationKeys[l].mValue.y;
+						pKeyFrame->vRotation.z = pNodeAnim->mRotationKeys[l].mValue.z;
+						break;
+					}
+				}
+
+				for (_uint l = 0; l < pNodeAnim->mNumScalingKeys; ++l)
+				{
+					if (pKeyFrame->Time == pNodeAnim->mScalingKeys[l].mTime)
+					{
+						memcpy(&pKeyFrame->vScale, &pNodeAnim->mScalingKeys[l].mValue, sizeof(_float3));
+						break;
+					}
+				}
+
+				pChannel->Add_KeyFrame(pKeyFrame);
+			}
+			pAnimation->Add_Channel(pChannel);
+		}
+		m_Animations.push_back(pAnimation);
+	}
+	return S_OK;
+}
+
 HRESULT CModel::Sort_MeshesByMaterial()
 {
 	_uint		iNumMaterials = (_uint)m_Materials.size();
@@ -364,6 +461,7 @@ HRESULT CModel::SetUp_SkinnedInfo(const aiScene * pScene)
 	for (_uint i = 0; i < pScene->mNumMeshes; ++i)
 	{
 		aiMesh*	pMesh = pScene->mMeshes[i];
+		CMeshContainer*	pMeshContainer = m_Meshes[i];
 
 		for (_uint j = 0; j < pMesh->mNumBones; ++j)
 		{
@@ -378,9 +476,36 @@ HRESULT CModel::SetUp_SkinnedInfo(const aiScene * pScene)
 			pBoneDesc->pHierarchyNode = pHierarchyNode;
 			Safe_AddRef(pHierarchyNode);
 
-			memcpy(&pBoneDesc->OffsetMatrix, &pBone->mOffsetMatrix, sizeof(_float4x4));
+			memcpy(&pBoneDesc->OffsetMatrix, &XMMatrixTranspose(XMMATRIX(pBone->mOffsetMatrix[0])), sizeof(_matrix));
 
-			m_Bones.push_back(pBoneDesc);
+			/* 정점의 블렌드인덱스와 블렌드 웨이트 값을 채운다. */
+			for (_uint k = 0; k < pBone->mNumWeights; ++k)
+			{
+				_uint	iVertexIndex = pBone->mWeights[k].mVertexId + pMeshContainer->Get_StartVertexIndex();
+
+				if (0.f == m_Vertices[iVertexIndex]->vBlendWeight.x)
+				{
+					m_Vertices[iVertexIndex]->vBlendIndex.x = j;
+					m_Vertices[iVertexIndex]->vBlendWeight.x = pBone->mWeights[k].mWeight;
+				}
+				else if (0.f == m_Vertices[iVertexIndex]->vBlendWeight.y)
+				{
+					m_Vertices[iVertexIndex]->vBlendIndex.y = j;
+					m_Vertices[iVertexIndex]->vBlendWeight.y = pBone->mWeights[k].mWeight;
+				}
+				else if (0.f == m_Vertices[iVertexIndex]->vBlendWeight.z)
+				{
+					m_Vertices[iVertexIndex]->vBlendIndex.z = j;
+					m_Vertices[iVertexIndex]->vBlendWeight.z = pBone->mWeights[k].mWeight;
+				}
+				else
+				{
+					m_Vertices[iVertexIndex]->vBlendIndex.w = j;
+					m_Vertices[iVertexIndex]->vBlendWeight.w = pBone->mWeights[k].mWeight;
+				}
+			}
+			if (FAILED(pMeshContainer->Add_BoneDesc(pBoneDesc)))
+				return E_FAIL;
 		}
 	}
 
@@ -389,6 +514,7 @@ HRESULT CModel::SetUp_SkinnedInfo(const aiScene * pScene)
 
 HRESULT CModel::Update_CombindTransformationMatrix()
 {
+	/* 애니메이션의 재생이 있다면. 매프레임마다 호출. */
 	for (auto& iter : m_HierarchyNodes)
 		iter->Update_CombindTransformationMatrix();
 
@@ -414,14 +540,21 @@ HRESULT CModel::Render_Model(_uint iMaterialIndex, _uint iPassIndex)
 {
 	m_pDevice_Context->IASetInputLayout(m_InputLayouts[iPassIndex].pLayout);
 
+	_matrix		BoneMatrices[128];
+
 	for (auto& pMeshContainer : m_SortMeshesByMaterial[iMaterialIndex])
 	{
+		ZeroMemory(BoneMatrices, sizeof(_matrix) * 128);
+
+		pMeshContainer->Compute_BoneMatrices(BoneMatrices);
+
+		Set_Variable("BoneMatrices", BoneMatrices, sizeof(_matrix) * 128);
+
 		if (FAILED(m_InputLayouts[iPassIndex].pPass->Apply(0, m_pDevice_Context)))
 			return E_FAIL;
 
 		m_pDevice_Context->DrawIndexed(3 * pMeshContainer->Get_NumPolygons(), 3 * pMeshContainer->Get_StartPolygonIndex(), pMeshContainer->Get_StartVertexIndex());
 	}
-
 	return S_OK;
 }
 
@@ -505,4 +638,11 @@ void CModel::Free()
 	m_Materials.clear();
 
 	Safe_Release(m_pModelLoader);
+
+	for (auto& pAnimation : m_Animations)
+	{
+		Safe_Release(pAnimation);
+	}
+	m_Animations.clear();
+
 }
