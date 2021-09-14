@@ -10,11 +10,13 @@
 #include "Status_Panel.h"
 #include "PlayerSkill.h"
 #include "HpMp.h"
-#include "WaveInfo.h"
+#include "PhaseInfo.h"
 #include "Camera_Target.h"
 #include "Camera_Free.h"
 #include "PauseMenu.h"
+#include "Phase_Panel.h"
 #include "StatusMenu.h"
+#include "StrikerTower.h"
 
 USING(Engine)
 
@@ -131,23 +133,31 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Terrain")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/Grass_0.tga")));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_TowerRange")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/TowerRange/%d.tga"), 5));
+
 
 	// GameObject
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Terrain"), CTerrain::Create(m_pDevice, m_pDevice_Context));
 
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_StatusPanel"), CStatus_Panel::Create(m_pDevice, m_pDevice_Context));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_PlayerSkill_UI"), CPlayerSkill::Create(m_pDevice, m_pDevice_Context));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Player_HpMp"), CHpMp::Create(m_pDevice, m_pDevice_Context));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_WaveInfo"), CWaveInfo::Create(m_pDevice, m_pDevice_Context));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_PauseMenu"), CPauseMenu::Create(m_pDevice, m_pDevice_Context));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_StatusMenu"), CStatusMenu::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_StatusPanel"),		CStatus_Panel::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_PlayerSkill_UI"),	CPlayerSkill::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Player_HpMp"),		CHpMp::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_PhaseInfo"),			CPhaseInfo::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Phase_Panel"),		CPhase_Panel::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_PauseMenu"),			CPauseMenu::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_StatusMenu"),		CStatusMenu::Create(m_pDevice, m_pDevice_Context));
 
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Camera_Free"), CCamera_Free::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Camera_Free"),	CCamera_Free::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Camera_Target"), CCamera_Target::Create(m_pDevice, m_pDevice_Context));
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Player"), CPlayer::Create(m_pDevice, m_pDevice_Context));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_StrikerTower"), CStrikerTower::Create(m_pDevice, m_pDevice_Context));
 
+
+
+	// Model
 	_matrix			PivotMatrix = XMMatrixScaling(0.05f, 0.05f, 0.05f) *
 		XMMatrixRotationX(XMConvertToRadians(90.0f)) *
 		XMMatrixRotationY(XMConvertToRadians(90.0f));
@@ -155,6 +165,8 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Level_1"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Magus.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique", PivotMatrix));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_StrikerTower"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Tower/Striker/", "StrikerTower.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique", PivotMatrix));
 
 
 	if (hr != S_OK)

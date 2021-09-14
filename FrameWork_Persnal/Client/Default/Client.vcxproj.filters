@@ -79,9 +79,6 @@
     <Filter Include="03.UI, HUD\00.2D\02.Hp">
       <UniqueIdentifier>{fbe49999-e618-456e-9949-5e07e862506f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.UI, HUD\00.2D\03.WaveInfo">
-      <UniqueIdentifier>{3dbfbb4f-b927-4693-9585-c89d4a6589f9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.UI, HUD\01.MainMenu">
       <UniqueIdentifier>{fbd7821e-65fe-4bb7-b403-bfd8924aa28f}</UniqueIdentifier>
     </Filter>
@@ -145,8 +142,17 @@
     <Filter Include="03.UI, HUD\02.3D\A0.Masking_MeterBar_3D">
       <UniqueIdentifier>{8855d6c6-002b-4688-8994-9faacd857436}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\02.Stage\NewFilter1">
-      <UniqueIdentifier>{d0b3d142-f1d2-47cc-be2a-000f876fb4b5}</UniqueIdentifier>
+    <Filter Include="03.UI, HUD\00.2D\03.PhaseInfo">
+      <UniqueIdentifier>{3dbfbb4f-b927-4693-9585-c89d4a6589f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\00.2D\06.Phase_Panel">
+      <UniqueIdentifier>{a15c0e93-0211-45a7-b668-0778d8ae26da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.DefenceTower\00.StrikerTower">
+      <UniqueIdentifier>{e1d2ee50-6438-4680-a7f5-22d8b494aa9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.DefenceTower\99.PreviewTower">
+      <UniqueIdentifier>{9680dac0-84ec-4404-818d-62795f99593a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -212,9 +218,6 @@
     </ClInclude>
     <ClInclude Include="..\public\HpMp.h">
       <Filter>03.UI, HUD\00.2D\02.Hp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\WaveInfo.h">
-      <Filter>03.UI, HUD\00.2D\03.WaveInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Wave_Manger.h">
       <Filter>05.Utility\00.Stage_Manager</Filter>
@@ -285,6 +288,18 @@
     <ClInclude Include="..\public\Masking_MeterBar_3D.h">
       <Filter>03.UI, HUD\02.3D\A0.Masking_MeterBar_3D</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PhaseInfo.h">
+      <Filter>03.UI, HUD\00.2D\03.PhaseInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Phase_Panel.h">
+      <Filter>03.UI, HUD\00.2D\06.Phase_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\DefenceTower.h">
+      <Filter>02.GameObject\04.DefenceTower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StrikerTower.h">
+      <Filter>02.GameObject\04.DefenceTower\00.StrikerTower</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -326,17 +341,11 @@
     <ClCompile Include="..\private\Player.cpp">
       <Filter>02.GameObject\03.Player</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UI_2D.cpp">
-      <Filter>03.UI, HUD\00.2D</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\PlayerSkill.cpp">
       <Filter>03.UI, HUD\00.2D\01.PlayerSkill</Filter>
     </ClCompile>
     <ClCompile Include="..\private\HpMp.cpp">
       <Filter>03.UI, HUD\00.2D\02.Hp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\WaveInfo.cpp">
-      <Filter>03.UI, HUD\00.2D\03.WaveInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Wave_Manger.cpp">
       <Filter>05.Utility\00.Stage_Manager</Filter>
@@ -400,6 +409,21 @@
     </ClCompile>
     <ClCompile Include="..\private\Masking_MeterBar_3D.cpp">
       <Filter>03.UI, HUD\02.3D\A0.Masking_MeterBar_3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PhaseInfo.cpp">
+      <Filter>03.UI, HUD\00.2D\03.PhaseInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI_2D.cpp">
+      <Filter>03.UI, HUD\00.2D\06.Phase_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Phase_Panel.cpp">
+      <Filter>03.UI, HUD\00.2D\06.Phase_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\DefenceTower.cpp">
+      <Filter>02.GameObject\04.DefenceTower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StrikerTower.cpp">
+      <Filter>02.GameObject\04.DefenceTower\00.StrikerTower</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

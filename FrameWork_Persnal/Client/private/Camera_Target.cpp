@@ -32,6 +32,14 @@ HRESULT CCamera_Target::NativeConstruct(void * pArg)
 
 _int CCamera_Target::Tick(_float TimeDelta)
 {
+
+	return __super::Tick(TimeDelta);
+}
+
+_int CCamera_Target::Late_Tick(_float TimeDelta)
+{
+	__super::Late_Tick(TimeDelta);
+
 	View_Check(TimeDelta);
 
 	if (GetAsyncKeyState('B') & 0x8000)
@@ -46,14 +54,6 @@ _int CCamera_Target::Tick(_float TimeDelta)
 
 	if(false == CData_Manager::GetInstance()->Get_Tick_Stop())
 		TargetRotate_Check((_uint)ELevel::Stage1, L"Layer_Player", L"Com_Movement");
-
-	return __super::Tick(TimeDelta);
-}
-
-_int CCamera_Target::Late_Tick(_float TimeDelta)
-{
-	__super::Late_Tick(TimeDelta);
-
 	return _int();
 }
 

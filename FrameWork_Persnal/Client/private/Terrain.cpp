@@ -109,13 +109,6 @@ HRESULT CTerrain::Render()
 
 HRESULT CTerrain::Ready_Component()
 {
-	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
-
-	if (nullptr == pGameInstance)
-		return E_FAIL;
-
-	Safe_AddRef(pGameInstance);
-
 	/* 렌더러컴포넌트를 추가하자.*/
 	/* For.Renderer*/
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
@@ -135,11 +128,6 @@ HRESULT CTerrain::Ready_Component()
 
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Mesh_Level_1"), TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
-
-
-
-
-	Safe_Release(pGameInstance);
 
 	return S_OK;
 }

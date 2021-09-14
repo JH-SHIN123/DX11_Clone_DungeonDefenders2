@@ -7,6 +7,7 @@
 
 #include "Client_Defines.h"
 #include "Status.h"
+#include "PhaseInfo.h"
 #include "Base.h"
 
 BEGIN(Client)
@@ -21,9 +22,8 @@ public:
 	CData_Manager();
 	virtual ~CData_Manager() = default;
 
-public: // Tick
-	void PlayerLevel_Check();
-
+public: 
+	void TicK_Data();
 
 #pragma region Level
 public:	// 씬전환 중개자,
@@ -32,14 +32,24 @@ public:	// 씬전환 중개자,
 	_bool Get_IsChange_Scene() { return m_IsChangeScene; }	// 씬의 Render에서 씬전환
 	
 private:
-	ELevel	m_NowLevel = ELevel::End;
+	ELevel	m_eNowLevel = ELevel::End;
 	_bool	m_IsChangeScene = false;
 #pragma endregion
 
 
+#pragma region Phase
+public:
+	_bool Tick_Phase();
+	void Set_NowPhase(EPhaseState eNowPhase);
+
+private:
+	EPhaseState	m_eNowPhase = EPhaseState::End;
+#pragma endregion
+
 
 #pragma region Player_Status
 public:
+	void PlayerLevelUp_Check(_int iLevel);
 	void Set_PlayerStatus(const STATUS_DESC& PlayerStatus) { m_PlayerStatus = PlayerStatus; }
 	const STATUS_DESC Get_PlayerStatus() const { return m_PlayerStatus; }
 	const _int Get_Hp()		const { return m_PlayerStatus.iHp; }
@@ -49,6 +59,7 @@ public:
 
 private:
 	STATUS_DESC m_PlayerStatus;
+	_bool		m_IsLevelUp = false;
 #pragma endregion
 
 
@@ -62,7 +73,7 @@ public:	// 스킬찍기
 	_int Get_Skill_Level(_int iSkillIndex) const { return m_iSkillLevel[iSkillIndex]; }
 
 private:
-	_int 		m_iStatUp_Count;
+	_int 		m_iStatUp_Count = 0;
 	_int		m_iSkillLevel[4];
 #pragma endregion
 

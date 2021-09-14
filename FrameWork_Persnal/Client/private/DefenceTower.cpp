@@ -1,0 +1,138 @@
+#include "stdafx.h"
+#include "..\public\DefenceTower.h"
+
+CDefenceTower::CDefenceTower(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
+	: CGameObject(pDevice, pDevice_Context)
+{
+}
+
+CDefenceTower::CDefenceTower(const CDefenceTower & rhs)
+	: CGameObject(rhs)
+{
+}
+
+HRESULT CDefenceTower::NativeConstruct_Prototype()
+{
+	return S_OK;
+}
+
+HRESULT CDefenceTower::NativeConstruct(void * pArg)
+{
+	__super::NativeConstruct(pArg);
+
+	Ready_Component(pArg);
+
+	return S_OK;
+}
+
+_int CDefenceTower::Tick(_float TimeDelta)
+{
+	return _int();
+}
+
+_int CDefenceTower::Late_Tick(_float TimeDelta)
+{
+	if(ETowerState::Pick == m_eTowerState_Next ||
+		ETowerState::Rotate == m_eTowerState_Next)
+		return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Alpha, this);
+
+
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
+}
+
+HRESULT CDefenceTower::Render()
+{
+	if (nullptr == m_pModelCom)
+		return E_FAIL;
+
+	m_pModelCom->Bind_VIBuffer();
+
+	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
+	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
+	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
+
+	LIGHT_DESC*		LightDesc = GET_GAMEINSTANCE->Get_LightDesc(0);
+	m_pModelCom->Set_Variable("vLightPosition", &LightDesc->vPosition, sizeof(_float3));
+	m_pModelCom->Set_Variable("fRange", &LightDesc->fRadius, sizeof(_float));
+	m_pModelCom->Set_Variable("vLightDiffuse", &LightDesc->vDiffuse, sizeof(_float4));
+	m_pModelCom->Set_Variable("vLightAmbient", &LightDesc->vAmbient, sizeof(_float4));
+	m_pModelCom->Set_Variable("vLightSpecular", &LightDesc->vSpecular, sizeof(_float4));
+
+	m_pModelCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
+
+
+	_uint iNumMaterials = m_pModelCom->Get_NumMaterials();
+	for (_uint i = 0; i < iNumMaterials; ++i)
+	{
+		if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_NORMALS)))
+		//	return E_FAIL;
+		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_SPECULAR)))
+		//	return E_FAIL;
+
+		m_pModelCom->Render_Model(i, 0);
+	}
+
+	return S_OK;	
+}
+
+void CDefenceTower::TowerState_Check()
+{
+
+}
+
+void CDefenceTower::Set_TowerPos(_fvector vPosition)
+{
+	if (ETowerState::Pick != m_eTowerState_Next)
+		return;
+
+	m_pMovementCom->Set_State(EState::Position, vPosition);
+}
+
+void CDefenceTower::Set_TowerRotation(_fvector vRotation)
+{
+	if (ETowerState::Rotate != m_eTowerState_Next)
+		return;
+
+}
+
+HRESULT CDefenceTower::Ready_Component(void * pArg)
+{
+	HRESULT hr = S_OK;
+
+	TOWER_DESC Data;
+	memcpy(&Data, pArg, sizeof(TOWER_DESC));
+
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pMovementCom, &Data.MoveState_Desc);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Status"), (CComponent**)&m_pStatusCom, &Data.Stat_Desc);
+	
+	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_TowerRange"), TEXT("Com_Textures"), (CComponent**)&m_pTexturesCom);
+	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
+
+	XMStoreFloat3(&m_vFirstLook_Dir, m_pMovementCom->Get_State(EState::Look));
+	m_fSpawnTime_Max = Data.fSpawnTime_Max;
+	m_eTowerRange = Data.eTowerRange;
+
+	if (S_OK != hr)
+		MSG_BOX("");
+
+	return hr;
+}
+
+CGameObject * CDefenceTower::Clone_GameObject(void * pArg)
+{
+	return nullptr;
+}
+
+void CDefenceTower::Free()
+{
+	__super::Free();
+
+	Safe_Release(m_pModelCom);
+	Safe_Release(m_pStatusCom);
+	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pMovementCom);
+	Safe_Release(m_pTexturesCom);
+}

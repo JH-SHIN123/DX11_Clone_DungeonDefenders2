@@ -5,6 +5,7 @@
 #include "Camera_Free.h"
 #include "UI_2D.h"
 #include "Data_Manager.h"
+#include "Player.h"
 
 CLevel_Stage1::CLevel_Stage1(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CLevel(pDevice, pDevice_Context)
@@ -58,6 +59,9 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 
 		CData_Manager::GetInstance()->Set_Tick_Stop(true);
 	}
+
+	if (GET_KEY_INPUT(DIK_F3))
+		CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Build);
 
 	return 0;
 }
@@ -132,7 +136,7 @@ HRESULT CLevel_Stage1::Ready_Layer_UI(const _tchar * pLayerTag)
 	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_Panel_Level");
 	UI_Desc.Movement_Desc.vPos = _float4(510.f, -305.f, 0.f, 1.f);
 	UI_Desc.Movement_Desc.vScale = _float4(256.f, 100.f, 0.f, 0.f);
-	pGameInstance->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_WaveInfo"), (_uint)ELevel::Stage1, L"Layer_WaveInfo", &UI_Desc);
+	pGameInstance->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_PhaseInfo"), (_uint)ELevel::Stage1, L"Layer_PhaseInfo", &UI_Desc);
 
 
 
@@ -172,10 +176,19 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
 
-	MOVESTATE_DESC Data;
-	Data.vPos = _float4(10.f, 0.f, 10.f, 1.f);
-	Data.vScale = _float4(3.f, 3.f, 1.f, 1.f);
-	Data.fSpeedPerSec = 20.f;
+	GAMEOBJ_DESC Data;
+	Data.Movement_Desc.vPos = _float4(10.f, 0.f, 10.f, 1.f);
+	Data.Movement_Desc.vScale = _float4(3.f, 3.f, 1.f, 1.f);
+	Data.Movement_Desc.fSpeedPerSec = 20.f;
+
+	Data.Status_Desc.fAttSpeed = 2.f;
+	Data.Status_Desc.fCritical = 10.f;
+	Data.Status_Desc.iAtt_Basic = 50;
+	Data.Status_Desc.iExp = 0;
+	Data.Status_Desc.iExp_Max = 100;
+	Data.Status_Desc.iHp_Max = 300;
+	Data.Status_Desc.iLevel = 1;
+	Data.Status_Desc.iMp_Max = 100;
 
 	pGameInstance->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_Player"), (_uint)ELevel::Stage1, pLayerTag, &Data);
 

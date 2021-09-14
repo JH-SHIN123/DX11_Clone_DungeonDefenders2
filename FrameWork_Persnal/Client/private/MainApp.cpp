@@ -69,6 +69,8 @@ HRESULT CMainApp::Render_MainApp()
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
+	// LateUpdate °³³ä
+	CData_Manager::GetInstance()->TicK_Data();
 
 	m_pGameInstance->Clear_Back_Buffer(_float4(0.f, 0.f, 1.f, 1.f));
 	m_pGameInstance->Clear_Depth_Stencil_Buffer();
@@ -185,17 +187,17 @@ HRESULT CMainApp::Ready_UI_Texture()
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Panel_Level")
 		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StageInfo/Panel_Level.tga")));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Panel_Wave")
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Panel_Phase")
 		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/UI/StageInfo/Panel_Wave.tga")));
 
 
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_WaveInfo_Text_Wave")
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_PhaseInfo_Text_Wave")
 		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/WaveInfo_Text/Wave_%d.png")));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_WaveInfo_Text_Phase")
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_PhaseInfo_Text_Phase")
 		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/WaveInfo_Text/Phase_%d.png"), 2));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_WaveInfo_Text_DefenseUnits")
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_PhaseInfo_Text_DefenseUnits")
 		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/WaveInfo_Text/DefenseUnits_%d.png")));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_WaveInfo_Text_Score")
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_PhaseInfo_Text_Score")
 		,CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/Score/Score.png")));
 	
 
@@ -219,6 +221,12 @@ HRESULT CMainApp::Ready_UI_Texture()
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Black")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Black.png")));
+
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Phase_Text")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Phase/Phase_Test.png")));
+
+
 
 	// Animate Texture
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_TextureEX_Status_Up")

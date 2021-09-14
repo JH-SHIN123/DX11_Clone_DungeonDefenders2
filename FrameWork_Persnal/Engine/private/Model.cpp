@@ -634,6 +634,7 @@ void CModel::Free()
 	{
 		for (_int i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)
 			Safe_Release(pMaterial->pMaterialTexture[i]);
+		//Safe_Delete(pMaterial);
 	}
 	m_Materials.clear();
 

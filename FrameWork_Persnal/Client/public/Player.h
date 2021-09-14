@@ -7,6 +7,15 @@
 
 BEGIN(Client)
 
+typedef struct tagGameObject_Desc
+{
+	STATUS_DESC		Status_Desc;
+	MOVESTATE_DESC	Movement_Desc;
+
+	_tchar			szModelName[MAX_PATH] = L"";
+	ELevel			eModelLevel = ELevel::End;
+}GAMEOBJ_DESC;
+
 class CPlayer final : public CGameObject
 {
 protected:
@@ -24,20 +33,27 @@ public:
 public:
 	_bool Get_Skill_Using(_int iSkillIndex);
 
-private:
+private: // Tick
 	void Key_Check(_float TimeDelta);
 	void Turn_Check(_float TimeDelta);
+
+private: // LateTick
 	void Level_Check();
 
 private:
 	CStatus*			m_pStatusCom	= nullptr;
 	CRenderer*			m_pRendererCom	= nullptr;
-	CMovement*			m_pMovementCom	= nullptr;
 	CTextures*			m_pTextureCom	= nullptr;
+	// 이제 이거 안쓸거임
+	CMovement*			m_pMovementCom	= nullptr;
 	CVIBuffer_Cube*		m_pBufferRectCom = nullptr;
 
 private:
 	_bool		m_IsSkill_Use[10] = { false };
+
+private: // Tower
+	class CStrikerTower*	m_pStrikerTower = nullptr;
+	_bool					m_IsTowerPick = false;
 
 private:
 	HRESULT	Ready_Component(void* pArg);

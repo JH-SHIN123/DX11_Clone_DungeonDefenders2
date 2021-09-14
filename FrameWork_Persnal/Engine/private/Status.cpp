@@ -24,6 +24,14 @@ HRESULT CStatus::NativeConstruct(void * pArg)
 {
 	__super::NativeConstruct(pArg);
 
+	memcpy(&m_Status_Desc, pArg, sizeof(STATUS_DESC));
+
+	m_Status_Desc.iHp = m_Status_Desc.iHp_Max;
+	m_Status_Desc.iMp = m_Status_Desc.iMp_Max;
+
+	if (1 == m_Status_Desc.iLevel)
+		m_Status_Desc.iExp = 0;
+
 	return S_OK;
 }
 
@@ -34,9 +42,9 @@ _uint CStatus::Tick(_float TimeDelta)
 	return _uint();
 }
 
-void CStatus::Level_Check()
+_bool CStatus::Level_Check()
 {
-	// 레벨업은 전투 끝나야지만 함
+	// 스탯창은 전투가 끝나고 나옴
 
 	if (m_Status_Desc.iExp >= m_Status_Desc.iExp_Max)
 	{
@@ -48,7 +56,10 @@ void CStatus::Level_Check()
 
 		m_Status_Desc.iExp			-= m_Status_Desc.iExp_Max;
 		m_Status_Desc.iExp_Max		= (_int)(m_Status_Desc.iExp_Max * 1.2f);
+		
+		return true;
 	}
+	return false;
 }
 
 void CStatus::Set_Damage(const HIT_DESC & pDamage)
