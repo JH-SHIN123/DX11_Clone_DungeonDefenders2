@@ -154,6 +154,12 @@
     <Filter Include="02.GameObject\04.DefenceTower\99.PreviewTower">
       <UniqueIdentifier>{9680dac0-84ec-4404-818d-62795f99593a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\06.CrystalCore">
+      <UniqueIdentifier>{4595e53d-e23e-40c1-a09f-fecd6cda1bd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\06.CrystalCore\A0.Ring">
+      <UniqueIdentifier>{cbb39902-107c-4af7-95a3-a097be0fd8bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -300,6 +306,12 @@
     <ClInclude Include="..\public\StrikerTower.h">
       <Filter>02.GameObject\04.DefenceTower\00.StrikerTower</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\CrystalCore.h">
+      <Filter>02.GameObject\06.CrystalCore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CrystalCore_Ring.h">
+      <Filter>02.GameObject\06.CrystalCore\A0.Ring</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -424,6 +436,12 @@
     </ClCompile>
     <ClCompile Include="..\private\UI_2D.cpp">
       <Filter>03.UI, HUD\00.2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CrystalCore.cpp">
+      <Filter>02.GameObject\06.CrystalCore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CrystalCore_Ring.cpp">
+      <Filter>02.GameObject\06.CrystalCore\A0.Ring</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

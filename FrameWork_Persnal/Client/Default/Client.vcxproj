@@ -176,6 +176,8 @@
     <ClInclude Include="..\public\Client_Macro.h" />
     <ClInclude Include="..\public\Client_Struct.h" />
     <ClInclude Include="..\public\Client_Typedef.h" />
+    <ClInclude Include="..\public\CrystalCore.h" />
+    <ClInclude Include="..\public\CrystalCore_Ring.h" />
     <ClInclude Include="..\public\Cursor.h" />
     <ClInclude Include="..\public\Cursor_Manager.h" />
     <ClInclude Include="..\public\Data_Manager.h" />
@@ -221,6 +223,8 @@
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\private\Camera_Manager.cpp" />
     <ClCompile Include="..\private\Camera_Target.cpp" />
+    <ClCompile Include="..\private\CrystalCore.cpp" />
+    <ClCompile Include="..\private\CrystalCore_Ring.cpp" />
     <ClCompile Include="..\private\Cursor.cpp" />
     <ClCompile Include="..\private\Cursor_Manager.cpp" />
     <ClCompile Include="..\private\Data_Manager.cpp" />
