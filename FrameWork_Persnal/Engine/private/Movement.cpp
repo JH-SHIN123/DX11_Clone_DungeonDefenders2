@@ -119,6 +119,20 @@ void CMovement::Go_Dir(_float TimeDelta, _fvector vTargetPos)
 	__super::Set_State(EState::Position, vPosition);
 }
 
+void CMovement::Go_Dir_NoSpeed(_float TimeDelta, _fvector vTargetPos, _float fSpeed)
+{
+	_vector vPosition = __super::Get_State(EState::Position);
+	_vector vDir = vTargetPos - vPosition;
+
+	vDir = vDir * TimeDelta * fSpeed;
+
+	if (1.f > XMVectorGetX(XMVector3Length(vDir)))
+		return;
+
+	vPosition += vDir;
+	__super::Set_State(EState::Position, vPosition);
+}
+
 void CMovement::Go_Up(_float TimeDelta)
 {
 	_vector vPosition = __super::Get_State(EState::Position);

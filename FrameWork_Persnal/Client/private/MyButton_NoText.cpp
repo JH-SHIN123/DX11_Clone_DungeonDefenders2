@@ -64,9 +64,29 @@ _bool CMyButton_NoText::Get_IsClick()
 {
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
-		if (m_IsPick == true)
+		if (true == m_IsPick && false == m_IsClicked)
+		{
+			m_IsClicked = true;
 			return true;
+		}
 	}
+	else
+		m_IsClicked = false;
+	return false;
+}
+
+_bool CMyButton_NoText::Get_IsClick_R()
+{
+	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
+	{
+		if (true == m_IsPick && false == m_IsClicked_R)
+		{
+			m_IsClicked_R = true;
+			return true;
+		}
+	}
+	else
+		m_IsClicked_R = false;
 	return false;
 }
 

@@ -153,7 +153,7 @@ HRESULT CLoading::LoadingForStage()
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Player"), CPlayer::Create(m_pDevice, m_pDevice_Context));
 
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_StrikerTower"), CStrikerTower::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_StrikerTower"), CStrikerTower::Create(m_pDevice, m_pDevice_Context));
 
 
 

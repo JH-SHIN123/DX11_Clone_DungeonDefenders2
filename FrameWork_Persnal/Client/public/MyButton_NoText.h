@@ -20,8 +20,12 @@ public:
 
 public:
 	_bool	Get_IsClick();
+	_bool	Get_IsClick_R();
 	_bool	Get_IsPick();
 	void	Get_Button_Pos(_float4* pPos) {	XMStoreFloat4(pPos, m_pMovementCom->Get_State(EState::Position)); }
+
+public:
+	void Set_Pos(_fvector vPos) { m_pMovementCom->Set_State(EState::Position, vPos); }
 
 private:
 	HRESULT	Ready_Component();
@@ -30,6 +34,8 @@ private:
 private:
 	RECT			m_tPickingBox;
 	_bool			m_IsPick = false;
+	_bool			m_IsClicked = false;
+	_bool			m_IsClicked_R = false;
 
 public:
 	static CMyButton_NoText* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, void* pArg); // pArg = BUTTON_DESC

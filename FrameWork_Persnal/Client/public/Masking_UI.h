@@ -31,13 +31,16 @@ public:
 	virtual HRESULT Render(_uint MaskShaderPass = 12, _uint UIFramePass = 1);
 
 public:
-	static CMasking_UI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
-	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;
-	virtual void Free();
+	void Set_Pos(_fvector vPos) { m_pMovementCom->Set_State(EState::Position, vPos); }
 
 private: // 텍스처는 기본 세개: 마스킹, 텍스처, 프레임
 	MASK_UI_DESC		m_Mask_Desc;
 	_float4x4			m_FrameMatrix;
+
+public:
+	static CMasking_UI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
+	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;
+	virtual void Free();
 };
 
 END

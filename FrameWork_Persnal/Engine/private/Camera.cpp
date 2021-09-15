@@ -162,6 +162,27 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 	XMStoreFloat3(&m_CameraDesc.vAt, vAt);
 }
 
+void CCamera::TargetRotate_Check(CTransform* pTransform)
+{
+	_vector vTargetPos = pTransform->Get_State(EState::Position);
+
+	_vector vTargetAxis = XMLoadFloat3(&m_CameraDesc.vTargetAxis);
+	_vector vMyPos = vTargetPos + XMVector3Normalize(vTargetAxis) * m_CameraDesc.fDis;
+
+	m_pMovementCom->Set_State(EState::Position, vMyPos);
+
+	_vector vNewRight = XMVector4Normalize(m_pMovementCom->Get_State(EState::Right)) * pTransform->Get_Scale(EState::Right);
+	_vector vRightUp_Cross = XMVector3Cross(vNewRight, XMVectorSet(0.f, 1.f, 0.f, 0.f));
+	_vector vNewLook = XMVector4Normalize(vRightUp_Cross) * pTransform->Get_Scale(EState::Look);
+
+	pTransform->Set_State(EState::Right, vNewRight);
+	pTransform->Set_State(EState::Look, vNewLook);
+
+	_vector vAt = m_pMovementCom->Get_State(EState::Position) + (XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * 20.f);
+
+	XMStoreFloat3(&m_CameraDesc.vAt, vAt);
+}
+
 void CCamera::View_Check(_float TimeDelata)
 {
 	switch (m_eCameraMode_Next)

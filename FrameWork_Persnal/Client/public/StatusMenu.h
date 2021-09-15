@@ -10,6 +10,12 @@ class CMyButton_NoText;
 class CMasking_MeterBar;
 class CMasking_UI;
 
+typedef struct tagStatusMenuDesc
+{
+	UI2D_DESC	UI2D;
+	_bool		IsCreateToOption = false;
+}STATMENU_DESC;
+
 class CStatusMenu final : public CUI_2D
 {
 private:
@@ -23,6 +29,9 @@ public:
 	virtual _int	Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void Move(_float TimeDelta);
+
 private:
 	HRESULT	Ready_Component();
 	void	Status_Tick();
@@ -34,7 +43,8 @@ private:
 	void	Status_UpGrade();
 
 private:
-	_bool			m_IsCreatToOption = false;
+	_bool			m_IsCreateToOption = false;
+	_bool			m_;
 
 private: // Exp
 	CMasking_MeterBar*		m_pExpBar = nullptr;
@@ -50,12 +60,13 @@ private: // HpMp
 private: // Status UI
 	vector<class CMyButton_NoText*>		m_vecButton_Status;
 	vector<CTransform*>					m_vecTransform_StatusFrame;
-	_int								m_iButtonCount_Status = 4; // 마지막은 스킬 포인트 UI
+	_int								m_iButtonCount_Status = 4; 
 	_bool								m_IsPick[4] = { false };
+	_int								m_iSkillUpgrade[4];
+	CMyButton_NoText*					m_pSkillPoint = nullptr;
 
 private: // Exit
 	CMyButton_NoText*		m_pButton_Exit = nullptr;
-	CMyButton_NoText*		m_pSkillPoint = nullptr;
 	_bool					m_IsExit = false;
 
 

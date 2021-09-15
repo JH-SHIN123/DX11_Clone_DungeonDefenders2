@@ -57,9 +57,10 @@ public:
 	void Set_ZoomOut(_float fFov, _float fZoomSpeed = 1.f);
 	void Set_CameraView_Mode(ECameraViewMode eViewMode) { m_eCameraMode_Next = eViewMode; }
 
-protected: // Tick
+public: // Tick
 	void	Target_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag);
 	void	TargetRotate_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag);
+	void	TargetRotate_Check(CTransform* pTransform);
 
 protected:
 	void	View_Check(_float TimeDelata);

@@ -413,9 +413,6 @@
     <ClCompile Include="..\private\PhaseInfo.cpp">
       <Filter>03.UI, HUD\00.2D\03.PhaseInfo</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UI_2D.cpp">
-      <Filter>03.UI, HUD\00.2D\06.Phase_Panel</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Phase_Panel.cpp">
       <Filter>03.UI, HUD\00.2D\06.Phase_Panel</Filter>
     </ClCompile>
@@ -424,6 +421,9 @@
     </ClCompile>
     <ClCompile Include="..\private\StrikerTower.cpp">
       <Filter>02.GameObject\04.DefenceTower\00.StrikerTower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI_2D.cpp">
+      <Filter>03.UI, HUD\00.2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

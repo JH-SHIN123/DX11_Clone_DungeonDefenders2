@@ -3,6 +3,7 @@
 #include "MyButton_NoText.h"
 #include "Data_Manager.h"
 #include "Level_Logo.h"
+#include "StatusMenu.h"
 
 CPauseMenu::CPauseMenu(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CUI_2D(pDevice, pDevice_Context)
@@ -136,13 +137,15 @@ void CPauseMenu::Button_Check()
 			{
 			case 0:	// 스탯창
 			{
-				UI2D_DESC UI_Desc;
+				STATMENU_DESC Stat_Desc;
 
-				lstrcpy(UI_Desc.szTextureName, L"Component_Texture_Status");
-				UI_Desc.Movement_Desc.vPos = _float4(0.f, 50.f, 0.f, 1.f);
-				UI_Desc.Movement_Desc.vScale = _float4(768.f, 512.f, 0.f, 0.f);
-				UI_Desc.eLevel = ELevel::Static;
-				GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_StatusMenu"), (_uint)ELevel::Stage1, L"Layer_StatusMenu", &UI_Desc);
+				lstrcpy(Stat_Desc.UI2D.szTextureName, L"Component_Texture_Status");
+				Stat_Desc.UI2D.Movement_Desc.vPos = _float4(0.f, 500.f, 0.f, 1.f);
+				Stat_Desc.UI2D.Movement_Desc.vScale = _float4(768.f, 512.f, 0.f, 0.f);
+				Stat_Desc.UI2D.Movement_Desc.fSpeedPerSec = 100.f;
+				Stat_Desc.UI2D.eLevel = ELevel::Static;
+				Stat_Desc.IsCreateToOption = true;
+				GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_StatusMenu"), (_uint)ELevel::Stage1, L"Layer_StatusMenu", &Stat_Desc);
 			}
 				break;
 			case 1:	// 게임재개

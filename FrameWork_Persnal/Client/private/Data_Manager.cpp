@@ -37,8 +37,9 @@ _bool CData_Manager::Tick_Phase()
 		UI2D_DESC UI_Desc;
 
 		lstrcpy(UI_Desc.szTextureName, L"Component_Texture_Status");
-		UI_Desc.Movement_Desc.vPos = _float4(0.f, 50.f, 0.f, 1.f);
+		UI_Desc.Movement_Desc.vPos = _float4(0.f, 500.f, 0.f, 1.f);
 		UI_Desc.Movement_Desc.vScale = _float4(768.f, 512.f, 0.f, 0.f);
+		UI_Desc.Movement_Desc.fSpeedPerSec = 500.f;
 		UI_Desc.eLevel = ELevel::Static;
 		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_StatusMenu"), (_uint)ELevel::Stage1, L"Layer_StatusMenu", &UI_Desc);
 
@@ -51,23 +52,22 @@ _bool CData_Manager::Tick_Phase()
 
 void CData_Manager::Set_NowPhase(EPhaseState eNowPhase)
 {
-	m_eNowPhase = eNowPhase;
-
 	_uint i = 0;
 	switch (m_eNowPhase)
 	{
 	case Client::EPhaseState::Clear:
 		break;
 	case Client::EPhaseState::Build:
-		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_Phase_Panel"), (_uint)ELevel::Stage1, L"Layer_Phase_Panel", &i);
 		break;
 	case Client::EPhaseState::Combat:
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_Phase_Panel"), (_uint)ELevel::Stage1, L"Layer_Phase_Panel", &i);
 		break;
 	case Client::EPhaseState::Boss:
 		break;
 	default:
 		break;
 	}
+	m_eNowPhase = eNowPhase;
 }
 
 void CData_Manager::Minus_StatUp_Count(_int iMinusCount)

@@ -49,14 +49,14 @@ _int CAnimate_Effect::Late_Tick(_float TimeDelta)
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::SceneChange, this);;
 }
 
-HRESULT CAnimate_Effect::Render(_uint iShaderPass)
+HRESULT CAnimate_Effect::Render()
 {
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureExCom->Get_ShaderResourceView((_uint)m_fTime));
 	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
  	m_pBufferRectCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
  	m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
 
-	m_pBufferRectCom->Render(iShaderPass);
+	m_pBufferRectCom->Render(m_AnimateEffect_Desc.iShaderPass);
 
 	return S_OK;
 }

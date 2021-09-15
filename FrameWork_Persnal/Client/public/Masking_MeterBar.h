@@ -46,6 +46,7 @@ public: // Getter
 
 public: // Setter
 	void Set_Count(_float fCount, _float fCount_Max);
+	void Set_Pos(_fvector vPos) { m_pMovementCom->Set_State(EState::Position, vPos); }
 
 public:
 	void Render_Frame_First(_uint MaskShaderPass, _uint UIFramePass);

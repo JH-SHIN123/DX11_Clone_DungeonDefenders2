@@ -23,7 +23,11 @@ HRESULT CStatusMenu::NativeConstruct_Prototype()
 
 HRESULT CStatusMenu::NativeConstruct(void * pArg)
 {
-	__super::NativeConstruct(pArg);
+	STATMENU_DESC Stat_Desc;
+	m_IsCreateToOption = Stat_Desc.IsCreateToOption;
+	memcpy(&Stat_Desc, pArg, sizeof(STATMENU_DESC));
+
+	__super::NativeConstruct(&Stat_Desc.UI2D);
 
 	m_vecButton_HpMp.reserve(m_iButtonCount_HpMp);
 	m_vecTransform_HpMpFrame.resize(m_iButtonCount_HpMp);
@@ -35,7 +39,7 @@ HRESULT CStatusMenu::NativeConstruct(void * pArg)
 
 
 	if (eNow_UI::Option == CData_Manager::GetInstance()->Get_Now_UI())
-		m_IsCreatToOption = true;
+		m_IsCreateToOption = true;
 
 	CData_Manager::GetInstance()->Set_Now_UI(eNow_UI::Status);
 	CData_Manager::GetInstance()->Set_Tick_Stop(true);
@@ -51,11 +55,17 @@ _int CStatusMenu::Tick(_float TimeDelta)
 	if (eNow_UI::Status != CData_Manager::GetInstance()->Get_Now_UI())
 		return 0;
 
+	TimeDelta = GET_TIMER->Get_TimeDelta(L"Timer_FPS60");
+
+	Move(TimeDelta);
+	
 	m_pExpBar->Tick(TimeDelta);
 	m_pButton_Exit->Tick(TimeDelta);
 
 	for (auto& iter : m_vecButton_Status)
 		iter->Tick(TimeDelta);
+
+	m_pSkillPoint->Tick(TimeDelta);
 
 	Status_Tick();
 	Status_UpGrade();
@@ -63,26 +73,37 @@ _int CStatusMenu::Tick(_float TimeDelta)
 	if (m_pButton_Exit->Get_IsClick())
 		m_IsExit = true;
 
-	
+	m_pPlayerPortrait->Tick(TimeDelta);
 
 	return _int();
 }
 
 _int CStatusMenu::Late_Tick(_float TimeDelta)
 {
+	TimeDelta = GET_TIMER->Get_TimeDelta(L"Timer_FPS60");
+
 	if (true == m_IsExit)
 	{
-		if(true == m_IsCreatToOption)
+		_float4 vPos;
+		XMStoreFloat4(&vPos, m_pMovementCom->Get_State(EState::Position));
+
+		m_pMovementCom->Go_Dir_NoSpeed(TimeDelta, XMVectorSet(0.f, 700.f, 0.f, 1.f), 3.5f);
+		if (600.f < vPos.y)
 		{
-			CData_Manager::GetInstance()->Set_Now_UI(eNow_UI::Option);
-			CData_Manager::GetInstance()->Set_Tick_Stop(true);
+			if (true == m_IsCreateToOption)
+			{
+				CData_Manager::GetInstance()->Set_Now_UI(eNow_UI::Option);
+				CData_Manager::GetInstance()->Set_Tick_Stop(true);
+			}
+			else
+			{
+				CData_Manager::GetInstance()->Set_Now_UI(eNow_UI::End);
+				CData_Manager::GetInstance()->Set_Tick_Stop(false);
+			}
+
+			return OBJECT_DEAD;
 		}
-		else
-		{
-			CData_Manager::GetInstance()->Set_Now_UI(eNow_UI::End);
-			CData_Manager::GetInstance()->Set_Tick_Stop(false);
-		}
-		return OBJECT_DEAD;
+
 	}
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Option_UI_2, this);
@@ -113,6 +134,55 @@ HRESULT CStatusMenu::Render()
 	return S_OK;
 }
 
+void CStatusMenu::Move(_float TimeDelta)
+{
+	_float4 vPos;
+	_float4 vPos2;
+	XMStoreFloat4(&vPos, m_pMovementCom->Get_State(EState::Position));
+
+	if (false == m_IsExit)
+	{
+		if (50.f < vPos.y)
+			m_pMovementCom->Go_Dir_NoSpeed(TimeDelta, XMVectorSet(0.f, 50.f, 0.f, 1.f), 5.f);
+	}
+	
+	vPos.y += 174.f; // 224 
+	m_pExpBar->Set_Pos(XMLoadFloat4(&vPos));
+	
+	vPos.y -= 124.f; // 100 
+	m_pPlayerPortrait->Set_Pos(XMLoadFloat4(&vPos));
+
+	vPos.x -= 200.f;
+	m_vecButton_HpMp[0]->Set_Pos(XMLoadFloat4(&vPos));
+	m_vecTransform_HpMpFrame[0]->Set_State(EState::Position, XMLoadFloat4(&vPos));
+	vPos.x += 400.f;
+	m_vecButton_HpMp[1]->Set_Pos(XMLoadFloat4(&vPos));
+	m_vecTransform_HpMpFrame[1]->Set_State(EState::Position, XMLoadFloat4(&vPos));
+
+	vPos.x -= 425.f;
+	vPos.y -= 140.f;
+	vPos2 = vPos;
+	vPos2.x += 17.5f;
+
+	_float fOffSet = 150.f;
+	for (_int i = 0; i < m_iButtonCount_Status; ++i)
+	{
+		m_vecButton_Status[i]->Set_Pos(XMLoadFloat4(&vPos));
+		m_vecTransform_StatusFrame[i]->Set_State(EState::Position, XMLoadFloat4(&vPos2));
+		vPos.x += fOffSet;
+		vPos2.x += fOffSet;
+	}
+
+	XMStoreFloat4(&vPos, m_pMovementCom->Get_State(EState::Position));
+	vPos.x += 350.f;
+	vPos.y += 230.f;
+	m_pButton_Exit->Set_Pos(XMLoadFloat4(&vPos));
+
+	vPos.x -= 350.f;
+	vPos.y -= 470.f;
+	m_pSkillPoint->Set_Pos(XMLoadFloat4(&vPos));	
+}
+
 HRESULT CStatusMenu::Ready_Component()
 {
 	// Exp Bar
@@ -124,7 +194,7 @@ HRESULT CStatusMenu::Ready_Component()
 	Data.fCount_Max = 10.f;
 	Data.UI_Desc.eLevel = ELevel::Static;
 	Data.UI_Desc.Movement_Desc.vScale = { 480.f, 48.f, 0.f, 0.f };
-	Data.UI_Desc.Movement_Desc.vPos = { 0.f, 224.f, 0.f, 1.f };
+	Data.UI_Desc.Movement_Desc.vPos = { 0.f, 2000.f, 0.f, 1.f };
 	lstrcpy((Data.UI_Desc.szTextureName), L"Component_Texture_ExpBar");
 	m_pExpBar = CMasking_MeterBar::Create(m_pDevice, m_pDevice_Context);
 	m_pExpBar->NativeConstruct(&Data);
@@ -134,7 +204,7 @@ HRESULT CStatusMenu::Ready_Component()
 	MASK_UI_DESC Mask_UI_Desc;
 	Mask_UI_Desc.HasFrame = true;
 	Mask_UI_Desc.IsFrameFirst = false;
-	Mask_UI_Desc.vFrameOffSetPos = { 0.f, 28.f, 0.f };
+	Mask_UI_Desc.vFrameOffSetPos = { 0.f, -72.f, 0.f };
 	Mask_UI_Desc.vFrameScale = { 128.f, 176.f,0.f };
 	Mask_UI_Desc.UI_Desc.eLevel = ELevel::Static;
 	Mask_UI_Desc.UI_Desc.Movement_Desc.vScale = { 100.5f, 100.f, 0.f, 0.f };
@@ -149,7 +219,7 @@ HRESULT CStatusMenu::Ready_Component()
 	ButtonDesc.Movement_Desc.vScale = { 74.f, 74.f, 0.f, 0.f };
 	ButtonDesc.eLevel = ELevel::Static;
 	lstrcpy(ButtonDesc.szTextureName, L"Component_Texture_Status_HpMp");
-	ButtonDesc.Movement_Desc.vPos = { -200.f, 100.f, 0.f, 1.f };
+	ButtonDesc.Movement_Desc.vPos = { -200.f, 2000.f, 0.f, 1.f };
 
 	TRANSFORM_DESC Trans_Desc;
 	Trans_Desc.vScale = { 256.f, 104.f, 0.f, 0.f };
@@ -172,7 +242,7 @@ HRESULT CStatusMenu::Ready_Component()
 	ButtonDesc.Movement_Desc.vScale = { 64.f, 64.f, 0.f, 0.f };
 	ButtonDesc.eLevel = ELevel::Static;
 	lstrcpy(ButtonDesc.szTextureName, L"Component_Texture_Status_Icon");
-	ButtonDesc.Movement_Desc.vPos = { -245.f, -40.f, 0.f, 1.f };
+	ButtonDesc.Movement_Desc.vPos = { -245.f, -2000.f, 0.f, 1.f };
 	Trans_Desc.vScale = { 128.f, 90.f, 0.f, 0.f };
 	Trans_Desc.vPos = ButtonDesc.Movement_Desc.vPos;
 	Trans_Desc.vPos.x += 17.5f;
@@ -202,13 +272,13 @@ HRESULT CStatusMenu::Ready_Component()
 	ButtonDesc.Movement_Desc.vScale = { 48.f, 48.f, 0.f, 0.f };
 	ButtonDesc.eLevel = ELevel::Static;
 	lstrcpy(ButtonDesc.szTextureName, L"Component_Texture_Button_Public");
-	ButtonDesc.Movement_Desc.vPos = { 350.f, 280.f, 0.f, 1.f };
+	ButtonDesc.Movement_Desc.vPos = { 350.f, 2000.f, 0.f, 1.f };
 	m_pButton_Exit = CMyButton_NoText::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
 
 	ButtonDesc.Movement_Desc.vScale = { 128.f, 64.f, 0.f, 0.f };
 	ButtonDesc.eLevel = ELevel::Static;
 	lstrcpy(ButtonDesc.szTextureName, L"Component_Texture_Button_Public");
-	ButtonDesc.Movement_Desc.vPos = { 0.f, -180.f, 0.f, 1.f };
+	ButtonDesc.Movement_Desc.vPos = { 0.f, -2000.f, 0.f, 1.f };
 	m_pSkillPoint = CMyButton_NoText::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
 
 	return S_OK;
@@ -266,21 +336,39 @@ void CStatusMenu::StatusPick_Render()
 
 void CStatusMenu::Status_UpGrade()
 {
-	_uint iCount = 1;//CData_Manager::GetInstance()->Get_StatUp_Count();
+	_uint iCount = CData_Manager::GetInstance()->Get_StatUp_Count();
 
 	if (iCount > 0)
 	{
-		for (auto& iter : m_vecButton_Status)
+		for (_int i = 0 ; i < m_iButtonCount_Status; ++i)
 		{
-			if (iter->Get_IsClick())
+			if (m_vecButton_Status[i]->Get_IsClick())
 			{
 				ANIEFFECT_DESC Data;
-				iter->Get_Button_Pos(&Data.vPos);
+				m_vecButton_Status[i]->Get_Button_Pos(&Data.vPos);
 				Data.vOffSet = { 2.f, 2.f };
 				lstrcpy(Data.szTextureEX_Name, L"Component_TextureEX_Status_Up");
 
 				GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_Animate_Effect"), (_uint)ELevel::Stage1, L"Layer_AnimateEffect", &Data);
+
+				++m_iSkillUpgrade[i];
 			}
+
+			if (m_vecButton_Status[i]->Get_IsClick_R())
+			{
+				--m_iSkillUpgrade[i];
+			}
+		}
+	}
+
+	if (m_pSkillPoint->Get_IsClick())
+	{
+		for (_int i = 0; i < m_iButtonCount_Status; ++i)
+		{
+			for (_int j = 0; j < m_iSkillUpgrade[i]; ++j)
+				CData_Manager::GetInstance()->Add_Skill_Level(i);
+
+			m_iSkillUpgrade[i] = 0;
 		}
 	}
 }

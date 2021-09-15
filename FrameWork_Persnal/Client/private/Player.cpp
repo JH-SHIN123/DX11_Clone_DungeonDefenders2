@@ -40,6 +40,12 @@ _int CPlayer::Tick(_float TimeDelta)
 	if (GetAsyncKeyState('V') & 0x8000)
 		m_pStatusCom->Add_Exp(10);
 
+
+	//static_cast<CCamera*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera_Free"))->TargetRotate_Check(m_pMovementCom);
+
+	if (nullptr != m_pStrikerTower)
+		m_pStrikerTower->Tick(TimeDelta);
+
 	return _int();
 }
 
@@ -55,8 +61,11 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 		_vector vDir = m_pMovementCom->Get_State(EState::Look);
 		vPos += vDir * 5.f;
 
-		m_pStrikerTower->
+		m_pStrikerTower->Set_TowerPos(vPos);
+
+		//m_pStrikerTower->
 	}
+
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
@@ -105,10 +114,15 @@ void CPlayer::Key_Check(_float TimeDelta)
 	if (GET_KEY_INPUT(DIK_8))
 	{
 		//m_IsTowerPick = true;
-		//static_cast<CCamera*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera_Free"))->Set_CameraView_Mode(ECameraViewMode::TopView);
+		static_cast<CCamera*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera_Free"))->Set_CameraView_Mode(ECameraViewMode::TopView);
 
-		//TOWER_DESC Data;
-		//Data.szModelName
+		TOWER_DESC Data;
+		lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower");
+		Data.eTowerRange = ETowerRange::Quarter;
+		XMStoreFloat4(&Data.MoveState_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
+
+		m_pStrikerTower = CStrikerTower::Create(m_pDevice, m_pDevice_Context);
+		m_pStrikerTower->NativeConstruct(&Data);
 	}
 
 	if (GET_KEY_INPUT(DIK_W))

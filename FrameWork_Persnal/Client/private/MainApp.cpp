@@ -45,6 +45,8 @@ HRESULT CMainApp::Ready_MainApp()
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Data/Font/font.tga")))))
 		return E_FAIL;
 
+
+
 	//ShowCursor(false);
 
 	return S_OK;

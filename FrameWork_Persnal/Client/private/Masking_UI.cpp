@@ -46,6 +46,12 @@ HRESULT CMasking_UI::NativeConstruct(void * pArg)
 
 _int CMasking_UI::Tick(_float TimeDelta)
 {
+	_float3 vPos;
+	XMStoreFloat3(&vPos, m_pMovementCom->Get_State(EState::Position));
+	m_FrameMatrix._41 = vPos.x += m_Mask_Desc.vFrameOffSetPos.x;
+	m_FrameMatrix._42 = vPos.y += m_Mask_Desc.vFrameOffSetPos.y;
+	m_FrameMatrix._43 = vPos.z += m_Mask_Desc.vFrameOffSetPos.z;
+
 	return _int();
 }
 
