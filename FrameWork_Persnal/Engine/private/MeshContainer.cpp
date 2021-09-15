@@ -9,14 +9,21 @@ CMeshContainer::CMeshContainer(ID3D11Device * pDevice, ID3D11DeviceContext * pDe
 	Safe_AddRef(pDevice_Context);
 }
 
-void CMeshContainer::Set_LinkedNodePointer(CHierarcyNode * pLinkedNode)
+CMeshContainer::CMeshContainer(const CMeshContainer & rhs)
+	: m_pDevice(rhs.m_pDevice)
+	, m_pDevice_Context(rhs.m_pDevice_Context)
 {
-	if (nullptr == m_pLinkedNode)
-	{
-		m_pLinkedNode = pLinkedNode;
+	strcpy(m_szMeshName, rhs.m_szMeshName);
+	m_iStartPolygonIndex = rhs.m_iStartPolygonIndex;
+	m_iNumPolgygons = rhs.m_iNumPolgygons;
+	m_iStartVertexIndex = rhs.m_iStartVertexIndex;
+	m_iMaterialIndex = rhs.m_iMaterialIndex;
 
-		Safe_AddRef(m_pLinkedNode);
-	}
+	for (auto& pOriginalBoneDesc : rhs.m_Bones)
+		m_Bones.push_back(new BONEDESC(*pOriginalBoneDesc));
+
+
+
 }
 
 HRESULT CMeshContainer::NativeConstruct(const char * pMeshName, _uint iStartPolygonIndex, _uint iNumPolgygons, _uint iStartVertexIndex, _uint iMaterialIndex)
@@ -45,7 +52,19 @@ void CMeshContainer::Compute_BoneMatrices(_matrix * pBoneMatrices)
 	_uint		iIndex = 0;
 
 	for (auto& pBoneDesc : m_Bones)
-		pBoneMatrices[iIndex++] = XMLoadFloat4x4(&pBoneDesc->OffsetMatrix) * pBoneDesc->pHierarchyNode->Get_CombindTransformationMatrix();
+		pBoneMatrices[iIndex++] = XMMatrixTranspose(XMLoadFloat4x4(&pBoneDesc->OffsetMatrix) * pBoneDesc->pHierarchyNode->Get_CombindTransformationMatrix());
+}
+
+void CMeshContainer::Clone_Bones()
+{
+	vector<BONEDESC*>	Bones;
+
+	for (auto& pBoneDesc : m_Bones)
+		Bones.push_back(new BONEDESC(*pBoneDesc));
+
+	m_Bones.clear();
+
+	m_Bones = Bones;
 }
 
 CMeshContainer * CMeshContainer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const char * pMeshName, _uint iStartPolygonIndex, _uint iNumPolgygons, _uint iStartVertexIndex, _uint iMaterialIndex)
@@ -61,8 +80,18 @@ CMeshContainer * CMeshContainer::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 
 void CMeshContainer::Free()
 {
-	Safe_Release(m_pLinkedNode);
-
 	Safe_Release(m_pDevice_Context);
 	Safe_Release(m_pDevice);
+	//Safe_Release(m_pLinkedNode);
 }
+
+
+//void CMeshContainer::Set_LinkedNodePointer(CHierarcyNode * pLinkedNode)
+//{
+//	if (nullptr == m_pLinkedNode)
+//	{
+//		m_pLinkedNode = pLinkedNode;
+//
+//		Safe_AddRef(m_pLinkedNode);
+//	}
+//}

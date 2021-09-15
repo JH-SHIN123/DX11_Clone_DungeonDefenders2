@@ -27,7 +27,6 @@ private:
 	CModel*				m_pModelCom = nullptr;
 	CStatus*			m_pStatusCom = nullptr;
 	CMovement*			m_pMovementCom = nullptr;
-	CTextures*			m_pTexturesCom = nullptr;
 
 public:
 	static CCrystalCore_Ring* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, void* pArg);

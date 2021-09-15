@@ -69,5 +69,4 @@ void CCrystalCore_Ring::Free()
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pMovementCom);
-	Safe_Release(m_pTexturesCom);
 }

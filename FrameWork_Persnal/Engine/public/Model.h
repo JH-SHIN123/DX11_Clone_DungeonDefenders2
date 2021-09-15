@@ -31,6 +31,7 @@ public:
 	HRESULT Add_MeshContainer(const char* pMeshName, _uint iStartPolygonIndex, _uint iStartVertexIndex, _uint iMaterialIndex);
 	HRESULT Add_Materials(MESHTEXTURE* pMeshMaterialTexture);
 	HRESULT Add_HierarchyNode(class CHierarcyNode* pHierarchyNode);
+	void	Add_AnimChannelToHierarchyNode(class CAnimChannel* pChannel);
 	HRESULT Reserve_VIBuffer(_uint iNumVertices, _uint iNumFace);
 
 	HRESULT Set_Variable(const char* pConstanceName, void* pData, _int iByteSize);
@@ -40,7 +41,7 @@ public:
 	HRESULT SetUp_Animation(const aiScene* pScene);
 	HRESULT Sort_MeshesByMaterial();
 	HRESULT SetUp_SkinnedInfo(const aiScene* pScene);
-	HRESULT Update_CombindTransformationMatrix();
+	HRESULT Update_CombindTransformationMatrix(_float TimeDelta);
 	HRESULT Bind_VIBuffer();
 
 	HRESULT Render_Model(_uint iMaterialIndex, _uint iPassIndex);
@@ -75,8 +76,8 @@ private:
 
 protected:
 	_uint						m_iNumAnimations;
+	_uint						m_iCurrentAnimationIndex = 0;
 	vector<class CAnimation*>	m_Animations;
-
 
 protected: /* For.Vertices */
 	ID3D11Buffer*				m_pVB = nullptr;

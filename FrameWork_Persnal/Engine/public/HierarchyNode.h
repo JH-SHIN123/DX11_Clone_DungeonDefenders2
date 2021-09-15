@@ -17,6 +17,9 @@ public:
 	_fmatrix Get_CombindTransformationMatrix() const { return XMLoadFloat4x4(&m_CombinedTransformationMatrix); }
 
 public:
+	HRESULT Set_AnimChannelPointer(class CAnimChannel* pAnimChannel);
+
+public:
 	HRESULT NativeConstruct(char* pName, _fmatrix TransformationMatrix, CHierarcyNode* pParent, _uint iDepth);
 	void Update_CombindTransformationMatrix();
 
@@ -26,6 +29,9 @@ private:
 	_float4x4		m_CombinedTransformationMatrix;
 	CHierarcyNode*	m_pParent = nullptr;
 	_uint			m_iDepth = 0;				// 몇대째인지 (재귀호출을 할것이기 때문에 재귀호출 회수 = 깊이)
+
+private:
+	class CAnimChannel*		m_pAnimChannel = nullptr;
 
 public:
 	static CHierarcyNode* Create(char* pName, _fmatrix TransformationMatrix, CHierarcyNode* pParent = nullptr, _uint iDepth = 0);

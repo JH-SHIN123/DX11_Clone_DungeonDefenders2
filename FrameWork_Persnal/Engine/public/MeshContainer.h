@@ -9,6 +9,7 @@ class CMeshContainer final : public CBase
 {
 private:
 	explicit CMeshContainer(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
+	explicit CMeshContainer(const CMeshContainer& rhs);
 	virtual ~CMeshContainer() = default;
 
 public:
@@ -18,19 +19,18 @@ public:
 	_uint Get_StartVertexIndex()	const	{ return m_iStartVertexIndex; }
 
 public:
-	void Set_LinkedNodePointer(class CHierarcyNode* pLinkedNode); // 노드가 가지고 있는 행렬에 쉽게 접근이 가능하도록
-
-public:
 	HRESULT NativeConstruct(const char* pMeshName, _uint iStartPolygonIndex, _uint iNumPolgygons, _uint iStartVertexIndex, _uint iMaterialIndex);
 	HRESULT Add_BoneDesc(BONEDESC* pBoneDesc);
 	void	Compute_BoneMatrices(_matrix* pBoneMatrices);
+	void	Clone_Bones();
 
 private:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pDevice_Context = nullptr;
 
 private:
-	class CHierarcyNode*	m_pLinkedNode = nullptr;
+	//void Set_LinkedNodePointer(class CHierarcyNode* pLinkedNode); // 노드가 가지고 있는 행렬에 쉽게 접근이 가능하도록
+	//class CHierarcyNode*	m_pLinkedNode = nullptr;
 
 private:
 	char					m_szMeshName[MAX_PATH] = "";

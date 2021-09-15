@@ -160,12 +160,12 @@ HRESULT CModelLoader::Create_HierarchyNode(CModel * pModel, aiNode * pNode, CHie
 	if (nullptr == pHierarchyNode)
 		return E_FAIL;
 
-	for (_uint i = 0; i < pNode->mNumMeshes; ++i)
-	{
-		CMeshContainer*		pMeshContainer = pModel->Get_MeshContainer(pNode->mMeshes[i]);
-
-		pMeshContainer->Set_LinkedNodePointer(pHierarchyNode);
-	}
+	//for (_uint i = 0; i < pNode->mNumMeshes; ++i)
+	//{
+	//	CMeshContainer*		pMeshContainer = pModel->Get_MeshContainer(pNode->mMeshes[i]);
+	//
+	//	pMeshContainer->Set_LinkedNodePointer(pHierarchyNode);
+	//}
 
 	pModel->Add_HierarchyNode(pHierarchyNode);
 

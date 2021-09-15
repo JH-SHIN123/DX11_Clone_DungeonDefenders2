@@ -39,6 +39,10 @@ CModel::CModel(const CModel & rhs)
 	, m_Meshes(rhs.m_Meshes)
 	, m_SortMeshesByMaterial(rhs.m_SortMeshesByMaterial)
 	, m_Materials(rhs.m_Materials)
+	, m_HierarchyNodes(rhs.m_HierarchyNodes)
+	, m_iNumAnimations(rhs.m_iNumAnimations)
+	, m_iCurrentAnimationIndex(rhs.m_iCurrentAnimationIndex)
+	, m_Animations(rhs.m_Animations)
 {
 	Safe_AddRef(m_pEffect);
 	Safe_AddRef(m_pIB);
@@ -253,6 +257,16 @@ HRESULT CModel::Add_HierarchyNode(CHierarcyNode * pHierarchyNode)
 	return S_OK;
 }
 
+void CModel::Add_AnimChannelToHierarchyNode(CAnimChannel * pChannel)
+{
+	auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarcyNode* pNode)
+	{
+		return !strcmp(pChannel->Get_Name(), pNode->Get_Name());
+	});
+
+	(*iter)->Set_AnimChannelPointer(pChannel);
+}
+
 HRESULT CModel::Reserve_VIBuffer(_uint iNumVertices, _uint iNumFace)
 {
 	m_Vertices.reserve(iNumVertices);
@@ -365,12 +379,20 @@ HRESULT CModel::SetUp_Animation(const aiScene * pScene)
 		if (nullptr == pAnim)
 			return E_FAIL;
 
-		CAnimation*		pAnimation = CAnimation::Create(pAnim->mName.data, pAnim->mDuration, pAnim->mTicksPerSecond);
+		CAnimation*		pAnimation = CAnimation::Create(pAnim->mName.data, (_float)pAnim->mDuration, (_float)pAnim->mTicksPerSecond);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 
+		_double		LastTime = 0.0;
+
 		_uint		iNumChannel = pAnim->mNumChannels;
 
+		_vector		vScale, vRotation, vPosition;
+		vScale = XMVectorZero();
+		vRotation = XMVectorZero();
+		vPosition = XMVectorZero();;
+
+		// 1개 채널 = n개 애니메이션
 		for (_uint j = 0; j < iNumChannel; ++j)
 		{
 			aiNodeAnim*			pNodeAnim = pAnim->mChannels[j];
@@ -383,55 +405,48 @@ HRESULT CModel::SetUp_Animation(const aiScene * pScene)
 			iNumKeyFrames = max(iNumKeyFrames, pNodeAnim->mNumScalingKeys);
 			iNumKeyFrames = max(iNumKeyFrames, pNodeAnim->mNumRotationKeys);
 
+			// 1개 애니메이션 = n개 키 프레임
 			for (_uint k = 0; k < iNumKeyFrames; ++k)
 			{
 				KEYFRAME*		pKeyFrame = new KEYFRAME;
 				ZeroMemory(pKeyFrame, sizeof(KEYFRAME));
 
-				if (pNodeAnim->mNumPositionKeys > k)
+				if (pNodeAnim->mNumScalingKeys > k)
 				{
-
+					memcpy(&vScale, &pNodeAnim->mScalingKeys[k].mValue, sizeof(_float3));
+					pKeyFrame->Time = pNodeAnim->mScalingKeys[k].mTime;
 				}
 
-
-				/* 1. 크기 * 이동 */
-				/* 2. 크기 * 회전 * 이동 */
-				/* 3. 크기 * 회전 * 이동 */
-
-				for (_uint l = 0; l < pNodeAnim->mNumPositionKeys; ++l)
+				if (pNodeAnim->mNumRotationKeys > k)
 				{
-					memcpy(&pKeyFrame->vPosition, &pNodeAnim->mPositionKeys[k].mValue, sizeof(_float3));
+					vRotation = XMVectorSetX(vRotation, pNodeAnim->mRotationKeys[k].mValue.x);
+					vRotation = XMVectorSetY(vRotation, pNodeAnim->mRotationKeys[k].mValue.y);
+					vRotation = XMVectorSetZ(vRotation, pNodeAnim->mRotationKeys[k].mValue.z);
+					vRotation = XMVectorSetW(vRotation, pNodeAnim->mRotationKeys[k].mValue.w);
+					pKeyFrame->Time = pNodeAnim->mRotationKeys[k].mTime;
+				}
+
+				if (pNodeAnim->mNumPositionKeys > k)
+				{
+					memcpy(&vPosition, &pNodeAnim->mPositionKeys[k].mValue, sizeof(_float3));
 					pKeyFrame->Time = pNodeAnim->mPositionKeys[k].mTime;
 				}
 
+				LastTime = max(LastTime, pKeyFrame->Time);
 
-
-
-				for (_uint l = 0; l < pNodeAnim->mNumRotationKeys; ++l)
-				{
-					if (pKeyFrame->Time == pNodeAnim->mRotationKeys[l].mTime)
-					{
-						pKeyFrame->vRotation.w = pNodeAnim->mRotationKeys[l].mValue.w;
-						pKeyFrame->vRotation.x = pNodeAnim->mRotationKeys[l].mValue.x;
-						pKeyFrame->vRotation.y = pNodeAnim->mRotationKeys[l].mValue.y;
-						pKeyFrame->vRotation.z = pNodeAnim->mRotationKeys[l].mValue.z;
-						break;
-					}
-				}
-
-				for (_uint l = 0; l < pNodeAnim->mNumScalingKeys; ++l)
-				{
-					if (pKeyFrame->Time == pNodeAnim->mScalingKeys[l].mTime)
-					{
-						memcpy(&pKeyFrame->vScale, &pNodeAnim->mScalingKeys[l].mValue, sizeof(_float3));
-						break;
-					}
-				}
+				memcpy(&pKeyFrame->vScale, &vScale, sizeof(_float3));
+				memcpy(&pKeyFrame->vRotation, &vRotation, sizeof(_float4));
+				memcpy(&pKeyFrame->vPosition, &vPosition, sizeof(_float3));
 
 				pChannel->Add_KeyFrame(pKeyFrame);
 			}
+
+			Add_AnimChannelToHierarchyNode(pChannel);
+
+
 			pAnimation->Add_Channel(pChannel);
 		}
+		pAnimation->Set_LastTime((_float)LastTime);
 		m_Animations.push_back(pAnimation);
 	}
 	return S_OK;
@@ -512,11 +527,19 @@ HRESULT CModel::SetUp_SkinnedInfo(const aiScene * pScene)
 	return S_OK;
 }
 
-HRESULT CModel::Update_CombindTransformationMatrix()
+HRESULT CModel::Update_CombindTransformationMatrix(_float TimeDelta)
 {
 	/* 애니메이션의 재생이 있다면. 매프레임마다 호출. */
-	for (auto& iter : m_HierarchyNodes)
-		iter->Update_CombindTransformationMatrix();
+	if (m_iNumAnimations > 0)
+	{
+		/* 현재 애니메이션 채널들이 시간에 맞는 상태 변환값을 가지게 한다. */
+		m_Animations[m_iCurrentAnimationIndex]->Update_Transform(TimeDelta);//
+
+		for (auto& pHierarchyNode : m_HierarchyNodes)
+		{
+			pHierarchyNode->Update_CombindTransformationMatrix();
+		}
+	}
 
 	return S_OK;
 }
@@ -548,7 +571,7 @@ HRESULT CModel::Render_Model(_uint iMaterialIndex, _uint iPassIndex)
 
 		pMeshContainer->Compute_BoneMatrices(BoneMatrices);
 
-		Set_Variable("BoneMatrices", BoneMatrices, sizeof(_matrix) * 128);
+		Set_Variable("g_BoneMatrices", BoneMatrices, sizeof(_matrix) * 128);
 
 		if (FAILED(m_InputLayouts[iPassIndex].pPass->Apply(0, m_pDevice_Context)))
 			return E_FAIL;

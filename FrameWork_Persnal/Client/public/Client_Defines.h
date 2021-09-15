@@ -22,8 +22,8 @@ using namespace Client;
 #include "Loading.h"
 
 #include "Client_Macro.h"
-#include "Client_Struct.h"
 #include "Client_Typedef.h"
+#include "Client_Struct.h"
 #include <fstream>
 
 #define __CLIENT_DEFINES_H__

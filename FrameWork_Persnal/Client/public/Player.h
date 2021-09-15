@@ -7,6 +7,15 @@
 
 BEGIN(Client)
 
+typedef struct tagGameObject_Desc
+{
+	STATUS_DESC		Status_Desc;
+	MOVESTATE_DESC	Movement_Desc;
+
+	wchar_t			szModelName[MAX_PATH] = L"";
+	ELevel			eModelLevel = ELevel::End;
+}GAMEOBJ_DESC;
+
 class CPlayer final : public CGameObject
 {
 protected:
@@ -32,12 +41,10 @@ private: // LateTick
 	void Level_Check();
 
 private:
+	CModel*				m_pModelCom		= nullptr;
 	CStatus*			m_pStatusCom	= nullptr;
-	CRenderer*			m_pRendererCom	= nullptr;
-	CTextures*			m_pTextureCom	= nullptr;
-	// 이제 이거 안쓸거임
 	CMovement*			m_pMovementCom	= nullptr;
-	CVIBuffer_Cube*		m_pBufferRectCom = nullptr;
+	CRenderer*			m_pRendererCom	= nullptr;
 
 private:
 	_bool		m_IsSkill_Use[10] = { false };

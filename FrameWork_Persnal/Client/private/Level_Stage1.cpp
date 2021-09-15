@@ -35,7 +35,6 @@ HRESULT CLevel_Stage1::NativeConstruct()
 		
 
 	// Test
-
 	//TOWER_DESC Data;
 	//lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower");
 	//Data.eTowerRange = ETowerRange::Quarter;
@@ -195,7 +194,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
 
 	GAMEOBJ_DESC Data;
 	Data.Movement_Desc.vPos = _float4(10.f, 0.f, 10.f, 1.f);
-	Data.Movement_Desc.vScale = _float4(3.f, 3.f, 1.f, 1.f);
+	Data.Movement_Desc.vScale = _float4(3.f, 3.f, 3.f, 1.f);
 	Data.Movement_Desc.fSpeedPerSec = 20.f;
 
 	Data.Status_Desc.fAttSpeed = 2.f;
@@ -206,6 +205,8 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
 	Data.Status_Desc.iHp_Max = 300;
 	Data.Status_Desc.iLevel = 1;
 	Data.Status_Desc.iMp_Max = 100;
+
+	lstrcpy(Data.szModelName, L"Component_Mesh_Mage");
 
 	pGameInstance->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_Player"), (_uint)ELevel::Stage1, pLayerTag, &Data);
 

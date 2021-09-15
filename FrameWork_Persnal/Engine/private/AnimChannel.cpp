@@ -4,6 +4,13 @@ CAnimChannel::CAnimChannel()
 {
 }
 
+void CAnimChannel::Set_CurrentKeyFrame(_uint iCurrentKeyFrame)
+{
+	if (iCurrentKeyFrame >= m_KeyFrames.size())
+		return;
+	m_iCurrentKeyFrame = iCurrentKeyFrame;
+}
+
 HRESULT CAnimChannel::NativeConstruct(const char * pName)
 {
 	strcpy(m_szName, pName);

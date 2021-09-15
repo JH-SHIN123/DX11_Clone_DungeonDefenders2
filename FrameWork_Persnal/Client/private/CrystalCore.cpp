@@ -80,7 +80,6 @@ HRESULT CCrystalCore::Ready_Component(void * pArg)
 {
 	GAMEOBJ_DESC Data;
 	memcpy(&Data, pArg, sizeof(GAMEOBJ_DESC));
-
 	HRESULT hr = S_OK;
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &Data.Movement_Desc);
@@ -88,6 +87,13 @@ HRESULT CCrystalCore::Ready_Component(void * pArg)
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_ActivateCrystal"), TEXT("Com_Textures"), (CComponent**)&m_pTexturesCom);
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
+
+
+	Data.Movement_Desc.fRotatePerSec = 30.f;
+	m_pRing_Up		= CCrystalCore_Ring::Create(m_pDevice, m_pDevice_Context, &Data);
+	Data.Movement_Desc.fRotatePerSec = 45.f;
+	m_pRing_Down	= CCrystalCore_Ring::Create(m_pDevice, m_pDevice_Context, &Data);
+
 
 	if (S_OK != hr)
 		MSG_BOX("CCrystalCore::Ready_Component Failed");

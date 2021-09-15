@@ -1,9 +1,14 @@
 
 #include "Shader_Defines.hpp"
 
+struct BONEMATRICES
+{
+	matrix		Matrices[128];
+};
+
 cbuffer BoneMatrixDesc
 {
-	matrix		BoneMatrices[128];
+	BONEMATRICES		g_BoneMatrices;
 };
 
 cbuffer LightDesc
@@ -68,14 +73,14 @@ VS_OUT VS_MAIN_DIRECTIONAL(VS_IN In)
 	matWV = mul(WorldMatrix, ViewMatrix);
 	matWVP = mul(matWV, ProjMatrix);
 
-	matrix		BoneMatrix = BoneMatrices[In.vBlendIndex.x] * In.vBlendWeight.x +
-		BoneMatrices[In.vBlendIndex.y] * In.vBlendWeight.y +
-		BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
-		BoneMatrices[In.vBlendIndex.w] * In.vBlendWeight.w;
+	matrix		BoneMatrix = g_BoneMatrices.Matrices[In.vBlendIndex.x] * In.vBlendWeight.x +
+		g_BoneMatrices.Matrices[In.vBlendIndex.y] * In.vBlendWeight.y +
+		g_BoneMatrices.Matrices[In.vBlendIndex.z] * In.vBlendWeight.z +
+		g_BoneMatrices.Matrices[In.vBlendIndex.w] * In.vBlendWeight.w;
 
-	Out.vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+	vector		vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
 
-	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+	Out.vPosition = mul(vPosition, matWVP);
 	Out.vTexUV = In.vTexUV;
 
 	vector		vWorldPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);

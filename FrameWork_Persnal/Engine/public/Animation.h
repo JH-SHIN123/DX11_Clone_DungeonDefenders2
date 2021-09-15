@@ -11,19 +11,31 @@ private:
 	CAnimation();
 	virtual ~CAnimation() = default;
 public:
-	HRESULT NativeConstruct(const char* pName, _double Duration, _double TickPerSecond);
+	void Set_LastTime(_float fLastTime) { m_fLastTime = fLastTime; }
+
+public:
+	HRESULT NativeConstruct(const char* pName, _float Duration, _float TickPerSecond);
 	HRESULT Add_Channel(class CAnimChannel* pAnimChannel);
+	HRESULT Update_Transform(_float TimeDelta);
 
 private:
 	char			m_szName[MAX_PATH] = "";
-	_double			m_Duration = 0.0;
-	_double			m_TickPerSecond = 0.0;
+	_float			m_TickPerSecond = 0.0;
+
+	
+	_float			m_fDuration		= 0.0;		/* 애니메이션의 총 시간(길이)*/
+	_float			m_fCurrentTime	= 0.0;		/* 애니메이션을 재생하고 있는 현재의 시간. */
+	_float			m_fLastTime		= 0.0;		/* 애니메이션의 마지막 키프레임의 시간. */
+
+	
+
+	_bool			m_isEnd = false;
 
 private:
 	vector<class CAnimChannel*>			m_Channels;
 
 public:
-	static CAnimation* Create(const char* pName, _double Duration, _double TickPerSecond);
+	static CAnimation* Create(const char* pName, _float Duration, _float TickPerSecond);
 	virtual void Free() override;
 };
 END
