@@ -226,7 +226,7 @@ HRESULT CMainApp::Ready_UI_Texture()
 
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Phase_Text")
-		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Phase/Phase_Test.png")));
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/UI/Text/Phase/%d.png"), 3));
 
 
 

@@ -77,6 +77,9 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 	if (GET_KEY_INPUT(DIK_F3))
 		CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Build);
 
+	if (GET_KEY_INPUT(DIK_F4))
+		CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Combat);
+
 	return 0;
 }
 

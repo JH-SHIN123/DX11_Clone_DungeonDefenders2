@@ -44,6 +44,7 @@ public:
 
 private:
 	EPhaseState	m_eNowPhase = EPhaseState::End;
+	_float		m_fPhaseCheck_Timer = 0.f;
 #pragma endregion
 
 

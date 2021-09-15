@@ -27,13 +27,23 @@ HRESULT CPhase_Panel::NativeConstruct(void * pArg)
 
 _int CPhase_Panel::Tick(_float TimeDelta)
 {
+	if (0 >= m_fTime)
+		return OBJECT_DEAD;
+
 	Move_Check(TimeDelta);
+
+	if (true == m_IsDisapeer)
+		m_fTime -= TimeDelta * 1.5f;
 
 	return _int();
 }
 
 _int CPhase_Panel::Late_Tick(_float TimeDelta)
 {
+	if (0 >= m_fTime)
+		return OBJECT_DEAD;
+
+
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Option_UI_1, this);
 }
 
@@ -47,7 +57,14 @@ HRESULT CPhase_Panel::Render()
 
 	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(m_iTextureIndex));
-	m_pBufferRectCom->Render(1);
+
+	if(false == m_IsDisapeer)
+		m_pBufferRectCom->Render(1);
+	else
+	{
+		m_pBufferRectCom->Set_Variable("g_AlphaTime", &m_fTime, sizeof(_float));
+		m_pBufferRectCom->Render(6);
+	}
 
 	return S_OK;
 }
@@ -84,6 +101,12 @@ void CPhase_Panel::Move_Check(_float TimeDelta)
 		fScale = 128.f;
 
 	m_pMovementCom->Set_Scale(XMVectorSet(512.f, fScale, 0.f, 0.f));
+
+	_float4 vPos;
+	XMStoreFloat4(&vPos, m_pMovementCom->Get_State(EState::Position));
+
+	if (60.f > vPos.y)
+		m_IsDisapeer = true;
 }
 
 CPhase_Panel * CPhase_Panel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
