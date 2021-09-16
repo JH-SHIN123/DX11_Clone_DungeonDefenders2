@@ -78,7 +78,7 @@ HRESULT CTerrain::Render()
 		if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_DIFFUSE)))
 			return E_FAIL;
 
-		m_pModelCom->Render_Model(i, 0);
+		m_pModelCom->Render_Model(i, 1);
 	}
 
 

@@ -81,6 +81,33 @@ VS_OUT VS_MAIN_DIRECTIONAL(VS_IN In)
 	vector		vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
 
 	Out.vPosition = mul(vPosition, matWVP);
+
+	Out.vTexUV = In.vTexUV;
+
+	vector		vWorldPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);
+	vector		vWorldNormal = normalize(mul(vector(In.vNormal, 0.f), WorldMatrix));
+
+	Out.vShade = max(dot(normalize(vector(vLightDirection, 0.f)) * -1.f, vWorldNormal), 0.f);
+	Out.vShade.a = 1.f;
+
+	vector		vReflect = reflect(normalize(vector(vLightDirection, 0.f)), normalize(vWorldNormal));
+	vector		vLook = vWorldPosition - vCameraPosition;
+
+	Out.vSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
+
+	return Out;
+}
+
+VS_OUT VS_MAIN_DIRECTIONAL_TERRAIN(VS_IN In)
+{
+	VS_OUT			Out = (VS_OUT)0;
+
+	matrix		matWV, matWVP;
+
+	matWV = mul(WorldMatrix, ViewMatrix);
+	matWVP = mul(matWV, ProjMatrix);
+	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP); // ¾î ½Ã¹ß;
+
 	Out.vTexUV = In.vTexUV;
 
 	vector		vWorldPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);
@@ -127,12 +154,20 @@ PS_OUT PS_MAIN(PS_IN In)
 
 technique11		DefaultTechnique
 {
-	pass Light_Directional
+	pass Light_Directional // 0
 	{
 		SetRasterizerState(Rasterizer_Solid);
 		SetDepthStencilState(DepthStecil_Default, 0);
 		SetBlendState(BlendState_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL();
+		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+	pass Light_Directional_Terrain // 1
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_Default, 0);
+		SetBlendState(BlendState_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL_TERRAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 };

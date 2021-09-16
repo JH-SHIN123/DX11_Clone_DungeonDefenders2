@@ -28,8 +28,7 @@ HRESULT CPlayer::NativeConstruct(void * pArg)
 
 	Ready_Component(pArg);
 
-	if(nullptr != m_pModelCom)
-		m_pModelCom->Set_AnimationIndex(0);
+	m_pModelCom->Set_AnimationIndex(1);
 
 
 	return S_OK;
@@ -210,7 +209,7 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &Data.Movement_Desc);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Status"), (CComponent**)&m_pStatusCom, &Data.Status_Desc);
 
-	//hr = CGameObject::Add_Component((_uint)ELevel::Stage1, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom, &Data.Status_Desc);
+	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom, &Data.Status_Desc);
 
 
 	return S_OK;

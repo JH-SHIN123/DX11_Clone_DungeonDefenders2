@@ -167,8 +167,8 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Level_1"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Magus.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique", PivotMatrix));
 
-	//hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Mage"),
-	//	CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Mage/", "Mage.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique", PivotMatrix));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Mage"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Mage/", "Mage.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
 
 	//hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_StrikerTower"),

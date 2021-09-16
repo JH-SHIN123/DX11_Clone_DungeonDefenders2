@@ -44,6 +44,8 @@ CModel::CModel(const CModel & rhs)
 	, m_iCurrentAnimationIndex(rhs.m_iCurrentAnimationIndex)
 	, m_Animations(rhs.m_Animations)
 {
+
+
 	Safe_AddRef(m_pEffect);
 	Safe_AddRef(m_pIB);
 	Safe_AddRef(m_pVB);
@@ -54,14 +56,25 @@ CModel::CModel(const CModel & rhs)
 		Safe_AddRef(InputLayout.pLayout);
 	}
 
+	/*for (auto& pOriginalMeshContainer : rhs.m_Meshes)
+	{
+	CMeshContainer*	pMeshContainer = pOriginalMeshContainer->Clone();
+	m_Meshes.push_back(pMeshContainers);
+	}*/
+
+
 	for (auto& pMeshContainer : m_Meshes)
+	{
 		Safe_AddRef(pMeshContainer);
+	}
+
 
 	for (auto& pMeshContainers : m_SortMeshesByMaterial)
 	{
 		for (auto& pMeshContainer : pMeshContainers)
 			Safe_AddRef(pMeshContainer);
 	}
+
 
 	for (auto& pMeshTexture : m_Materials)
 	{
