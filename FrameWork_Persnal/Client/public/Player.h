@@ -7,6 +7,23 @@
 
 BEGIN(Client)
 
+enum class EPlayerState
+{
+	CallOut = 0, // 38
+	ChargeMax = 38,
+	ChargeMax_KnockBack = 59,
+	ChargeMin = 79,
+	ChargeMin_KnockBack = 100,
+	Death = 181,
+	Detonate = 211,
+	Fire = 231,
+	Fire_MaxPower = 261,
+	Heal = 281,
+	Hurt = 292,
+	Idle = 411,
+	Idle_LowHp = 471
+};
+
 typedef struct tagGameObject_Desc
 {
 	STATUS_DESC		Status_Desc;

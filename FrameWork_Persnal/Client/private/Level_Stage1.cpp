@@ -168,10 +168,10 @@ HRESULT CLevel_Stage1::Ready_Layer_Camera_Free(const _tchar * pLayerTag)
 	CameraDesc.vAt = _float3(0.f, -5.f, 0.f);
 	CameraDesc.vAxisY = _float3(0.f, 1.f, 0.f);
 
-	CameraDesc.vTargetAxis = _float3(0.3f, 0.5f, -1.1f);
+	CameraDesc.vTargetAxis = _float3(0.3f, 0.9f, -1.1f);
 	CameraDesc.fXRotationLock_Min = 70.f;
 	CameraDesc.fXRotationLock_Max = 155.f;
-	CameraDesc.fDis = 5.f;
+	CameraDesc.fDis = 10.f;
 
 	CameraDesc.fAspect = _float(g_iWinCX) / g_iWinCY;
 	CameraDesc.fFovy = XMConvertToRadians(90.0f);
@@ -194,7 +194,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
 
 	GAMEOBJ_DESC Data;
 	Data.Movement_Desc.vPos = _float4(10.f, 0.f, 10.f, 1.f);
-	Data.Movement_Desc.vScale = _float4(0.3f, 0.3f, 0.3f, 0.f);
+	Data.Movement_Desc.vScale = _float4(0.25f, 0.25f, 0.25f, 0.f);
 	Data.Movement_Desc.fSpeedPerSec = 20.f;
 
 	Data.Status_Desc.fAttSpeed = 2.f;

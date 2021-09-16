@@ -25,8 +25,12 @@ HRESULT CAnimation::Add_Channel(CAnimChannel * pAnimChannel)
 	return S_OK;
 }
 
-HRESULT CAnimation::Update_Transform(_float TimeDelta)
+HRESULT CAnimation::Update_Transform(_float TimeDelta, _float fEndTime, _float fNextCurrentTime)
 {
+	// m_fLastTime
+	// 끝났을때 CurrentTime다시세팅할 기준점
+	m_fLastTime = fEndTime;
+
 	m_fCurrentTime += fmod(m_TickPerSecond * TimeDelta, m_fDuration);
 
 	if (m_fCurrentTime >= m_fLastTime)
@@ -48,9 +52,12 @@ HRESULT CAnimation::Update_Transform(_float TimeDelta)
 		_uint iCurrentKeyFrame = pAnimChannel->Get_CurrentKeyFrame();
 
 		if (true == m_isEnd)
-		{
+		{		
+			//난 하나의 채널안에서 애니메이션을 전부 돌리는 상황
+			//m_fCurrentTime = fNextCurrentTime; // 이거 ㄹ이렇게 때려박는것은 지금의 구조에선 위험하다 (특정범위 안에서만 반복하도록 만든 코드)
+			// iCurrentKeyFrame을 적절히 조절 가능하다면 저대로 써도 될거같은데 ㅜ
 			iCurrentKeyFrame = 0;
-			m_fCurrentTime = 0;
+			m_fCurrentTime = 0.f;
 			pAnimChannel->Set_CurrentKeyFrame(iCurrentKeyFrame);
 		}
 
@@ -87,18 +94,21 @@ HRESULT CAnimation::Update_Transform(_float TimeDelta)
 			_vector		vSourRotataion, vDestRotation;
 			_vector		vSourPosition, vDestPosition;
 
+			// 이전 프레임
 			vSourScale = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame]->vScale);
 			vSourRotataion = XMLoadFloat4(&KeyFrames[iCurrentKeyFrame]->vRotation);
 			vSourPosition = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame]->vPosition);
 			vSourPosition = XMVectorSetW(vSourPosition, 1.f);
 
+			// 다음프레임
 			vDestScale = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame + 1]->vScale);
 			vDestRotation = XMLoadFloat4(&KeyFrames[iCurrentKeyFrame + 1]->vRotation);
 			vDestPosition = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame + 1]->vPosition);
 			vDestPosition = XMVectorSetW(vDestPosition, 1.f);
 
+			// 선형보간
 			vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
-			vRotation = XMQuaternionSlerp(vSourRotataion, vDestRotation, fRatio);
+			vRotation = XMQuaternionSlerp(vSourRotataion, vDestRotation, fRatio); // +구면선형보간
 			vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
 			vPosition = XMVectorSetW(vPosition, 1.f);
 		}

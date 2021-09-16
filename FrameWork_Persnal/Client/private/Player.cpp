@@ -28,8 +28,8 @@ HRESULT CPlayer::NativeConstruct(void * pArg)
 
 	Ready_Component(pArg);
 
-	m_pModelCom->Set_AnimationIndex(1);
-
+	m_pModelCom->Set_AnimationIndex(0); // 애니메이션 인덱스는 한개밖에 안들어가는 상황
+	m_pModelCom->Set_CurrentTime(38.f);
 
 	return S_OK;
 }
@@ -70,13 +70,13 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 	}
 
 	if (nullptr != m_pModelCom)
-		m_pModelCom->Update_CombindTransformationMatrix(TimeDelta);
+		m_pModelCom->Update_CombindTransformationMatrix(TimeDelta, 181.f, 100.f);
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
 
 HRESULT CPlayer::Render()
-{
+{ 
 	if (nullptr == m_pModelCom)
 		return S_OK;
 

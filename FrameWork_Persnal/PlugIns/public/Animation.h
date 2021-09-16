@@ -12,11 +12,12 @@ private:
 	virtual ~CAnimation() = default;
 public:
 	void Set_LastTime(_float fLastTime) { m_fLastTime = fLastTime; }
+	void Set_CurrentTime(_float fCurrentTime) { m_fCurrentTime = fCurrentTime; }
 
 public:
 	HRESULT NativeConstruct(const char* pName, _float Duration, _float TickPerSecond);
 	HRESULT Add_Channel(class CAnimChannel* pAnimChannel);
-	HRESULT Update_Transform(_float TimeDelta);
+	HRESULT Update_Transform(_float TimeDelta, _float fEndTime, _float fNextCurrentTime);
 
 private:
 	char			m_szName[MAX_PATH] = "";

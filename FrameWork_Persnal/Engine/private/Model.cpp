@@ -99,6 +99,15 @@ void CModel::Set_AnimationIndex(_uint iAnimationIndex)
 	m_iCurrentAnimationIndex = iAnimationIndex;	
 }
 
+void CModel::Set_CurrentTime(_float fCurrentTime)
+
+{
+	if (m_Animations.size() >= (_int)m_iNumAnimations)
+		return;
+
+	 m_Animations[m_iCurrentAnimationIndex]->Set_CurrentTime(fCurrentTime);
+}
+
 HRESULT CModel::NativeConstruct_Prototype(const char * pMeshFilePath, const char * pMeshFileName, const _tchar * pShaderFilePath, const char * pTechniqueName, _fmatrix PivotMatrix)
 {
 	if (nullptr == m_pModelLoader)
@@ -547,13 +556,13 @@ HRESULT CModel::SetUp_SkinnedInfo(const aiScene * pScene)
 	return S_OK;
 }
 
-HRESULT CModel::Update_CombindTransformationMatrix(_float TimeDelta)
+HRESULT CModel::Update_CombindTransformationMatrix(_float TimeDelta, _float fEndTime, _float fNextCurrentTime)
 {
 	/* 애니메이션의 재생이 있다면. 매프레임마다 호출. */
 	if (m_iNumAnimations > 0)
 	{
 		/* 현재 애니메이션 채널들이 시간에 맞는 상태 변환값을 가지게 한다. */
-		m_Animations[m_iCurrentAnimationIndex]->Update_Transform(TimeDelta);//
+		m_Animations[m_iCurrentAnimationIndex]->Update_Transform(TimeDelta, fEndTime, fNextCurrentTime);//
 
 		for (auto& pHierarchyNode : m_HierarchyNodes)
 		{

@@ -21,6 +21,7 @@ public:
 
 public:
 	void Set_AnimationIndex(_uint iAnimationIndex);
+	void Set_CurrentTime(_float fCurrentTime);
 
 
 public:
@@ -44,7 +45,7 @@ public:
 	HRESULT SetUp_Animation(const aiScene* pScene);
 	HRESULT Sort_MeshesByMaterial();
 	HRESULT SetUp_SkinnedInfo(const aiScene* pScene);
-	HRESULT Update_CombindTransformationMatrix(_float TimeDelta);
+	HRESULT Update_CombindTransformationMatrix(_float TimeDelta, _float fEndTime, _float fNextCurrentTime = 0.f);
 	HRESULT Bind_VIBuffer();
 
 	HRESULT Render_Model(_uint iMaterialIndex, _uint iPassIndex);
