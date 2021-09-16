@@ -49,14 +49,14 @@ HRESULT CAnimation::Update_Transform(_float TimeDelta, _float fEndTime, _float f
 		KEYFRAME*			pFirst = KeyFrames.front();
 		KEYFRAME*			pLast = KeyFrames.back();
 
-		_uint iCurrentKeyFrame = pAnimChannel->Get_CurrentKeyFrame();
+		_uint iCurrentKeyFrame = (_uint)m_fCurrentTime;//pAnimChannel->Get_CurrentKeyFrame();
 
 		if (true == m_isEnd)
 		{		
 			//난 하나의 채널안에서 애니메이션을 전부 돌리는 상황
 			//m_fCurrentTime = fNextCurrentTime; // 이거 ㄹ이렇게 때려박는것은 지금의 구조에선 위험하다 (특정범위 안에서만 반복하도록 만든 코드)
 			// iCurrentKeyFrame을 적절히 조절 가능하다면 저대로 써도 될거같은데 ㅜ
-			iCurrentKeyFrame = 0;
+			iCurrentKeyFrame = fNextCurrentTime;
 			m_fCurrentTime = 0.f;
 			pAnimChannel->Set_CurrentKeyFrame(iCurrentKeyFrame);
 		}
