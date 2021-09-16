@@ -46,6 +46,7 @@ private:
 public:
 	static CMeshContainer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const char* pMeshName,
 		_uint iStartPolygonIndex, _uint iNumPolgygons, _uint iStartVertexIndex, _uint iMaterialIndex);
+	virtual CMeshContainer* Clone();
 	virtual void Free() override;
 };
 

@@ -21,7 +21,7 @@ HRESULT CHierarcyNode::NativeConstruct(char * pName, _fmatrix TransformationMatr
 {
 	strcpy(m_szNodeName, pName);
 
-	XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix);
+	XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(TransformationMatrix));
 
 	m_pParent = pParent;
 	Safe_AddRef(m_pParent);

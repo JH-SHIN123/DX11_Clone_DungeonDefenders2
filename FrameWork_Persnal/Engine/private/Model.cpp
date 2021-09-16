@@ -78,6 +78,14 @@ CMeshContainer * CModel::Get_MeshContainer(_uint iMeshIndex)
 	return m_Meshes[iMeshIndex];
 }
 
+void CModel::Set_AnimationIndex(_uint iAnimationIndex)
+{
+	if (iAnimationIndex >= m_iNumAnimations)
+		return;
+
+	m_iCurrentAnimationIndex = iAnimationIndex;	
+}
+
 HRESULT CModel::NativeConstruct_Prototype(const char * pMeshFilePath, const char * pMeshFileName, const _tchar * pShaderFilePath, const char * pTechniqueName, _fmatrix PivotMatrix)
 {
 	if (nullptr == m_pModelLoader)
@@ -118,7 +126,6 @@ HRESULT CModel::NativeConstruct(void * pArg)
 
 HRESULT CModel::Ready_VIBuffer(const _tchar * pShaderFilePath, const char * pTechniqueName, _fmatrix PivotMatrix)
 {
-	// VIBuffer의 세팅과 비슷하다 크게 달라지는건 아직 없다.
 	/* For. VertexBuffer */
 	m_iNumVertexBuffers = 1;
 
@@ -139,7 +146,6 @@ HRESULT CModel::Ready_VIBuffer(const _tchar * pShaderFilePath, const char * pTec
 
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
-		// 흠...
 		_vector		vTransformPosition = XMVector3TransformCoord(XMLoadFloat3(&m_Vertices[i]->vPosition), PivotMatrix);
 
 		XMStoreFloat3(&m_Vertices[i]->vPosition, vTransformPosition);
@@ -192,12 +198,12 @@ HRESULT CModel::Ready_VIBuffer(const _tchar * pShaderFilePath, const char * pTec
 		return E_FAIL;
 
 	D3D11_INPUT_ELEMENT_DESC			ElementDesc[] = {
-		{ "POSITION",		0, DXGI_FORMAT_R32G32B32_FLOAT,		0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL",			0, DXGI_FORMAT_R32G32B32_FLOAT,		0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TANGENT",		0, DXGI_FORMAT_R32G32B32_FLOAT,		0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD",		0, DXGI_FORMAT_R32G32_FLOAT,		0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDINDEX",		0, DXGI_FORMAT_R32G32B32A32_UINT,	0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDWEIGHT",	0, DXGI_FORMAT_R32G32B32A32_FLOAT,	0, 60, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDINDEX", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 60, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	if (FAILED(SetUp_InputLayOuts(ElementDesc, 6, pShaderFilePath, pTechniqueName)))
@@ -405,7 +411,7 @@ HRESULT CModel::SetUp_Animation(const aiScene * pScene)
 			iNumKeyFrames = max(iNumKeyFrames, pNodeAnim->mNumScalingKeys);
 			iNumKeyFrames = max(iNumKeyFrames, pNodeAnim->mNumRotationKeys);
 
-			// 1개 애니메이션 = n개 키 프레임
+			// 1개 애니메이션 = n개 키프레임
 			for (_uint k = 0; k < iNumKeyFrames; ++k)
 			{
 				KEYFRAME*		pKeyFrame = new KEYFRAME;
@@ -415,6 +421,7 @@ HRESULT CModel::SetUp_Animation(const aiScene * pScene)
 				{
 					memcpy(&vScale, &pNodeAnim->mScalingKeys[k].mValue, sizeof(_float3));
 					pKeyFrame->Time = pNodeAnim->mScalingKeys[k].mTime;
+
 				}
 
 				if (pNodeAnim->mNumRotationKeys > k)
@@ -585,10 +592,7 @@ CHierarcyNode * CModel::Find_HierarchyNode(const char * pNodeName)
 {
 	auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarcyNode* pHierarchyNode)->bool
 	{
-		if (0 == strcmp(pNodeName, pHierarchyNode->Get_Name()))
-			return true;
-		else
-			return false;
+		return !strcmp(pNodeName, pHierarchyNode->Get_Name());
 	});
 
 	if (iter == m_HierarchyNodes.end())

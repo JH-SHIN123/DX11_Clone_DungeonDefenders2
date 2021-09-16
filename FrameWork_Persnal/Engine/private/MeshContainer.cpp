@@ -78,6 +78,13 @@ CMeshContainer * CMeshContainer::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 	return pInstance;
 }
 
+CMeshContainer* CMeshContainer::Clone()
+{
+	CMeshContainer*		pInstance = new CMeshContainer(*this);
+
+	return pInstance;
+}
+
 void CMeshContainer::Free()
 {
 	Safe_Release(m_pDevice_Context);

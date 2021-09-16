@@ -19,6 +19,9 @@ public:
 
 	class CMeshContainer* Get_MeshContainer(_uint iMeshIndex);
 
+public:
+	void Set_AnimationIndex(_uint iAnimationIndex);
+
 
 public:
 	virtual HRESULT NativeConstruct_Prototype(const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix); /* 버퍼를 생성한다.*/

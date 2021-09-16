@@ -28,6 +28,10 @@ HRESULT CPlayer::NativeConstruct(void * pArg)
 
 	Ready_Component(pArg);
 
+	if(nullptr != m_pModelCom)
+		m_pModelCom->Set_AnimationIndex(0);
+
+
 	return S_OK;
 }
 
