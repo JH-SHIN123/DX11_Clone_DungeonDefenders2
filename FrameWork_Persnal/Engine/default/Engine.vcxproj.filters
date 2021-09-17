@@ -115,29 +115,29 @@
     <Filter Include="02.Utility\05.ScreenCapture">
       <UniqueIdentifier>{358108a0-b18f-4580-bf58-3529427440e2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Utility\06.ModelLoader">
-      <UniqueIdentifier>{33b679e3-3a64-4d3c-a47d-2196d2f52ed3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Utility\02.Component\06.Mesh">
       <UniqueIdentifier>{90eb2e0a-b6ab-4e87-810b-362a13997fac}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.Utility\02.Component\06.Mesh\00.Model">
       <UniqueIdentifier>{d461e301-e891-4103-b0af-18b9b3d763b8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\00.MeshContainer">
-      <UniqueIdentifier>{6e84f8e9-fc15-4cc9-b0c8-44a3de0c0586}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\01.HierarchyNode">
-      <UniqueIdentifier>{ac3110b5-aa98-48a5-a067-0effa0d63a70}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Utility\02.Component\07.Textures_Extend">
       <UniqueIdentifier>{b68b0e58-f805-4bee-8879-a3914148a790}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\02.Animation">
+    <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\01.MeshContainer">
+      <UniqueIdentifier>{6e84f8e9-fc15-4cc9-b0c8-44a3de0c0586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\02.HierarchyNode">
+      <UniqueIdentifier>{ac3110b5-aa98-48a5-a067-0effa0d63a70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\03.Animation">
       <UniqueIdentifier>{5bba31e7-8211-4ee0-be54-4bf18bb41c12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\02.Animation\Channel">
+    <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\03.Animation\00.Channel">
       <UniqueIdentifier>{3e9e4869-3841-4829-88f0-1364357aac60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\00.ModelLoader">
+      <UniqueIdentifier>{33b679e3-3a64-4d3c-a47d-2196d2f52ed3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -262,25 +262,25 @@
       <Filter>02.Utility\05.ScreenCapture</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ModelLoader.h">
-      <Filter>02.Utility\06.ModelLoader</Filter>
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\00.ModelLoader</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Model.h">
       <Filter>02.Utility\02.Component\06.Mesh\00.Model</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MeshContainer.h">
-      <Filter>02.Utility\02.Component\06.Mesh\00.Model\00.MeshContainer</Filter>
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\01.MeshContainer</Filter>
     </ClInclude>
     <ClInclude Include="..\public\HierarchyNode.h">
-      <Filter>02.Utility\02.Component\06.Mesh\00.Model\01.HierarchyNode</Filter>
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\02.HierarchyNode</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Textures_Extend.h">
       <Filter>02.Utility\02.Component\07.Textures_Extend</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Animation.h">
-      <Filter>02.Utility\02.Component\06.Mesh\00.Model\02.Animation</Filter>
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\03.Animation</Filter>
     </ClInclude>
     <ClInclude Include="..\public\AnimChannel.h">
-      <Filter>02.Utility\02.Component\06.Mesh\00.Model\02.Animation\Channel</Filter>
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\03.Animation\00.Channel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -378,25 +378,25 @@
       <Filter>02.Utility\05.ScreenCapture</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ModelLoader.cpp">
-      <Filter>02.Utility\06.ModelLoader</Filter>
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\00.ModelLoader</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Model.cpp">
       <Filter>02.Utility\02.Component\06.Mesh\00.Model</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MeshContainer.cpp">
-      <Filter>02.Utility\02.Component\06.Mesh\00.Model\00.MeshContainer</Filter>
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\01.MeshContainer</Filter>
     </ClCompile>
     <ClCompile Include="..\private\HierarchyNode.cpp">
-      <Filter>02.Utility\02.Component\06.Mesh\00.Model\01.HierarchyNode</Filter>
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\02.HierarchyNode</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Textures_Extend.cpp">
       <Filter>02.Utility\02.Component\07.Textures_Extend</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Animation.cpp">
-      <Filter>02.Utility\02.Component\06.Mesh\00.Model\02.Animation</Filter>
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\03.Animation</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AnimChannel.cpp">
-      <Filter>02.Utility\02.Component\06.Mesh\00.Model\02.Animation\Channel</Filter>
+      <Filter>02.Utility\02.Component\06.Mesh\00.Model\03.Animation\00.Channel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

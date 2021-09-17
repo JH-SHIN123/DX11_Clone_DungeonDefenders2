@@ -13,17 +13,14 @@ CMeshContainer::CMeshContainer(const CMeshContainer & rhs)
 	: m_pDevice(rhs.m_pDevice)
 	, m_pDevice_Context(rhs.m_pDevice_Context)
 {
+	Safe_AddRef(m_pDevice);
+	Safe_AddRef(m_pDevice_Context);
+
 	strcpy(m_szMeshName, rhs.m_szMeshName);
-	m_iStartPolygonIndex = rhs.m_iStartPolygonIndex;
-	m_iNumPolgygons = rhs.m_iNumPolgygons;
-	m_iStartVertexIndex = rhs.m_iStartVertexIndex;
-	m_iMaterialIndex = rhs.m_iMaterialIndex;
-
-	for (auto& pOriginalBoneDesc : rhs.m_Bones)
-		m_Bones.push_back(new BONEDESC(*pOriginalBoneDesc));
-
-
-
+	m_iStartPolygonIndex	= rhs.m_iStartPolygonIndex;
+	m_iNumPolgygons			= rhs.m_iNumPolgygons;
+	m_iStartVertexIndex		= rhs.m_iStartVertexIndex;
+	m_iMaterialIndex		= rhs.m_iMaterialIndex;
 }
 
 HRESULT CMeshContainer::NativeConstruct(const char * pMeshName, _uint iStartPolygonIndex, _uint iNumPolgygons, _uint iStartVertexIndex, _uint iMaterialIndex)
@@ -87,18 +84,13 @@ CMeshContainer* CMeshContainer::Clone()
 
 void CMeshContainer::Free()
 {
+	for (auto& pBone : m_Bones)
+	{
+		Safe_Release(pBone->pHierarchyNode);
+		Safe_Delete(pBone);
+	}
+	m_Bones.clear();
+
 	Safe_Release(m_pDevice_Context);
 	Safe_Release(m_pDevice);
-	//Safe_Release(m_pLinkedNode);
 }
-
-
-//void CMeshContainer::Set_LinkedNodePointer(CHierarcyNode * pLinkedNode)
-//{
-//	if (nullptr == m_pLinkedNode)
-//	{
-//		m_pLinkedNode = pLinkedNode;
-//
-//		Safe_AddRef(m_pLinkedNode);
-//	}
-//}

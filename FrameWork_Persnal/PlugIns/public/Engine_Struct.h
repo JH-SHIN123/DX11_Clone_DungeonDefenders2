@@ -34,7 +34,7 @@ namespace Engine
 
 	typedef struct tagBoneDesc
 	{
-		class CHierarcyNode*		pHierarchyNode;
+		class CHierarchyNode*		pHierarchyNode;
 		XMFLOAT4X4					OffsetMatrix;
 	}BONEDESC;
 

@@ -28,8 +28,8 @@ HRESULT CPlayer::NativeConstruct(void * pArg)
 
 	Ready_Component(pArg);
 
-	m_pModelCom->Set_AnimationIndex(0); // 애니메이션 인덱스는 한개밖에 안들어가는 상황
-	m_pModelCom->Set_CurrentTime(200.f);
+	m_pModelCom->Set_AnimationIndex(0); // 나는 애니메이션 하나에 다 있는 상황 원테이크
+	m_pModelCom->Set_AnimationIndex_Start(292.f, 118.f);
 
 	return S_OK;
 }
@@ -38,10 +38,20 @@ _int CPlayer::Tick(_float TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	Turn_Check(TimeDelta);
 	Key_Check(TimeDelta);
 
-	if (GetAsyncKeyState('V') & 0x8000)
-		m_pStatusCom->Add_Exp(10);
+	//if (GetAsyncKeyState('V') & 0x8000)
+	//	m_pModelCom->Set_AnimationIndex_Start(38.f, 20.f);
+
+	//if (GetAsyncKeyState('C') & 0x8000)
+	//	m_pModelCom->Set_AnimationIndex_Start(293.f, 118.f);
+
+	//if (GetAsyncKeyState('X') & 0x8000)
+	//	m_pModelCom->Set_AnimationIndex_Start(1216.f, 75.f);
+
+
+		//m_pStatusCom->Add_Exp(10);
 
 
 	//static_cast<CCamera*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera_Free"))->TargetRotate_Check(m_pMovementCom);
@@ -58,6 +68,8 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 
 	Level_Check();
 	
+	Animation_Check(TimeDelta);
+
 	if (nullptr != m_pStrikerTower)
 	{
 		_vector vPos = m_pMovementCom->Get_State(EState::Position);
@@ -69,8 +81,6 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 		//m_pStrikerTower->
 	}
 
-	if (nullptr != m_pModelCom)
-		m_pModelCom->Update_CombindTransformationMatrix(TimeDelta, 300.f, 200.f);
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
@@ -131,6 +141,8 @@ _bool CPlayer::Get_Skill_Using(_int iSkillIndex)
 
 void CPlayer::Key_Check(_float TimeDelta)
 {
+	m_eAnimationState_Next = EPlayerAnimation::Idle;
+
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
 		if (nullptr != m_pStrikerTower)
@@ -138,6 +150,18 @@ void CPlayer::Key_Check(_float TimeDelta)
 			Safe_Release(m_pStrikerTower);
 			m_IsTowerPick = false;
 		}
+	}
+
+	_long dwMouseMove = 0;
+
+	if (dwMouseMove = GET_MOUSE_X)
+	{
+		m_eAnimationState_Next = EPlayerAnimation::Turn_Left;
+	}
+
+	if (dwMouseMove = GET_MOUSE_Y)
+	{
+
 	}
 
 	if (GET_KEY_INPUT(DIK_8))
@@ -155,37 +179,43 @@ void CPlayer::Key_Check(_float TimeDelta)
 	}
 
 	if (GET_KEY_INPUT(DIK_W))
+	{
 		m_pMovementCom->Go_LookDir(TimeDelta);
+		m_eAnimationState_Next = EPlayerAnimation::RunForward;
+	}
 
 	if (GET_KEY_INPUT(DIK_S))
+	{
 		m_pMovementCom->Go_LookDir(-TimeDelta);
+		m_eAnimationState_Next = EPlayerAnimation::Move_Backward;
+	}
 
 	if (GET_KEY_INPUT(DIK_A))
+	{
 		m_pMovementCom->Go_Left(TimeDelta);
+		m_eAnimationState_Next = EPlayerAnimation::Move_Left;
+	}
 
 	if (GET_KEY_INPUT(DIK_D))
+	{
 		m_pMovementCom->Go_Right(TimeDelta);
+		m_eAnimationState_Next = EPlayerAnimation::Move_Right;
+	}
 
 	if (GET_KEY_INPUT(DIK_1))
 	{
 		static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"))->Set_Skill_CoolDown(0, 10.f);
 	}
 
+	if(GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+		m_eAnimationState_Next = EPlayerAnimation::Fire;
+
+
 }
 
 void CPlayer::Turn_Check(_float TimeDelta)
 {
-	_long dwMouseMove = 0;
 
-	if (dwMouseMove = GET_MOUSE_X)
-	{
-		
-	}
-
-	if (dwMouseMove = GET_MOUSE_Y)
-	{
-
-	}
 }
 
 void CPlayer::Level_Check()
@@ -196,6 +226,19 @@ void CPlayer::Level_Check()
 		CData_Manager::GetInstance()->PlayerLevelUp_Check(m_pStatusCom->Get_Level());
 		CData_Manager::GetInstance()->Set_PlayerStatus(m_pStatusCom->Get_Stat());
 	}
+}
+
+void CPlayer::Animation_Check(_float TimeDelta)
+{
+	if (nullptr == m_pModelCom)
+		return;
+
+	if(m_eAnimationState_Cur != m_eAnimationState_Next)
+		m_pModelCom->Set_AnimationIndex_Start((_float)m_eAnimationState_Next, Animation_Term());
+
+	m_pModelCom->Update_CombindTransformationMatrix(TimeDelta);
+
+	m_eAnimationState_Cur = m_eAnimationState_Next;
 }
 
 HRESULT CPlayer::Ready_Component(void* pArg)
@@ -213,6 +256,128 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 
 
 	return S_OK;
+}
+
+_float CPlayer::Animation_Term()
+{
+	EPlayerAnimation NewtAnimaion = EPlayerAnimation::EndKey;
+
+	switch (m_eAnimationState_Next)
+	{
+	case Client::EPlayerAnimation::CallOut:
+		NewtAnimaion = EPlayerAnimation::ChargeMax;
+		break;
+	case Client::EPlayerAnimation::ChargeMax:
+		NewtAnimaion = EPlayerAnimation::ChargeMax_KnockBack;
+		break;
+	case Client::EPlayerAnimation::ChargeMax_KnockBack:
+		NewtAnimaion = EPlayerAnimation::ChargeMin;
+		break;
+	case Client::EPlayerAnimation::ChargeMin:
+		NewtAnimaion = EPlayerAnimation::ChargeMin_KnockBack;
+		break;
+	case Client::EPlayerAnimation::ChargeMin_KnockBack:
+		NewtAnimaion = EPlayerAnimation::Death;
+		break;
+	case Client::EPlayerAnimation::Death:
+		NewtAnimaion = EPlayerAnimation::Detonate;
+		break;
+	case Client::EPlayerAnimation::Detonate:
+		NewtAnimaion = EPlayerAnimation::Fire;
+		break;
+	case Client::EPlayerAnimation::Fire:
+		NewtAnimaion = EPlayerAnimation::FireMaxPower;
+		break;
+	case Client::EPlayerAnimation::FireMaxPower:
+		NewtAnimaion = EPlayerAnimation::Heal;
+		break;
+	case Client::EPlayerAnimation::Heal:
+		NewtAnimaion = EPlayerAnimation::Hurt;
+		break;
+	case Client::EPlayerAnimation::Hurt:
+		NewtAnimaion = EPlayerAnimation::Idle;
+		break;
+	case Client::EPlayerAnimation::Idle:
+		NewtAnimaion = EPlayerAnimation::Idle_lowHp;
+		break;
+	case Client::EPlayerAnimation::Idle_lowHp:
+		NewtAnimaion = EPlayerAnimation::Jump;
+		break;
+	case Client::EPlayerAnimation::Jump:
+		NewtAnimaion = EPlayerAnimation::Jump_Falling;
+		break;
+	case Client::EPlayerAnimation::Jump_Falling:
+		NewtAnimaion = EPlayerAnimation::KnockBack;
+		break;
+	case Client::EPlayerAnimation::KnockBack:
+		NewtAnimaion = EPlayerAnimation::LevelUp;
+		break;
+	case Client::EPlayerAnimation::LevelUp:
+		NewtAnimaion = EPlayerAnimation::Lose;
+		break;
+	case Client::EPlayerAnimation::Lose:
+		NewtAnimaion = EPlayerAnimation::ManaBomb;
+		break;
+	case Client::EPlayerAnimation::ManaBomb:
+		NewtAnimaion = EPlayerAnimation::Move_Backward;
+		break;
+	case Client::EPlayerAnimation::Move_Backward:
+		NewtAnimaion = EPlayerAnimation::Move_Left;
+		break;
+	case Client::EPlayerAnimation::Move_Left:
+		NewtAnimaion = EPlayerAnimation::Move_Right;
+		break;
+	case Client::EPlayerAnimation::Move_Right:
+		NewtAnimaion = EPlayerAnimation::PickupItem;
+		break;
+	case Client::EPlayerAnimation::PickupItem:
+		NewtAnimaion = EPlayerAnimation::Repair;
+		break;
+	case Client::EPlayerAnimation::Repair:
+		NewtAnimaion = EPlayerAnimation::RunForward;
+		break;
+	case Client::EPlayerAnimation::RunForward:
+		NewtAnimaion = EPlayerAnimation::Spawn;
+		break;
+	case Client::EPlayerAnimation::Spawn:
+		NewtAnimaion = EPlayerAnimation::Summon;
+		break;
+	case Client::EPlayerAnimation::Summon:
+		NewtAnimaion = EPlayerAnimation::Summon_Place;
+		break;
+	case Client::EPlayerAnimation::Summon_Place:
+		NewtAnimaion = EPlayerAnimation::Summon_Start;
+		break;
+	case Client::EPlayerAnimation::Summon_Start:
+		NewtAnimaion = EPlayerAnimation::Summon_Stop;
+		break;
+	case Client::EPlayerAnimation::Summon_Stop:
+		NewtAnimaion = EPlayerAnimation::Turn_Left;
+		break;
+	case Client::EPlayerAnimation::Turn_Left:
+		NewtAnimaion = EPlayerAnimation::Upgrade;
+		break;
+	case Client::EPlayerAnimation::Upgrade:
+		NewtAnimaion = EPlayerAnimation::Wave_Start;
+		break;
+	case Client::EPlayerAnimation::Wave_Start:
+		NewtAnimaion = EPlayerAnimation::Win;
+		break;
+	case Client::EPlayerAnimation::Win:
+		NewtAnimaion = EPlayerAnimation::WinWave;
+		break;
+	case Client::EPlayerAnimation::WinWave:
+		NewtAnimaion = EPlayerAnimation::EndKey;
+		break;
+	default:
+		NewtAnimaion = EPlayerAnimation::Idle_lowHp;
+		m_eAnimationState_Next = EPlayerAnimation::Idle;
+		break;
+	}
+
+	_float fAnimationTime = (_float)NewtAnimaion - (_float)m_eAnimationState_Next;
+
+	return fAnimationTime - 1.f;
 }
 
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

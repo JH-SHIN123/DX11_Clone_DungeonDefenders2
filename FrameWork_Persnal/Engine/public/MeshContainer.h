@@ -29,8 +29,8 @@ private:
 	ID3D11DeviceContext*	m_pDevice_Context = nullptr;
 
 private:
-	//void Set_LinkedNodePointer(class CHierarcyNode* pLinkedNode); // 노드가 가지고 있는 행렬에 쉽게 접근이 가능하도록
-	//class CHierarcyNode*	m_pLinkedNode = nullptr;
+	//void Set_LinkedNodePointer(class CHierarchyNode* pLinkedNode); // 노드가 가지고 있는 행렬에 쉽게 접근이 가능하도록
+	//class CHierarchyNode*	m_pLinkedNode = nullptr;
 
 private:
 	char					m_szMeshName[MAX_PATH] = "";

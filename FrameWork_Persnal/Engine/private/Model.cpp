@@ -1,17 +1,16 @@
 #include "..\public\Model.h"
 #include "Textures.h"
+#include "Animation.h"
+#include "AnimChannel.h"
 #include "ModelLoader.h"
 #include "HierarchyNode.h"
 #include "MeshContainer.h"
-#include "Animation.h"
-#include "AnimChannel.h"
-#include "Textures.h"
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CComponent(pDevice, pDevice_Context)
-	, m_pModelLoader(CModelLoader::GetInstance())
+	, m_pModelLoader(CModelLoader::Create())
 {
-	Safe_AddRef(m_pModelLoader);
+
 }
 
 CModel::CModel(const CModel & rhs)
@@ -23,7 +22,6 @@ CModel::CModel(const CModel & rhs)
 	, m_iNumVertices(rhs.m_iNumVertices)
 	, m_iStride(rhs.m_iStride)
 	, m_iNumVertexBuffers(rhs.m_iNumVertexBuffers)
-	, m_pVertices(rhs.m_pVertices)
 	, m_pIB(rhs.m_pIB)
 	, m_IBDesc(rhs.m_IBDesc)
 	, m_IBSubresourceData(rhs.m_IBSubresourceData)
@@ -35,16 +33,15 @@ CModel::CModel(const CModel & rhs)
 	, m_InputLayouts(rhs.m_InputLayouts)
 	, m_Vertices(rhs.m_Vertices)
 	, m_PolygonIndices(rhs.m_PolygonIndices)
-	, m_pPolygonIndices(rhs.m_pPolygonIndices)
-	, m_Meshes(rhs.m_Meshes)
-	, m_SortMeshesByMaterial(rhs.m_SortMeshesByMaterial)
+	/*, m_Meshes(rhs.m_Meshes)*/
+	/*, m_SortMeshesByMaterial(rhs.m_SortMeshesByMaterial)*/
 	, m_Materials(rhs.m_Materials)
-	, m_HierarchyNodes(rhs.m_HierarchyNodes)
+	/*, m_HierarchyNodes(rhs.m_HierarchyNodes)*/
 	, m_iNumAnimations(rhs.m_iNumAnimations)
 	, m_iCurrentAnimationIndex(rhs.m_iCurrentAnimationIndex)
-	, m_Animations(rhs.m_Animations)
+	/*, m_Animations(rhs.m_Animations)*/
 {
-
+	Safe_AddRef(m_pModelLoader);
 
 	Safe_AddRef(m_pEffect);
 	Safe_AddRef(m_pIB);
@@ -56,33 +53,13 @@ CModel::CModel(const CModel & rhs)
 		Safe_AddRef(InputLayout.pLayout);
 	}
 
-	/*for (auto& pOriginalMeshContainer : rhs.m_Meshes)
+	/* 새롭게 복제하여 생성한다. */
+	for (auto& pOriginalMeshContainer : rhs.m_Meshes)
 	{
-	CMeshContainer*	pMeshContainer = pOriginalMeshContainer->Clone();
-	m_Meshes.push_back(pMeshContainers);
-	}*/
-
-
-	for (auto& pMeshContainer : m_Meshes)
-	{
-		Safe_AddRef(pMeshContainer);
-	}
-
-
-	for (auto& pMeshContainers : m_SortMeshesByMaterial)
-	{
-		for (auto& pMeshContainer : pMeshContainers)
-			Safe_AddRef(pMeshContainer);
-	}
-
-
-	for (auto& pMeshTexture : m_Materials)
-	{
-		for (_int i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)
-			Safe_AddRef(pMeshTexture->pMaterialTexture[i]);
+		CMeshContainer*	pMeshContainer = pOriginalMeshContainer->Clone();
+		m_Meshes.push_back(pMeshContainer);
 	}
 }
-
 CMeshContainer * CModel::Get_MeshContainer(_uint iMeshIndex)
 {
 	if (iMeshIndex >= m_Meshes.size())
@@ -91,50 +68,59 @@ CMeshContainer * CModel::Get_MeshContainer(_uint iMeshIndex)
 	return m_Meshes[iMeshIndex];
 }
 
+_bool CModel::Get_IsFinishedAnimaion()
+{
+	 return m_Animations[m_iCurrentAnimationIndex]->Get_IsFinishedAnimaion();
+}
+
 void CModel::Set_AnimationIndex(_uint iAnimationIndex)
 {
 	if (iAnimationIndex >= m_iNumAnimations)
 		return;
 
-	m_iCurrentAnimationIndex = iAnimationIndex;	
+	m_iCurrentAnimationIndex = iAnimationIndex;
 }
 
-void CModel::Set_CurrentTime(_float fCurrentTime)
-
+void CModel::Set_AnimationIndex_Start(_float iAnimationStart, _float fAnimationStart_Term, _uint iAnimationIndex)
 {
-	if (m_Animations.size() >= (_int)m_iNumAnimations)
+	if (iAnimationIndex >= m_iNumAnimations)
 		return;
 
-	 m_Animations[m_iCurrentAnimationIndex]->Set_CurrentTime(fCurrentTime);
+	m_iCurrentAnimationIndex = iAnimationIndex;
+
+	m_Animations[m_iCurrentAnimationIndex]->Set_AnimationIndex_Start(iAnimationStart, fAnimationStart_Term);
 }
 
-HRESULT CModel::NativeConstruct_Prototype(const char * pMeshFilePath, const char * pMeshFileName, const _tchar * pShaderFilePath, const char * pTechniqueName, _fmatrix PivotMatrix)
+HRESULT CModel::NativeConstruct_Prototype(const char * pMeshFilePath, const char * pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix)
 {
 	if (nullptr == m_pModelLoader)
 		return E_FAIL;
 
 	__super::NativeConstruct_Prototype();
 
-	// 모델로더 싱글톤을 이용해 자신(메쉬)에게 필요한 정보를 받아온다. 
-	// 진짜 다받아온다
 	if (FAILED(m_pModelLoader->Load_ModelFromFile(m_pDevice, m_pDevice_Context, this, pMeshFilePath, pMeshFileName)))
-		return E_FAIL;	
+		return E_FAIL;
 
 	/* 렌더링의 편의를 위해 재질이 같은 메시들을 모아둔다. */
 	if (FAILED(Sort_MeshesByMaterial()))
-		return E_FAIL;	
+		return E_FAIL;
 
 	/* 부모 노드의 상태행렬들을 순차적으로 자식에게 누적시키기위해. */
-	sort(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [](CHierarcyNode* pDest, CHierarcyNode* pSour) 
+	sort(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [](CHierarchyNode* pDest, CHierarchyNode* pSour)
 	{
 		return pDest->Get_Depth() < pSour->Get_Depth();
 	});
 
+	/* 뼈대정보를 로드한다. */
+	if (FAILED(SetUp_SkinnedInfo(m_pModelLoader->Get_aiScene())))
+		return E_FAIL;
+
 	if (FAILED(Ready_VIBuffer(pShaderFilePath, pTechniqueName, PivotMatrix)))
 		return E_FAIL;
 
-
-
+	/* 애니메이션를 로드한다. */
+	if (FAILED(SetUp_Animation(m_pModelLoader->Get_aiScene())))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -143,10 +129,28 @@ HRESULT CModel::NativeConstruct(void * pArg)
 {
 	__super::NativeConstruct(pArg);
 
+	/* 새롭게 복제하여 생성한 메시를 정렬해준다.  */
+	if (FAILED(Sort_MeshesByMaterial()))
+		return E_FAIL;
+
+	if (FAILED(m_pModelLoader->Ready_HierarchyNodes(this)))
+		return E_FAIL;
+
+	sort(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [](CHierarchyNode* pDest, CHierarchyNode* pSour)
+	{
+		return pDest->Get_Depth() < pSour->Get_Depth();
+	});
+
+	if (FAILED(SetUp_SkinnedInfo(m_pModelLoader->Get_aiScene())))
+		return E_FAIL;
+
+	if (FAILED(SetUp_Animation(m_pModelLoader->Get_aiScene())))
+		return E_FAIL;
+
 	return S_OK;
 }
 
-HRESULT CModel::Ready_VIBuffer(const _tchar * pShaderFilePath, const char * pTechniqueName, _fmatrix PivotMatrix)
+HRESULT CModel::Ready_VIBuffer(const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix)
 {
 	/* For. VertexBuffer */
 	m_iNumVertexBuffers = 1;
@@ -164,23 +168,8 @@ HRESULT CModel::Ready_VIBuffer(const _tchar * pShaderFilePath, const char * pTec
 	m_VBDesc.StructureByteStride = m_iStride;
 
 	ZeroMemory(&m_VBSubresourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-	m_pVertices = new VTXMESH[m_iNumVertices];
 
-	for (_uint i = 0; i < m_iNumVertices; ++i)
-	{
-		_vector		vTransformPosition = XMVector3TransformCoord(XMLoadFloat3(&m_Vertices[i]->vPosition), PivotMatrix);
-
-		XMStoreFloat3(&m_Vertices[i]->vPosition, vTransformPosition);
-
-		m_pVertices[i] = *m_Vertices[i];
-	}
-
-
-	for (auto& pVertex : m_Vertices)
-		Safe_Delete(pVertex);
-	m_Vertices.clear();
-
-	m_VBSubresourceData.pSysMem = m_pVertices;
+	m_VBSubresourceData.pSysMem = &m_Vertices[0];
 
 	/* For. IndexBuffer */
 
@@ -199,16 +188,7 @@ HRESULT CModel::Ready_VIBuffer(const _tchar * pShaderFilePath, const char * pTec
 	m_IBDesc.StructureByteStride = 0;
 
 	ZeroMemory(&m_IBSubresourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-	m_pPolygonIndices = new POLYGONINDICES32[m_iNumPolygons];
-
-	for (_uint i = 0; i < m_iNumPolygons; ++i)
-		m_pPolygonIndices[i] = *m_PolygonIndices[i];
-
-	for (auto& pPolygonIndices : m_PolygonIndices)
-		Safe_Delete(pPolygonIndices);
-	m_PolygonIndices.clear();
-
-	m_IBSubresourceData.pSysMem = m_pPolygonIndices;
+	m_IBSubresourceData.pSysMem = &m_PolygonIndices[0];
 
 	if (nullptr == m_pDevice)
 		return E_FAIL;
@@ -234,27 +214,21 @@ HRESULT CModel::Ready_VIBuffer(const _tchar * pShaderFilePath, const char * pTec
 	return S_OK;
 }
 
-HRESULT CModel::Add_Vertex(VTXMESH * pVertex)
+HRESULT CModel::Add_Vertex(const VTXMESH& Vertex)
 {
-	if (nullptr == pVertex)
-		return E_FAIL;
-
-	m_Vertices.push_back(pVertex);
+	m_Vertices.push_back(Vertex);
 
 	return S_OK;
 }
 
-HRESULT CModel::Add_PolgygonIndices(POLYGONINDICES32 * pPolygonIndices)
+HRESULT CModel::Add_PolgygonIndices(const POLYGONINDICES32& PolygonIndices)
 {
-	if (nullptr == pPolygonIndices)
-		return E_FAIL;
-
-	m_PolygonIndices.push_back(pPolygonIndices);
+	m_PolygonIndices.push_back(PolygonIndices);
 
 	return S_OK;
 }
 
-HRESULT CModel::Add_MeshContainer(const char * pMeshName, _uint iStartPolygonIndex, _uint iStartVertexIndex, _uint iMaterialIndex)
+HRESULT CModel::Add_MeshContainer(const char* pMeshName, _uint iStartPolygonIndex, _uint iStartVertexIndex, _uint iMaterialIndex)
 {
 	CMeshContainer*		pMeshContainer = CMeshContainer::Create(m_pDevice, m_pDevice_Context, pMeshName, iStartPolygonIndex, (_uint)m_PolygonIndices.size() - iStartPolygonIndex, iStartVertexIndex, iMaterialIndex);
 	if (nullptr == pMeshContainer)
@@ -275,7 +249,7 @@ HRESULT CModel::Add_Materials(MESHTEXTURE * pMeshMaterialTexture)
 	return S_OK;
 }
 
-HRESULT CModel::Add_HierarchyNode(CHierarcyNode * pHierarchyNode)
+HRESULT CModel::Add_HierarchyNode(CHierarchyNode * pHierarchyNode)
 {
 	if (nullptr == pHierarchyNode)
 		return E_FAIL;
@@ -285,14 +259,21 @@ HRESULT CModel::Add_HierarchyNode(CHierarcyNode * pHierarchyNode)
 	return S_OK;
 }
 
-void CModel::Add_AnimChannelToHierarchyNode(CAnimChannel * pChannel)
+void CModel::Add_AnimChannelToHierarchyNode(_uint iAnimIndex, CAnimChannel * pChannel)
 {
-	auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarcyNode* pNode)
+	auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarchyNode* pNode)
 	{
 		return !strcmp(pChannel->Get_Name(), pNode->Get_Name());
 	});
 
-	(*iter)->Set_AnimChannelPointer(pChannel);
+	(*iter)->Set_AnimChannelPointer(iAnimIndex, pChannel);
+}
+
+HRESULT CModel::Reserve_Vertices(_uint iNumVertices)
+{
+	m_Vertices.reserve(iNumVertices);
+
+	return S_OK;
 }
 
 HRESULT CModel::Reserve_VIBuffer(_uint iNumVertices, _uint iNumFace)
@@ -336,7 +317,7 @@ HRESULT CModel::Set_ShaderResourceView(const char * pConstanceName, _uint iMater
 	return pVariable->SetResource(pShaderResourceView);
 }
 
-HRESULT CModel::SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC * pInputElementDesc, _uint iNumElement, const _tchar * pShaderFilePath, const char * pTechniqueName)
+HRESULT CModel::SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC* pInputElementDesc, _uint iNumElement, const _tchar* pShaderFilePath, const char* pTechniqueName)
 {
 	_uint		iFlag = 0;
 
@@ -363,7 +344,7 @@ HRESULT CModel::SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC * pInputElementDesc,
 	if (FAILED(pTechnique->GetDesc(&TechniqueDesc)))
 		return E_FAIL;
 
-	// D3D11_RASTERIZER_DESC
+	//D3D11_RASTERIZER_DESC
 
 	// D3D11_DEPTH_STENCIL_DESC
 
@@ -401,6 +382,12 @@ HRESULT CModel::SetUp_Animation(const aiScene * pScene)
 	if (0 == m_iNumAnimations)
 		return S_OK;
 
+
+	for (auto& pHierarchyNode : m_HierarchyNodes)
+	{
+		pHierarchyNode->Reserve_AnimChannel(m_iNumAnimations);
+	}
+
 	for (_uint i = 0; i < m_iNumAnimations; ++i)
 	{
 		aiAnimation*		pAnim = pScene->mAnimations[i];
@@ -420,7 +407,6 @@ HRESULT CModel::SetUp_Animation(const aiScene * pScene)
 		vRotation = XMVectorZero();
 		vPosition = XMVectorZero();;
 
-		// 1개 채널 = n개 애니메이션
 		for (_uint j = 0; j < iNumChannel; ++j)
 		{
 			aiNodeAnim*			pNodeAnim = pAnim->mChannels[j];
@@ -433,7 +419,6 @@ HRESULT CModel::SetUp_Animation(const aiScene * pScene)
 			iNumKeyFrames = max(iNumKeyFrames, pNodeAnim->mNumScalingKeys);
 			iNumKeyFrames = max(iNumKeyFrames, pNodeAnim->mNumRotationKeys);
 
-			// 1개 애니메이션 = n개 키프레임
 			for (_uint k = 0; k < iNumKeyFrames; ++k)
 			{
 				KEYFRAME*		pKeyFrame = new KEYFRAME;
@@ -470,7 +455,7 @@ HRESULT CModel::SetUp_Animation(const aiScene * pScene)
 				pChannel->Add_KeyFrame(pKeyFrame);
 			}
 
-			Add_AnimChannelToHierarchyNode(pChannel);
+			Add_AnimChannelToHierarchyNode(i, pChannel);
 
 
 			pAnimation->Add_Channel(pChannel);
@@ -516,36 +501,39 @@ HRESULT CModel::SetUp_SkinnedInfo(const aiScene * pScene)
 			BONEDESC*		pBoneDesc = new BONEDESC;
 			ZeroMemory(pBoneDesc, sizeof(BONEDESC));
 
-			CHierarcyNode*	pHierarchyNode = Find_HierarchyNode(pBone->mName.data);
+			CHierarchyNode*	pHierarchyNode = Find_HierarchyNode(pBone->mName.data);
 			pBoneDesc->pHierarchyNode = pHierarchyNode;
 			Safe_AddRef(pHierarchyNode);
 
 			memcpy(&pBoneDesc->OffsetMatrix, &XMMatrixTranspose(XMMATRIX(pBone->mOffsetMatrix[0])), sizeof(_matrix));
 
-			/* 정점의 블렌드인덱스와 블렌드 웨이트 값을 채운다. */
-			for (_uint k = 0; k < pBone->mNumWeights; ++k)
+			if (false == m_IsClone)
 			{
-				_uint	iVertexIndex = pBone->mWeights[k].mVertexId + pMeshContainer->Get_StartVertexIndex();
+				/* 정점의 블렌드인덱스와 블렌드 웨이트 값을 채운다. */
+				for (_uint k = 0; k < pBone->mNumWeights; ++k)
+				{
+					_uint	iVertexIndex = pBone->mWeights[k].mVertexId + pMeshContainer->Get_StartVertexIndex();
 
-				if (0.f == m_Vertices[iVertexIndex]->vBlendWeight.x)
-				{
-					m_Vertices[iVertexIndex]->vBlendIndex.x = j;
-					m_Vertices[iVertexIndex]->vBlendWeight.x = pBone->mWeights[k].mWeight;
-				}
-				else if (0.f == m_Vertices[iVertexIndex]->vBlendWeight.y)
-				{
-					m_Vertices[iVertexIndex]->vBlendIndex.y = j;
-					m_Vertices[iVertexIndex]->vBlendWeight.y = pBone->mWeights[k].mWeight;
-				}
-				else if (0.f == m_Vertices[iVertexIndex]->vBlendWeight.z)
-				{
-					m_Vertices[iVertexIndex]->vBlendIndex.z = j;
-					m_Vertices[iVertexIndex]->vBlendWeight.z = pBone->mWeights[k].mWeight;
-				}
-				else
-				{
-					m_Vertices[iVertexIndex]->vBlendIndex.w = j;
-					m_Vertices[iVertexIndex]->vBlendWeight.w = pBone->mWeights[k].mWeight;
+					if (0.f == m_Vertices[iVertexIndex].vBlendWeight.x)
+					{
+						m_Vertices[iVertexIndex].vBlendIndex.x = j;
+						m_Vertices[iVertexIndex].vBlendWeight.x = pBone->mWeights[k].mWeight;
+					}
+					else if (0.f == m_Vertices[iVertexIndex].vBlendWeight.y)
+					{
+						m_Vertices[iVertexIndex].vBlendIndex.y = j;
+						m_Vertices[iVertexIndex].vBlendWeight.y = pBone->mWeights[k].mWeight;
+					}
+					else if (0.f == m_Vertices[iVertexIndex].vBlendWeight.z)
+					{
+						m_Vertices[iVertexIndex].vBlendIndex.z = j;
+						m_Vertices[iVertexIndex].vBlendWeight.z = pBone->mWeights[k].mWeight;
+					}
+					else
+					{
+						m_Vertices[iVertexIndex].vBlendIndex.w = j;
+						m_Vertices[iVertexIndex].vBlendWeight.w = pBone->mWeights[k].mWeight;
+					}
 				}
 			}
 			if (FAILED(pMeshContainer->Add_BoneDesc(pBoneDesc)))
@@ -555,18 +543,17 @@ HRESULT CModel::SetUp_SkinnedInfo(const aiScene * pScene)
 
 	return S_OK;
 }
-
-HRESULT CModel::Update_CombindTransformationMatrix(_float TimeDelta, _float fEndTime, _float fNextCurrentTime)
+/* 애니메이션의 재생이 있다면. 매프레임마다 호출. */
+HRESULT CModel::Update_CombindTransformationMatrix(_float TimeDelta)
 {
-	/* 애니메이션의 재생이 있다면. 매프레임마다 호출. */
 	if (m_iNumAnimations > 0)
 	{
 		/* 현재 애니메이션 채널들이 시간에 맞는 상태 변환값을 가지게 한다. */
-		m_Animations[m_iCurrentAnimationIndex]->Update_Transform(TimeDelta, fEndTime, fNextCurrentTime);//
+		m_Animations[m_iCurrentAnimationIndex]->Update_Transform(TimeDelta);
 
 		for (auto& pHierarchyNode : m_HierarchyNodes)
 		{
-			pHierarchyNode->Update_CombindTransformationMatrix();
+			pHierarchyNode->Update_CombindTransformationMatrix(m_iCurrentAnimationIndex);
 		}
 	}
 
@@ -610,9 +597,9 @@ HRESULT CModel::Render_Model(_uint iMaterialIndex, _uint iPassIndex)
 	return S_OK;
 }
 
-CHierarcyNode * CModel::Find_HierarchyNode(const char * pNodeName)
+CHierarchyNode* CModel::Find_HierarchyNode(const char * pNodeName)
 {
-	auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarcyNode* pHierarchyNode)->bool
+	auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarchyNode* pHierarchyNode)->bool
 	{
 		return !strcmp(pNodeName, pHierarchyNode->Get_Name());
 	});
@@ -623,26 +610,30 @@ CHierarcyNode * CModel::Find_HierarchyNode(const char * pNodeName)
 		return *iter;
 }
 
-CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const char * pMeshFilePath, const char * pMeshFileName, const _tchar * pShaderFilePath, const char * pTechniqueName, _fmatrix PivotMatrix)
+CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const char * pMeshFilePath, const char * pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix)
 {
 	CModel*		pInstance = new CModel(pDevice, pDevice_Context);
+
 	if (FAILED(pInstance->NativeConstruct_Prototype(pMeshFilePath, pMeshFileName, pShaderFilePath, pTechniqueName, PivotMatrix)))
 	{
 		MSG_BOX("Failed to Creating Instance (CModel) ");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 
 CComponent * CModel::Clone(void * pArg)
 {
-	CModel*		pClone = new CModel(*this);
-	if (FAILED(pClone->NativeConstruct(pArg)))
+	CModel*		pInstance = new CModel(*this);
+
+	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{
-		MSG_BOX("Failed to Creating Clone (CModel) ");
-		Safe_Release(pClone);
+		MSG_BOX("Failed to Creating Instance (CModel) ");
+		Safe_Release(pInstance);
 	}
-	return pClone;
+
+	return pInstance;
 }
 
 void CModel::Free()
@@ -651,24 +642,17 @@ void CModel::Free()
 
 	if (false == m_IsClone)
 	{
-		Safe_Delete_Array(m_pVertices);
-		Safe_Delete_Array(m_pPolygonIndices);
+		m_Vertices.clear();
+
+		for (auto& pMaterial : m_Materials)
+		{
+			for (auto& pTexture : pMaterial->pMaterialTexture)
+				Safe_Release(pTexture);
+			Safe_Delete(pMaterial);
+		}
+
+		m_Materials.clear();
 	}
-
-	for (auto& InputLayout : m_InputLayouts)
-	{
-		Safe_Release(InputLayout.pPass);
-		Safe_Release(InputLayout.pLayout);
-	}
-	m_InputLayouts.clear();
-
-	Safe_Release(m_pEffect);
-	Safe_Release(m_pIB);
-	Safe_Release(m_pVB);
-
-	for (auto& pMeshContainer : m_Meshes)
-		Safe_Release(pMeshContainer);
-	m_Meshes.clear();
 
 	for (auto& pMeshContainers : m_SortMeshesByMaterial)
 	{
@@ -678,21 +662,32 @@ void CModel::Free()
 	}
 	m_SortMeshesByMaterial.clear();
 
+	for (auto& pMeshContainer : m_Meshes)
+		Safe_Release(pMeshContainer);
+	m_Meshes.clear();
 
-	for (auto& pMaterial : m_Materials)
+	for (auto& pHierarchyNode : m_HierarchyNodes)
+		Safe_Release(pHierarchyNode);
+	m_HierarchyNodes.clear();
+
+	for (auto& InputLayout : m_InputLayouts)
 	{
-		for (_int i = 0; i < AI_TEXTURE_TYPE_MAX; ++i)
-			Safe_Release(pMaterial->pMaterialTexture[i]);
-		//Safe_Delete(pMaterial);
+		Safe_Release(InputLayout.pPass);
+		Safe_Release(InputLayout.pLayout);
 	}
-	m_Materials.clear();
-
-	Safe_Release(m_pModelLoader);
+	m_InputLayouts.clear();
 
 	for (auto& pAnimation : m_Animations)
-	{
 		Safe_Release(pAnimation);
-	}
 	m_Animations.clear();
 
+	Safe_Release(m_pEffect);
+	Safe_Release(m_pIB);
+	Safe_Release(m_pVB);
+
+
+
+
+
+	Safe_Release(m_pModelLoader);
 }

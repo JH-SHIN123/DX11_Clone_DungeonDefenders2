@@ -7,21 +7,45 @@
 
 BEGIN(Client)
 
-enum class EPlayerState
+enum class EPlayerAnimation
 {
-	CallOut = 0, // 38
+	CallOut = 0,
 	ChargeMax = 38,
 	ChargeMax_KnockBack = 59,
-	ChargeMin = 79,
-	ChargeMin_KnockBack = 100,
-	Death = 181,
-	Detonate = 211,
-	Fire = 231,
-	Fire_MaxPower = 261,
-	Heal = 281,
-	Hurt = 292,
-	Idle = 411,
-	Idle_LowHp = 471
+	ChargeMin = 80,
+	ChargeMin_KnockBack = 101,
+	Death = 122,
+	Detonate = 182,
+	Fire = 212,
+	FireMaxPower = 232,
+	Heal = 262,
+	Hurt = 282,
+	Idle = 293,
+	Idle_lowHp = 412,
+	Jump = 472,
+	Jump_Falling = 492,
+	KnockBack = 511,
+	LevelUp = 556,
+	Lose = 646,
+	ManaBomb = 708,
+	Move_Backward = 782,
+	Move_Left = 798,
+	Move_Right = 814,
+	PickupItem = 830,
+	Repair = 847,
+	RunForward = 876,
+	Spawn = 892,
+	Summon = 948,
+	Summon_Place = 977,
+	Summon_Start = 1022,
+	Summon_Stop = 1037,
+	Turn_Left = 1063,
+	Upgrade = 1088,
+	Wave_Start = 1109,
+	Win = 1139,
+	WinWave = 1216,
+	EndKey = 1291,
+	End = -1
 };
 
 typedef struct tagGameObject_Desc
@@ -48,14 +72,16 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	_bool Get_Skill_Using(_int iSkillIndex);
+	_bool	Get_Skill_Using(_int iSkillIndex);
 
 private: // Tick
-	void Key_Check(_float TimeDelta);
-	void Turn_Check(_float TimeDelta);
+	void	Key_Check(_float TimeDelta);
+	void	Turn_Check(_float TimeDelta);
 
 private: // LateTick
-	void Level_Check();
+	void	Level_Check();
+	void	Animation_Check(_float TimeDelta);
+	_float	Animation_Term();
 
 private:
 	CModel*				m_pModelCom		= nullptr;
@@ -64,11 +90,15 @@ private:
 	CRenderer*			m_pRendererCom	= nullptr;
 
 private:
-	_bool		m_IsSkill_Use[10] = { false };
+	_bool			m_IsSkill_Use[10] = { false };
 
 private: // Tower
-	class CStrikerTower*	m_pStrikerTower = nullptr;
-	_bool					m_IsTowerPick = false;
+	class CStrikerTower*		m_pStrikerTower = nullptr;
+	_bool						m_IsTowerPick = false;
+
+private:
+	EPlayerAnimation		m_eAnimationState_Cur	= EPlayerAnimation::End;
+	EPlayerAnimation		m_eAnimationState_Next	= EPlayerAnimation::Idle;
 
 private:
 	HRESULT	Ready_Component(void* pArg);

@@ -5,36 +5,39 @@
 #include "Base.h"
 
 BEGIN(Engine)
-class CHierarcyNode final :	public CBase
+class CHierarchyNode final :	public CBase
 {
 public:
-	CHierarcyNode();
-	virtual ~CHierarcyNode() = default;
+	CHierarchyNode();
+	CHierarchyNode(const CHierarchyNode& rhs);
+	virtual ~CHierarchyNode() = default;
 
 public:
 	const char* Get_Name() const { return m_szNodeName; }
-	const _uint Get_Depth() const { return m_iDepth; }
+	_uint		Get_Depth() const { return m_iDepth; }
 	_fmatrix Get_CombindTransformationMatrix() const { return XMLoadFloat4x4(&m_CombinedTransformationMatrix); }
+	_fmatrix Get_TransformationMatrix() const { return XMLoadFloat4x4(&m_TransformationMatrix); }
 
 public:
-	HRESULT Set_AnimChannelPointer(class CAnimChannel* pAnimChannel);
+	HRESULT Set_AnimChannelPointer(_uint iAnimIndex, class CAnimChannel* pAnimChannel);
 
 public:
-	HRESULT NativeConstruct(char* pName, _fmatrix TransformationMatrix, CHierarcyNode* pParent, _uint iDepth);
-	void Update_CombindTransformationMatrix();
+	HRESULT NativeConstruct(char* pName, _fmatrix TransformationMatrix, CHierarchyNode* pParent, _uint iDepth);
+	HRESULT Reserve_AnimChannel(_uint iNumAnimation);
+	void Update_CombindTransformationMatrix(_uint iAnimationIndex);
 
 private:
-	char			m_szNodeName[MAX_PATH] = "";	
-	_float4x4		m_TransformationMatrix;
-	_float4x4		m_CombinedTransformationMatrix;
-	CHierarcyNode*	m_pParent = nullptr;
-	_uint			m_iDepth = 0;				// 몇대째인지 (재귀호출을 할것이기 때문에 재귀호출 회수 = 깊이)
-
-private:
-	class CAnimChannel*		m_pAnimChannel = nullptr;
+	char					m_szNodeName[MAX_PATH] = "";
+	_float4x4				m_TransformationMatrix;
+	_float4x4				m_CombinedTransformationMatrix;
+	CHierarchyNode*			m_pParent = nullptr;
+	_uint					m_iDepth = 0;
+	_uint					m_iNumAnimation = 0;
+	class CAnimChannel**	m_ppAnimChannel = nullptr;
 
 public:
-	static CHierarcyNode* Create(char* pName, _fmatrix TransformationMatrix, CHierarcyNode* pParent = nullptr, _uint iDepth = 0);
+	static CHierarchyNode* Create(char* pName, _fmatrix TransformationMatrix, CHierarchyNode* pParent = nullptr, _uint iDepth = 0);
+
 	virtual void Free() override;
 };
 

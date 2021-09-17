@@ -19,7 +19,13 @@ HRESULT CTerrain::NativeConstruct_Prototype()
 {
 	CGameObject::NativeConstruct_Prototype();
 
+	/*
+	
+		_matrix			PivotMatrix = XMMatrixScaling(0.05f, 0.05f, 0.05f) *
+		XMMatrixRotationX(XMConvertToRadians(90.0f)) *
+		XMMatrixRotationY(XMConvertToRadians(90.0f));
 
+	*/
 
 	return S_OK;
 }
@@ -106,6 +112,13 @@ HRESULT CTerrain::Ready_Component()
 
 	if (FAILED(CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Mesh_Level_1"), TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
+
+
+	_matrix			PivotMatrix = XMMatrixScaling(0.05f, 0.05f, 0.05f) *
+		XMMatrixRotationX(XMConvertToRadians(90.0f)) *
+		XMMatrixRotationY(XMConvertToRadians(90.0f));
+
+	m_pTransformCom->Set_WorldMatrix(PivotMatrix);
 
 	return S_OK;
 }

@@ -160,12 +160,9 @@ HRESULT CLoading::LoadingForStage()
 
 
 	// Model
-	_matrix			PivotMatrix = XMMatrixScaling(0.05f, 0.05f, 0.05f) *
-		XMMatrixRotationX(XMConvertToRadians(90.0f)) *
-		XMMatrixRotationY(XMConvertToRadians(90.0f));
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Level_1"),
-		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Magus.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique", PivotMatrix));
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Magus.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Mage"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Mage/", "Mage.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
