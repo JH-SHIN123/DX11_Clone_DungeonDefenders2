@@ -66,21 +66,17 @@ HRESULT CAnimation::Add_Channel(CAnimChannel * pAnimChannel)
 
 HRESULT CAnimation::Update_Transform(_float TimeDelta)
 {
-	// m_fLastTime
-	// 끝났을때 CurrentTime다시세팅할 기준점
-//_fLastTime = fEndTime;
-
 	if (true == m_IsChange)
 	{
-		Change_Animation_Check(TimeDelta);
-		return S_OK;
+		if(false == Change_Animation_Check(TimeDelta))
+			return S_OK;
 	}
 
 	m_fCurrentTime += fmod(m_TickPerSecond * TimeDelta, m_fLastTime);
 
 	if (m_fCurrentTime >= m_fLastTime)
 	{
-		m_fCurrentTime = m_fStartTime -0.5f;//fmod(m_TickPerSecond * TimeDelta, m_fDuration);
+		m_fCurrentTime = m_fStartTime - 0.1f;
 
 		m_isEnd = true;
 		
@@ -93,19 +89,15 @@ HRESULT CAnimation::Update_Transform(_float TimeDelta)
 	{
 		vector<KEYFRAME*>	KeyFrames = pAnimChannel->Get_KeyFrames();
 
-		KEYFRAME*			pFirst	= KeyFrames[(_uint)m_fStartTime];//.front();
-		KEYFRAME*			pLast	= KeyFrames[(_uint)m_fLastTime];//.back();
+		KEYFRAME*			pFirst = KeyFrames[(_uint)m_fStartTime];
+		KEYFRAME*			pLast	= KeyFrames[(_uint)m_fLastTime];
 
-		//auto& iter_First = KeyFrames[20];
 
 		_uint iCurrentKeyFrame = (_uint)m_fCurrentTime;//pAnimChannel->Get_CurrentKeyFrame();
 
 
 		if (true == m_isEnd)
 		{		
-			//난 하나의 채널안에서 애니메이션을 전부 돌리는 상황
-			//m_fCurrentTime = fNextCurrentTime; // 이거 ㄹ이렇게 때려박는것은 지금의 구조에선 위험하다 (특정범위 안에서만 반복하도록 만든 코드)
-			// iCurrentKeyFrame을 적절히 조절 가능하다면 저대로 써도 될거같은데 ㅜ
 			iCurrentKeyFrame = (_uint)m_fStartTime;
 			pAnimChannel->Set_CurrentKeyFrame(iCurrentKeyFrame);
 		}
@@ -149,7 +141,7 @@ HRESULT CAnimation::Update_Transform(_float TimeDelta)
 			//vPosition = XMVectorSetW(vPosition, 1.f);
  		}
 
-		else if (true == m_isEnd || m_fCurrentTime >= (_float)pLast->Time)
+		else if (/*true == m_isEnd ||*/ m_fCurrentTime >= (_float)pLast->Time)
 		{
 			// 끝의 애니메이션과 첫번째 애니메이션을 붙여주자
 
@@ -238,12 +230,10 @@ HRESULT CAnimation::Update_Transform(_float TimeDelta)
 	return S_OK;
 }
 
-void CAnimation::Change_Animation_Check(_float TimeDelta)
+_bool CAnimation::Change_Animation_Check(_float TimeDelta)
 {
 	// 린다...G
-	m_fAnimationLerpTime += TimeDelta * 5.f;
-
-	m_fLastTime = m_fStartTime + m_fStartTime_Term;
+	m_fAnimationLerpTime += TimeDelta * 5.f;	
 
 	_vector		vScale, vRotation, vPosition;
 	_vector		vSourScale, vDestScale;
@@ -257,7 +247,6 @@ void CAnimation::Change_Animation_Check(_float TimeDelta)
 	{
 		vector<KEYFRAME*>	KeyFrames = pAnimChannel->Get_KeyFrames();
 
-
 		// 비율은 0 ~ 1
 		_float		fRatio = m_fAnimationLerpTime;
 
@@ -265,10 +254,11 @@ void CAnimation::Change_Animation_Check(_float TimeDelta)
 		{
 			fRatio = 1.f;
 			m_IsChange = false;
-			m_fCurrentTime = m_fStartTime - 0.8f;
+			m_fCurrentTime = m_fStartTime - 0.1f;
+			m_fLastTime = m_fStartTime + m_fStartTime_Term;
 			m_fAnimationLerpTime = 0.f;
+			return true;
 		}
-
 
 		vSourScale		= XMLoadFloat3(&m_pFrameLerp[iChannelNum].vSrcScale);
 		vSourRotataion	= XMLoadFloat4(&m_pFrameLerp[iChannelNum].vSrcRotation);
@@ -290,6 +280,7 @@ void CAnimation::Change_Animation_Check(_float TimeDelta)
 
 		pAnimChannel->Set_TransformationMatrix(TransformMatrix);
 	}
+	return false;
 }
 
 CAnimation * CAnimation::Create(const char * pName, _float Duration, _float TickPerSecond)

@@ -32,7 +32,7 @@ public:
 
 
 private:
-	void Change_Animation_Check(_float TimeDelta);
+	_bool Change_Animation_Check(_float TimeDelta);
 
 private:
 	char			m_szName[MAX_PATH] = "";
