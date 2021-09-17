@@ -5,6 +5,10 @@
 #include "Base.h"
 
 BEGIN(Engine)
+
+//enum class EAnimationType
+//{ Once, Loop, End };
+
 class CAnimation final : public CBase
 {
 	typedef struct tagFrameLerp
@@ -18,9 +22,6 @@ private:
 	virtual ~CAnimation() = default;
 
 public:
-	_bool Get_IsFinishedAnimaion() { return m_IsFinished; }
-
-public:
 	void Set_LastTime(_float fLastTime);
 	void Set_CurrentTime(_float fCurrentTime) { m_fCurrentTime = fCurrentTime; }
 	void Set_AnimationIndex_Start(_float fAnimationStart, _float fAnimationStart_Term);
@@ -28,11 +29,15 @@ public:
 public:
 	HRESULT NativeConstruct(const char* pName, _float Duration, _float TickPerSecond);
 	HRESULT Add_Channel(class CAnimChannel* pAnimChannel);
-	HRESULT Update_Transform(_float TimeDelta);
+	HRESULT Update_Transform(_float TimeDelta, _float fFrameSpeed);
+	HRESULT Update_Transform_Lerp_Double(class CHierarchyNode * pNode,_float TimeDelta, _float fFrameSpeed);
 
 
 private:
 	_bool Change_Animation_Check(_float TimeDelta);
+
+private:
+	void Start_Frame(vector<KEYFRAME*> vecKeyFrame, _uint iCurrentKeyFrame,  _fvector vScale, _fvector vRotation, _fvector vPosition);
 
 private:
 	char			m_szName[MAX_PATH] = "";
@@ -44,16 +49,26 @@ private:
 	_float			m_fLastTime		= 0.f;		/* 애니메이션의 마지막 키프레임의 시간. */
 
 	
-	_bool			m_IsFinished = false;
-	_bool			m_isEnd = false;
-	_bool			m_IsChange = false;
+	_bool			m_IsEnd					= false;
+	_bool			m_IsChange				= false;
 	_float			m_fStartTime			= 0.f;
 	_float			m_fStartTime_Term		= 0.f;
 	_float			m_fAnimationLerpTime	= 0.f;
+	FRAME_LERP*		m_pFrameLerp			= { nullptr };
 
-	FRAME_LERP*		m_pFrameLerp = { nullptr }; 
+
+	_bool			m_IsSecondAnimation			= false;
+	FRAME_LERP*		m_pFrameLerp_Second			= { nullptr };
+	_float			m_fStartTime_Second			= 0.f;
+	_float			m_fStartTime_Term_Second	= 0.f;
+	_float			m_fAnimationLerpTime_Second = 0.f;
+
 	// 보간한 현재의 내 프레임을 저장할 배열
 	// 채널은 여러개지만 지금 쓰고있는 애니메이션은 한개가 아닌가
+
+
+	// 애니메이션 두개를 보간하기
+
 
 private:
 	vector<class CAnimChannel*>			m_Channels;

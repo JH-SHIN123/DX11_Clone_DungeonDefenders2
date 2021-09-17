@@ -60,6 +60,7 @@ CModel::CModel(const CModel & rhs)
 		m_Meshes.push_back(pMeshContainer);
 	}
 }
+
 CMeshContainer * CModel::Get_MeshContainer(_uint iMeshIndex)
 {
 	if (iMeshIndex >= m_Meshes.size())
@@ -70,7 +71,7 @@ CMeshContainer * CModel::Get_MeshContainer(_uint iMeshIndex)
 
 _bool CModel::Get_IsFinishedAnimaion()
 {
-	 return m_Animations[m_iCurrentAnimationIndex]->Get_IsFinishedAnimaion();
+	return false;//m_Animations[m_iCurrentAnimationIndex]->Get_IsFinishedAnimaion();
 }
 
 void CModel::Set_AnimationIndex(_uint iAnimationIndex)
@@ -89,6 +90,19 @@ void CModel::Set_AnimationIndex_Start(_float iAnimationStart, _float fAnimationS
 	m_iCurrentAnimationIndex = iAnimationIndex;
 
 	m_Animations[m_iCurrentAnimationIndex]->Set_AnimationIndex_Start(iAnimationStart, fAnimationStart_Term);
+}
+
+void CModel::Set_AnimationIndex_Start_Second(CHierarchyNode * pNode, _float TimeDelta, _float fAnimationStart, _float fAnimationStart_Term, _float fFrameSpeed, _uint iAnimationIndex)
+{
+	if (m_iNumAnimations > 0)
+	{
+		
+		m_Animations[m_iCurrentAnimationIndex]->Update_Transform(TimeDelta, fFrameSpeed);
+
+		// 두번 도는걸수도?
+		pNode->Update_CombindTransformationMatrix(m_iCurrentAnimationIndex);
+		
+	}
 }
 
 HRESULT CModel::NativeConstruct_Prototype(const char * pMeshFilePath, const char * pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix)
@@ -428,7 +442,6 @@ HRESULT CModel::SetUp_Animation(const aiScene * pScene)
 				{
 					memcpy(&vScale, &pNodeAnim->mScalingKeys[k].mValue, sizeof(_float3));
 					pKeyFrame->Time = pNodeAnim->mScalingKeys[k].mTime;
-
 				}
 
 				if (pNodeAnim->mNumRotationKeys > k)
@@ -544,12 +557,14 @@ HRESULT CModel::SetUp_SkinnedInfo(const aiScene * pScene)
 	return S_OK;
 }
 /* 애니메이션의 재생이 있다면. 매프레임마다 호출. */
-HRESULT CModel::Update_CombindTransformationMatrix(_float TimeDelta)
+HRESULT CModel::Update_CombindTransformationMatrix(_float TimeDelta, _float fFrameSpeed)
 {
 	if (m_iNumAnimations > 0)
 	{
 		/* 현재 애니메이션 채널들이 시간에 맞는 상태 변환값을 가지게 한다. */
-		m_Animations[m_iCurrentAnimationIndex]->Update_Transform(TimeDelta);
+		m_Animations[m_iCurrentAnimationIndex]->Update_Transform(TimeDelta, fFrameSpeed);
+
+		// 여기서 특정 뼈와 그의 자식새끼들을 다시 보간한다면?
 
 		for (auto& pHierarchyNode : m_HierarchyNodes)
 		{

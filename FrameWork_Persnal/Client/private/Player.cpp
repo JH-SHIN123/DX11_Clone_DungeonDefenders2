@@ -41,18 +41,6 @@ _int CPlayer::Tick(_float TimeDelta)
 	Turn_Check(TimeDelta);
 	Key_Check(TimeDelta);
 
-	//if (GetAsyncKeyState('V') & 0x8000)
-	//	m_pModelCom->Set_AnimationIndex_Start(38.f, 20.f);
-
-	//if (GetAsyncKeyState('C') & 0x8000)
-	//	m_pModelCom->Set_AnimationIndex_Start(293.f, 118.f);
-
-	//if (GetAsyncKeyState('X') & 0x8000)
-	//	m_pModelCom->Set_AnimationIndex_Start(1216.f, 75.f);
-
-
-		//m_pStatusCom->Add_Exp(10);
-
 
 	//static_cast<CCamera*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera_Free"))->TargetRotate_Check(m_pMovementCom);
 
@@ -211,11 +199,104 @@ void CPlayer::Key_Check(_float TimeDelta)
 		m_eAnimationState_Next = EPlayerAnimation::Fire;
 
 
+	//Idle_Check();
 }
 
 void CPlayer::Turn_Check(_float TimeDelta)
 {
 
+}
+
+void CPlayer::Idle_Check()
+{
+	// 키입력 한번으로 동작을 계속 수행해야 하는 놈들
+
+
+
+	_bool IsCurState = false;
+	if (m_pModelCom->Get_IsFinishedAnimaion())
+	{
+		// ex. 공격이 끝났다? -> Idle
+		switch (m_eAnimationState_Cur)
+		{
+		case Client::EPlayerAnimation::CallOut:
+			break;
+		case Client::EPlayerAnimation::ChargeMax:
+			break;
+		case Client::EPlayerAnimation::ChargeMax_KnockBack:
+			break;
+		case Client::EPlayerAnimation::ChargeMin:
+			break;
+		case Client::EPlayerAnimation::ChargeMin_KnockBack:
+			break;
+		case Client::EPlayerAnimation::Death:
+			break;
+		case Client::EPlayerAnimation::Detonate:
+			break;
+		case Client::EPlayerAnimation::Fire:
+			IsCurState = true;
+			break;
+		case Client::EPlayerAnimation::FireMaxPower:
+			break;
+		case Client::EPlayerAnimation::Heal:
+			break;
+		case Client::EPlayerAnimation::Hurt:
+			break;
+		case Client::EPlayerAnimation::Idle_lowHp:
+			break;
+		case Client::EPlayerAnimation::Jump:
+			break;
+		case Client::EPlayerAnimation::Jump_Falling:
+			break;
+		case Client::EPlayerAnimation::KnockBack:
+			break;
+		case Client::EPlayerAnimation::LevelUp:
+			break;
+		case Client::EPlayerAnimation::Lose:
+			break;
+		case Client::EPlayerAnimation::ManaBomb:
+			break;
+		case Client::EPlayerAnimation::PickupItem:
+			break;
+		case Client::EPlayerAnimation::Repair:
+			break;
+		case Client::EPlayerAnimation::Spawn:
+			break;
+		case Client::EPlayerAnimation::Summon:
+			break;
+		case Client::EPlayerAnimation::Summon_Place:
+			break;
+		case Client::EPlayerAnimation::Summon_Start:
+			break;
+		case Client::EPlayerAnimation::Summon_Stop:
+			break;
+		case Client::EPlayerAnimation::Upgrade:
+			break;
+		case Client::EPlayerAnimation::Wave_Start:
+			break;
+		case Client::EPlayerAnimation::Win:
+			break;
+		case Client::EPlayerAnimation::WinWave:
+			break;
+		case Client::EPlayerAnimation::EndKey:
+			break;
+
+		case Client::EPlayerAnimation::Idle:
+		case Client::EPlayerAnimation::Move_Backward:
+		case Client::EPlayerAnimation::Move_Left:
+		case Client::EPlayerAnimation::Move_Right:
+		case Client::EPlayerAnimation::RunForward:
+		case Client::EPlayerAnimation::Turn_Left:
+		default:
+			IsCurState = false;
+			break;
+		}
+
+		//if (true == IsCurState)
+		//	m_eAnimationState_Next = m_eAnimationState_Cur;
+		m_eAnimationState_Next = EPlayerAnimation::Idle;
+	}
+	
 }
 
 void CPlayer::Level_Check()
@@ -245,7 +326,6 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 {
 	GAMEOBJ_DESC Data;
 	memcpy(&Data, pArg, sizeof(GAMEOBJ_DESC));
-
 
 	HRESULT hr = S_OK;
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom);

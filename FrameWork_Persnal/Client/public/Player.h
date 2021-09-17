@@ -77,6 +77,7 @@ public:
 private: // Tick
 	void	Key_Check(_float TimeDelta);
 	void	Turn_Check(_float TimeDelta);
+	void	Idle_Check();
 
 private: // LateTick
 	void	Level_Check();
@@ -97,8 +98,9 @@ private: // Tower
 	_bool						m_IsTowerPick = false;
 
 private:
-	EPlayerAnimation		m_eAnimationState_Cur	= EPlayerAnimation::End;
-	EPlayerAnimation		m_eAnimationState_Next	= EPlayerAnimation::Idle;
+	EPlayerAnimation		m_eAnimationState_Cur		= EPlayerAnimation::End;
+	EPlayerAnimation		m_eAnimationState_Next		= EPlayerAnimation::Idle;
+	EPlayerAnimation		m_eAnimationState_Second	= EPlayerAnimation::End;
 
 private:
 	HRESULT	Ready_Component(void* pArg);

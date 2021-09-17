@@ -22,6 +22,7 @@ public:
 public:
 	void Set_AnimationIndex(_uint iAnimationIndex);
 	void Set_AnimationIndex_Start(_float fAnimationStart, _float fAnimationStart_Term, _uint iAnimationIndex = 0);
+	void Set_AnimationIndex_Start_Second(class CHierarchyNode* pNode, _float TimeDelta, _float fAnimationStart, _float fAnimationStart_Term, _float fFrameSpeed, _uint iAnimationIndex = 0);
 
 
 public:
@@ -47,7 +48,7 @@ public:
 	HRESULT SetUp_Animation(const aiScene* pScene);
 	HRESULT Sort_MeshesByMaterial();
 	HRESULT SetUp_SkinnedInfo(const aiScene* pScene);
-	HRESULT Update_CombindTransformationMatrix(_float TimeDelta);
+	HRESULT Update_CombindTransformationMatrix(_float TimeDelta, _float fFrameSpeed = 1.f);
 	HRESULT Bind_VIBuffer();
 
 	HRESULT Render_Model(_uint iMaterialIndex, _uint iPassIndex);
