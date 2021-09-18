@@ -11,6 +11,7 @@ typedef struct tagAnimateEffect_Desc
 {
 	_float4			vPos;
 	_float2			vOffSet = { 0.f, 0.f };
+	_uint			iShaderPass = 1;
 	_bool			IsLoop = false;
 	_float			fLoopTime = 0.f;
 	_float			fAnimateSpeed = 2.f;
@@ -31,7 +32,7 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg) override;
 	virtual _int	Tick(_float TimeDelta)		override;
 	virtual _int	Late_Tick(_float TimeDelta) override;
-	virtual HRESULT Render(_uint iShaderPass = 1);
+	virtual HRESULT Render() override;
 
 private:
 	HRESULT	Ready_Component(void* pArg);

@@ -13,6 +13,22 @@ Engine::CInputDev::~CInputDev()
 	Free();
 }
 
+_bool CInputDev::Get_MouseClick_Down(MOUSEKEYSTATE eMouse)
+{
+	if (m_tMouseState.rgbButtons[(_uint)eMouse])
+	{
+		if (m_bMouseDown[(_uint)eMouse] == false)
+		{
+			m_bMouseDown[(_uint)eMouse] = true;
+			return true;
+		}
+	}
+	else
+		m_bMouseDown[(_uint)eMouse] = false;
+
+	return false;
+}
+
 HRESULT Engine::CInputDev::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 {
 	if (nullptr == hInst)

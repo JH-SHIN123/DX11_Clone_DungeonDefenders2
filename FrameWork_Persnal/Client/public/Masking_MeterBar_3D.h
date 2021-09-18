@@ -6,7 +6,7 @@
 #include "Masking_MeterBar.h"
 
 BEGIN(Client)
-typedef struct tagMask_MeterBar_desc
+typedef struct tagMask_MeterBar_desc3D
 {
 	_float						fCount;
 	_float						fCount_Max;

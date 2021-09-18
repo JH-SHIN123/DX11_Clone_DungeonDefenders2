@@ -270,12 +270,12 @@ void CStatusMenu::Status_UpGrade()
 
 	if (iCount > 0)
 	{
-		for (auto& iter : m_vecButton_Status)
+		for (_int i = 0; i < m_vecButton_Status.size(); ++i)
 		{
-			if (iter->Get_IsClick())
+			if (m_vecButton_Status[i]->Get_IsClick())
 			{
 				ANIEFFECT_DESC Data;
-				iter->Get_Button_Pos(&Data.vPos);
+				m_vecButton_Status[i]->Get_Button_Pos(&Data.vPos);
 				Data.vOffSet = { 2.f, 2.f };
 				lstrcpy(Data.szTextureEX_Name, L"Component_TextureEX_Status_Up");
 
