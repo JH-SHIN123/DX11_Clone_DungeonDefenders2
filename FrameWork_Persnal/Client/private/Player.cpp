@@ -317,7 +317,12 @@ void CPlayer::Animation_Check(_float TimeDelta)
 	if(m_eAnimationState_Cur != m_eAnimationState_Next)
 		m_pModelCom->Set_AnimationIndex_Start((_float)m_eAnimationState_Next, Animation_Term());
 
-	m_pModelCom->Update_CombindTransformationMatrix(TimeDelta);
+	m_pModelCom->Update_AnimaionMatrix(TimeDelta);
+
+	m_pModelCom->Set_AnimationIndex_Start_SecondNode( "b_HipL", TimeDelta, (_float)EPlayerAnimation::Fire, (_float)EPlayerAnimation::FireMaxPower - 1.f, 1.f);
+
+
+	m_pModelCom->Update_CombindTransformationMatrix();
 
 	m_eAnimationState_Cur = m_eAnimationState_Next;
 }

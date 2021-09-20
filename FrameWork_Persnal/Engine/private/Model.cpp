@@ -82,27 +82,45 @@ void CModel::Set_AnimationIndex(_uint iAnimationIndex)
 	m_iCurrentAnimationIndex = iAnimationIndex;
 }
 
-void CModel::Set_AnimationIndex_Start(_float iAnimationStart, _float fAnimationStart_Term, _uint iAnimationIndex)
+void CModel::Set_AnimationIndex_Start(_float fAnimationStart, _float fAnimationStart_Term, _uint iAnimationIndex)
 {
 	if (iAnimationIndex >= m_iNumAnimations)
 		return;
 
 	m_iCurrentAnimationIndex = iAnimationIndex;
 
-	m_Animations[m_iCurrentAnimationIndex]->Set_AnimationIndex_Start(iAnimationStart, fAnimationStart_Term);
+	m_Animations[m_iCurrentAnimationIndex]->Set_AnimationIndex_Start(fAnimationStart, fAnimationStart_Term);
 }
 
-void CModel::Set_AnimationIndex_Start_Second(CHierarchyNode * pNode, _float TimeDelta, _float fAnimationStart, _float fAnimationStart_Term, _float fFrameSpeed, _uint iAnimationIndex)
+void CModel::Set_AnimationIndex_Start_SecondNode(const char* szNodeName, _float TimeDelta, _float fAnimationStart, _float fAnimationStart_Term, _float fFrameSpeed, _uint iAnimationIndex)
 {
-	if (m_iNumAnimations > 0)
-	{
-		
-		m_Animations[m_iCurrentAnimationIndex]->Update_Transform(TimeDelta, fFrameSpeed);
+	if (iAnimationIndex >= m_iNumAnimations)
+		return;
+	
+	m_Animations[iAnimationIndex]->Set_AnimationIndex_Start_Second(fAnimationStart, fAnimationStart_Term);
 
-		// 두번 도는걸수도?
-		pNode->Update_CombindTransformationMatrix(m_iCurrentAnimationIndex);
-		
-	}
+	CHierarchyNode* pNode = Find_HierarchyNode(szNodeName);
+
+	if (nullptr == pNode)
+		return;
+
+	_uint iNodeDepth = pNode->Get_Depth();
+	m_iNodesDepth;
+
+	if (iNodeDepth < m_iNodesDepth)
+		return;
+
+	vector<string> vecNodeNames;
+	vecNodeNames.reserve(m_iNodesCount);
+
+	vecNodeNames.emplace_back(pNode->Get_Name());
+
+	if (m_iNumAnimations > 0)
+		m_Animations[iAnimationIndex]->Update_Transform_Node(pNode, TimeDelta, fFrameSpeed);
+
+	Update_Animation_Node(pNode, &vecNodeNames, TimeDelta, fFrameSpeed, iAnimationIndex);
+
+
 }
 
 HRESULT CModel::NativeConstruct_Prototype(const char * pMeshFilePath, const char * pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix)
@@ -556,22 +574,25 @@ HRESULT CModel::SetUp_SkinnedInfo(const aiScene * pScene)
 
 	return S_OK;
 }
-/* 애니메이션의 재생이 있다면. 매프레임마다 호출. */
-HRESULT CModel::Update_CombindTransformationMatrix(_float TimeDelta, _float fFrameSpeed)
+
+HRESULT CModel::Update_AnimaionMatrix(_float TimeDelta, _float fFrameSpeed)
 {
+/* 애니메이션의 재생이 있다면. 매프레임마다 호출. */
 	if (m_iNumAnimations > 0)
 	{
 		/* 현재 애니메이션 채널들이 시간에 맞는 상태 변환값을 가지게 한다. */
 		m_Animations[m_iCurrentAnimationIndex]->Update_Transform(TimeDelta, fFrameSpeed);
-
-		// 여기서 특정 뼈와 그의 자식새끼들을 다시 보간한다면?
-
-		for (auto& pHierarchyNode : m_HierarchyNodes)
-		{
-			pHierarchyNode->Update_CombindTransformationMatrix(m_iCurrentAnimationIndex);
-		}
 	}
 
+	return S_OK;
+}
+
+HRESULT CModel::Update_CombindTransformationMatrix()
+{
+	for (auto& pHierarchyNode : m_HierarchyNodes)
+	{
+		pHierarchyNode->Update_CombindTransformationMatrix(m_iCurrentAnimationIndex);
+	}
 	return S_OK;
 }
 
@@ -588,6 +609,11 @@ HRESULT CModel::Bind_VIBuffer()
 	m_pDevice_Context->IASetPrimitiveTopology(m_eTopology);
 
 	return S_OK;
+}
+
+void CModel::Set_Depth(const _uint & iDepthCount)
+{
+	m_iNodesDepth = iDepthCount;
 }
 
 HRESULT CModel::Render_Model(_uint iMaterialIndex, _uint iPassIndex)
@@ -623,6 +649,46 @@ CHierarchyNode* CModel::Find_HierarchyNode(const char * pNodeName)
 		return nullptr;
 	else
 		return *iter;
+}
+
+CHierarchyNode * CModel::Find_HierarchyNode_Parent(const char * pNodeName, _uint iDepth, vector<string>* vecNodeNames)
+{
+	auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarchyNode* pHierarchyNode)->bool
+	{
+		if (pHierarchyNode->Get_Depth() > iDepth)
+		{
+			for (auto& pNodeNames : *vecNodeNames)
+			{
+				if (!strcmp(pNodeNames.data(), pHierarchyNode->Get_Name_Parent()))
+					return true;
+			}
+		}
+	});
+
+	if (iter == m_HierarchyNodes.end())
+		return nullptr;
+	else
+		return *iter;
+}
+
+HRESULT CModel::Update_Animation_Node(CHierarchyNode * pNode, vector <string>* vecNodeNames, _float TimeDelta, _float fFrameSpeed, _uint iAnimationIndex)
+{
+Update_Animation_Node_Try_Again:
+
+	CHierarchyNode* pChildNode = Find_HierarchyNode_Parent(pNode->Get_Name(), pNode->Get_Depth(), vecNodeNames);
+
+	if (nullptr == pChildNode)
+		return S_OK;
+
+	vecNodeNames->emplace_back(pNode->Get_Name());
+	m_Animations[iAnimationIndex]->Update_Transform_Node(pChildNode, TimeDelta, fFrameSpeed);
+
+	Update_Animation_Node(pChildNode, vecNodeNames, TimeDelta, fFrameSpeed, iAnimationIndex);
+
+	if (nullptr != Find_HierarchyNode_Parent(pNode->Get_Name(), pNode->Get_Depth(), vecNodeNames))
+		goto Update_Animation_Node_Try_Again;
+
+	return S_OK;
 }
 
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const char * pMeshFilePath, const char * pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix)

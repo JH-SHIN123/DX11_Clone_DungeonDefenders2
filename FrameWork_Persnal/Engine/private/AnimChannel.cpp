@@ -11,6 +11,11 @@ void CAnimChannel::Set_CurrentKeyFrame(_uint iCurrentKeyFrame)
 	m_iCurrentKeyFrame = iCurrentKeyFrame;
 }
 
+void CAnimChannel::Set_Parent_Name(const char * szParentName)
+{
+	strcpy(m_szParentName, szParentName);
+}
+
 HRESULT CAnimChannel::NativeConstruct(const char * pName)
 {
 	strcpy(m_szName, pName);

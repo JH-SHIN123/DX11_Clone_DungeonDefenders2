@@ -12,9 +12,7 @@ private:
 	virtual ~CModelLoader() = default;
 
 public:
-	const aiScene* Get_aiScene() const {
-		return m_pScene;
-	}
+	const aiScene* Get_aiScene() const { return m_pScene; }
 
 public:
 	HRESULT Load_ModelFromFile(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, class CModel* pModel, const char* pMeshFilePath, const char* pMeshFileName);

@@ -20,10 +20,11 @@ public:
 	_bool Get_IsFinishedAnimaion();
 
 public:
+	void Set_Depth(const _uint& iDepthCount);
+	void Set_NodeCount() { ++m_iNodesCount; }
 	void Set_AnimationIndex(_uint iAnimationIndex);
 	void Set_AnimationIndex_Start(_float fAnimationStart, _float fAnimationStart_Term, _uint iAnimationIndex = 0);
-	void Set_AnimationIndex_Start_Second(class CHierarchyNode* pNode, _float TimeDelta, _float fAnimationStart, _float fAnimationStart_Term, _float fFrameSpeed, _uint iAnimationIndex = 0);
-
+	void Set_AnimationIndex_Start_SecondNode(const char* szNodeName, _float TimeDelta, _float fAnimationStart, _float fAnimationStart_Term, _float fFrameSpeed, _uint iAnimationIndex = 0);
 
 public:
 	virtual HRESULT NativeConstruct_Prototype(const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix); /* 버퍼를 생성한다.*/
@@ -40,7 +41,6 @@ public:
 	HRESULT Reserve_Vertices(_uint iNumVertices);
 	HRESULT Reserve_VIBuffer(_uint iNumVertices, _uint iNumFace);
 
-
 	HRESULT Set_Variable(const char* pConstanceName, void* pData, _int iByteSize);
 	HRESULT Set_ShaderResourceView(const char * pConstanceName, _uint iMaterialIndex, aiTextureType eMaterialType, _uint iTextureIndex = 0);
 
@@ -48,12 +48,12 @@ public:
 	HRESULT SetUp_Animation(const aiScene* pScene);
 	HRESULT Sort_MeshesByMaterial();
 	HRESULT SetUp_SkinnedInfo(const aiScene* pScene);
-	HRESULT Update_CombindTransformationMatrix(_float TimeDelta, _float fFrameSpeed = 1.f);
 	HRESULT Bind_VIBuffer();
 
 	HRESULT Render_Model(_uint iMaterialIndex, _uint iPassIndex);
 
-
+	HRESULT Update_AnimaionMatrix(_float TimeDelta, _float fFrameSpeed = 1.f);
+	HRESULT Update_CombindTransformationMatrix();
 
 private:
 	class CModelLoader*		m_pModelLoader = nullptr;
@@ -75,6 +75,8 @@ private:
 	typedef vector<MESHTEXTURE*>		MATERIALS;
 
 	vector<class CHierarchyNode*>		m_HierarchyNodes;
+	_uint								m_iNodesDepth = 0;
+	_uint								m_iNodesCount = 0;
 
 protected:
 	_uint						m_iNumAnimations;
@@ -90,9 +92,6 @@ protected: /* For.Vertices */
 	_uint						m_iNumVertices = 0;
 	_uint						m_iStride = 0;
 	_uint						m_iNumVertexBuffers = 0;
-
-
-
 
 protected: /* For.Indices */
 	ID3D11Buffer*				m_pIB = nullptr;
@@ -110,8 +109,8 @@ protected: /* For.Shader */
 
 private:
 	class CHierarchyNode* Find_HierarchyNode(const char* pNodeName);
-
-
+	class CHierarchyNode* Find_HierarchyNode_Parent(const char* pNodeName, _uint iDepth, vector <string>* vecNodeNames);
+	HRESULT	Update_Animation_Node(class CHierarchyNode* pNode, vector <string>* vecNodeNames, _float TimeDelta, _float fFrameSpeed, _uint iAnimationIndex);
 
 
 public:

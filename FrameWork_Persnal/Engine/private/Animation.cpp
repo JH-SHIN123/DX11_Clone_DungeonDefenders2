@@ -1,5 +1,6 @@
 #include "..\public\Animation.h"
 #include "AnimChannel.h"
+#include "HierarchyNode.h"
 
 
 CAnimation::CAnimation()
@@ -14,11 +15,11 @@ void CAnimation::Set_LastTime(_float fLastTime)
 	// 이건 플립북이 아니다 그저 뼈의 순서대로 정보를 하나씩 만 가질것
 	_int iSize = (_int)m_Channels.size();
 
-	m_pFrameLerp		= new FRAME_LERP[iSize]; 
+	m_pFrameLerp = new FRAME_LERP[iSize];
 	m_pFrameLerp_Second = new FRAME_LERP[iSize];
 
 	ZeroMemory(m_pFrameLerp, sizeof(FRAME_LERP) * iSize);
-	
+
 	_uint iChannelNum = 0;
 	for (auto& pAnimChannel : m_Channels)
 	{
@@ -43,11 +44,20 @@ void CAnimation::Set_LastTime(_float fLastTime)
 
 void CAnimation::Set_AnimationIndex_Start(_float fAnimationStart, _float fAnimationStart_Term)
 {
-	m_IsChange				= true;
-	m_fStartTime			= fAnimationStart;
-	m_fStartTime_Term		= fAnimationStart_Term;
-	m_fAnimationLerpTime	= 0.f;
+	m_IsChange = true;
+	m_fStartTime = fAnimationStart;
+	m_fStartTime_Term = fAnimationStart_Term;
+	m_fAnimationLerpTime = 0.f;
 	//m_isEnd					= false;
+}
+
+void CAnimation::Set_AnimationIndex_Start_Second(_float fAnimationStart, _float fAnimationStart_Term)
+{
+	m_fStartTime_Second = fAnimationStart;
+	m_fStartTime_Term_Second = fAnimationStart_Term;
+	m_fCurrentTime_Second = fAnimationStart;
+	m_fLastTime_Second = fAnimationStart + fAnimationStart_Term;
+	m_fAnimationLerpTime_Second = 0.f;
 }
 
 HRESULT CAnimation::NativeConstruct(const char * pName, _float Duration, _float TickPerSecond)
@@ -73,7 +83,7 @@ HRESULT CAnimation::Update_Transform(_float TimeDelta, _float fFrameSpeed)
 {
 	if (true == m_IsChange)
 	{
-		if(false == Change_Animation_Check(TimeDelta))
+		if (false == Change_Animation_Check(TimeDelta))
 			return S_OK;
 	}
 
@@ -89,6 +99,7 @@ HRESULT CAnimation::Update_Transform(_float TimeDelta, _float fFrameSpeed)
 		m_IsEnd = false;
 
 	_uint iChannelNum = 0;
+	m_Channels[0]->Get_Name();
 	for (auto& pAnimChannel : m_Channels)
 	{
 		vector<KEYFRAME*>	KeyFrames = pAnimChannel->Get_KeyFrames();
@@ -157,7 +168,7 @@ HRESULT CAnimation::Update_Transform(_float TimeDelta, _float fFrameSpeed)
 			vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
 			vPosition = XMVectorSetW(vPosition, 1.f);
 		}
-		
+
 		XMStoreFloat3(&m_pFrameLerp[iChannelNum].vSrcScale, vScale);
 		XMStoreFloat3(&m_pFrameLerp[iChannelNum].vSrcPosition, vPosition);
 		XMStoreFloat4(&m_pFrameLerp[iChannelNum++].vSrcRotation, vRotation);
@@ -170,101 +181,97 @@ HRESULT CAnimation::Update_Transform(_float TimeDelta, _float fFrameSpeed)
 	return S_OK;
 }
 
-HRESULT CAnimation::Update_Transform_Lerp_Double(CHierarchyNode * pNode, _float TimeDelta, _float fFrameSpeed)
+HRESULT CAnimation::Update_Transform_Node(CHierarchyNode * pNode, _float TimeDelta, _float fFrameSpeed)
 {
-	m_fCurrentTime += fmod(m_TickPerSecond * TimeDelta * fFrameSpeed, m_fLastTime);
+	if (nullptr == pNode)
+		return E_FAIL;
 
-	if (m_fCurrentTime >= m_fLastTime)
+	m_fCurrentTime_Second += fmod(m_TickPerSecond * TimeDelta * fFrameSpeed, m_fLastTime_Second);
+
+	if (m_fCurrentTime_Second >= m_fLastTime_Second)
 	{
-		m_fCurrentTime = m_fStartTime - 0.1f;
+		m_fCurrentTime_Second = m_fStartTime_Second - 0.1f;
 
-		m_IsEnd = true;
+		m_IsEnd_Second = true;
 	}
 	else
-		m_IsEnd = false;
+		m_IsEnd_Second = false;
 
 	_uint iChannelNum = 0;
-	for (auto& pAnimChannel : m_Channels)
+
+	vector<KEYFRAME*>	KeyFrames = (*pNode->Get_AnimChannel())->Get_KeyFrames();
+
+	KEYFRAME*			pFirst = KeyFrames[(_uint)m_fStartTime_Second];
+	KEYFRAME*			pLast = KeyFrames[(_uint)m_fLastTime_Second];
+
+
+	_uint iCurrentKeyFrame = (_uint)m_fCurrentTime_Second;
+
+
+	if (true == m_IsEnd)
 	{
-		pNode->Get
-
-		vector<KEYFRAME*>	KeyFrames = pAnimChannel->Get_KeyFrames();
-
-		KEYFRAME*			pFirst = KeyFrames[(_uint)m_fStartTime];
-		KEYFRAME*			pLast = KeyFrames[(_uint)m_fLastTime];
-
-
-		_uint iCurrentKeyFrame = (_uint)m_fCurrentTime;
-
-
-		if (true == m_IsEnd)
-		{
-			iCurrentKeyFrame = (_uint)m_fStartTime;
-			pAnimChannel->Set_CurrentKeyFrame(iCurrentKeyFrame);
-		}
-
-		_vector			vScale, vRotation, vPosition;
-
-		vScale = XMVectorZero();
-		vRotation = XMVectorZero();
-		vPosition = XMVectorZero();
-
-		if (m_fCurrentTime < (_float)pFirst->Time /*|| true == m_IsChange*/)
-		{
-			vScale = XMLoadFloat3(&pFirst->vScale);
-			vRotation = XMLoadFloat4(&pFirst->vRotation);
-			vPosition = XMLoadFloat3(&pFirst->vPosition);
-			vPosition = XMVectorSetW(vPosition, 1.f);
-		}
-
-		else if (true == m_IsEnd || m_fCurrentTime >= (_float)pLast->Time)
-		{
-			vScale = XMLoadFloat3(&pLast->vScale);
-			vRotation = XMLoadFloat4(&pLast->vRotation);
-			vPosition = XMLoadFloat3(&pLast->vPosition);
-			vPosition = XMVectorSetW(vPosition, 1.f);
-		}
-		else
-		{
-			if (m_fCurrentTime > KeyFrames[iCurrentKeyFrame + 1]->Time)
-				pAnimChannel->Set_CurrentKeyFrame(++iCurrentKeyFrame);
-
-			_float		fRatio = (m_fCurrentTime - (_float)KeyFrames[iCurrentKeyFrame]->Time) /
-				((_float)KeyFrames[iCurrentKeyFrame + 1]->Time - (_float)KeyFrames[iCurrentKeyFrame]->Time);
-
-			_vector		vSourScale, vDestScale;
-			_vector		vSourRotataion, vDestRotation;
-			_vector		vSourPosition, vDestPosition;
-
-			// 이전 프레임
-			vSourScale = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame]->vScale);
-			vSourRotataion = XMLoadFloat4(&KeyFrames[iCurrentKeyFrame]->vRotation);
-			vSourPosition = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame]->vPosition);
-			vSourPosition = XMVectorSetW(vSourPosition, 1.f);
-
-			// 다음프레임
-			vDestScale = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame + 1]->vScale);
-			vDestRotation = XMLoadFloat4(&KeyFrames[iCurrentKeyFrame + 1]->vRotation);
-			vDestPosition = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame + 1]->vPosition);
-			vDestPosition = XMVectorSetW(vDestPosition, 1.f);
-
-			// 선형보간
-			vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
-			vRotation = XMQuaternionSlerp(vSourRotataion, vDestRotation, fRatio); // +구면선형보간
-			vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
-			vPosition = XMVectorSetW(vPosition, 1.f);
-		}
-
-		XMStoreFloat3(&m_pFrameLerp[iChannelNum].vSrcScale, vScale);
-		XMStoreFloat3(&m_pFrameLerp[iChannelNum].vSrcPosition, vPosition);
-		XMStoreFloat4(&m_pFrameLerp[iChannelNum++].vSrcRotation, vRotation);
-
-		_matrix		TransformMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
-
-		pAnimChannel->Set_TransformationMatrix(TransformMatrix);
+		iCurrentKeyFrame = (_uint)m_fStartTime;
+		(*pNode->Get_AnimChannel())->Set_CurrentKeyFrame(iCurrentKeyFrame);
 	}
 
-	return S_OK;
+	_vector			vScale, vRotation, vPosition;
+
+	vScale = XMVectorZero();
+	vRotation = XMVectorZero();
+	vPosition = XMVectorZero();
+
+	if (m_fCurrentTime_Second < (_float)pFirst->Time /*|| true == m_IsChange*/)
+	{
+		vScale = XMLoadFloat3(&pFirst->vScale);
+		vRotation = XMLoadFloat4(&pFirst->vRotation);
+		vPosition = XMLoadFloat3(&pFirst->vPosition);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+	}
+
+	else if (true == m_IsEnd || m_fCurrentTime_Second >= (_float)pLast->Time)
+	{
+		vScale = XMLoadFloat3(&pLast->vScale);
+		vRotation = XMLoadFloat4(&pLast->vRotation);
+		vPosition = XMLoadFloat3(&pLast->vPosition);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+	}
+
+	else
+	{
+
+
+		if (m_fCurrentTime_Second > KeyFrames[iCurrentKeyFrame + 1]->Time)
+			(*pNode->Get_AnimChannel())->Set_CurrentKeyFrame(++iCurrentKeyFrame);
+
+		_float		fRatio = (m_fCurrentTime_Second - (_float)KeyFrames[iCurrentKeyFrame]->Time) /
+			((_float)KeyFrames[iCurrentKeyFrame + 1]->Time - (_float)KeyFrames[iCurrentKeyFrame]->Time);
+
+		_vector		vSourScale, vDestScale;
+		_vector		vSourRotataion, vDestRotation;
+		_vector		vSourPosition, vDestPosition;
+
+		// 이전 프레임
+		vSourScale = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame]->vScale);
+		vSourRotataion = XMLoadFloat4(&KeyFrames[iCurrentKeyFrame]->vRotation);
+		vSourPosition = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame]->vPosition);
+		vSourPosition = XMVectorSetW(vSourPosition, 1.f);
+
+		// 다음프레임
+		vDestScale = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame + 1]->vScale);
+		vDestRotation = XMLoadFloat4(&KeyFrames[iCurrentKeyFrame + 1]->vRotation);
+		vDestPosition = XMLoadFloat3(&KeyFrames[iCurrentKeyFrame + 1]->vPosition);
+		vDestPosition = XMVectorSetW(vDestPosition, 1.f);
+
+		// 선형보간
+		vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
+		vRotation = XMQuaternionSlerp(vSourRotataion, vDestRotation, fRatio); // +구면선형보간
+		vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+	}
+
+	_matrix		TransformMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
+
+	(*pNode->Get_AnimChannel())->Set_TransformationMatrix(TransformMatrix);
 
 	return S_OK;
 }
@@ -272,7 +279,7 @@ HRESULT CAnimation::Update_Transform_Lerp_Double(CHierarchyNode * pNode, _float 
 _bool CAnimation::Change_Animation_Check(_float TimeDelta)
 {
 	// 린다...G
-	m_fAnimationLerpTime += TimeDelta * 5.f;	
+	m_fAnimationLerpTime += TimeDelta * 5.f;
 
 	_vector		vScale, vRotation, vPosition;
 	_vector		vSourScale, vDestScale;
@@ -299,21 +306,21 @@ _bool CAnimation::Change_Animation_Check(_float TimeDelta)
 			return true;
 		}
 		//50
-		vSourScale		= XMLoadFloat3(&m_pFrameLerp[iChannelNum].vSrcScale);
-		vSourRotataion	= XMLoadFloat4(&m_pFrameLerp[iChannelNum].vSrcRotation);
-		vSourPosition	= XMLoadFloat3(&m_pFrameLerp[iChannelNum++].vSrcPosition);
-		vSourPosition	= XMVectorSetW(vSourPosition, 1.f);
+		vSourScale = XMLoadFloat3(&m_pFrameLerp[iChannelNum].vSrcScale);
+		vSourRotataion = XMLoadFloat4(&m_pFrameLerp[iChannelNum].vSrcRotation);
+		vSourPosition = XMLoadFloat3(&m_pFrameLerp[iChannelNum++].vSrcPosition);
+		vSourPosition = XMVectorSetW(vSourPosition, 1.f);
 
-		vDestScale		= XMLoadFloat3(&KeyFrames[iNextKeyFrame]->vScale);
-		vDestRotation	= XMLoadFloat4(&KeyFrames[iNextKeyFrame]->vRotation);
-		vDestPosition	= XMLoadFloat3(&KeyFrames[iNextKeyFrame]->vPosition);
-		vDestPosition	= XMVectorSetW(vDestPosition, 1.f);
+		vDestScale = XMLoadFloat3(&KeyFrames[iNextKeyFrame]->vScale);
+		vDestRotation = XMLoadFloat4(&KeyFrames[iNextKeyFrame]->vRotation);
+		vDestPosition = XMLoadFloat3(&KeyFrames[iNextKeyFrame]->vPosition);
+		vDestPosition = XMVectorSetW(vDestPosition, 1.f);
 
 		// 선형보간
-		vScale			= XMVectorLerp(vSourScale, vDestScale, fRatio);
-		vRotation		= XMQuaternionSlerp(vSourRotataion, vDestRotation, fRatio); // +구면선형보간
-		vPosition		= XMVectorLerp(vSourPosition, vDestPosition, fRatio);
-		vPosition		= XMVectorSetW(vPosition, 1.f);
+		vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
+		vRotation = XMQuaternionSlerp(vSourRotataion, vDestRotation, fRatio); // +구면선형보간
+		vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
+		vPosition = XMVectorSetW(vPosition, 1.f);
 
 		_matrix		TransformMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 

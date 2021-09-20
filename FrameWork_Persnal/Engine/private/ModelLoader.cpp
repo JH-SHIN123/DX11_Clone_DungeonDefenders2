@@ -159,10 +159,13 @@ HRESULT CModelLoader::Create_HierarchyNode(CModel* pModel, aiNode * pNode, CHier
 	if (nullptr == pHierarchyNode)
 		return E_FAIL;
 
+	pModel->Set_Depth(iDepth);
+	pModel->Set_NodeCount();
 	pModel->Add_HierarchyNode(pHierarchyNode);
 
 	for (_uint i = 0; i < pNode->mNumChildren; ++i)
 		Create_HierarchyNode(pModel, pNode->mChildren[i], pHierarchyNode, iDepth + 1);
+
 
 	return S_OK;
 }

@@ -20,6 +20,7 @@ public: // Getter
 public:
 	void Set_CurrentKeyFrame(_uint iCurrentKeyFrame);
 	void Set_TransformationMatrix(_fmatrix TransformationMatrix) { XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix); }
+	void Set_Parent_Name(const char* szParentName);
 
 public:
 	HRESULT NativeConstruct(const char* pName);
@@ -27,6 +28,7 @@ public:
 
 private:
 	char			m_szName[MAX_PATH] = "";
+	char			m_szParentName[MAX_PATH] = "";
 
 private:
 	vector<KEYFRAME*>	m_KeyFrames;

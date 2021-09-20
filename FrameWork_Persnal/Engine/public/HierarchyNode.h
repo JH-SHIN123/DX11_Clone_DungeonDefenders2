@@ -18,6 +18,7 @@ public:
 	_uint		Get_Depth() const { return m_iDepth; }
 	_fmatrix Get_CombindTransformationMatrix() const { return XMLoadFloat4x4(&m_CombinedTransformationMatrix); }
 	_fmatrix Get_TransformationMatrix() const { return XMLoadFloat4x4(&m_TransformationMatrix); }
+	class CAnimChannel** Get_AnimChannel() const { return m_ppAnimChannel; }
 
 public:
 	HRESULT Set_AnimChannelPointer(_uint iAnimIndex, class CAnimChannel* pAnimChannel);

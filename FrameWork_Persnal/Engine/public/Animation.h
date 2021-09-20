@@ -25,12 +25,13 @@ public:
 	void Set_LastTime(_float fLastTime);
 	void Set_CurrentTime(_float fCurrentTime) { m_fCurrentTime = fCurrentTime; }
 	void Set_AnimationIndex_Start(_float fAnimationStart, _float fAnimationStart_Term);
+	void Set_AnimationIndex_Start_Second(_float fAnimationStart, _float fAnimationStart_Term);
 
 public:
 	HRESULT NativeConstruct(const char* pName, _float Duration, _float TickPerSecond);
 	HRESULT Add_Channel(class CAnimChannel* pAnimChannel);
 	HRESULT Update_Transform(_float TimeDelta, _float fFrameSpeed);
-	HRESULT Update_Transform_Lerp_Double(class CHierarchyNode * pNode,_float TimeDelta, _float fFrameSpeed);
+	HRESULT Update_Transform_Node(class CHierarchyNode * pNode,_float TimeDelta, _float fFrameSpeed);
 
 
 private:
@@ -57,11 +58,14 @@ private:
 	FRAME_LERP*		m_pFrameLerp			= { nullptr };
 
 
+	_bool			m_IsEnd_Second = false;
 	_bool			m_IsSecondAnimation			= false;
 	FRAME_LERP*		m_pFrameLerp_Second			= { nullptr };
 	_float			m_fStartTime_Second			= 0.f;
 	_float			m_fStartTime_Term_Second	= 0.f;
 	_float			m_fAnimationLerpTime_Second = 0.f;
+	_float			m_fCurrentTime_Second		= 0.f;		
+	_float			m_fLastTime_Second			= 0.f;		
 
 	// 보간한 현재의 내 프레임을 저장할 배열
 	// 채널은 여러개지만 지금 쓰고있는 애니메이션은 한개가 아닌가

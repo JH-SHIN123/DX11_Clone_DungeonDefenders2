@@ -14,9 +14,11 @@ public:
 
 public:
 	const char* Get_Name() const { return m_szNodeName; }
+	const char* Get_Name_Parent() const { return m_pParent->m_szNodeName; }
 	_uint		Get_Depth() const { return m_iDepth; }
 	_fmatrix Get_CombindTransformationMatrix() const { return XMLoadFloat4x4(&m_CombinedTransformationMatrix); }
 	_fmatrix Get_TransformationMatrix() const { return XMLoadFloat4x4(&m_TransformationMatrix); }
+	class CAnimChannel** Get_AnimChannel() const { return m_ppAnimChannel; }
 
 public:
 	HRESULT Set_AnimChannelPointer(_uint iAnimIndex, class CAnimChannel* pAnimChannel);
