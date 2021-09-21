@@ -85,6 +85,9 @@ private: // LateTick
 	_float	Animation_Term();
 
 private:
+	void SpecialAnimation_Check(_float TimeDelta);
+
+private:
 	CModel*				m_pModelCom		= nullptr;
 	CStatus*			m_pStatusCom	= nullptr;
 	CMovement*			m_pMovementCom	= nullptr;
@@ -92,6 +95,9 @@ private:
 
 private:
 	_bool			m_IsSkill_Use[10] = { false };
+	_bool			m_IsAttack = false;
+	_float			m_fChargeSkill = 0.f;
+	_bool			m_IsCharging = false;
 
 private: // Tower
 	class CStrikerTower*		m_pStrikerTower = nullptr;
@@ -101,6 +107,7 @@ private:
 	EPlayerAnimation		m_eAnimationState_Cur		= EPlayerAnimation::End;
 	EPlayerAnimation		m_eAnimationState_Next		= EPlayerAnimation::Idle;
 	EPlayerAnimation		m_eAnimationState_Second	= EPlayerAnimation::End;
+	_bool					m_IsSecondAnimation = false;
 
 private:
 	HRESULT	Ready_Component(void* pArg);

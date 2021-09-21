@@ -17,6 +17,7 @@
 #include "Phase_Panel.h"
 #include "StatusMenu.h"
 #include "StrikerTower.h"
+#include "BlockadeTower.h"
 
 USING(Engine)
 
@@ -155,21 +156,24 @@ HRESULT CLoading::LoadingForStage()
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Player"), CPlayer::Create(m_pDevice, m_pDevice_Context));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_BlockadeTower"), CBlockadeTower::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_StrikerTower"), CStrikerTower::Create(m_pDevice, m_pDevice_Context));
 
 
 
 	// Model
 
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Level_1"),
-		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Magus.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+	//hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Level_1"),
+	//	CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Magus.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Mage"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Mage/", "Mage.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_StrikerTower"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Tower/Striker/", "StrikerTower.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
-	//hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_StrikerTower"),
-	//	CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Tower/Striker/", "StrikerTower.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique", PivotMatrix));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_BlockcadeTower"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Tower/Blockade/", "BlockcadeTower.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
 
 	if (hr != S_OK)

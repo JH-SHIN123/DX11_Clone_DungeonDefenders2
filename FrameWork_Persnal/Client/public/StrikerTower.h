@@ -7,6 +7,13 @@
 BEGIN(Client)
 class CStrikerTower final :	public CDefenceTower
 {
+	enum class EStrikerTowerAnim
+	{
+		Fire = 0,
+		Idle = 85,
+		End_Anim = 125,
+		End = -1
+	};
 private:
 	explicit CStrikerTower(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	explicit CStrikerTower(const CStrikerTower& rhs);
@@ -21,6 +28,17 @@ public:
 
 protected:
 	HRESULT		Ready_Component(void* pArg);
+
+private:
+	void Attack_Check(_float TimeDelta);
+	void Anim_Check();
+
+private:
+	EStrikerTowerAnim	m_eAnim_Cur = EStrikerTowerAnim::End;
+	EStrikerTowerAnim	m_eAnim_Next = EStrikerTowerAnim::Idle;
+	_bool				m_IsAttack = false;
+	_float				m_fCoolTime = 0.f;
+	const _float		m_fAttCoolTime = 4.f;
 
 public:
 	static	CStrikerTower* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

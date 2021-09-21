@@ -148,9 +148,6 @@
     <Filter Include="03.UI, HUD\00.2D\06.Phase_Panel">
       <UniqueIdentifier>{a15c0e93-0211-45a7-b668-0778d8ae26da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\04.DefenceTower\00.StrikerTower">
-      <UniqueIdentifier>{e1d2ee50-6438-4680-a7f5-22d8b494aa9b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\04.DefenceTower\99.PreviewTower">
       <UniqueIdentifier>{9680dac0-84ec-4404-818d-62795f99593a}</UniqueIdentifier>
     </Filter>
@@ -159,6 +156,12 @@
     </Filter>
     <Filter Include="02.GameObject\06.CrystalCore\A0.Ring">
       <UniqueIdentifier>{cbb39902-107c-4af7-95a3-a097be0fd8bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.DefenceTower\01.StrikerTower">
+      <UniqueIdentifier>{e1d2ee50-6438-4680-a7f5-22d8b494aa9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.DefenceTower\00.BlockadeTower">
+      <UniqueIdentifier>{921b0b17-4b6f-4364-88c1-dc88769e98d2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -304,13 +307,16 @@
       <Filter>02.GameObject\04.DefenceTower</Filter>
     </ClInclude>
     <ClInclude Include="..\public\StrikerTower.h">
-      <Filter>02.GameObject\04.DefenceTower\00.StrikerTower</Filter>
+      <Filter>02.GameObject\04.DefenceTower\01.StrikerTower</Filter>
     </ClInclude>
     <ClInclude Include="..\public\CrystalCore.h">
       <Filter>02.GameObject\06.CrystalCore</Filter>
     </ClInclude>
     <ClInclude Include="..\public\CrystalCore_Ring.h">
       <Filter>02.GameObject\06.CrystalCore\A0.Ring</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BlockadeTower.h">
+      <Filter>02.GameObject\04.DefenceTower\00.BlockadeTower</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -432,7 +438,7 @@
       <Filter>02.GameObject\04.DefenceTower</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StrikerTower.cpp">
-      <Filter>02.GameObject\04.DefenceTower\00.StrikerTower</Filter>
+      <Filter>02.GameObject\04.DefenceTower\01.StrikerTower</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UI_2D.cpp">
       <Filter>03.UI, HUD\00.2D</Filter>
@@ -442,6 +448,9 @@
     </ClCompile>
     <ClCompile Include="..\private\CrystalCore_Ring.cpp">
       <Filter>02.GameObject\06.CrystalCore\A0.Ring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BlockadeTower.cpp">
+      <Filter>02.GameObject\04.DefenceTower\00.BlockadeTower</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -168,6 +168,7 @@
     <ClInclude Include="..\Bin\Shader\Shader_Defines.hpp" />
     <ClInclude Include="..\public\Animate_Effect.h" />
     <ClInclude Include="..\public\BackGround_Logo.h" />
+    <ClInclude Include="..\public\BlockadeTower.h" />
     <ClInclude Include="..\public\Calculator.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\public\Camera_Manager.h" />
@@ -219,6 +220,7 @@
   <ItemGroup>
     <ClCompile Include="..\private\Animate_Effect.cpp" />
     <ClCompile Include="..\private\BackGround_Logo.cpp" />
+    <ClCompile Include="..\private\BlockadeTower.cpp" />
     <ClCompile Include="..\private\Calculator.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\private\Camera_Manager.cpp" />

@@ -34,6 +34,7 @@ _int CStrikerTower::Tick(_float TimeDelta)
 
 _int CStrikerTower::Late_Tick(_float TimeDelta)
 {
+	Attack_Check(TimeDelta);
 
 	return __super::Late_Tick(TimeDelta);
 }
@@ -48,6 +49,19 @@ HRESULT CStrikerTower::Render()
 HRESULT CStrikerTower::Ready_Component(void * pArg)
 {
 	return S_OK;
+}
+
+void CStrikerTower::Attack_Check(_float TimeDelta)
+{
+	if (m_fCoolTime == 0.f)
+	{
+		// 몬스터가 반경 안에 있다.
+
+	}
+}
+
+void CStrikerTower::Anim_Check()
+{
 }
 
 CStrikerTower * CStrikerTower::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

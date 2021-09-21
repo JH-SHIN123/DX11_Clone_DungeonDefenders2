@@ -22,6 +22,9 @@ private:
 	virtual ~CAnimation() = default;
 
 public:
+	_bool Get_IsEnd() { return m_IsEnd; }
+
+public:
 	void Set_LastTime(_float fLastTime);
 	void Set_CurrentTime(_float fCurrentTime) { m_fCurrentTime = fCurrentTime; }
 	void Set_AnimationIndex_Start(_float fAnimationStart, _float fAnimationStart_Term);
@@ -32,7 +35,6 @@ public:
 	HRESULT Add_Channel(class CAnimChannel* pAnimChannel);
 	HRESULT Update_Transform(_float TimeDelta, _float fFrameSpeed);
 	HRESULT Update_Transform_Node(class CHierarchyNode * pNode,_float TimeDelta, _float fFrameSpeed);
-
 
 private:
 	_bool Change_Animation_Check(_float TimeDelta);

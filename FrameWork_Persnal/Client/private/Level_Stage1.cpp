@@ -21,8 +21,8 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
 		return E_FAIL;
@@ -35,15 +35,21 @@ HRESULT CLevel_Stage1::NativeConstruct()
 		
 
 	// Test
-	//TOWER_DESC Data;
-	//lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower");
+	TOWER_DESC Data;
+	lstrcpy(Data.szModelName, L"Component_Mesh_BlockcadeTower");
+	Data.eTowerRange = ETowerRange::Quarter;
+	Data.MoveState_Desc.fRotatePerSec = 0.5f;
+	Data.MoveState_Desc.vPos = { 0.f,0.f,20.f,1.f };
+	Data.MoveState_Desc.vScale = { 0.035f, 0.035f, 0.035f, 0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_BlockadeTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
+
+
+	//lstrcpy(Data.szModelName, L"Component_Mesh_BlockcadeTower");
 	//Data.eTowerRange = ETowerRange::Quarter;
 	//Data.MoveState_Desc.fRotatePerSec = 90.f;
-	//Data.MoveState_Desc.vPos = { 0.f,2.f,0.f,1.f };
-	//
-	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_StrikerTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
-
-
+	//Data.MoveState_Desc.vPos = { 0.f,0.f,20.f,1.f };
+	//Data.MoveState_Desc.vScale = { 0.035f, 0.035f, 0.035f, 0.f };
+	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_BlockadeTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
 
 
 	return S_OK;
@@ -176,7 +182,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Camera_Free(const _tchar * pLayerTag)
 	CameraDesc.fAspect = _float(g_iWinCX) / g_iWinCY;
 	CameraDesc.fFovy = XMConvertToRadians(90.0f);
 	CameraDesc.fNear = 0.3f;
-	CameraDesc.fFar = 300.f;
+	CameraDesc.fFar = 430.f;
 
 	CameraDesc.StateDesc.fSpeedPerSec = 50.f;
 	CameraDesc.StateDesc.fRotatePerSec = XMConvertToRadians(90.0f);

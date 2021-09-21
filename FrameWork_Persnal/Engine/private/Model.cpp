@@ -71,7 +71,7 @@ CMeshContainer * CModel::Get_MeshContainer(_uint iMeshIndex)
 
 _bool CModel::Get_IsFinishedAnimaion()
 {
-	return false;//m_Animations[m_iCurrentAnimationIndex]->Get_IsFinishedAnimaion();
+	return m_Animations[m_iCurrentAnimationIndex]->Get_IsEnd();
 }
 
 void CModel::Set_AnimationIndex(_uint iAnimationIndex)
@@ -104,12 +104,6 @@ void CModel::Set_AnimationIndex_Start_SecondNode(const char* szNodeName, _float 
 	if (nullptr == pNode)
 		return;
 
-	_uint iNodeDepth = pNode->Get_Depth();
-	m_iNodesDepth;
-
-	if (iNodeDepth < m_iNodesDepth)
-		return;
-
 	vector<string> vecNodeNames;
 	vecNodeNames.reserve(m_iNodesCount);
 
@@ -118,9 +112,7 @@ void CModel::Set_AnimationIndex_Start_SecondNode(const char* szNodeName, _float 
 	if (m_iNumAnimations > 0)
 		m_Animations[iAnimationIndex]->Update_Transform_Node(pNode, TimeDelta, fFrameSpeed);
 
-	Update_Animation_Node(pNode, &vecNodeNames, TimeDelta, fFrameSpeed, iAnimationIndex);
-
-
+	Update_Animation_Node(pNode, &vecNodeNames, TimeDelta, fFrameSpeed, iAnimationIndex, true);
 }
 
 HRESULT CModel::NativeConstruct_Prototype(const char * pMeshFilePath, const char * pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix)
@@ -653,40 +645,68 @@ CHierarchyNode* CModel::Find_HierarchyNode(const char * pNodeName)
 
 CHierarchyNode * CModel::Find_HierarchyNode_Parent(const char * pNodeName, _uint iDepth, vector<string>* vecNodeNames)
 {
-	auto	iter = find_if(m_HierarchyNodes.begin(), m_HierarchyNodes.end(), [&](CHierarchyNode* pHierarchyNode)->bool
+	_bool IsReturn = true;
+
+	for (_int i = 0; i < m_HierarchyNodes.size(); ++i)
 	{
-		if (pHierarchyNode->Get_Depth() > iDepth)
+		if (nullptr != m_HierarchyNodes[i]->Get_ParentNode())
 		{
-			for (auto& pNodeNames : *vecNodeNames)
+			// 부모 노드 이름중에 내가 지명한 이름이랑 곂침?
+			if (!strcmp(m_HierarchyNodes[i]->Get_Name_Parent(), pNodeName))
 			{
-				if (!strcmp(pNodeNames.data(), pHierarchyNode->Get_Name_Parent()))
-					return true;
+				IsReturn = true;
+				//목록에서 이름 곂치는지 검사 해봐
+				for (auto& NameIter : *vecNodeNames)
+				{
+					if (!strcmp(m_HierarchyNodes[i]->Get_Name(), NameIter.data()))
+					{
+						IsReturn = false;
+					}
+				}
+
+				if (true == IsReturn)
+					return m_HierarchyNodes[i];
 			}
 		}
-	});
+	}
 
-	if (iter == m_HierarchyNodes.end())
-		return nullptr;
-	else
-		return *iter;
+	return nullptr;
 }
 
-HRESULT CModel::Update_Animation_Node(CHierarchyNode * pNode, vector <string>* vecNodeNames, _float TimeDelta, _float fFrameSpeed, _uint iAnimationIndex)
+HRESULT CModel::Update_Animation_Node(CHierarchyNode * pNode, vector <string>* vecNodeNames, _float TimeDelta, _float fFrameSpeed, _uint iAnimationIndex, _bool IsStartNode)
 {
-Update_Animation_Node_Try_Again:
+	// 필요한거 부모노드의 이름, 이름이 담긴 벡터
+	// 노드의 부모노드 이름 == 부모노드의 이름
+	// 내 이름 != 이름벡터
+	
+	// 재귀 이거 어떻게 탈출함 시발 ㅋㅋㅋ
 
+
+
+
+	// 노드 하나의 바닥까지는 도달 가능
 	CHierarchyNode* pChildNode = Find_HierarchyNode_Parent(pNode->Get_Name(), pNode->Get_Depth(), vecNodeNames);
 
-	if (nullptr == pChildNode)
-		return S_OK;
+	if (nullptr != pChildNode)
+	{
+		vecNodeNames->emplace_back(pChildNode->Get_Name());
+		m_Animations[iAnimationIndex]->Update_Transform_Node(pChildNode, TimeDelta, fFrameSpeed);
+		Update_Animation_Node(pChildNode, vecNodeNames, TimeDelta, fFrameSpeed, iAnimationIndex, false);
+	}
+	else
+	{
+		if (false == IsStartNode)
+		{
+			auto& iter = vecNodeNames->front();
 
-	vecNodeNames->emplace_back(pNode->Get_Name());
-	m_Animations[iAnimationIndex]->Update_Transform_Node(pChildNode, TimeDelta, fFrameSpeed);
+			if (!strcmp(iter.data(), pNode->Get_Name()))
+				return S_OK;
 
-	Update_Animation_Node(pChildNode, vecNodeNames, TimeDelta, fFrameSpeed, iAnimationIndex);
+			Update_Animation_Node(pNode->Get_ParentNode(), vecNodeNames, TimeDelta, fFrameSpeed, iAnimationIndex, false);
+		}
+		
+	}
 
-	if (nullptr != Find_HierarchyNode_Parent(pNode->Get_Name(), pNode->Get_Depth(), vecNodeNames))
-		goto Update_Animation_Node_Try_Again;
 
 	return S_OK;
 }

@@ -38,6 +38,7 @@ _int CPlayer::Tick(_float TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	SpecialAnimation_Check(TimeDelta);
 	Turn_Check(TimeDelta);
 	Key_Check(TimeDelta);
 
@@ -129,16 +130,7 @@ _bool CPlayer::Get_Skill_Using(_int iSkillIndex)
 
 void CPlayer::Key_Check(_float TimeDelta)
 {
-	m_eAnimationState_Next = EPlayerAnimation::Idle;
 
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
-	{
-		if (nullptr != m_pStrikerTower)
-		{
-			Safe_Release(m_pStrikerTower);
-			m_IsTowerPick = false;
-		}
-	}
 
 	_long dwMouseMove = 0;
 
@@ -154,7 +146,6 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	if (GET_KEY_INPUT(DIK_8))
 	{
-		//m_IsTowerPick = true;
 		static_cast<CCamera*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera_Free"))->Set_CameraView_Mode(ECameraViewMode::TopView);
 
 		TOWER_DESC Data;
@@ -192,11 +183,74 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	if (GET_KEY_INPUT(DIK_1))
 	{
-		static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"))->Set_Skill_CoolDown(0, 10.f);
+		CPlayerSkill* pSkill = static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"));
+		if (true == pSkill->Get_IsCoolDown(0))
+		{
+			pSkill->Set_Skill_CoolDown(0, 10.f);
+			m_eAnimationState_Next = EPlayerAnimation::Detonate;
+			m_IsAttack = true;
+		}
 	}
 
-	if(GetAsyncKeyState(VK_LBUTTON) & 0x8000)
-		m_eAnimationState_Next = EPlayerAnimation::Fire;
+	if (GET_KEY_INPUT(DIK_2))
+	{
+		CPlayerSkill* pSkill = static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"));
+		if (true == pSkill->Get_IsCoolDown(1))
+		{
+			pSkill->Set_Skill_CoolDown(1, 5.f);
+			m_eAnimationState_Next = EPlayerAnimation::ManaBomb;
+			m_IsAttack = true;
+		}
+	}
+
+	if (GET_KEY_INPUT(DIK_3))
+	{
+		CPlayerSkill* pSkill = static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"));
+		if (true == pSkill->Get_IsCoolDown(2))
+		{
+			pSkill->Set_Skill_CoolDown(2, 5.f);
+			m_eAnimationState_Next = EPlayerAnimation::FireMaxPower;
+			m_IsAttack = true;
+		}
+	}
+
+	if (GET_KEY_INPUT(DIK_4))
+	{
+		CPlayerSkill* pSkill = static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"));
+		if (true == pSkill->Get_IsCoolDown(3))
+		{
+			pSkill->Set_Skill_CoolDown(3, 15.f);
+			m_eAnimationState_Next = EPlayerAnimation::ChargeMax;
+			m_fChargeSkill = 3.f;
+			m_IsCharging = true;
+			m_IsAttack = true;
+		}
+	}
+
+	if (GET_KEY_INPUT(DIK_5))
+	{
+		CPlayerSkill* pSkill = static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"));
+		if (true == pSkill->Get_IsCoolDown(3))
+		{
+			pSkill->Set_Skill_CoolDown(3, 5.f);
+			m_eAnimationState_Next = EPlayerAnimation::Heal;
+			m_fChargeSkill = 3.f;
+			m_IsCharging = true;
+			m_IsAttack = true;
+		}
+	}
+
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+	{
+		m_eAnimationState_Second = EPlayerAnimation::Fire;
+		m_IsSecondAnimation = true;
+	}
+
+	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
+	{
+		m_eAnimationState_Second = EPlayerAnimation::Fire;
+		m_IsSecondAnimation = false;
+	}
 
 
 	//Idle_Check();
@@ -319,7 +373,8 @@ void CPlayer::Animation_Check(_float TimeDelta)
 
 	m_pModelCom->Update_AnimaionMatrix(TimeDelta);
 
-	m_pModelCom->Set_AnimationIndex_Start_SecondNode( "b_HipL", TimeDelta, (_float)EPlayerAnimation::Fire, (_float)EPlayerAnimation::FireMaxPower - 1.f, 1.f);
+	if(true == m_IsSecondAnimation)
+		m_pModelCom->Set_AnimationIndex_Start_SecondNode( "b_Torso", TimeDelta, (_float)EPlayerAnimation::Fire, (_float)EPlayerAnimation::FireMaxPower - (_float)EPlayerAnimation::Fire - 1.f, 1.f);
 
 
 	m_pModelCom->Update_CombindTransformationMatrix();
@@ -463,6 +518,35 @@ _float CPlayer::Animation_Term()
 	_float fAnimationTime = (_float)NewtAnimaion - (_float)m_eAnimationState_Next;
 
 	return fAnimationTime - 1.f;
+}
+
+void CPlayer::SpecialAnimation_Check(_float TimeDelta)
+{
+	if (false == m_IsAttack)
+	{
+		if(false == m_IsCharging)
+			m_eAnimationState_Next = EPlayerAnimation::Idle;
+	}
+
+
+	if (true == m_IsAttack && m_pModelCom->Get_IsFinishedAnimaion())
+	{
+		m_eAnimationState_Next = EPlayerAnimation::Idle;
+		m_IsAttack = false;
+	}
+
+	if (true == m_IsCharging)
+	{
+		m_fChargeSkill -= TimeDelta;
+		if (0.f == m_fChargeSkill)
+		{
+			m_IsAttack = false;
+			m_fChargeSkill = 0.f;
+			m_IsCharging = false;
+			m_eAnimationState_Next = EPlayerAnimation::Idle;
+		}
+	}
+
 }
 
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

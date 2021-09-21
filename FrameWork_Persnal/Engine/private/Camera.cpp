@@ -151,7 +151,7 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 	m_pMovementCom->Set_State(EState::Position, vMyPos);
 
 	_vector vNewRight = XMVector4Normalize(m_pMovementCom->Get_State(EState::Right)) * pTarget->Get_Scale(EState::Right);
-	_vector vRightUp_Cross = XMVector3Cross(vNewRight, XMVectorSet(0.f, 1.f, 0.f, 0.f)) ;
+	_vector vRightUp_Cross = XMVector3Cross(vNewRight, XMVectorSet(0.f, 1.f, 0.f, 0.f));
 	_vector vNewLook = XMVector4Normalize(vRightUp_Cross) * pTarget->Get_Scale(EState::Look);
 
 	pTarget->Set_State(EState::Right, vNewRight);
@@ -238,6 +238,7 @@ void CCamera::View_ThirdPerson(_float TimeDelata)
 
 		_vector vNormal_Look = XMVector3Normalize(vLook);
 		_float fCetha = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(vNormal_Look, XMVectorSet(0.f, 1.f, 0.f, 0.f)))));
+
 		if (m_CameraDesc.fXRotationLock_Min <= fCetha && fCetha <= m_CameraDesc.fXRotationLock_Max)
 		{
 			XMStoreFloat3(&m_CameraDesc.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetAxis), RotateMatrix));

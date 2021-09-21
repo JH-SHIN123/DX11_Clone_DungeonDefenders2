@@ -189,12 +189,28 @@ void CMovement::RotateToTargetOnLand_Tick(_float TimeDelta, _fvector vTargetPos)
 
 void CMovement::RotationY_CW(_float TimeDelta)
 {
+	_vector	vRight = __super::Get_State(EState::Right);
+	_vector	vUp = __super::Get_State(EState::Up);
+	_vector	vLook = __super::Get_State(EState::Look);
+
 	_matrix	RotateMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_MoveStateDesc.fRotatePerSec * TimeDelta);
+
+	__super::Set_State(EState::Right, XMVector3TransformNormal(vRight, RotateMatrix));
+	__super::Set_State(EState::Up, XMVector3TransformNormal(vUp, RotateMatrix));
+	__super::Set_State(EState::Look, XMVector3TransformNormal(vLook, RotateMatrix));
 }
 
 void CMovement::RotationY_CCW(_float TimeDelta)
 {
+	_vector	vRight = __super::Get_State(EState::Right);
+	_vector	vUp = __super::Get_State(EState::Up);
+	_vector	vLook = __super::Get_State(EState::Look);
+
 	_matrix	RotateMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), -m_MoveStateDesc.fRotatePerSec * TimeDelta);
+
+	__super::Set_State(EState::Right, XMVector3TransformNormal(vRight, RotateMatrix));
+	__super::Set_State(EState::Up, XMVector3TransformNormal(vUp, RotateMatrix));
+	__super::Set_State(EState::Look, XMVector3TransformNormal(vLook, RotateMatrix));
 }
 
 void CMovement::Jump_Begin()

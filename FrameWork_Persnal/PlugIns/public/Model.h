@@ -110,7 +110,7 @@ protected: /* For.Shader */
 private:
 	class CHierarchyNode* Find_HierarchyNode(const char* pNodeName);
 	class CHierarchyNode* Find_HierarchyNode_Parent(const char* pNodeName, _uint iDepth, vector <string>* vecNodeNames);
-	HRESULT	Update_Animation_Node(class CHierarchyNode* pNode, vector <string>* vecNodeNames, _float TimeDelta, _float fFrameSpeed, _uint iAnimationIndex);
+	HRESULT	Update_Animation_Node(class CHierarchyNode* pNode, vector <string>* vecNodeNames, _float TimeDelta, _float fFrameSpeed, _uint iAnimationIndex, _bool IsStartNode);
 
 
 public:

@@ -34,6 +34,9 @@ public: // Setter
 	void	Set_Cast(ECastType eCastType, _float fCastTime) { m_eCastType = eCastType, m_fCastTime_Max = fCastTime; }
 	_bool	Set_Skill_CoolDown(_uint iIndex, _float fCoolDownTime);
 
+public:
+	_bool Get_IsCoolDown(_uint iSkillIndex) { return !m_IsCoolDown[iSkillIndex]; }
+
 private:
 	void CoolDown_Check(_float TimeDelta);
 	void Phase_Check();

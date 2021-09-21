@@ -1,0 +1,86 @@
+#include "stdafx.h"
+#include "..\public\BlockadeTower.h"
+
+CBlockadeTower::CBlockadeTower(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
+	: CDefenceTower(pDevice, pDevice_Context)
+{
+}
+
+CBlockadeTower::CBlockadeTower(const CBlockadeTower & rhs)
+	: CDefenceTower(rhs)
+{
+}
+
+HRESULT CBlockadeTower::NativeConstruct_Prototype()
+{
+	__super::NativeConstruct_Prototype();
+
+	return S_OK;
+}
+
+HRESULT CBlockadeTower::NativeConstruct(void * pArg)
+{
+	__super::NativeConstruct(pArg);
+
+	m_pModelCom->Set_AnimationIndex(0); // 나는 애니메이션 하나에 다 있는 상황 원테이크
+	m_pModelCom->Set_AnimationIndex_Start(0.f, m_fIdleAnimation);
+
+	return S_OK;
+}
+
+_int CBlockadeTower::Tick(_float TimeDelta)
+{
+	return _int();
+}
+
+_int CBlockadeTower::Late_Tick(_float TimeDelta)
+{
+	m_pModelCom->Update_AnimaionMatrix(TimeDelta);
+	m_pModelCom->Update_CombindTransformationMatrix();
+
+
+	__super::Enemy_Check(TimeDelta);
+
+
+	return __super::Late_Tick(TimeDelta);
+}
+
+HRESULT CBlockadeTower::Render()
+{
+
+	__super::Render();
+
+	return S_OK;
+}
+
+HRESULT CBlockadeTower::Ready_Component(void * pArg)
+{
+	return S_OK;
+}
+
+CBlockadeTower * CBlockadeTower::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
+{
+	CBlockadeTower*		pInstance = new CBlockadeTower(pDevice, pDevice_Context);
+	if (FAILED(pInstance->NativeConstruct_Prototype()))
+	{
+		MSG_BOX("Failed to Creating Instance (CBlockadeTower) ");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+CGameObject * CBlockadeTower::Clone_GameObject(void * pArg)
+{
+	CBlockadeTower*		pInstance = new CBlockadeTower(*this);
+	if (FAILED(pInstance->NativeConstruct(pArg)))
+	{
+		MSG_BOX("Failed to Cloned Instance (CBlockadeTower) ");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void CBlockadeTower::Free()
+{
+	__super::Free();
+}

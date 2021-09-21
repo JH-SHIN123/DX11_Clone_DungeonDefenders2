@@ -18,6 +18,8 @@ typedef struct tagTowerDesc
 	_tchar			szModelName[MAX_PATH] = L"";
 	STATUS_DESC		Stat_Desc;
 	MOVESTATE_DESC	MoveState_Desc;
+	_bool			IsTurnable = false;
+	_float			fTowerRangeDis = 15.f;
 
 	_float			fSpawnTime_Max = 1.f;
 	ETowerRange		eTowerRange = ETowerRange::Half;
@@ -50,10 +52,13 @@ public:
 	void Set_TowerRotation(_fvector vRotation);
 
 protected:
+
+protected:
 	HRESULT	Ready_Component(void* pArg);
 	void	TowerState_Check();
+	void	Enemy_Check(_float TimeDelta);
 
-private:
+protected:
 	CModel*			m_pModelCom		= nullptr;
 	CStatus*		m_pStatusCom	= nullptr;
 	CMovement*		m_pMovementCom	= nullptr;
@@ -68,8 +73,15 @@ private:
 	_float			m_fSpawnTime		= 0;
 	_float			m_fSpawnTime_Max	= 0;
 	_uint			m_iShaderPass		= 0;
-	_float3			m_vFirstLook_Dir;
 	ETowerRange		m_eTowerRange		= ETowerRange::End;
+	_bool			m_IsTurnable		= false;
+	_float3			m_vFirstLook_Dir;
+	_float			m_fTowerRangeDis	= 0.f;
+	_float			m_fTowerRangeMax = 45.f; // ¿øÁ¡ 90
+	_float			m_fTowerRangeMin = -45.f;
+	_float			m_fTowerRangeCenter = 0.f;
+
+
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;
