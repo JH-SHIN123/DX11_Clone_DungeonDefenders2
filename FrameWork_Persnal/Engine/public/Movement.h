@@ -67,6 +67,7 @@ public: // Move
 	void Go_Right(_float TimeDelta);
 	void Go_Left(_float TimeDelta);
 	void Go_Dir(_float TimeDelta, _fvector vTargetPos);
+	void Go_Dir_Vector(_float TimeDelta, _fvector vDir);
 	void Go_Dir_NoSpeed(_float TimeDelta, _fvector vTargetPos, _float fSpeed);
 	void Go_Up(_float TimeDelta);
 	void Go_LookDir(_float TimeDelta);

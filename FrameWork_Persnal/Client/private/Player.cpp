@@ -48,6 +48,10 @@ _int CPlayer::Tick(_float TimeDelta)
 	if (nullptr != m_pStrikerTower)
 		m_pStrikerTower->Tick(TimeDelta);
 
+	//m_pColliderCom->Update_Collider(m_pMovementCom->Get_WorldMatrix());
+	m_pColliderCom->Update_Collider(m_pMovementCom->Get_State(EState::Position));
+
+
 	return _int();
 }
 
@@ -111,11 +115,16 @@ HRESULT CPlayer::Render()
 	}
 
 
-	return S_OK;
 	if (nullptr != m_pStrikerTower)
 	{
 		m_pStrikerTower->Render();
 	}
+
+
+#ifdef _DEBUG
+	m_pColliderCom->Render_Collider();
+#endif
+
 
 	return S_OK;
 }
@@ -242,13 +251,13 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
-		m_eAnimationState_Second = EPlayerAnimation::Fire;
+		m_eAnimationState_Next_Second = EPlayerAnimation::Fire;
 		m_IsSecondAnimation = true;
 	}
 
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
 	{
-		m_eAnimationState_Second = EPlayerAnimation::Fire;
+		m_eAnimationState_Next_Second = EPlayerAnimation::Fire;
 		m_IsSecondAnimation = false;
 	}
 
@@ -369,17 +378,32 @@ void CPlayer::Animation_Check(_float TimeDelta)
 		return;
 
 	if(m_eAnimationState_Cur != m_eAnimationState_Next)
-		m_pModelCom->Set_AnimationIndex_Start((_float)m_eAnimationState_Next, Animation_Term());
+		m_pModelCom->Set_AnimationIndex_Start((_float)m_eAnimationState_Next, Animation_Term(m_eAnimationState_Next));
+
 
 	m_pModelCom->Update_AnimaionMatrix(TimeDelta);
 
-	if(true == m_IsSecondAnimation)
-		m_pModelCom->Set_AnimationIndex_Start_SecondNode( "b_Torso", TimeDelta, (_float)EPlayerAnimation::Fire, (_float)EPlayerAnimation::FireMaxPower - (_float)EPlayerAnimation::Fire - 1.f, 1.f);
+	if (true == m_IsSecondAnimation)
+	{
+		if (m_eAnimationState_Cur_Second != m_eAnimationState_Next_Second)
+			m_pModelCom->Set_AnimationIndex_Start_SecondNode((_float)m_eAnimationState_Next_Second, Animation_Term(m_eAnimationState_Next_Second));
+		// 이거 분해하면 된다! 나는 틀리지 않았어...
+		//m_pModelCom->Set_AnimationIndex_Start_SecondNode("b_Torso", TimeDelta, (_float)EPlayerAnimation::Fire, (_float)EPlayerAnimation::FireMaxPower - (_float)EPlayerAnimation::Fire - 1.f, 1.f);
+		m_pModelCom->Update_AnimaionMatrix_Second("b_Torso", TimeDelta);
+
+		if (true == m_pModelCom->Get_IsFinishedAnimaion_Second())
+		{
+			m_IsSecondAnimation = false;
+			m_eAnimationState_Next_Second = EPlayerAnimation::End;
+			m_eAnimationState_Cur_Second = m_eAnimationState_Next_Second;
+		}
+	}
 
 
 	m_pModelCom->Update_CombindTransformationMatrix();
 
-	m_eAnimationState_Cur = m_eAnimationState_Next;
+	m_eAnimationState_Cur		 = m_eAnimationState_Next;
+	m_eAnimationState_Cur_Second = m_eAnimationState_Next_Second;
 }
 
 HRESULT CPlayer::Ready_Component(void* pArg)
@@ -394,15 +418,21 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom, &Data.Status_Desc);
 
+	CCollider::COLLIDERDESC		ColliderDesc;
+	ZeroMemory(&ColliderDesc, sizeof(ColliderDesc));
+
+	ColliderDesc.vScale = XMFLOAT3(3.f, 3.f, 3.f);
+
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &ColliderDesc);
 
 	return S_OK;
 }
 
-_float CPlayer::Animation_Term()
+_float CPlayer::Animation_Term(EPlayerAnimation eNextAnimation)
 {
 	EPlayerAnimation NewtAnimaion = EPlayerAnimation::EndKey;
 
-	switch (m_eAnimationState_Next)
+	switch (eNextAnimation)
 	{
 	case Client::EPlayerAnimation::CallOut:
 		NewtAnimaion = EPlayerAnimation::ChargeMax;
@@ -515,7 +545,7 @@ _float CPlayer::Animation_Term()
 		break;
 	}
 
-	_float fAnimationTime = (_float)NewtAnimaion - (_float)m_eAnimationState_Next;
+	_float fAnimationTime = (_float)NewtAnimaion - (_float)eNextAnimation;
 
 	return fAnimationTime - 1.f;
 }
@@ -577,6 +607,7 @@ void CPlayer::Free()
 	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pMovementCom);
+	Safe_Release(m_pColliderCom);
 
 	Safe_Release(m_pStrikerTower);
 

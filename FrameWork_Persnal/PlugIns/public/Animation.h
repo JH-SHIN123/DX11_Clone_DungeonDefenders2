@@ -23,6 +23,8 @@ private:
 
 public:
 	_bool Get_IsEnd() { return m_IsEnd; }
+	_bool Get_IsEnd_Second() { return m_IsEnd_Second; }
+	_float Get_AnimTime() { return m_fCurrentTime; }
 
 public:
 	void Set_LastTime(_float fLastTime);
@@ -34,10 +36,11 @@ public:
 	HRESULT NativeConstruct(const char* pName, _float Duration, _float TickPerSecond);
 	HRESULT Add_Channel(class CAnimChannel* pAnimChannel);
 	HRESULT Update_Transform(_float TimeDelta, _float fFrameSpeed);
-	HRESULT Update_Transform_Node(class CHierarchyNode * pNode,_float TimeDelta, _float fFrameSpeed);
+	HRESULT Update_Transform_Node(const char *szNodeName,_float TimeDelta, _float fFrameSpeed);
 
 private:
 	_bool Change_Animation_Check(_float TimeDelta);
+	_bool Change_Animation_Check_Second(const char* szNodeName, _float TimeDelta);
 
 private:
 	void Start_Frame(vector<KEYFRAME*> vecKeyFrame, _uint iCurrentKeyFrame,  _fvector vScale, _fvector vRotation, _fvector vPosition);
@@ -61,6 +64,7 @@ private:
 
 
 	_bool			m_IsEnd_Second = false;
+	_bool			m_IsStart_Second = false;
 	_bool			m_IsSecondAnimation			= false;
 	FRAME_LERP*		m_pFrameLerp_Second			= { nullptr };
 	_float			m_fStartTime_Second			= 0.f;

@@ -37,7 +37,6 @@ _int CDefenceTower::Late_Tick(_float TimeDelta)
 		ETowerState::Rotate == m_eTowerState_Next)
 		return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Alpha, this);
 
-
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
 
@@ -85,13 +84,14 @@ void CDefenceTower::TowerState_Check()
 	m_eTowerState_Next = ETowerState::Idle;
 }
 
-void CDefenceTower::Enemy_Check(_float TimeDelta)
+_bool CDefenceTower::Enemy_Check(_float TimeDelta)
 {
 	// 몬스터가 내 공격범위안에 있다.
 	// 돌아라
 	CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Player");
 	if (nullptr == pLayer)
-		return;
+		return false;
+
 	list<CGameObject*> listObject = pLayer->Get_GameObject_List();
 
 	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
@@ -120,8 +120,6 @@ void CDefenceTower::Enemy_Check(_float TimeDelta)
 
 		else if (fTargetDis >= fDis)
 		{
-			// 각도 계산
-
 			if (m_fTowerRangeMin <= fAngle_Axis && fAngle_Axis <= m_fTowerRangeMax)
 			{
 
@@ -132,9 +130,6 @@ void CDefenceTower::Enemy_Check(_float TimeDelta)
 		}
 	}
 
-	//_vector vTargetDir = vTargetPos - vMyPos;
-
-	// 범위 안에서는 엄청 잘 돌ㅇ늠
 	if (m_fTowerRangeMin <= fTurnAngle && fTurnAngle <= m_fTowerRangeMax)
 	{
 		_float fDstDis = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
@@ -143,13 +138,15 @@ void CDefenceTower::Enemy_Check(_float TimeDelta)
 		//_float fTurnAngle_Break = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(vTargetPos, m_pMovementCom->Get_State(EState::Look)))));
 
 		// 여기서 좌우회전 반복을 그만 하고싶음 지금은 회전속도가 아주 적어서 티는 안나지만...
-		if(fDstDis > fSrcDis /*&& 25.f < fTurnAngle_Break*/)
+		if (fDstDis > fSrcDis /*&& 25.f < fTurnAngle_Break*/)
+		{
 			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta, vTargetPos);
+
+			return true;
+		}
 	}
 
-	// 적당히 돌라고 브레이크 
-
-
+	return false;
 }
 
 void CDefenceTower::Set_TowerPos(_fvector vPosition)

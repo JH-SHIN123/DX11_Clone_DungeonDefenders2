@@ -39,17 +39,25 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	lstrcpy(Data.szModelName, L"Component_Mesh_BlockcadeTower");
 	Data.eTowerRange = ETowerRange::Quarter;
 	Data.MoveState_Desc.fRotatePerSec = 0.5f;
-	Data.MoveState_Desc.vPos = { 0.f,0.f,20.f,1.f };
+	Data.MoveState_Desc.vPos = { -10.f,0.f,20.f,1.f };
 	Data.MoveState_Desc.vScale = { 0.035f, 0.035f, 0.035f, 0.f };
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_BlockadeTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
 
 
-	//lstrcpy(Data.szModelName, L"Component_Mesh_BlockcadeTower");
-	//Data.eTowerRange = ETowerRange::Quarter;
-	//Data.MoveState_Desc.fRotatePerSec = 90.f;
-	//Data.MoveState_Desc.vPos = { 0.f,0.f,20.f,1.f };
-	//Data.MoveState_Desc.vScale = { 0.035f, 0.035f, 0.035f, 0.f };
-	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_BlockadeTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
+	lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower");
+	Data.eTowerRange = ETowerRange::Quarter;
+	Data.MoveState_Desc.fRotatePerSec = 0.5f;
+	Data.MoveState_Desc.vPos = { 0.f,0.f,20.f,1.f };
+	Data.MoveState_Desc.vScale = { 0.035f, 0.035f, 0.035f, 0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_StrikerTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
+
+
+	lstrcpy(Data.szModelName, L"Component_Mesh_LightningTower");
+	Data.eTowerRange = ETowerRange::Quarter;
+	Data.MoveState_Desc.fRotatePerSec = 0.5f;
+	Data.MoveState_Desc.vPos = { 10.f,0.f,20.f,1.f };
+	Data.MoveState_Desc.vScale = { 0.04f, 0.04f, 0.04f, 0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_LightningTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
 
 
 	return S_OK;

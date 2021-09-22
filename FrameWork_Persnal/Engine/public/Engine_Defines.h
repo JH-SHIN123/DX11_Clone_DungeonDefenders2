@@ -23,6 +23,11 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+// µð¹ö±ë¿ë Ãæµ¹Ã¼ ·»´õ·¯
+#include <DirectXTK/Effects.h>
+#include <DirectXTK/SpriteBatch.h>
+#include <DirectXTK/SpriteFont.h>
+
 
 using namespace DirectX;
 

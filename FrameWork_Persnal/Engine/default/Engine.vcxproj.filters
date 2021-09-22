@@ -139,6 +139,12 @@
     <Filter Include="02.Utility\02.Component\06.Mesh\00.Model\00.ModelLoader">
       <UniqueIdentifier>{33b679e3-3a64-4d3c-a47d-2196d2f52ed3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Utility\02.Component\08.Collider">
+      <UniqueIdentifier>{bbde9d43-3544-4dbe-92c9-2742367a30c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\06.DebugDraw">
+      <UniqueIdentifier>{10f6d977-1126-4b87-9cf6-dd04c4bb2a59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
@@ -282,6 +288,12 @@
     <ClInclude Include="..\public\AnimChannel.h">
       <Filter>02.Utility\02.Component\06.Mesh\00.Model\03.Animation\00.Channel</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Collider.h">
+      <Filter>02.Utility\02.Component\08.Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\DebugDraw.h">
+      <Filter>02.Utility\06.DebugDraw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -397,6 +409,12 @@
     </ClCompile>
     <ClCompile Include="..\private\AnimChannel.cpp">
       <Filter>02.Utility\02.Component\06.Mesh\00.Model\03.Animation\00.Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Collider.cpp">
+      <Filter>02.Utility\02.Component\08.Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\DebugDraw.cpp">
+      <Filter>02.Utility\06.DebugDraw</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 #include "Text_Manager.h"
 #include "Data_Manager.h"
 #include "Animate_Effect.h"
+#include "Collider.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -133,6 +134,11 @@ HRESULT CMainApp::Ready_Component_PrototypeForStatic()
 	/* For. Status */
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Status")
 		, CStatus::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
+	/* Collider_Sphere*/
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), 
+		CCollider::Create(m_pDevice, m_pDevice_Context, ECollideType::SPHERE))))
 		return E_FAIL;
 
 

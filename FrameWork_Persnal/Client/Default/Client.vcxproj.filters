@@ -148,9 +148,6 @@
     <Filter Include="03.UI, HUD\00.2D\06.Phase_Panel">
       <UniqueIdentifier>{a15c0e93-0211-45a7-b668-0778d8ae26da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\04.DefenceTower\99.PreviewTower">
-      <UniqueIdentifier>{9680dac0-84ec-4404-818d-62795f99593a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\06.CrystalCore">
       <UniqueIdentifier>{4595e53d-e23e-40c1-a09f-fecd6cda1bd4}</UniqueIdentifier>
     </Filter>
@@ -162,6 +159,21 @@
     </Filter>
     <Filter Include="02.GameObject\04.DefenceTower\00.BlockadeTower">
       <UniqueIdentifier>{921b0b17-4b6f-4364-88c1-dc88769e98d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet">
+      <UniqueIdentifier>{b8ffaba7-0f33-4b82-8868-bc13c07a5f82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet\00.StrikerTower_Bullet">
+      <UniqueIdentifier>{4560bbbb-8592-478e-9631-6b7eef3bcc7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.DefenceTower\02.LightningTower">
+      <UniqueIdentifier>{255411cc-936f-4d01-990b-58797b81eec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\04.DefenceTower\02.LightningTower\01.Lightning_Ball">
+      <UniqueIdentifier>{02737a9f-a52e-482d-9f93-aef877572035}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet\01.LightningTower_Bullet">
+      <UniqueIdentifier>{26754a9a-e0a4-4af0-8a9c-071b4d68d7c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -318,6 +330,18 @@
     <ClInclude Include="..\public\BlockadeTower.h">
       <Filter>02.GameObject\04.DefenceTower\00.BlockadeTower</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Bullet.h">
+      <Filter>02.GameObject\07.Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\StrikerTower_Bullet.h">
+      <Filter>02.GameObject\07.Bullet\00.StrikerTower_Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LightningTower.h">
+      <Filter>02.GameObject\04.DefenceTower\02.LightningTower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LightningTower_Bullet.h">
+      <Filter>02.GameObject\07.Bullet\01.LightningTower_Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -451,6 +475,18 @@
     </ClCompile>
     <ClCompile Include="..\private\BlockadeTower.cpp">
       <Filter>02.GameObject\04.DefenceTower\00.BlockadeTower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bullet.cpp">
+      <Filter>02.GameObject\07.Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StrikerTower_Bullet.cpp">
+      <Filter>02.GameObject\07.Bullet\00.StrikerTower_Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LightningTower.cpp">
+      <Filter>02.GameObject\04.DefenceTower\02.LightningTower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LightningTower_Bullet.cpp">
+      <Filter>02.GameObject\07.Bullet\01.LightningTower_Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

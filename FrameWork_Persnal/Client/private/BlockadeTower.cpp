@@ -39,7 +39,6 @@ _int CBlockadeTower::Late_Tick(_float TimeDelta)
 	m_pModelCom->Update_CombindTransformationMatrix();
 
 
-	__super::Enemy_Check(TimeDelta);
 
 
 	return __super::Late_Tick(TimeDelta);

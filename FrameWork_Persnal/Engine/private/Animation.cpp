@@ -53,6 +53,7 @@ void CAnimation::Set_AnimationIndex_Start(_float fAnimationStart, _float fAnimat
 
 void CAnimation::Set_AnimationIndex_Start_Second(_float fAnimationStart, _float fAnimationStart_Term)
 {
+	m_IsEnd_Second = false;
 	m_fStartTime_Second = fAnimationStart;
 	m_fStartTime_Term_Second = fAnimationStart_Term;
 	m_fCurrentTime_Second = fAnimationStart;
@@ -99,7 +100,7 @@ HRESULT CAnimation::Update_Transform(_float TimeDelta, _float fFrameSpeed)
 		m_IsEnd = false;
 
 	_uint iChannelNum = 0;
-	m_Channels[0]->Get_Name();
+
 	for (auto& pAnimChannel : m_Channels)
 	{
 		vector<KEYFRAME*>	KeyFrames = pAnimChannel->Get_KeyFrames();
@@ -181,12 +182,21 @@ HRESULT CAnimation::Update_Transform(_float TimeDelta, _float fFrameSpeed)
 	return S_OK;
 }
 
-HRESULT CAnimation::Update_Transform_Node(CHierarchyNode * pNode, _float TimeDelta, _float fFrameSpeed)
+HRESULT CAnimation::Update_Transform_Node(const char *szNodeName, _float TimeDelta, _float fFrameSpeed)
 {
-	if (nullptr == pNode)
+	if (nullptr == szNodeName)
 		return E_FAIL;
 
-	m_fCurrentTime_Second += fmod(m_TickPerSecond * TimeDelta * fFrameSpeed, m_fLastTime_Second);
+	if (true == m_IsEnd_Second)
+		return S_OK;
+
+	if (true == m_IsStart_Second)
+	{
+		if (false == Change_Animation_Check(TimeDelta))
+			return S_OK;
+	}
+
+	m_fCurrentTime_Second += TimeDelta;//fmod(m_TickPerSecond * TimeDelta * fFrameSpeed, m_fLastTime_Second);
 
 	if (m_fCurrentTime_Second >= m_fLastTime_Second)
 	{
@@ -201,7 +211,8 @@ HRESULT CAnimation::Update_Transform_Node(CHierarchyNode * pNode, _float TimeDel
 
 	for (auto& pAnimChannel : m_Channels)
 	{
-		if (!strcmp(pAnimChannel->Get_Name(), pNode->Get_Name()))
+		++iChannelNum;
+		if (!strcmp(pAnimChannel->Get_Name(), szNodeName))
 		{
 			vector<KEYFRAME*>	KeyFrames = pAnimChannel->Get_KeyFrames();
 
@@ -210,11 +221,10 @@ HRESULT CAnimation::Update_Transform_Node(CHierarchyNode * pNode, _float TimeDel
 
 			_uint iCurrentKeyFrame = (_uint)m_fCurrentTime_Second;
 
-
 			if (true == m_IsEnd_Second)
 			{
 				iCurrentKeyFrame = (_uint)m_fStartTime_Second;
-				//(*pNode->Get_AnimChannel())->Set_CurrentKeyFrame(iCurrentKeyFrame);
+				pAnimChannel->Set_CurrentKeyFrame(iCurrentKeyFrame);
 			}
 
 			_vector			vScale, vRotation, vPosition;
@@ -242,7 +252,7 @@ HRESULT CAnimation::Update_Transform_Node(CHierarchyNode * pNode, _float TimeDel
 			else
 			{
 				if (m_fCurrentTime_Second > KeyFrames[iCurrentKeyFrame + 1]->Time)
-					(*pNode->Get_AnimChannel())->Set_CurrentKeyFrame(++iCurrentKeyFrame);
+					pAnimChannel->Set_CurrentKeyFrame(++iCurrentKeyFrame);
 
 				_float		fRatio = (m_fCurrentTime_Second - (_float)KeyFrames[iCurrentKeyFrame]->Time) /
 					((_float)KeyFrames[iCurrentKeyFrame + 1]->Time - (_float)KeyFrames[iCurrentKeyFrame]->Time);
@@ -269,6 +279,10 @@ HRESULT CAnimation::Update_Transform_Node(CHierarchyNode * pNode, _float TimeDel
 				vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
 				vPosition = XMVectorSetW(vPosition, 1.f);
 			}
+
+			XMStoreFloat3(&m_pFrameLerp[iChannelNum].vSrcScale, vScale);
+			XMStoreFloat3(&m_pFrameLerp[iChannelNum].vSrcPosition, vPosition);
+			XMStoreFloat4(&m_pFrameLerp[iChannelNum].vSrcRotation, vRotation);
 
 			_matrix		TransformMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 			pAnimChannel->Set_TransformationMatrix(TransformMatrix);
@@ -306,6 +320,59 @@ _bool CAnimation::Change_Animation_Check(_float TimeDelta)
 			m_fCurrentTime = m_fStartTime - 0.1f;
 			m_fLastTime = m_fStartTime + m_fStartTime_Term;
 			m_fAnimationLerpTime = 0.f;
+			return true;
+		}
+		//50
+		vSourScale = XMLoadFloat3(&m_pFrameLerp[iChannelNum].vSrcScale);
+		vSourRotataion = XMLoadFloat4(&m_pFrameLerp[iChannelNum].vSrcRotation);
+		vSourPosition = XMLoadFloat3(&m_pFrameLerp[iChannelNum++].vSrcPosition);
+		vSourPosition = XMVectorSetW(vSourPosition, 1.f);
+
+		vDestScale = XMLoadFloat3(&KeyFrames[iNextKeyFrame]->vScale);
+		vDestRotation = XMLoadFloat4(&KeyFrames[iNextKeyFrame]->vRotation);
+		vDestPosition = XMLoadFloat3(&KeyFrames[iNextKeyFrame]->vPosition);
+		vDestPosition = XMVectorSetW(vDestPosition, 1.f);
+
+		// 선형보간
+		vScale = XMVectorLerp(vSourScale, vDestScale, fRatio);
+		vRotation = XMQuaternionSlerp(vSourRotataion, vDestRotation, fRatio); // +구면선형보간
+		vPosition = XMVectorLerp(vSourPosition, vDestPosition, fRatio);
+		vPosition = XMVectorSetW(vPosition, 1.f);
+
+		_matrix		TransformMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
+
+		pAnimChannel->Set_TransformationMatrix(TransformMatrix);
+	}
+	return false;
+}
+
+_bool CAnimation::Change_Animation_Check_Second(const char *szNodeName, _float TimeDelta)
+{
+	// 린다...G
+	m_fAnimationLerpTime_Second += TimeDelta * 7.f;
+
+	_vector		vScale, vRotation, vPosition;
+	_vector		vSourScale, vDestScale;
+	_vector		vSourRotataion, vDestRotation;
+	_vector		vSourPosition, vDestPosition;
+
+	_uint iChannelNum = 0;
+	_uint iNextKeyFrame = (_uint)m_fStartTime;
+
+	for (auto& pAnimChannel : m_Channels)
+	{
+		vector<KEYFRAME*>	KeyFrames = pAnimChannel->Get_KeyFrames();
+
+		// 비율은 0 ~ 1
+		_float		fRatio = m_fAnimationLerpTime_Second;
+
+		if (1.f <= fRatio)
+		{
+			fRatio = 1.f;
+			m_IsStart_Second = false;
+			m_fCurrentTime_Second = m_fStartTime - 0.1f;
+			m_fLastTime_Second = m_fStartTime_Second + m_fStartTime_Term_Second;
+			m_fAnimationLerpTime_Second = 0.f;
 			return true;
 		}
 		//50

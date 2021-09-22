@@ -18,13 +18,15 @@ public:
 	_uint Get_NumMaterials() const { return (_uint)m_Materials.size(); }
 	class CMeshContainer* Get_MeshContainer(_uint iMeshIndex);
 	_bool Get_IsFinishedAnimaion();
+	_bool Get_IsFinishedAnimaion_Second();
+	_float Get_AnimTime(_uint iAniIndex = 0.f);
 
 public:
 	void Set_Depth(const _uint& iDepthCount);
 	void Set_NodeCount() { ++m_iNodesCount; }
 	void Set_AnimationIndex(_uint iAnimationIndex);
 	void Set_AnimationIndex_Start(_float fAnimationStart, _float fAnimationStart_Term, _uint iAnimationIndex = 0);
-	void Set_AnimationIndex_Start_SecondNode(const char* szNodeName, _float TimeDelta, _float fAnimationStart, _float fAnimationStart_Term, _float fFrameSpeed, _uint iAnimationIndex = 0);
+	void Set_AnimationIndex_Start_SecondNode(_float fAnimationStart, _float fAnimationStart_Term, _uint iAnimationIndex = 0);
 
 public:
 	virtual HRESULT NativeConstruct_Prototype(const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix); /* 버퍼를 생성한다.*/
@@ -53,6 +55,7 @@ public:
 	HRESULT Render_Model(_uint iMaterialIndex, _uint iPassIndex);
 
 	HRESULT Update_AnimaionMatrix(_float TimeDelta, _float fFrameSpeed = 1.f);
+	HRESULT Update_AnimaionMatrix_Second(const char* szNodeName, _float TimeDelta, _uint iAnimationIndex = 0, _float fFrameSpeed = 1.f);
 	HRESULT Update_CombindTransformationMatrix();
 
 private:

@@ -107,6 +107,15 @@ void CMovement::Go_Left(_float TimeDelta)
 	__super::Set_State(EState::Position, vPosition);
 }
 
+void CMovement::Go_Dir_Vector(_float TimeDelta, _fvector vDir)
+{
+	_vector vPosition = __super::Get_State(EState::Position);
+
+	vPosition += vDir * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
+
+	__super::Set_State(EState::Position, vPosition);
+}
+
 void CMovement::Go_Dir(_float TimeDelta, _fvector vTargetPos)
 {
 	_vector vPosition	= __super::Get_State(EState::Position);

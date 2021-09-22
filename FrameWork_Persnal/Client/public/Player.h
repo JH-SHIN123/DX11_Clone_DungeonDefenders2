@@ -82,7 +82,7 @@ private: // Tick
 private: // LateTick
 	void	Level_Check();
 	void	Animation_Check(_float TimeDelta);
-	_float	Animation_Term();
+	_float	Animation_Term(EPlayerAnimation eNextAnimation);
 
 private:
 	void SpecialAnimation_Check(_float TimeDelta);
@@ -92,6 +92,7 @@ private:
 	CStatus*			m_pStatusCom	= nullptr;
 	CMovement*			m_pMovementCom	= nullptr;
 	CRenderer*			m_pRendererCom	= nullptr;
+	CCollider*			m_pColliderCom	= nullptr;
 
 private:
 	_bool			m_IsSkill_Use[10] = { false };
@@ -106,7 +107,9 @@ private: // Tower
 private:
 	EPlayerAnimation		m_eAnimationState_Cur		= EPlayerAnimation::End;
 	EPlayerAnimation		m_eAnimationState_Next		= EPlayerAnimation::Idle;
-	EPlayerAnimation		m_eAnimationState_Second	= EPlayerAnimation::End;
+	EPlayerAnimation		m_eAnimationState_Cur_Second = EPlayerAnimation::End;
+	EPlayerAnimation		m_eAnimationState_Next_Second = EPlayerAnimation::End;
+
 	_bool					m_IsSecondAnimation = false;
 
 private:

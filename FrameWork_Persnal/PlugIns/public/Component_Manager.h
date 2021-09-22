@@ -4,6 +4,7 @@
 
 #include "Model.h"
 #include "Status.h"
+#include "Collider.h"
 #include "Renderer.h"
 #include "Textures.h"
 #include "Movement.h"

@@ -169,6 +169,7 @@
     <ClInclude Include="..\public\Animate_Effect.h" />
     <ClInclude Include="..\public\BackGround_Logo.h" />
     <ClInclude Include="..\public\BlockadeTower.h" />
+    <ClInclude Include="..\public\Bullet.h" />
     <ClInclude Include="..\public\Calculator.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\public\Camera_Manager.h" />
@@ -188,6 +189,8 @@
     <ClInclude Include="..\public\Level_Loading.h" />
     <ClInclude Include="..\public\Level_Logo.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
+    <ClInclude Include="..\public\LightningTower.h" />
+    <ClInclude Include="..\public\LightningTower_Bullet.h" />
     <ClInclude Include="..\public\Loading.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\public\MainMenu.h" />
@@ -206,6 +209,7 @@
     <ClInclude Include="..\public\StatusMenu.h" />
     <ClInclude Include="..\public\Status_Panel.h" />
     <ClInclude Include="..\public\StrikerTower.h" />
+    <ClInclude Include="..\public\StrikerTower_Bullet.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\Text_Manager.h" />
     <ClInclude Include="..\public\UI_2D.h" />
@@ -221,6 +225,7 @@
     <ClCompile Include="..\private\Animate_Effect.cpp" />
     <ClCompile Include="..\private\BackGround_Logo.cpp" />
     <ClCompile Include="..\private\BlockadeTower.cpp" />
+    <ClCompile Include="..\private\Bullet.cpp" />
     <ClCompile Include="..\private\Calculator.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\private\Camera_Manager.cpp" />
@@ -236,6 +241,8 @@
     <ClCompile Include="..\private\Level_Loading.cpp" />
     <ClCompile Include="..\private\Level_Logo.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />
+    <ClCompile Include="..\private\LightningTower.cpp" />
+    <ClCompile Include="..\private\LightningTower_Bullet.cpp" />
     <ClCompile Include="..\private\Loading.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\MainMenu.cpp" />
@@ -254,6 +261,7 @@
     <ClCompile Include="..\private\StatusMenu.cpp" />
     <ClCompile Include="..\private\Status_Panel.cpp" />
     <ClCompile Include="..\private\StrikerTower.cpp" />
+    <ClCompile Include="..\private\StrikerTower_Bullet.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\Text_Manager.cpp" />
     <ClCompile Include="..\private\UI_2D.cpp" />

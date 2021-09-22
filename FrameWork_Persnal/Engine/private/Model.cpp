@@ -74,6 +74,16 @@ _bool CModel::Get_IsFinishedAnimaion()
 	return m_Animations[m_iCurrentAnimationIndex]->Get_IsEnd();
 }
 
+_bool CModel::Get_IsFinishedAnimaion_Second()
+{
+	return m_Animations[m_iCurrentAnimationIndex]->Get_IsEnd_Second();
+}
+
+_float CModel::Get_AnimTime(_uint iAniIndex)
+{
+	return m_Animations[iAniIndex]->Get_AnimTime();
+}
+
 void CModel::Set_AnimationIndex(_uint iAnimationIndex)
 {
 	if (iAnimationIndex >= m_iNumAnimations)
@@ -92,27 +102,12 @@ void CModel::Set_AnimationIndex_Start(_float fAnimationStart, _float fAnimationS
 	m_Animations[m_iCurrentAnimationIndex]->Set_AnimationIndex_Start(fAnimationStart, fAnimationStart_Term);
 }
 
-void CModel::Set_AnimationIndex_Start_SecondNode(const char* szNodeName, _float TimeDelta, _float fAnimationStart, _float fAnimationStart_Term, _float fFrameSpeed, _uint iAnimationIndex)
+void CModel::Set_AnimationIndex_Start_SecondNode(_float fAnimationStart, _float fAnimationStart_Term, _uint iAnimationIndex)
 {
 	if (iAnimationIndex >= m_iNumAnimations)
 		return;
 	
 	m_Animations[iAnimationIndex]->Set_AnimationIndex_Start_Second(fAnimationStart, fAnimationStart_Term);
-
-	CHierarchyNode* pNode = Find_HierarchyNode(szNodeName);
-
-	if (nullptr == pNode)
-		return;
-
-	vector<string> vecNodeNames;
-	vecNodeNames.reserve(m_iNodesCount);
-
-	vecNodeNames.emplace_back(pNode->Get_Name());
-
-	if (m_iNumAnimations > 0)
-		m_Animations[iAnimationIndex]->Update_Transform_Node(pNode, TimeDelta, fFrameSpeed);
-
-	Update_Animation_Node(pNode, &vecNodeNames, TimeDelta, fFrameSpeed, iAnimationIndex, true);
 }
 
 HRESULT CModel::NativeConstruct_Prototype(const char * pMeshFilePath, const char * pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix)
@@ -579,6 +574,27 @@ HRESULT CModel::Update_AnimaionMatrix(_float TimeDelta, _float fFrameSpeed)
 	return S_OK;
 }
 
+HRESULT CModel::Update_AnimaionMatrix_Second(const char* szNodeName, _float TimeDelta, _uint iAnimationIndex, _float fFrameSpeed)
+{
+	/* 현재 애니메이션 채널들이 시간에 맞는 상태 변환값을 가지게 한다. */
+	CHierarchyNode* pNode = Find_HierarchyNode(szNodeName);
+
+	if (nullptr == pNode)
+		return E_FAIL;
+
+	vector<string> vecNodeNames;
+	vecNodeNames.reserve(m_iNodesCount);
+
+	vecNodeNames.emplace_back(pNode->Get_Name());
+
+
+	m_Animations[iAnimationIndex]->Update_Transform_Node(pNode->Get_Name(), TimeDelta, fFrameSpeed);
+
+	Update_Animation_Node(pNode, &vecNodeNames, TimeDelta, fFrameSpeed, iAnimationIndex, true);
+	
+	return S_OK;
+}
+
 HRESULT CModel::Update_CombindTransformationMatrix()
 {
 	for (auto& pHierarchyNode : m_HierarchyNodes)
@@ -690,7 +706,7 @@ HRESULT CModel::Update_Animation_Node(CHierarchyNode * pNode, vector <string>* v
 	if (nullptr != pChildNode)
 	{
 		vecNodeNames->emplace_back(pChildNode->Get_Name());
-		m_Animations[iAnimationIndex]->Update_Transform_Node(pChildNode, TimeDelta, fFrameSpeed);
+		m_Animations[iAnimationIndex]->Update_Transform_Node(pChildNode->Get_Name(), TimeDelta, fFrameSpeed);
 		Update_Animation_Node(pChildNode, vecNodeNames, TimeDelta, fFrameSpeed, iAnimationIndex, false);
 	}
 	else
