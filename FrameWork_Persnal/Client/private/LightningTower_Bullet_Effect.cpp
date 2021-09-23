@@ -43,12 +43,13 @@ _int CLightningTower_Bullet_Effect::Tick(_float TimeDelta)
 
 _int CLightningTower_Bullet_Effect::Late_Tick(_float TimeDelta)
 {
-	return __super::Late_Tick(TimeDelta);
+	//return __super::Late_Tick(TimeDelta);
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Alpha, this);
 }
 
 HRESULT CLightningTower_Bullet_Effect::Render()
 {
-	__super::Render_Mesh();
+	__super::Render();
 
 	return S_OK;
 }

@@ -30,7 +30,8 @@ HRESULT CMonster::NativeConstruct(void * pArg)
 
 _int CMonster::Tick(_float TimeDelta)
 {
-	m_pMeterBar_Hp->Tick(TimeDelta);
+	if (nullptr != m_pMeterBar_Hp)
+		m_pMeterBar_Hp->Tick(TimeDelta);
 
 
 	return _int();
@@ -38,17 +39,58 @@ _int CMonster::Tick(_float TimeDelta)
 
 _int CMonster::Late_Tick(_float TimeDelta)
 {
-	m_pMeterBar_Hp->Set_Count((_float)m_pStatusCom->Get_Hp(), (_float)m_pStatusCom->Get_HpMax());
+	if (nullptr != m_pMeterBar_Hp)
+	{
+		m_pMeterBar_Hp->Set_Count((_float)m_pStatusCom->Get_Hp(), (_float)m_pStatusCom->Get_HpMax());
+		m_pMeterBar_Hp->Late_Tick(TimeDelta);
+	}
 
 
 
-	return _int();
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
 
 HRESULT CMonster::Render()
 {
+	if (nullptr == m_pModelCom)
+		return S_OK;
 
-	m_pMeterBar_Hp->Render();
+	m_pModelCom->Bind_VIBuffer();
+
+	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
+	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
+	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
+
+	LIGHT_DESC*		LightDesc = GET_GAMEINSTANCE->Get_LightDesc(0);
+
+	m_pModelCom->Set_Variable("vLightPosition", &LightDesc->vPosition, sizeof(_float3));
+	m_pModelCom->Set_Variable("fRange", &LightDesc->fRadius, sizeof(_float));
+
+	m_pModelCom->Set_Variable("vLightDiffuse", &LightDesc->vDiffuse, sizeof(_float4));
+	m_pModelCom->Set_Variable("vLightAmbient", &LightDesc->vAmbient, sizeof(_float4));
+	m_pModelCom->Set_Variable("vLightSpecular", &LightDesc->vSpecular, sizeof(_float4));
+
+	m_pModelCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
+
+	_uint iNumMaterials = m_pModelCom->Get_NumMaterials();
+
+	for (_uint i = 0; i < iNumMaterials; ++i)
+	{
+		if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_NORMALS)))
+		//	return E_FAIL;
+		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_SPECULAR)))
+		//	return E_FAIL;
+
+		m_pModelCom->Render_Model(i, 0);
+	}
+
+
+#ifdef _DEBUG
+	//m_pColliderCom->Render_Collider();
+#endif
+
 
 	return S_OK;
 }
@@ -61,11 +103,10 @@ HRESULT CMonster::Ready_Component(void * pArg)
 	HRESULT hr = S_OK;
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom);
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Movement"), (CComponent**)&m_pStatusCom, &Data.Stat_Desc);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Status"), (CComponent**)&m_pStatusCom, &Data.Stat_Desc);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &Data.Movement_Desc);
+	hr = CGameObject::Add_Component((_uint)Data.eLevel, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
 
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect_Model"), TEXT("Com_Buffer"), (CComponent**)&m_pBufferRectCom);
-	hr = CGameObject::Add_Component((_uint)Data.eLevel, Data.szTextureName, TEXT("Com_Texture_0"), (CComponent**)&m_pTextureCom);
 
 
 
@@ -78,13 +119,7 @@ HRESULT CMonster::Ready_Component(void * pArg)
 
 CGameObject * CMonster::Clone_GameObject(void * pArg)
 {
-	CMonster* pInstance = new CMonster(*this);
-	if (FAILED(pInstance->NativeConstruct(pArg)))
-	{
-		MSG_BOX("Failed to Creating clone (CMonster) ");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
+	return nullptr;
 }
 
 void CMonster::Free()
@@ -92,9 +127,10 @@ void CMonster::Free()
 	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pMovementCom);
+	Safe_Release(m_pModelCom);
+	Safe_Release(m_pColliderCom);
 
-	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pBufferRectCom);
+	Safe_Release(m_pMeterBar_Hp);
 
 	__super::Free();
 }

@@ -7,6 +7,7 @@
 #include "Data_Manager.h"
 #include "Player.h"
 #include "DefenceTower.h"
+#include "Monster.h"
 
 CLevel_Stage1::CLevel_Stage1(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CLevel(pDevice, pDevice_Context)
@@ -21,8 +22,8 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
 		return E_FAIL;
@@ -58,6 +59,14 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Data.MoveState_Desc.vPos = { 10.f,0.f,20.f,1.f };
 	Data.MoveState_Desc.vScale = { 0.04f, 0.04f, 0.04f, 0.f };
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_LightningTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
+
+
+	MONSTER_DESC MonData;
+	lstrcpy(MonData.szModelName, L"Component_Mesh_Goblin");
+	MonData.eLevel = ELevel::Stage1;
+	MonData.Movement_Desc.vPos = { 0.f, 0.f, 30.f, 1.f };
+	MonData.Movement_Desc.vScale = { 0.5f, 0.5f, 0.5f, 0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Goblin", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
 
 
 	return S_OK;

@@ -177,10 +177,11 @@ void CCollider::Free()
 	{
 		Safe_Delete(m_pEffect);
 		Safe_Delete(m_pBatch);
-		Safe_Delete(m_pAABB);
-		Safe_Delete(m_pOBB);
-		Safe_Delete(m_pSphere);
 	}
+
+	Safe_Delete(m_pAABB);
+	Safe_Delete(m_pOBB);
+	Safe_Delete(m_pSphere);
 	Safe_Release(m_pInputLayout);
 	
 }

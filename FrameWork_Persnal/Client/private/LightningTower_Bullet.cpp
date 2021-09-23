@@ -24,6 +24,8 @@ HRESULT CLightningTower_Bullet::NativeConstruct(void * pArg)
 	_vector vScale = XMVectorSet(0.05f, 0.05f, 0.05f, 0.f);
 	m_pMovementCom->Set_Scale_LinearRotate(vScale);
 
+	m_vecEffectMesh.resize(m_iBoundCount);
+
 	Ready_Component(pArg);
 
 	return S_OK;
@@ -35,20 +37,29 @@ _int CLightningTower_Bullet::Tick(_float TimeDelta)
 
 	Spawn_Check(TimeDelta);
 
-	if (nullptr != m_pEffectMesh)
+	for (auto& iter : m_vecEffectMesh)
 	{
-		m_pEffectMesh->Set_Rotate(m_pMovementCom->Get_WorldMatrix());
-		m_pEffectMesh->Set_Position(m_pMovementCom->Get_State(EState::Position));
-		m_pEffectMesh->Tick(TimeDelta);
+		if (nullptr != iter)
+		{
+			iter->Late_Tick(TimeDelta);
+			iter->Set_Rotate(m_pMovementCom->Get_WorldMatrix());
+			iter->Set_Position(m_pMovementCom->Get_State(EState::Position));
+			iter->Tick(TimeDelta);
+		}
 	}
+	
 
 	return _int();
 }
 
 _int CLightningTower_Bullet::Late_Tick(_float TimeDelta)
 {
-	if (nullptr != m_pEffectMesh)
-		m_pEffectMesh->Late_Tick(TimeDelta);
+	for (auto& iter : m_vecEffectMesh)
+	{
+		if(nullptr != iter)
+			iter->Late_Tick(TimeDelta);
+	}
+	
 
 
 	return __super::Late_Tick(TimeDelta);
@@ -77,18 +88,9 @@ void CLightningTower_Bullet::Spawn_Check(_float TimeDelta)
 	if (vScale.x >= m_vScale_SizeUp.x)
 		m_IsMoveable = true;
 
-	if (nullptr == m_pEffectMesh && 0.75f <= m_fScaleTime)
+	if (nullptr == m_vecEffectMesh[0] && 0.25f <= m_fScaleTime)
 	{
-		EFFECT_DESC Data;
-		Data.eEffectType = EEffectType::Mesh;
-		Data.eResourceLevel = ELevel::Stage1;
-		Data.iShaderPass = 2;
-		lstrcpy(Data.szResourceName, L"Component_Mesh_LightningTower_Bullet_Effect_1");
-		XMStoreFloat4(&Data.Move_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
-		Data.Move_Desc.vScale = { 0.03f,  0.03f , 0.03f, 0.f };
-		m_pEffectMesh = (CLightningTower_Bullet_Effect*)GET_GAMEINSTANCE->Add_Create_Clone((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet_Effect", (_uint)ELevel::Stage1, &Data);
-
-
+		Create_Effect();
 	}
 
 	if (false == m_IsMoveable)
@@ -104,6 +106,30 @@ void CLightningTower_Bullet::Spawn_Check(_float TimeDelta)
 		m_pMovementCom->Go_Up(-TimeDelta);
 	}
 
+
+}
+
+void CLightningTower_Bullet::Create_Effect()
+{
+	EFFECT_DESC Data;
+	Data.eEffectType = EEffectType::Mesh;
+	Data.eResourceLevel = ELevel::Stage1;
+	Data.iShaderPass = 2;
+	XMStoreFloat4(&Data.Move_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
+	Data.Move_Desc.vScale = { 0.03f,  0.03f , 0.03f, 0.f };
+	_vector vAxis = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+	
+	lstrcpy(Data.szResourceName, L"Component_Mesh_LightningTower_Bullet_Effect_1");
+	m_vecEffectMesh[0] = (CLightningTower_Bullet_Effect*)GET_GAMEINSTANCE->Add_Create_Clone((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet_Effect", (_uint)ELevel::Stage1, &Data);
+	
+	lstrcpy(Data.szResourceName, L"Component_Mesh_LightningTower_Bullet_Effect_2");
+	m_vecEffectMesh[1] = (CLightningTower_Bullet_Effect*)GET_GAMEINSTANCE->Add_Create_Clone((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet_Effect", (_uint)ELevel::Stage1, &Data);
+	m_vecEffectMesh[1]->Set_Rotate_Axis(vAxis, XMConvertToDegrees(70.f));
+
+	vAxis = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+	lstrcpy(Data.szResourceName, L"Component_Mesh_LightningTower_Bullet_Effect_3");
+	m_vecEffectMesh[2] = (CLightningTower_Bullet_Effect*)GET_GAMEINSTANCE->Add_Create_Clone((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet_Effect", (_uint)ELevel::Stage1, &Data);
+	m_vecEffectMesh[2]->Set_Rotate_Axis(vAxis, XMConvertToDegrees(90.f));
 
 }
 
@@ -131,7 +157,7 @@ CGameObject * CLightningTower_Bullet::Clone_GameObject(void * pArg)
 
 void CLightningTower_Bullet::Free()
 {
-	Safe_Release(m_pEffectMesh);
+	Safe_Release_Vector(m_vecEffectMesh);
 
 
 	__super::Free();

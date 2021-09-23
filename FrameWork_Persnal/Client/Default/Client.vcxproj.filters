@@ -357,6 +357,9 @@
     <ClInclude Include="..\public\LightningTower_Bullet_Effect.h">
       <Filter>02.GameObject\08.Effect\01.LightningTower_Effect\00.LightningTower_Bullet_Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Goblin.h">
+      <Filter>02.GameObject\05.Monster\00.Goblin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -508,6 +511,9 @@
     </ClCompile>
     <ClCompile Include="..\private\LightningTower_Bullet_Effect.cpp">
       <Filter>02.GameObject\08.Effect\01.LightningTower_Effect\00.LightningTower_Bullet_Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Goblin.cpp">
+      <Filter>02.GameObject\05.Monster\00.Goblin</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

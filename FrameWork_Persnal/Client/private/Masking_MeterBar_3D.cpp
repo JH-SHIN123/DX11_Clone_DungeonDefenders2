@@ -36,7 +36,7 @@ _int CMasking_MeterBar_3D::Tick(_float TimeDelta)
 
 _int CMasking_MeterBar_3D::Late_Tick(_float TimeDelta)
 {
-	return _int();
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::UI, this);
 }
 
 HRESULT CMasking_MeterBar_3D::Render(_uint MaskShaderPass, _uint UIFramePass)

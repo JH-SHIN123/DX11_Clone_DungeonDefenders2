@@ -15,14 +15,13 @@ typedef struct tagMonsterDesc
 	
 	MOVESTATE_DESC Movement_Desc;
 
-	// 지금 당장은 쓰자구 ㅇㅇ
-	_tchar  szTextureName[MAX_PATH] = L"";
+	_tchar  szModelName[MAX_PATH] = L"";
 	ELevel	eLevel = ELevel::Static;
 	
 }MONSTER_DESC;
 
 
-class CMonster final : public CGameObject
+class CMonster abstract : public CGameObject
 {
 protected:
 	explicit CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
@@ -39,16 +38,16 @@ public:
 private:
 	HRESULT	Ready_Component(void* pArg);
 
-private:
+protected:
+	CModel*					m_pModelCom		= nullptr;
 	CStatus*				m_pStatusCom	= nullptr;
 	CRenderer*				m_pRendererCom	= nullptr;
 	CMovement*				m_pMovementCom	= nullptr;
+
+	// 아마 이걸 세분화 해야 할것임
+	CCollider*				m_pColliderCom	= nullptr;
+
 	CMasking_MeterBar_3D*	m_pMeterBar_Hp	= nullptr;
-
-	// 지금 당장은 쓰자구 ㅇㅇ
-	CTextures*			m_pTextureCom		= nullptr;
-	CVIBuffer_Rect*		m_pBufferRectCom	= nullptr;
-
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

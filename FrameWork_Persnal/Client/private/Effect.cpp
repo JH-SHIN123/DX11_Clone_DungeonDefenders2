@@ -50,6 +50,11 @@ void CEffect::Set_Position(_fvector vPosition)
 	m_pMovementCom->Set_State(EState::Position, vPosition);
 }
 
+void CEffect::Set_Rotate_Axis(_fvector vRatate, _float fRadian)
+{
+	m_pMovementCom->Set_RotateAxis(vRatate, fRadian);
+}
+
 HRESULT CEffect::Ready_Component(void * pArg)
 {
 	HRESULT hr = S_OK;

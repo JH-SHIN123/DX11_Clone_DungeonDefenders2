@@ -36,6 +36,7 @@ public:
 public:
 	void Set_Rotate(_fmatrix Matrix);
 	void Set_Position(_fvector vPosition);
+	void Set_Rotate_Axis(_fvector vRatate, _float fRadian);
 
 public:
 	HRESULT Ready_Component(void* pArg);
