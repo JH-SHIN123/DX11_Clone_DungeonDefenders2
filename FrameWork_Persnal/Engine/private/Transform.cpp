@@ -65,6 +65,27 @@ void CTransform::Set_Scale(_fvector vScale)
 	//memcpy(&ScaleMatrix.m[(_uint)EState::Position][0], &vPosition, sizeof(_vector));
 }
 
+void CTransform::Set_Scale_LinearRotate(_fvector vScale)
+{
+	_vector vRight	= XMVector3Normalize(Get_State(EState::Right))	* XMVectorGetX(vScale);
+	_vector vUp		= XMVector3Normalize(Get_State(EState::Up))		* XMVectorGetY(vScale);
+	_vector vLook	= XMVector3Normalize(Get_State(EState::Look))	* XMVectorGetZ(vScale);
+
+	memcpy(&m_WorldMatrix.m[(_uint)EState::Right][0], &vRight, sizeof(_vector));
+	memcpy(&m_WorldMatrix.m[(_uint)EState::Up][0], &vUp, sizeof(_vector));
+	memcpy(&m_WorldMatrix.m[(_uint)EState::Look][0], &vLook, sizeof(_vector));
+}
+
+void CTransform::Set_Rotate(_fmatrix fMatrix)
+{
+	for (_int i = 0; i < 3; ++i)
+	{
+		_vector vRotate = XMVector3Normalize(fMatrix.r[i]) * Get_Scale((EState)i);
+
+		memcpy(&m_WorldMatrix.m[i][0], &vRotate, sizeof(_vector));
+	}
+}
+
 void CTransform::Set_RotateAxis(_fvector vAxis, _float fRadian)
 {
 	_vector	vRight	= XMVectorSet(1.f, 0.f, 0.f, 0.f) * Get_Scale(EState::Right);

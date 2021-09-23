@@ -163,6 +163,14 @@ HRESULT CGameInstance::Add_GameObject(_uint iPrototypeLevelIndex, const _tchar *
 	return m_pGameObject_Manager->Add_GameObject(iPrototypeLevelIndex, pPrototypeTag, iLevelIndex, pLayerTag, pArg);
 }
 
+CGameObject* CGameInstance::Add_Create_Clone(_uint iPrototypeLevelIndex, const _tchar * pPrototypeTag, _uint iLevelIndex, void * pArg)
+{
+	if (nullptr == m_pGameObject_Manager)
+		return nullptr;
+
+	return m_pGameObject_Manager->Add_Create_Clone(iPrototypeLevelIndex, pPrototypeTag, iLevelIndex, pArg);
+}
+
 CGameObject * CGameInstance::Get_GameObject(_uint iLevelIndex, const _tchar * pLayerTag)
 {
 	if (nullptr == m_pGameObject_Manager)
@@ -173,7 +181,7 @@ CGameObject * CGameInstance::Get_GameObject(_uint iLevelIndex, const _tchar * pL
 
 CLayer * CGameInstance::Get_Layer(_uint iLevelIndex, const _tchar * pLayerTag)
 {
-	if (nullptr == m_pGameObject_Manager)
+	if (nullptr == m_pGameObject_Manager) 
 		return nullptr;
 
 	return m_pGameObject_Manager->Get_Layer(iLevelIndex, pLayerTag);

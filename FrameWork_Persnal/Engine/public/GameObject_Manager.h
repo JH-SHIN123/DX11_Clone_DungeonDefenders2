@@ -21,6 +21,9 @@ public:
 	/* 원형객체를 검색하여 복제한 후, 레이어에 추가하나다,. */
 	HRESULT Add_GameObject(_uint iPrototypeLevelIndex, const _tchar* pPrototypeTag, _uint iLevelIndex, const _tchar* pLayerTag, void* pArg = nullptr);
 
+	// 자식 용도로 쓸 게임 오브젝트를 만들어 준다.
+	CGameObject* Add_Create_Clone(_uint iPrototypeLevelIndex, const _tchar* pPrototypeTag, _uint iLevelIndex, void* pArg);
+
 	// Getter
 	CGameObject* Get_GameObject(_uint iLevelIndex, const _tchar* pLayerTag);
 	CLayer* Get_Layer(_uint iLevelIndex, const _tchar* pLayerTag);

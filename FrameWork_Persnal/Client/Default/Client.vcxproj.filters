@@ -169,11 +169,20 @@
     <Filter Include="02.GameObject\04.DefenceTower\02.LightningTower">
       <UniqueIdentifier>{255411cc-936f-4d01-990b-58797b81eec7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\04.DefenceTower\02.LightningTower\01.Lightning_Ball">
-      <UniqueIdentifier>{02737a9f-a52e-482d-9f93-aef877572035}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\07.Bullet\01.LightningTower_Bullet">
       <UniqueIdentifier>{26754a9a-e0a4-4af0-8a9c-071b4d68d7c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect">
+      <UniqueIdentifier>{547f0240-c7f5-4a3d-8064-a5166b464693}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect\00.StrikerTower_Effect">
+      <UniqueIdentifier>{7281c425-9464-460e-bb93-67e1bdf67015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect\01.LightningTower_Effect">
+      <UniqueIdentifier>{1cb8b737-54dd-43b8-93f6-36422ab7f71d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect\01.LightningTower_Effect\00.LightningTower_Bullet_Effect">
+      <UniqueIdentifier>{f5b2c4fc-a332-4dad-9af9-8e27b720cdc1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -342,6 +351,12 @@
     <ClInclude Include="..\public\LightningTower_Bullet.h">
       <Filter>02.GameObject\07.Bullet\01.LightningTower_Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Effect.h">
+      <Filter>02.GameObject\08.Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LightningTower_Bullet_Effect.h">
+      <Filter>02.GameObject\08.Effect\01.LightningTower_Effect\00.LightningTower_Bullet_Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -487,6 +502,12 @@
     </ClCompile>
     <ClCompile Include="..\private\LightningTower_Bullet.cpp">
       <Filter>02.GameObject\07.Bullet\01.LightningTower_Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Effect.cpp">
+      <Filter>02.GameObject\08.Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LightningTower_Bullet_Effect.cpp">
+      <Filter>02.GameObject\08.Effect\01.LightningTower_Effect\00.LightningTower_Bullet_Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

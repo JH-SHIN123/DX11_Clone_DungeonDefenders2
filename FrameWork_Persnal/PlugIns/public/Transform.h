@@ -36,14 +36,14 @@ public:
 public: // Getter
 	_vector Get_State(EState eState) const;
 	_float	Get_Scale(EState eState) const;
-	_matrix	Get_WorldMatrix() const 
-		{ return XMLoadFloat4x4(&m_WorldMatrix); }
-	_matrix	Get_WorldMatrix_Inverse() const 
-		{ return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)); }
+	_matrix	Get_WorldMatrix() const { return XMLoadFloat4x4(&m_WorldMatrix); }
+	_matrix	Get_WorldMatrix_Inverse() const { return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)); }
 
 public:	// Setter
 	void	Set_State(EState eState, _fvector vState);
 	void	Set_Scale(_fvector vScale); // only scale
+	void	Set_Scale_LinearRotate(_fvector vScale);
+	void	Set_Rotate(_fmatrix fMatrix);
 	void	Set_RotateAxis(_fvector vAxis, _float fRadian);
 	void	Set_RotateAxis_MyRadian(_fvector vAxis, _float fRadian);
 	void	Set_WorldMatrix(const _fmatrix& WorldMatrix) { XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix); }

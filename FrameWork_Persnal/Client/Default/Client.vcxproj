@@ -184,6 +184,7 @@
     <ClInclude Include="..\public\Cursor_Manager.h" />
     <ClInclude Include="..\public\Data_Manager.h" />
     <ClInclude Include="..\public\DefenceTower.h" />
+    <ClInclude Include="..\public\Effect.h" />
     <ClInclude Include="..\public\HpMp.h" />
     <ClInclude Include="..\public\InGame_Manager.h" />
     <ClInclude Include="..\public\Level_Loading.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="..\public\Level_Stage1.h" />
     <ClInclude Include="..\public\LightningTower.h" />
     <ClInclude Include="..\public\LightningTower_Bullet.h" />
+    <ClInclude Include="..\public\LightningTower_Bullet_Effect.h" />
     <ClInclude Include="..\public\Loading.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\public\MainMenu.h" />
@@ -236,6 +238,7 @@
     <ClCompile Include="..\private\Cursor_Manager.cpp" />
     <ClCompile Include="..\private\Data_Manager.cpp" />
     <ClCompile Include="..\private\DefenceTower.cpp" />
+    <ClCompile Include="..\private\Effect.cpp" />
     <ClCompile Include="..\private\HpMp.cpp" />
     <ClCompile Include="..\private\InGame_Manager.cpp" />
     <ClCompile Include="..\private\Level_Loading.cpp" />
@@ -243,6 +246,7 @@
     <ClCompile Include="..\private\Level_Stage1.cpp" />
     <ClCompile Include="..\private\LightningTower.cpp" />
     <ClCompile Include="..\private\LightningTower_Bullet.cpp" />
+    <ClCompile Include="..\private\LightningTower_Bullet_Effect.cpp" />
     <ClCompile Include="..\private\Loading.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\MainMenu.cpp" />

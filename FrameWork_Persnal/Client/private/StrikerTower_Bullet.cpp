@@ -25,6 +25,8 @@ HRESULT CStrikerTower_Bullet::NativeConstruct(void * pArg)
 
 _int CStrikerTower_Bullet::Tick(_float TimeDelta)
 {
+	__super::Tick(TimeDelta);
+
 	_vector vDir = XMLoadFloat3(&m_vGoDir);
 	m_pMovementCom->Go_Dir_Vector(TimeDelta, vDir);
 

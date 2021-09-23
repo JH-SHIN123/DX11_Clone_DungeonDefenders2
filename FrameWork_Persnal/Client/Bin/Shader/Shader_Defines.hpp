@@ -51,6 +51,15 @@ RasterizerState Rasterizer_Solid
 	// 채워서 그려줘 (픽셀쉐이더가 많이 호출 될것임)
 };
 
+RasterizerState Rasterizer_Solid_NotCurl
+{
+	FillMode = solid;
+	CullMode = none;
+	FrontCounterClockwise = false;
+
+// 채워서 그려줘 (픽셀쉐이더가 많이 호출 될것임)
+};
+
 /*		D3D11_DEPTH_STENCIL_DESC
 BOOL DepthEnable;							=	Z 비교 유무
 D3D11_DEPTH_WRITE_MASK DepthWriteMask;		=	Z Write 관련 Zero(안함), All(함)

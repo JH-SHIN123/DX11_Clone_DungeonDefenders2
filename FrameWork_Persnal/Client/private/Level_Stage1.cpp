@@ -21,8 +21,8 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
 		return E_FAIL;

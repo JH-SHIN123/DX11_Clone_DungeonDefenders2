@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\LightningTower.h"
+#include "LightningTower_Bullet.h"
 
 CLightningTower::CLightningTower(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CDefenceTower(pDevice, pDevice_Context)
@@ -18,6 +19,8 @@ HRESULT CLightningTower::NativeConstruct_Prototype()
 
 HRESULT CLightningTower::NativeConstruct(void * pArg)
 {
+	__super::Set_TowerRangeAngle(180.f,-180.f);
+
 	__super::NativeConstruct(pArg);
 
 	Ready_Component(pArg);
@@ -30,9 +33,10 @@ HRESULT CLightningTower::NativeConstruct(void * pArg)
 
 _int CLightningTower::Tick(_float TimeDelta)
 {
-	__super::Tick(TimeDelta);
+	_int iReturn = __super::Tick(TimeDelta);
+	
 
-	return _int();
+	return iReturn;
 }
 
 _int CLightningTower::Late_Tick(_float TimeDelta)
@@ -51,17 +55,41 @@ _int CLightningTower::Late_Tick(_float TimeDelta)
 		_float fAnimTime = m_pModelCom->Get_AnimTime();
 
 
-		if (m_fAttStartTime > m_fAttCharging)
+		if (m_fAttStartTime > m_fAttCharging && false == m_IsAttack)
 		{
 			m_fAttCharging += TimeDelta;
 			
 
 
 		}
+		else if (true == m_IsAttack)
+		{
+			m_fAttCharging += TimeDelta;
+
+			if (3.f <= m_fAttCharging)
+			{
+				m_fAttCharging = 0.f;
+
+				_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
+				vMyPos += m_pMovementCom->Get_State(EState::Up) * 250.f;
+
+				BULLET_DESC Data;
+				lstrcpy(Data.szModelName, L"Component_Mesh_LightningTower_Bullet");
+				Data.MoveState_Desc.fRotatePerSec = 50.f;
+				XMStoreFloat3(&Data.vDir, m_pMovementCom->Get_State(EState::Look));
+				XMStoreFloat4(&Data.MoveState_Desc.vPos, vMyPos);
+				Data.MoveState_Desc.fSpeedPerSec = 20.f;
+				Data.fLifeTime = 10.f;
+
+				GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
+			}
+
+
+		}
 		else
 		{
 			m_IsAttack = true;
-
+			m_fAttCharging = 0.f;
 		}
 		
 	}

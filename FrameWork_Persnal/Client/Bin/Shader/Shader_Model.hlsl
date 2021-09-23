@@ -31,6 +31,7 @@ cbuffer MtrlDesc
 texture2D		g_DiffuseTexture;
 texture2D		g_AmbientTexture;
 texture2D		g_SpecularTexture;
+float3			g_RGBColor;
 
 sampler DiffuseSampler = sampler_state
 {
@@ -124,6 +125,21 @@ VS_OUT VS_MAIN_DIRECTIONAL_TERRAIN(VS_IN In)
 	return Out;
 }
 
+VS_OUT VS_MAIN_EFFECT_NOLIGHT(VS_IN In)
+{
+	VS_OUT			Out = (VS_OUT)0;
+
+	matrix		matWV, matWVP;
+
+	matWV = mul(WorldMatrix, ViewMatrix);
+	matWVP = mul(matWV, ProjMatrix);
+	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+
+	Out.vTexUV = In.vTexUV;
+
+	return Out;
+}
+
 struct PS_IN
 {
 	float4 vPosition : SV_POSITION;
@@ -152,9 +168,59 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_ONLY_RED(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	vector vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	if (0.f < vColor.r)
+		Out.vColor.a = vColor.g;
+
+	Out.vColor.r = 0.f;
+	Out.vColor.g = 0.75f;
+	Out.vColor.b = 1.f;
+
+
+	return Out;
+}
+
+PS_OUT PS_ONLY_GREEN(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	vector vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	if (0.f < vColor.g)
+		Out.vColor.a = vColor.g;
+
+	Out.vColor.r = 0.f;
+	Out.vColor.g = 0.75f;
+	Out.vColor.b = 1.f;
+
+	return Out;
+}
+
+PS_OUT PS_ONLY_BLUE(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	vector vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	if (0.f < vColor.b)
+		Out.vColor.a = vColor.g;
+
+	Out.vColor.r = 0.f;
+	Out.vColor.g = 0.75f;
+	Out.vColor.b = 1.f;
+
+
+	return Out;
+}
+
 technique11		DefaultTechnique
 {
-	pass Light_Directional // 0
+	pass BoneLight__Directional // 0
 	{
 		SetRasterizerState(Rasterizer_Solid);
 		SetDepthStencilState(DepthStecil_Default, 0);
@@ -162,7 +228,8 @@ technique11		DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL();
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
-	pass Light_Directional_Terrain // 1
+
+	pass Light_Directional__Terrain // 1
 	{
 		SetRasterizerState(Rasterizer_Solid);
 		SetDepthStencilState(DepthStecil_Default, 0);
@@ -170,7 +237,32 @@ technique11		DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL_TERRAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
+
+	pass Effect_NoLight__OnlyRed // 2
+	{
+		SetRasterizerState(Rasterizer_Solid_NotCurl);
+		SetDepthStencilState(DepthStecil_Default, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_EFFECT_NOLIGHT();
+		PixelShader = compile ps_5_0 PS_ONLY_RED();
+	}
+
+	pass Effect_NoLight__OnlyGreen // 3
+	{
+		SetRasterizerState(Rasterizer_Solid_NotCurl);
+		SetDepthStencilState(DepthStecil_Default, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_EFFECT_NOLIGHT();
+		PixelShader = compile ps_5_0 PS_ONLY_GREEN();
+	}
+
+	pass Effect_NoLight__OnlyBlue // 4
+	{
+		SetRasterizerState(Rasterizer_Solid_NotCurl);
+		SetDepthStencilState(DepthStecil_Default, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_EFFECT_NOLIGHT();
+		PixelShader = compile ps_5_0 PS_ONLY_BLUE();
+	}
+
 };
-
-
-

@@ -50,8 +50,7 @@ public: // Getter
 public:
 	void Set_TowerPos(_fvector vPosition);
 	void Set_TowerRotation(_fvector vRotation);
-
-protected:
+	void Set_TowerRangeAngle(_float fRangeAngle_Max, _float fRangeAngle_Min) { m_fTowerRangeMax = fRangeAngle_Max, m_fTowerRangeMin = fRangeAngle_Min; }
 
 protected:
 	HRESULT	Ready_Component(void* pArg);
@@ -77,10 +76,9 @@ private:
 	_bool			m_IsTurnable		= false;
 	_float3			m_vFirstLook_Dir;
 	_float			m_fTowerRangeDis	= 0.f;
+	_float			m_fTowerRangeCenter = 0.f;
 	_float			m_fTowerRangeMax = 45.f; // ¿øÁ¡ 90
 	_float			m_fTowerRangeMin = -45.f;
-	_float			m_fTowerRangeCenter = 0.f;
-
 
 
 public:

@@ -25,6 +25,9 @@ HRESULT CBullet::NativeConstruct(void * pArg)
 
 _int CBullet::Tick(_float TimeDelta)
 {
+	if (true == m_IsDelete_This)
+		return OBJECT_DEAD;
+
 	return _int();
 }
 

@@ -81,6 +81,33 @@ HRESULT CGameObject_Manager::Add_GameObject(_uint iPrototypeLevelIndex, const _t
 	return S_OK;
 }
 
+CGameObject* CGameObject_Manager::Add_Create_Clone(_uint iPrototypeLevelIndex, const _tchar * pPrototypeTag, _uint iLevelIndex, void * pArg)
+{
+	if (nullptr == m_pLayers ||
+		iPrototypeLevelIndex >= m_iNumLevels ||
+		iLevelIndex >= m_iNumLevels)
+		return nullptr;
+
+	CGameObject*	pPrototype = Find_Prototype(iPrototypeLevelIndex, pPrototypeTag);
+
+	if (nullptr == pPrototype)
+	{
+		_tchar szMSG[MAX_PATH] = L"Can't Find Prototype ( ";
+		lstrcat(szMSG, pPrototypeTag);
+		lstrcat(szMSG, L" )");
+
+		MSG_BOX_L(L"GameObject", szMSG);
+		return nullptr;
+	}
+
+	CGameObject*	pGameObject = pPrototype->Clone_GameObject(pArg);
+
+	if (nullptr == pGameObject)
+		MSG_BOX("CGameObject_Manager::Add_Create_Clone Failed!");
+
+	return pGameObject;
+}
+
 CGameObject * CGameObject_Manager::Get_GameObject(_uint iLevelIndex, const _tchar * pLayerTag)
 {
 	if (m_iNumLevels <= iLevelIndex)

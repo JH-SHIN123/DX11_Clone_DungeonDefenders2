@@ -55,10 +55,10 @@ _int CStrikerTower::Late_Tick(_float TimeDelta)
 		{
 			m_IsAttack = true;
 			_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
-			vMyPos += m_pMovementCom->Get_State(EState::Up) * 250.f;
+			vMyPos += m_pMovementCom->Get_State(EState::Up) * 240.f;
 
 			BULLET_DESC Data;
-			lstrcpy(Data.szModelName, L"Component_Mesh_BlockcadeTower_Bullet");
+			lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
 			Data.MoveState_Desc.fRotatePerSec = 50.f;
 			XMStoreFloat3(&Data.vDir, m_pMovementCom->Get_State(EState::Look));
 			XMStoreFloat4(&Data.MoveState_Desc.vPos, vMyPos);
