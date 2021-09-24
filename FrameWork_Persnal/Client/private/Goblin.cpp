@@ -20,16 +20,24 @@ HRESULT CGoblin::NativeConstruct(void * pArg)
 {
 	__super::NativeConstruct(pArg);
 
+	Ready_Component(pArg);
+
 
 	m_pModelCom->Set_AnimationIndex(0);
 
 	m_pModelCom->Set_AnimationIndex_Start(0.f, 40.f);
+
+	Set_Pivot(XMVectorSet(0.25f, 0.25f, 0.25f, 0.f));
 
 	return S_OK;
 }
 
 _int CGoblin::Tick(_float TimeDelta)
 {
+	m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
+	m_pColliderCom_Hurt->Update_Collider(m_pMovementCom->Get_State(EState::Position));
+
+
 	return _int();
 }
 
@@ -44,6 +52,14 @@ _int CGoblin::Late_Tick(_float TimeDelta)
 HRESULT CGoblin::Render()
 {
 	__super::Render();
+
+
+#ifdef _DEBUG
+	m_pColliderCom_Attack->Render_Collider();
+	m_pColliderCom_Hurt->Render_Collider();
+
+#endif // _DEBUG
+
 
 	return S_OK;
 }
@@ -65,6 +81,16 @@ void CGoblin::Anim_Check(_float TimeDelta)
 
 HRESULT CGoblin::Ready_Component(void * pArg)
 {
+	HRESULT  hr = S_OK;
+
+	COLLIDER_DESC Data;
+	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
+	Data.vScale = { 7.f, 7.f, 7.f };
+	
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Attack_Collider"), (CComponent**)&m_pColliderCom_Attack, &Data);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_AABB"), TEXT("Com_Hurt_Collider"), (CComponent**)&m_pColliderCom_Hurt, &Data);
+
+
 	return S_OK;
 }
 
@@ -107,7 +133,7 @@ _float CGoblin::Anim_Changer(EGoblinAnim eAnim)
 		break;
 	}
 
-	_float fAnim = (_float)m_eAnim_Next - (_float)eAnim_Term - 1.f;
+	_float fAnim = (_float)eAnim_Term - (_float)m_eAnim_Next  - 1.f;
 
 	return fAnim;
 }
@@ -136,5 +162,8 @@ CGameObject * CGoblin::Clone_GameObject(void * pArg)
 
 void CGoblin::Free()
 {
+	Safe_Release(m_pColliderCom_Attack);
+	Safe_Release(m_pColliderCom_Hurt);
+
 	__super::Free();
 }

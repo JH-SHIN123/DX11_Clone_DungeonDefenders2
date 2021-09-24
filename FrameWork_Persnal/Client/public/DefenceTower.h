@@ -55,7 +55,7 @@ public:
 protected:
 	HRESULT	Ready_Component(void* pArg);
 	void	TowerState_Check();
-	_bool	Enemy_Check(_float TimeDelta);
+	_bool	Enemy_Check(_float TimeDelta, _vector* vTargetPos);
 
 protected:
 	CModel*			m_pModelCom		= nullptr;

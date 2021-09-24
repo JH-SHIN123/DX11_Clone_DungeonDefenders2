@@ -21,10 +21,13 @@ HRESULT CLightningTower_Bullet::NativeConstruct(void * pArg)
 {
 	__super::NativeConstruct(pArg);
 
-	_vector vScale = XMVectorSet(0.05f, 0.05f, 0.05f, 0.f);
-	m_pMovementCom->Set_Scale_LinearRotate(vScale);
+	//_vector vScale = XMVectorSet(0.05f, 0.05f, 0.05f, 0.f);
+	//m_pMovementCom->Set_Scale_LinearRotate(vScale);
 
 	m_vecEffectMesh.resize(m_iBoundCount);
+
+	Set_Pivot(XMVectorSet(0.05f, 0.05f, 0.05f, 0.f));
+
 
 	Ready_Component(pArg);
 
@@ -83,7 +86,7 @@ void CLightningTower_Bullet::Spawn_Check(_float TimeDelta)
 {
 	m_fScaleTime += TimeDelta;
 	_float3 vScale;
-	vScale.x = m_pMovementCom->Get_Scale(EState::Right) + TimeDelta * 0.05f;
+	vScale.x = TimeDelta * 0.05f;
 
 	if (vScale.x >= m_vScale_SizeUp.x)
 		m_IsMoveable = true;
@@ -95,10 +98,10 @@ void CLightningTower_Bullet::Spawn_Check(_float TimeDelta)
 
 	if (false == m_IsMoveable)
 	{
-		vScale.y = m_pMovementCom->Get_Scale(EState::Up) + TimeDelta * 0.05f;
-		vScale.z = m_pMovementCom->Get_Scale(EState::Look) + TimeDelta * 0.05f;
+		vScale.y = TimeDelta * 0.05f;
+		vScale.z = TimeDelta * 0.05f;
 
-		m_pMovementCom->Set_Scale_LinearRotate(XMLoadFloat3(&vScale));
+		Set_Pivot(XMVectorSet(vScale.x, vScale.y, vScale.z, 0.f));
 	}
 
 	else

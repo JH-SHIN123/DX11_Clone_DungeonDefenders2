@@ -30,6 +30,7 @@ HRESULT CPlayer::NativeConstruct(void * pArg)
 
 	m_pModelCom->Set_AnimationIndex(0); // 나는 애니메이션 하나에 다 있는 상황 원테이크
 	m_pModelCom->Set_AnimationIndex_Start(292.f, 118.f);
+	Set_Pivot(XMVectorSet(0.25f, 0.25f, 0.25f, 0.f));
 
 	return S_OK;
 }
@@ -48,8 +49,8 @@ _int CPlayer::Tick(_float TimeDelta)
 	if (nullptr != m_pStrikerTower)
 		m_pStrikerTower->Tick(TimeDelta);
 
-	//m_pColliderCom->Update_Collider(m_pMovementCom->Get_WorldMatrix());
-	m_pColliderCom->Update_Collider(m_pMovementCom->Get_State(EState::Position));
+	m_pColliderCom->Update_Collider(m_pMovementCom->Get_WorldMatrix());
+	//m_pColliderCom->Update_Collider(m_pMovementCom->Get_State(EState::Position));
 
 
 	return _int();
@@ -85,6 +86,7 @@ HRESULT CPlayer::Render()
 
 	m_pModelCom->Bind_VIBuffer();
 
+	m_pModelCom->Set_Variable("g_PivotMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_PivotMatrix)), sizeof(_matrix));
 	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
@@ -261,6 +263,12 @@ void CPlayer::Key_Check(_float TimeDelta)
 		m_IsSecondAnimation = false;
 	}
 
+	if (GET_KEY_INPUT(DIK_Q))
+	{
+		HIT_DESC Data;
+		
+		m_pStatusCom->Set_Hp(50);
+	}
 
 	//Idle_Check();
 }
@@ -387,8 +395,7 @@ void CPlayer::Animation_Check(_float TimeDelta)
 	{
 		if (m_eAnimationState_Cur_Second != m_eAnimationState_Next_Second)
 			m_pModelCom->Set_AnimationIndex_Start_SecondNode((_float)m_eAnimationState_Next_Second, Animation_Term(m_eAnimationState_Next_Second));
-		// 이거 분해하면 된다! 나는 틀리지 않았어...
-		//m_pModelCom->Set_AnimationIndex_Start_SecondNode("b_Torso", TimeDelta, (_float)EPlayerAnimation::Fire, (_float)EPlayerAnimation::FireMaxPower - (_float)EPlayerAnimation::Fire - 1.f, 1.f);
+
 		m_pModelCom->Update_AnimaionMatrix_Second("b_Torso", TimeDelta);
 
 		if (true == m_pModelCom->Get_IsFinishedAnimaion_Second())
@@ -416,14 +423,18 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &Data.Movement_Desc);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Status"), (CComponent**)&m_pStatusCom, &Data.Status_Desc);
 
-	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom, &Data.Status_Desc);
+	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
 
-	CCollider::COLLIDERDESC		ColliderDesc;
+	COLLIDER_DESC		ColliderDesc;
 	ZeroMemory(&ColliderDesc, sizeof(ColliderDesc));
 
 	ColliderDesc.vScale = XMFLOAT3(3.f, 3.f, 3.f);
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &ColliderDesc);
+
+
+	
+
 
 	return S_OK;
 }

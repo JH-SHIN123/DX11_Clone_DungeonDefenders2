@@ -50,6 +50,7 @@ HRESULT CBullet::Render()
 
 	m_pModelCom->Bind_VIBuffer();
 
+	m_pModelCom->Set_Variable("g_PivotMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_PivotMatrix)), sizeof(_matrix));
 	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
@@ -121,6 +122,7 @@ CGameObject * CBullet::Clone_GameObject(void * pArg)
 
 void CBullet::Free()
 {
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pMovementCom);

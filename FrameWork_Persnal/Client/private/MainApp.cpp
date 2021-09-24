@@ -8,6 +8,7 @@
 #include "Data_Manager.h"
 #include "Animate_Effect.h"
 #include "Collider.h"
+#include "Collide_Manager.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -141,13 +142,15 @@ HRESULT CMainApp::Ready_Component_PrototypeForStatic()
 		CCollider::Create(m_pDevice, m_pDevice_Context, ECollideType::SPHERE))))
 		return E_FAIL;
 
+	/* Collider_AABB*/
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Collider_AABB"),
+		CCollider::Create(m_pDevice, m_pDevice_Context, ECollideType::AABB))))
+		return E_FAIL;
 
-	// 이건 나중에 해결해 보자 텍스처 UV를 _float3로 못씀
-	//if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_VIBuffer_Cube")
-	//	, CVIBuffer_Cube::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Cube.hlsl"), "DefaultTechnique"))))
-	//	return E_FAIL;
-
-
+	/* Collider_Sphere*/
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Collider_OBB"),
+		CCollider::Create(m_pDevice, m_pDevice_Context, ECollideType::OBB))))
+		return E_FAIL;
 
 
 	//Animate_Effect

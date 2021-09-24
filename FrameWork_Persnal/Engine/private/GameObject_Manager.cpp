@@ -132,6 +132,14 @@ CLayer * CGameObject_Manager::Get_Layer(_uint iLevelIndex, const _tchar * pLayer
 	return Find_Layer(iLevelIndex, pLayerTag);
 }
 
+const list<CGameObject*>* CGameObject_Manager::Get_List(_uint iLevelIndex, const _tchar * pLayerTag)
+{
+	if (m_iNumLevels <= iLevelIndex)
+		return nullptr;
+
+	return nullptr;//Find_Layer(iLevelIndex, pLayerTag)->Get_GameObject_List();
+}
+
 //list<CGameObject*>* CGameObject_Manager::Get_GameObject_List(_uint iLevelIndex, const _tchar * pLayerTag)
 //{
 //	if (m_iNumLevels <= iLevelIndex)

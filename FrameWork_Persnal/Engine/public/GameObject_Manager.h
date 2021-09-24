@@ -27,6 +27,7 @@ public:
 	// Getter
 	CGameObject* Get_GameObject(_uint iLevelIndex, const _tchar* pLayerTag);
 	CLayer* Get_Layer(_uint iLevelIndex, const _tchar* pLayerTag);
+	const list<CGameObject*>* Get_List(_uint iLevelIndex, const _tchar* pLayerTag);
 
 	_int Tick_GameObject(_float TimeDelta);
 	void Clear(_uint iLevelIndex);

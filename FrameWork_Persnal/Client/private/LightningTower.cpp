@@ -28,6 +28,8 @@ HRESULT CLightningTower::NativeConstruct(void * pArg)
 	m_pModelCom->Set_AnimationIndex(0); // 나는 애니메이션 하나에 다 있는 상황 원테이크
 	m_pModelCom->Set_AnimationIndex_Start(0.f, (_float)m_eAnim_Next - 1.f);
 
+	Set_Pivot(XMVectorSet(0.04f, 0.04f, 0.04f, 0.f));
+
 	return S_OK;
 }
 
@@ -48,7 +50,9 @@ _int CLightningTower::Late_Tick(_float TimeDelta)
 	//if (true == m_pModelCom->Get_IsFinishedAnimaion())
 	//	m_IsAttack = false;
 
-	if (true == __super::Enemy_Check(TimeDelta))
+	_vector vTargetPos;
+
+	if (true == __super::Enemy_Check(TimeDelta, &vTargetPos))
 	{
 		m_eAnim_Next = CLightningTower::EAnim::FireLoop;
 
@@ -71,13 +75,16 @@ _int CLightningTower::Late_Tick(_float TimeDelta)
 				m_fAttCharging = 0.f;
 
 				_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
-				vMyPos += m_pMovementCom->Get_State(EState::Up) * 250.f;
+				vMyPos += XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * 8.f;
+
+				_vector vDir = XMVector3Normalize(vTargetPos - vMyPos);
 
 				BULLET_DESC Data;
 				lstrcpy(Data.szModelName, L"Component_Mesh_LightningTower_Bullet");
 				Data.MoveState_Desc.fRotatePerSec = 50.f;
-				XMStoreFloat3(&Data.vDir, m_pMovementCom->Get_State(EState::Look));
+				XMStoreFloat3(&Data.vDir, vDir);
 				XMStoreFloat4(&Data.MoveState_Desc.vPos, vMyPos);
+				Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 				Data.MoveState_Desc.fSpeedPerSec = 20.f;
 				Data.fLifeTime = 10.f;
 

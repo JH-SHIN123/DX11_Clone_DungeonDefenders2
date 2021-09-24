@@ -47,6 +47,7 @@ HRESULT CDefenceTower::Render()
 
 	m_pModelCom->Bind_VIBuffer();
 
+	m_pModelCom->Set_Variable("g_PivotMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_PivotMatrix)), sizeof(_matrix));
 	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
@@ -84,11 +85,11 @@ void CDefenceTower::TowerState_Check()
 	m_eTowerState_Next = ETowerState::Idle;
 }
 
-_bool CDefenceTower::Enemy_Check(_float TimeDelta)
+_bool CDefenceTower::Enemy_Check(_float TimeDelta, _vector* vTargetPos)
 {
 	// 몬스터가 내 공격범위안에 있다.
 	// 돌아라
-	CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Player");
+	CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Monster");
 	if (nullptr == pLayer)
 		return false;
 
@@ -97,7 +98,6 @@ _bool CDefenceTower::Enemy_Check(_float TimeDelta)
 	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
 	_float	fTargetDis = -1.f;
 	_float	fTurnAngle = 0.f;
-	_vector vTargetPos;
 
 	for (auto& iter : listObject)
 	{
@@ -114,7 +114,7 @@ _bool CDefenceTower::Enemy_Check(_float TimeDelta)
 		if (-1.f == fTargetDis)
 		{
 			fTargetDis = fDis;
-			vTargetPos = vPos;
+			*vTargetPos = vPos;
 			fTurnAngle = fAngle_Axis;
 		}
 
@@ -124,7 +124,7 @@ _bool CDefenceTower::Enemy_Check(_float TimeDelta)
 			{
 
 				fTargetDis = fDis;
-				vTargetPos = vPos;
+				*vTargetPos = vPos;
 				fTurnAngle = fAngle_Axis;
 			}
 		}
@@ -132,15 +132,15 @@ _bool CDefenceTower::Enemy_Check(_float TimeDelta)
 
 	if (m_fTowerRangeMin <= fTurnAngle && fTurnAngle <= m_fTowerRangeMax)
 	{
-		_float fDstDis = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
-		_float fSrcDis = XMVectorGetX(XMVector3Length(vTargetPos - (vMyPos + XMLoadFloat3(&m_vFirstLook_Dir) * 10.f)));
+		_float fDstDis = XMVectorGetX(XMVector3Length(*vTargetPos - vMyPos));
+		_float fSrcDis = XMVectorGetX(XMVector3Length(*vTargetPos - (vMyPos + XMLoadFloat3(&m_vFirstLook_Dir) * 10.f)));
 
 		//_float fTurnAngle_Break = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(vTargetPos, m_pMovementCom->Get_State(EState::Look)))));
 
 		// 여기서 좌우회전 반복을 그만 하고싶음 지금은 회전속도가 아주 적어서 티는 안나지만...
 		if (fDstDis > fSrcDis /*&& 25.f < fTurnAngle_Break*/)
 		{
-			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta, vTargetPos);
+			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta, *vTargetPos);
 
 			return true;
 		}

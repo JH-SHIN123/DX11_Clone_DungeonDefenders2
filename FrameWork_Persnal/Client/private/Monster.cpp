@@ -57,6 +57,7 @@ HRESULT CMonster::Render()
 
 	m_pModelCom->Bind_VIBuffer();
 
+	m_pModelCom->Set_Variable("g_PivotMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_PivotMatrix)), sizeof(_matrix));
 	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
@@ -95,6 +96,39 @@ HRESULT CMonster::Render()
 	return S_OK;
 }
 
+EMonsterAI CMonster::AI_Check()
+{
+	CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Tower");
+	if (nullptr == pLayer)
+		return EMonsterAI::End;
+
+	// AI를 구상 해보자
+	/*
+	1. 일반적으로 몬스터는 특정 경로를 따라간다.
+		 A_1. 그러다가 플레이어에게 공격을 맞으면 플레이어를 따라간다.
+			A_2. 너무 멀어지면 다시 경로를 찾아 간다.
+		B_1. 타워를 만나면 타워를 때린다.
+			A_1. 플레이어한테 공격을 맞으면 플레이어를 따라간다.
+				A_2. 너무 멀어지면 다시 경로를 찾아 간다.
+
+	
+	*/
+
+
+	list<CGameObject*> listObject = pLayer->Get_GameObject_List();
+
+	for (auto& iter : listObject)
+	{
+
+	}
+
+
+
+
+
+	return EMonsterAI::End;
+}
+
 HRESULT CMonster::Ready_Component(void * pArg)
 {
 	MONSTER_DESC Data;
@@ -128,7 +162,6 @@ void CMonster::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pMovementCom);
 	Safe_Release(m_pModelCom);
-	Safe_Release(m_pColliderCom);
 
 	Safe_Release(m_pMeterBar_Hp);
 

@@ -68,6 +68,11 @@ void CStatus::Set_Damage(const HIT_DESC & pDamage)
 	m_Hit_Desc = pDamage;
 }
 
+void CStatus::Set_Hp(_int iHp)
+{
+	m_Status_Desc.iHp = iHp;
+}
+
 void CStatus::Damage_Check(_float TimeDelta)
 {
 	if (true == m_IsHit)

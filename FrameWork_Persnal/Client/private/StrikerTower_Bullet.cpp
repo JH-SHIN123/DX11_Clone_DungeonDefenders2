@@ -20,6 +20,10 @@ HRESULT CStrikerTower_Bullet::NativeConstruct(void * pArg)
 {
 	__super::NativeConstruct(pArg);
 
+	Ready_Component(pArg);
+
+	Set_Pivot(XMVectorSet(0.01f, 0.01f, 0.01f, 0.f));
+
 	return S_OK;
 }
 
@@ -50,7 +54,19 @@ HRESULT CStrikerTower_Bullet::Render()
 
 HRESULT CStrikerTower_Bullet::Ready_Component(void * pArg)
 {
-	return S_OK;
+	HRESULT hr = S_OK;
+
+	COLLIDER_DESC Data;
+	Data.vScale = { 2.f, 2.f, 2.f };
+	
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &Data);
+
+
+
+	if (S_OK != hr)
+		MSG_BOX("CStrikerTower_Bullet::Ready_Component Failed!");
+
+	return hr;
 }
 
 CStrikerTower_Bullet * CStrikerTower_Bullet::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

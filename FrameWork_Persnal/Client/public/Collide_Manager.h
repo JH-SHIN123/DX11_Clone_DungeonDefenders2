@@ -1,0 +1,27 @@
+#pragma once
+
+#ifndef __COLLIDE_MANAGER_H__
+
+#include "Client_Defines.h"
+#include "Base.h"
+
+BEGIN(Client)
+class CCollide_Manager final : public CBase
+{
+	DECLARE_SINGLETON(CCollide_Manager)
+public:
+	CCollide_Manager();
+	virtual ~CCollide_Manager();
+
+public:
+	_bool Collide_Check(const _tchar* szDstObjectName, ELevel eDstObjectLevel, const _tchar* szSrcObjectName, ELevel eSrcObjectLevel);
+
+
+
+public:
+	virtual void Free() override;
+};
+
+END
+#define __COLLIDE_MANAGER_H__
+#endif // !__COLLIDE_MANAGER_H__

@@ -32,6 +32,7 @@ texture2D		g_DiffuseTexture;
 texture2D		g_AmbientTexture;
 texture2D		g_SpecularTexture;
 float3			g_RGBColor;
+matrix			g_PivotMatrix;
 
 sampler DiffuseSampler = sampler_state
 {
@@ -79,6 +80,8 @@ VS_OUT VS_MAIN_DIRECTIONAL(VS_IN In)
 		g_BoneMatrices.Matrices[In.vBlendIndex.z] * In.vBlendWeight.z +
 		g_BoneMatrices.Matrices[In.vBlendIndex.w] * In.vBlendWeight.w;
 
+	BoneMatrix = mul(BoneMatrix, g_PivotMatrix);
+
 	vector		vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
 
 	Out.vPosition = mul(vPosition, matWVP);
@@ -105,6 +108,7 @@ VS_OUT VS_MAIN_DIRECTIONAL_TERRAIN(VS_IN In)
 
 	matrix		matWV, matWVP;
 
+	In.vPosition = mul(In.vPosition, g_PivotMatrix);
 	matWV = mul(WorldMatrix, ViewMatrix);
 	matWVP = mul(matWV, ProjMatrix);
 	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP); // ¾î ½Ã¹ß;

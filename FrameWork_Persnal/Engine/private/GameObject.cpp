@@ -16,6 +16,8 @@ CGameObject::CGameObject(const CGameObject & rhs)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pDevice_Context);
+
+	Set_Pivot(XMVectorSet(1.f, 1.f, 1.f, 0.f));
 }
 
 HRESULT CGameObject::NativeConstruct_Prototype()
@@ -55,6 +57,21 @@ CComponent * CGameObject::Get_Component(const _tchar * pComponentTag)
 		return nullptr;
 
 	return iter->second;
+}
+
+void CGameObject::Set_Pivot(_fvector vScale)
+{
+	_matrix PivotMatrix = XMMatrixIdentity();
+
+	PivotMatrix = XMMatrixScalingFromVector(vScale);
+	//if(nullptr != vRotate)
+	//PivotMatrix *= XMMatrixRotationRollPitchYawFromVector(vRotate);
+
+	//m_PivotMatrix._11 = XMVectorGetX(vScale);
+	//m_PivotMatrix._22 = XMVectorGetX(vScale);
+	//m_PivotMatrix._33 = XMVectorGetX(vScale);
+
+	XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);
 }
 
 HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar * pPrototypeTag, const _tchar * pComponentTag, CComponent ** ppOut, void * pArg)

@@ -184,6 +184,12 @@
     <Filter Include="02.GameObject\08.Effect\01.LightningTower_Effect\00.LightningTower_Bullet_Effect">
       <UniqueIdentifier>{f5b2c4fc-a332-4dad-9af9-8e27b720cdc1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Utility\06.Collide_Manager">
+      <UniqueIdentifier>{c015e515-69a7-4080-80bd-d706ca161490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet\02.Skill_ManaBomb">
+      <UniqueIdentifier>{252f8a87-83c5-415a-bb47-26611c07bc90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -360,6 +366,12 @@
     <ClInclude Include="..\public\Goblin.h">
       <Filter>02.GameObject\05.Monster\00.Goblin</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Skill_ManaBomb.h">
+      <Filter>02.GameObject\07.Bullet\02.Skill_ManaBomb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Collide_Manager.h">
+      <Filter>05.Utility\06.Collide_Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -514,6 +526,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Goblin.cpp">
       <Filter>02.GameObject\05.Monster\00.Goblin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Skill_ManaBomb.cpp">
+      <Filter>02.GameObject\07.Bullet\02.Skill_ManaBomb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Collide_Manager.cpp">
+      <Filter>05.Utility\06.Collide_Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -41,7 +41,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Data.eTowerRange = ETowerRange::Quarter;
 	Data.MoveState_Desc.fRotatePerSec = 0.5f;
 	Data.MoveState_Desc.vPos = { -10.f,0.f,20.f,1.f };
-	Data.MoveState_Desc.vScale = { 0.035f, 0.035f, 0.035f, 0.f };
+	Data.MoveState_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f); 
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_BlockadeTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
 
 
@@ -49,7 +49,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Data.eTowerRange = ETowerRange::Quarter;
 	Data.MoveState_Desc.fRotatePerSec = 0.5f;
 	Data.MoveState_Desc.vPos = { 0.f,0.f,20.f,1.f };
-	Data.MoveState_Desc.vScale = { 0.035f, 0.035f, 0.035f, 0.f };
+	Data.MoveState_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_StrikerTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
 
 
@@ -57,7 +57,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Data.eTowerRange = ETowerRange::Quarter;
 	Data.MoveState_Desc.fRotatePerSec = 0.5f;
 	Data.MoveState_Desc.vPos = { 10.f,0.f,20.f,1.f };
-	Data.MoveState_Desc.vScale = { 0.04f, 0.04f, 0.04f, 0.f };
+	Data.MoveState_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_LightningTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
 
 
@@ -65,7 +65,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	lstrcpy(MonData.szModelName, L"Component_Mesh_Goblin");
 	MonData.eLevel = ELevel::Stage1;
 	MonData.Movement_Desc.vPos = { 0.f, 0.f, 30.f, 1.f };
-	MonData.Movement_Desc.vScale = { 0.5f, 0.5f, 0.5f, 0.f };
+	MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Goblin", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
 
 
@@ -216,8 +216,8 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
 
 	GAMEOBJ_DESC Data;
-	Data.Movement_Desc.vPos = _float4(10.f, 0.f, 10.f, 1.f);
-	Data.Movement_Desc.vScale = _float4(0.25f, 0.25f, 0.25f, 0.f);
+	Data.Movement_Desc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
+	Data.Movement_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
 	Data.Movement_Desc.fSpeedPerSec = 20.f;
 
 	Data.Status_Desc.fAttSpeed = 2.f;

@@ -20,6 +20,8 @@ typedef struct tagMonsterDesc
 	
 }MONSTER_DESC;
 
+enum class EMonsterAI
+{ Idle, Attack, Hurt, Dead, Shock, End };
 
 class CMonster abstract : public CGameObject
 {
@@ -35,6 +37,9 @@ public:
 	virtual _int	Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
+protected:
+	EMonsterAI AI_Check();
+
 private:
 	HRESULT	Ready_Component(void* pArg);
 
@@ -44,10 +49,12 @@ protected:
 	CRenderer*				m_pRendererCom	= nullptr;
 	CMovement*				m_pMovementCom	= nullptr;
 
-	// 아마 이걸 세분화 해야 할것임
-	CCollider*				m_pColliderCom	= nullptr;
 
 	CMasking_MeterBar_3D*	m_pMeterBar_Hp	= nullptr;
+
+private:
+	EMonsterAI		m_eAI_Cur	= EMonsterAI::End;
+	EMonsterAI		m_eAI_Next	= EMonsterAI::Idle;
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

@@ -26,6 +26,8 @@ HRESULT CStrikerTower::NativeConstruct(void * pArg)
 	m_pModelCom->Set_AnimationIndex(0); // 나는 애니메이션 하나에 다 있는 상황 원테이크
 	m_pModelCom->Set_AnimationIndex_Start(0.f, (_float)m_eAnim_Next - 1.f);
 
+	Set_Pivot(XMVectorSet(0.035f, 0.035f, 0.035f, 0.f));
+
 	return S_OK;
 }
 
@@ -45,7 +47,9 @@ _int CStrikerTower::Late_Tick(_float TimeDelta)
 	if (true == m_pModelCom->Get_IsFinishedAnimaion())
 		m_IsAttack = false;
 
-	if (true == __super::Enemy_Check(TimeDelta))
+	_vector vTargetPos;
+
+	if (true == __super::Enemy_Check(TimeDelta, &vTargetPos))
 	{
 		m_eAnim_Next = CStrikerTower::EStrikerTowerAnim::Fire;
 
@@ -55,15 +59,18 @@ _int CStrikerTower::Late_Tick(_float TimeDelta)
 		{
 			m_IsAttack = true;
 			_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
-			vMyPos += m_pMovementCom->Get_State(EState::Up) * 240.f;
+			vMyPos += XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * 8.f;
 
 			BULLET_DESC Data;
 			lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
 			Data.MoveState_Desc.fRotatePerSec = 50.f;
-			XMStoreFloat3(&Data.vDir, m_pMovementCom->Get_State(EState::Look));
+
+			_vector vDir = XMVector3Normalize(vTargetPos - vMyPos);
+
+			XMStoreFloat3(&Data.vDir, vDir);
 			XMStoreFloat4(&Data.MoveState_Desc.vPos, vMyPos);
-			Data.MoveState_Desc.vScale = { 0.01f, 0.01f, 0.01f, 0.f };
-			Data.MoveState_Desc.fSpeedPerSec = 200.f;
+			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+			Data.MoveState_Desc.fSpeedPerSec = 40.f;
 			Data.fLifeTime = 10.f;
 
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_StrikerTower_Bullet", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);

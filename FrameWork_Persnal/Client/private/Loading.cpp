@@ -204,6 +204,8 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Goblin"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Monster/Goblin/", "Goblin.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Skill_ManaBomb"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Skill/ManaBomb/", "ManaBomb.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
 
 	if (hr != S_OK)

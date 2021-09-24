@@ -57,6 +57,7 @@ public:
 	CGameObject* Add_Create_Clone(_uint iPrototypeLevelIndex, const _tchar* pPrototypeTag, _uint iLevelIndex, void* pArg = nullptr);
 	CGameObject* Get_GameObject(_uint iLevelIndex, const _tchar* pLayerTag); // Clone
 	CLayer* Get_Layer(_uint iLevelIndex, const _tchar* pLayerTag); // Clone
+	const list<CGameObject*>* Get_GameObject_List(_uint iLevelIndex, const _tchar* pLayerTag);
 #pragma endregion
 
 

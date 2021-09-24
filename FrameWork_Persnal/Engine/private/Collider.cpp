@@ -29,8 +29,6 @@ HRESULT CCollider::NativeConstruct_Prototype(ECollideType eColliderType)
 
 	m_eColliderType = eColliderType;
 
-	
-
 	m_pEffect = new BasicEffect(m_pDevice);
 	if (nullptr == m_pEffect)
 		return E_FAIL;
@@ -40,14 +38,14 @@ HRESULT CCollider::NativeConstruct_Prototype(ECollideType eColliderType)
 	const void* pShaderByteCode = nullptr;
 	size_t		ShaderByteCodeLength = 0;
 
-	m_pEffect->GetVertexShaderBytecode(&pShaderByteCode, &ShaderByteCodeLength);	
+	m_pEffect->GetVertexShaderBytecode(&pShaderByteCode, &ShaderByteCodeLength);
 
 	if (FAILED(m_pDevice->CreateInputLayout(DirectX::VertexPositionColor::InputElements, DirectX::VertexPositionColor::InputElementCount, pShaderByteCode, ShaderByteCodeLength, &m_pInputLayout)))
 		return E_FAIL;
 
 	m_pBatch = new DirectX::PrimitiveBatch<DirectX::VertexPositionColor>(m_pDevice_Context);
 	if (nullptr == m_pBatch)
-		return E_FAIL;	
+		return E_FAIL;
 
 	XMStoreFloat4(&m_vColor, DirectX::Colors::Green);
 
@@ -59,14 +57,18 @@ HRESULT CCollider::NativeConstruct(void * pArg)
 	__super::NativeConstruct(pArg);
 
 	if (nullptr != pArg)
-		memcpy(&m_ColliderDesc, pArg, sizeof(COLLIDERDESC));
+		memcpy(&m_ColliderDesc, pArg, sizeof(COLLIDER_DESC));
 
+
+	m_ColliderDesc.vPosition.y += m_ColliderDesc.vScale.y;	
 
 	switch (m_eColliderType)
 	{
 	case ECollideType::AABB:
+		m_pAABB = new BoundingBox(m_ColliderDesc.vPosition, m_ColliderDesc.vScale);
 		break;
 	case ECollideType::OBB:
+		m_pOBB = new BoundingOrientedBox(m_ColliderDesc.vPosition, m_ColliderDesc.vScale, _float4(1.f, 0.f, 0.f, 0.f));
 		break;
 	case ECollideType::SPHERE:
 		m_pSphere = new BoundingSphere(m_ColliderDesc.vPosition, m_ColliderDesc.vScale.x);
@@ -78,14 +80,30 @@ HRESULT CCollider::NativeConstruct(void * pArg)
 
 _int CCollider::Update_Collider(_fmatrix WorldMatrix)
 {
-	_matrix		TransformMatrix = Remove_Scale(WorldMatrix);	
+	_matrix		TransformMatrix = WorldMatrix;
 
-	_vector		vPosition = WorldMatrix.r[3] - XMLoadFloat3(&m_pSphere->Center);
+	_vector		vWorldPos = WorldMatrix.r[3];
+	vWorldPos = Fix_Position(vWorldPos);
 
-	TransformMatrix.r[3] = vPosition;
+	//_vector		vPosition;
 
-	m_pSphere->Transform(*m_pSphere, TransformMatrix);
-
+	switch (m_eColliderType)
+	{
+	case ECollideType::AABB:
+		TransformMatrix = Remove_Rotation(TransformMatrix);
+		TransformMatrix.r[3] = vWorldPos - XMLoadFloat3(&m_pAABB->Center);
+		m_pAABB->Transform(*m_pAABB, TransformMatrix);
+		break;
+	case ECollideType::OBB:
+		TransformMatrix.r[3] = vWorldPos - XMLoadFloat3(&m_pOBB->Center);
+		m_pOBB->Transform(*m_pOBB, TransformMatrix);
+		break;
+	case ECollideType::SPHERE:
+		TransformMatrix = Remove_Rotation(TransformMatrix);
+		TransformMatrix.r[3] = vWorldPos - XMLoadFloat3(&m_pSphere->Center);
+		m_pSphere->Transform(*m_pSphere, TransformMatrix);
+		break;
+	}
 	return _int();
 }
 
@@ -93,26 +111,44 @@ _int CCollider::Update_Collider(_fvector vPosition)
 {
 	_matrix		TransformMatrix = XMMatrixIdentity();
 
-	TransformMatrix.r[3] = vPosition;
+	//TransformMatrix.r[3] = vPosition;
 
-	m_pSphere->Transform(*m_pSphere, TransformMatrix);
+	switch (m_eColliderType)
+	{
+	case ECollideType::AABB:
+		//TransformMatrix = Remove_Rotation(TransformMatrix);
+		TransformMatrix.r[0] = XMVectorSet(m_ColliderDesc.vScale.x, 0.f, 0.f, 0.f);
+		TransformMatrix.r[1] = XMVectorSet(0.f, m_ColliderDesc.vScale.y, 0.f, 0.f);
+		TransformMatrix.r[2] = XMVectorSet(0.f, 0.f, m_ColliderDesc.vScale.x, 0.f);
+		TransformMatrix.r[3] = vPosition - XMLoadFloat3(&m_pAABB->Center);
+		m_pAABB->Transform(*m_pAABB, TransformMatrix);
+		break;
+	case ECollideType::OBB:
+		TransformMatrix.r[3] = vPosition - XMLoadFloat3(&m_pOBB->Center);
+		m_pOBB->Transform(*m_pOBB, TransformMatrix);
+		break;
+	case ECollideType::SPHERE:
+		TransformMatrix.r[3] = vPosition - XMLoadFloat3(&m_pSphere->Center);
+		m_pSphere->Transform(*m_pSphere, TransformMatrix);
+		break;
+	}
 	return _int();
 }
 
 HRESULT CCollider::Render_Collider(/*_fmatrix WorldMatrix*/)
 {
-	if (nullptr == m_pEffect || 
+	if (nullptr == m_pEffect ||
 		nullptr == m_pBatch)
-		return E_FAIL;	
+		return E_FAIL;
 
 	CPipeline_Manager*	pPipeLine = CPipeline_Manager::GetInstance();
 	if (nullptr == pPipeLine)
 		return E_FAIL;
 
 	Safe_AddRef(pPipeLine);
-	
+
 	//m_pEffect->SetWorld(Remove_Scale(WorldMatrix));
-	
+
 	m_pEffect->SetView(pPipeLine->Get_Transform(ETransformState::View));
 	m_pEffect->SetProjection(pPipeLine->Get_Transform(ETransformState::Proj));
 
@@ -124,9 +160,20 @@ HRESULT CCollider::Render_Collider(/*_fmatrix WorldMatrix*/)
 
 	/* 쉐이더 셋팅에 대한 작업. */
 
-	XMStoreFloat4(&m_vColor, m_isCollision == true ? DirectX::Colors::Red : DirectX::Colors::Green);
-	
-	DX::Draw(m_pBatch, *m_pSphere, XMLoadFloat4(&m_vColor));
+	XMStoreFloat4(&m_vColor, m_IsCollision == true ? DirectX::Colors::Red : DirectX::Colors::Green);
+
+	switch (m_eColliderType)
+	{
+	case ECollideType::AABB:
+		DX::Draw(m_pBatch, *m_pAABB, XMLoadFloat4(&m_vColor));
+		break;
+	case ECollideType::OBB:
+		DX::Draw(m_pBatch, *m_pOBB, XMLoadFloat4(&m_vColor));
+		break;
+	case ECollideType::SPHERE:
+		DX::Draw(m_pBatch, *m_pSphere, XMLoadFloat4(&m_vColor));
+		break;
+	}
 
 	m_pBatch->End();
 
@@ -145,6 +192,42 @@ _matrix CCollider::Remove_Scale(_matrix Transform)
 	Result.r[3] = Transform.r[3];
 
 	return Result;
+}
+
+_matrix CCollider::Remove_Rotation(_matrix Transform)
+{
+	_matrix		Result;
+
+	Result.r[0] = XMVectorSet(1.f, 0.f, 0.f, 0.f) * XMVector3Length(Transform.r[0]);
+	Result.r[1] = XMVectorSet(0.f, 1.f, 0.f, 0.f) * XMVector3Length(Transform.r[1]);
+	Result.r[2] = XMVectorSet(0.f, 0.f, 1.f, 0.f) * XMVector3Length(Transform.r[2]);
+	Result.r[3] = Transform.r[3];
+
+	return Result;
+}
+
+_fvector CCollider::Fix_Position(_fvector vPosition)
+{
+	_vector		vResult = vPosition;
+
+	_float		fScaleY = 0.f;
+
+	switch (m_eColliderType)
+	{
+	case ECollideType::AABB:
+		fScaleY = m_pAABB->Extents.y;
+		break;
+	case ECollideType::OBB:
+		fScaleY = m_pOBB->Extents.y;
+		break;
+	case ECollideType::SPHERE:
+		fScaleY = m_pSphere->Radius;
+		break;
+	}
+
+	vResult.m128_f32[1] += fScaleY;
+
+	return vResult;
 }
 
 CCollider * CCollider::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, ECollideType eColliderType)

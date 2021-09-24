@@ -7,13 +7,14 @@ BEGIN(Engine)
 
 enum class ECollideType { AABB, OBB, SPHERE, End };
 
+typedef struct tagColliderDesc
+{
+	_float3		vScale = { 0.f,0.f,0.f }, vRotation = { 0.f,0.f,0.f }, vPosition = { 1.f,1.f,1.f };
+
+}COLLIDER_DESC;
+
 class ENGINE_DLL CCollider final : public CComponent
 {
-public:
-	typedef struct tagColliderDesc
-	{
-		_float3		vScale, vRotation, vPosition;
-	}COLLIDERDESC;
 private:
 	explicit CCollider(ID3D11Device* pDevice, ID3D11DeviceContext*	pDevice_Context);
 	explicit CCollider(const CCollider& rhs);
@@ -30,11 +31,11 @@ public:
 
 private:
 	ECollideType			m_eColliderType = ECollideType::End;
-	COLLIDERDESC			m_ColliderDesc;
+	COLLIDER_DESC			m_ColliderDesc;
 	BoundingBox*			m_pAABB = nullptr;
 	BoundingOrientedBox*	m_pOBB = nullptr;
 	BoundingSphere*			m_pSphere = nullptr;
-	_bool					m_isCollision = false;
+	_bool					m_IsCollision = false;
 	_float4					m_vColor;
 
 
@@ -51,6 +52,8 @@ private:
 
 private:
 	_matrix Remove_Scale(_matrix Transform);
+	_matrix Remove_Rotation(_matrix Transform);
+	_fvector Fix_Position(_fvector vPosition);
 public:
 	static CCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, ECollideType eColliderType);
 	virtual CComponent* Clone(void* pArg) override;

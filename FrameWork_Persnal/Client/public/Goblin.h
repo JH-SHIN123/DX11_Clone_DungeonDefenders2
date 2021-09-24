@@ -42,11 +42,17 @@ public:
 private:
 	HRESULT		Ready_Component(void* pArg);
 	_float		Anim_Changer(EGoblinAnim eAnim);
+	void		AI_Check();
 
 
 private:
 	EGoblinAnim	m_eAnim_Cur			= EGoblinAnim::End;
 	EGoblinAnim	m_eAnim_Next		= EGoblinAnim::Idle;
+
+private:
+	CCollider*				m_pColliderCom_Attack = nullptr;
+	CCollider*				m_pColliderCom_Hurt = nullptr;
+
 
 public:
 	static CGoblin* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

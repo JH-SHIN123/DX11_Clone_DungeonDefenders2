@@ -63,6 +63,7 @@ public: // Getter
 
 public: // Setter
 	void Set_Damage(const HIT_DESC& pDamage);
+	void Set_Hp(_int iHp);
 
 public: // Add
 	void Add_Exp(_int iExp) { m_Status_Desc.iExp += iExp; }

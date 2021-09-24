@@ -39,7 +39,10 @@ protected:
 	CStatus*				m_pStatusCom		= nullptr;
 	CRenderer*				m_pRendererCom		= nullptr;
 	CMovement*				m_pMovementCom		= nullptr;
+	CCollider*				m_pColliderCom		= nullptr;
+
 	CModel*					m_pModelCom			= nullptr;
+
 	CVIBuffer_Rect*			m_pBufferRectCom	= nullptr;
 	CTextures*				m_pTextureCom		= nullptr;
 

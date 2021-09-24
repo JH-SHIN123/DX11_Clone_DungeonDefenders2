@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\HpMp.h"
+#include "Player.h"
 
 CHpMp::CHpMp(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CUI_2D(pDevice, pDevice_Context)
@@ -66,17 +67,19 @@ HRESULT CHpMp::Render()
 
 void CHpMp::HpMp_Check(_float TimeDelta)
 {
+	CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1 , L"Layer_Player");
+	if (nullptr == pLayer)
+		return;
 
-	if (GET_KEY_INPUT(DIK_Q))
-	{
-		m_fHp -= 20.f;
-		m_fMp -= 20.f;
-	}
-	if (GET_KEY_INPUT(DIK_E))
-	{
-		m_fHp += 20.f;
-		m_fMp += 20.f;
-	}
+	CStatus* pStatus = (CStatus*)pLayer->Get_GameObject()->Get_Component(L"Com_Status");
+
+	m_fHp		= (_float)pStatus->Get_Hp();
+	m_fHp_Max	= (_float)pStatus->Get_HpMax();
+	m_fMp		= (_float)pStatus->Get_Mp();
+	m_fMp_Max	= (_float)pStatus->Get_MpMax();
+
+
+	
 
 	if (true) // 맞았다면
 	{
