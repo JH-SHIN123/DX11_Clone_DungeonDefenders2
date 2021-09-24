@@ -188,7 +188,6 @@
     <ClInclude Include="..\public\Effect.h" />
     <ClInclude Include="..\public\Goblin.h" />
     <ClInclude Include="..\public\HpMp.h" />
-    <ClInclude Include="..\public\InGame_Manager.h" />
     <ClInclude Include="..\public\Level_Loading.h" />
     <ClInclude Include="..\public\Level_Logo.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
@@ -246,7 +245,6 @@
     <ClCompile Include="..\private\Effect.cpp" />
     <ClCompile Include="..\private\Goblin.cpp" />
     <ClCompile Include="..\private\HpMp.cpp" />
-    <ClCompile Include="..\private\InGame_Manager.cpp" />
     <ClCompile Include="..\private\Level_Loading.cpp" />
     <ClCompile Include="..\private\Level_Logo.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />

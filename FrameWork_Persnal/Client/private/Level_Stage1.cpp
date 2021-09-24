@@ -28,7 +28,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Camera_Free(TEXT("Layer_Camera_Free"))))
+	if (FAILED(Ready_Layer_Camera_Free(TEXT("Layer_Camera"))))
 		return E_FAIL;
 	
 	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
@@ -194,8 +194,8 @@ HRESULT CLevel_Stage1::Ready_Layer_Camera_Free(const _tchar * pLayerTag)
 	CameraDesc.vTargetAxis = _float3(0.3f, 0.9f, -1.1f);
 	CameraDesc.fXRotationLock_Min = 70.f;
 	CameraDesc.fXRotationLock_Max = 155.f;
-	//CameraDesc.fDis = 10.f;
-	CameraDesc.fDis = 30.f;
+	CameraDesc.fDis = 10.f;
+	//CameraDesc.fDis = 30.f;
 	CameraDesc.fAspect = _float(g_iWinCX) / g_iWinCY;
 	CameraDesc.fFovy = XMConvertToRadians(90.0f);
 	CameraDesc.fNear = 0.3f;

@@ -21,6 +21,7 @@
 #define GET_MOUSE_X	CGameInstance::GetInstance()->Get_InputDev()->Get_DIMouseMove(MOUSEMOVESTATE::X)
 #define GET_MOUSE_Y	CGameInstance::GetInstance()->Get_InputDev()->Get_DIMouseMove(MOUSEMOVESTATE::Y)
 #define GET_MOUSE_Z	CGameInstance::GetInstance()->Get_InputDev()->Get_DIMouseMove(MOUSEMOVESTATE::Z)
+#define GET_MOUSE_CLICK(DIK)	CGameInstance::GetInstance()->Get_InputDev()->Get_MouseClick_Down(DIK)
 
 #define GET_KEY_INPUT(DIK)	CGameInstance::GetInstance()->Get_InputDev()->Get_DIKeyState(DIK) & 0x80
 

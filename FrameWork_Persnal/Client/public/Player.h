@@ -48,6 +48,9 @@ enum class EPlayerAnimation
 	End = -1
 };
 
+enum class ETowerSpawn
+{ Start, Locate, Rotate, Spawn, End };
+
 typedef struct tagGameObject_Desc
 {
 	STATUS_DESC		Status_Desc;
@@ -88,9 +91,11 @@ private: // LateTick
 private: 
 	void Skill_ManaBomb();
 	void Skill_Meteor();
+	void Skill_Healing(_float TimeDelta);
 
 private:
 	void SpecialAnimation_Check(_float TimeDelta);
+	void Casting_Move_Check(_float* TimeDelta);
 
 private:
 	CModel*				m_pModelCom		= nullptr;
@@ -106,8 +111,11 @@ private:
 	_bool			m_IsCharging = false;
 
 private: // Tower
-	class CStrikerTower*		m_pStrikerTower = nullptr;
-	_bool						m_IsTowerPick = false;
+	class CBlockadeTower*		m_pBlockadeTower	= nullptr;
+	class CStrikerTower*		m_pStrikerTower		= nullptr;
+	class CLightningTower*		m_pLightningTower	= nullptr;
+	ETowerSpawn					m_eTowerSpawn		= ETowerSpawn::End;
+	_bool						m_IsTowerPick		= false;
 
 private:
 	EPlayerAnimation		m_eAnimationState_Cur		= EPlayerAnimation::End;
@@ -118,8 +126,12 @@ private:
 	_bool					m_IsSecondAnimation = false;
 
 private: // Skill
-	_bool m_IsSpawn_ManaBomb = false;
-	_bool m_IsSpawn_Meteor = false;
+	_bool	m_IsCast_PowerUp		= false;
+	_bool	m_IsCast_ManaBomb		= false;
+	_bool	m_IsCast_Meteor			= false;
+	_bool	m_IsCast_BrainWash		= false;
+	_bool	m_IsCast_Healing		= false;
+	_bool	m_IsCasting_Move		= false;
 
 private:
 	HRESULT	Ready_Component(void* pArg);

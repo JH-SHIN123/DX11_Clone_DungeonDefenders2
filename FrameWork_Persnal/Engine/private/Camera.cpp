@@ -33,6 +33,8 @@ HRESULT CCamera::NativeConstruct(void * pArg)
 	{
 		memcpy(&m_CameraDesc, pArg, sizeof(CAMERA_DESC));
 		m_CameraDesc_Second = m_CameraDesc;
+		m_vTopView_Dir = { 0.f, m_CameraDesc.vTargetAxis.y,  m_CameraDesc.vTargetAxis.z * 0.9f };
+
 		//m_fAxisX_Lenght
 		//m_vNoRotate_TargetAxis = m_CameraDesc.vTargetAxis;
 		//m_vCalculate_TargetAxis = m_CameraDesc.vTargetAxis;
@@ -218,6 +220,8 @@ void CCamera::View_ThirdPerson(_float TimeDelata)
 		RotateMatrix = XMMatrixRotationAxis(vUp, XMConvertToRadians((_float)dwMouseMove * 0.05f));
 		XMStoreFloat3(&m_CameraDesc.vTargetAxis,XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetAxis), RotateMatrix));
 		XMStoreFloat3(&m_CameraDesc_Second.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc_Second.vTargetAxis), RotateMatrix));
+		XMStoreFloat3(&m_vTopView_Dir, XMVector3TransformNormal(XMLoadFloat3(&m_vTopView_Dir), RotateMatrix));
+		//m_vTopView_Dir
 
 		vLook = XMVector3TransformNormal(vLook, RotateMatrix);
 		m_pMovementCom->Set_State(EState::Look, vLook);
@@ -243,6 +247,7 @@ void CCamera::View_ThirdPerson(_float TimeDelata)
 		{
 			XMStoreFloat3(&m_CameraDesc.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetAxis), RotateMatrix));
 			XMStoreFloat3(&m_CameraDesc_Second.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc_Second.vTargetAxis), RotateMatrix));
+			XMStoreFloat3(&m_vTopView_Dir, XMVector3TransformNormal(XMLoadFloat3(&m_vTopView_Dir), RotateMatrix));
 
 			m_pMovementCom->Set_State(EState::Right, vRight);
 			m_pMovementCom->Set_State(EState::Look, vLook);
@@ -293,10 +298,11 @@ void CCamera::View_TopView(_float TimeDelata)
 	_vector vNormal_Look = XMVector3Normalize(vLook);
 	_float fCetha = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(vNormal_Look, XMVectorSet(0.f, 1.f, 0.f, 0.f)))));
 
-	if (fCetha <= 165.f) // 움직여야 할 때
+	if (fCetha <= 170.f) // 움직여야 할 때
 	{
 		XMStoreFloat3(&m_CameraDesc.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetAxis), RotateMatrix));
 		XMStoreFloat3(&m_CameraDesc_Second.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc_Second.vTargetAxis), RotateMatrix));
+		XMStoreFloat3(&m_vTopView_Dir, XMVector3TransformNormal(XMLoadFloat3(&m_vTopView_Dir), RotateMatrix));
 
 		m_pMovementCom->Set_State(EState::Right, vRight);
 		m_pMovementCom->Set_State(EState::Look, vLook);
@@ -304,15 +310,25 @@ void CCamera::View_TopView(_float TimeDelata)
 	}
 
 
-	if (m_CameraDesc.fDis <= 9.f)
+	if (m_CameraDesc.fDis <= 17.f)
 	{
 		m_CameraDesc.fDis += m_fDisSecond * TimeDelata; // 8.9
+	}
 
-		_vector vTargetAxis = XMLoadFloat3(&m_CameraDesc.vTargetAxis);
+	_vector vTargetAxis = XMLoadFloat3(&m_CameraDesc.vTargetAxis);
+	_float fFirstLength = XMVectorGetX(XMVector3Length(vTargetAxis));
+	_float fSecondLength = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vTopView_Dir)));
+
+	if (fFirstLength >= fSecondLength)
+	{
 		vTargetAxis -= XMVector3Normalize(vRight) * 0.005f;
-
 		XMStoreFloat3(&m_CameraDesc.vTargetAxis, vTargetAxis);
 	}
+	else
+	{
+		//m_CameraDesc.vTargetAxis = m_vTopView_Dir;
+	}
+
 }
 
 void CCamera::View_Change_Top_ThirdPerson(_float TimeDelata)
@@ -335,6 +351,7 @@ void CCamera::View_Change_Top_ThirdPerson(_float TimeDelata)
 
 	XMStoreFloat3(&m_CameraDesc.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc.vTargetAxis), RotateMatrix));
 	XMStoreFloat3(&m_CameraDesc_Second.vTargetAxis, XMVector3TransformNormal(XMLoadFloat3(&m_CameraDesc_Second.vTargetAxis), RotateMatrix));
+	XMStoreFloat3(&m_vTopView_Dir, XMVector3TransformNormal(XMLoadFloat3(&m_vTopView_Dir), RotateMatrix));
 
 	m_pMovementCom->Set_State(EState::Right, vRight);
 	m_pMovementCom->Set_State(EState::Look, vLook);

@@ -84,6 +84,7 @@ protected:
 protected:
 	CAMERA_DESC				m_CameraDesc;
 	CAMERA_DESC				m_CameraDesc_Second;
+	_float3					m_vTopView_Dir;
 	_bool					m_IsZoomIn = false;
 	_bool					m_IsZoomOut = false;
 	_bool					m_IsZoomReverse = false;

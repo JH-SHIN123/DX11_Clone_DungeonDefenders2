@@ -5,6 +5,12 @@
 #include "Camera_Target.h"
 #include "StrikerTower.h"
 #include "Skill_ManaBomb.h"
+#include "Camera_Target.h"
+#include "BlockadeTower.h"
+#include "StrikerTower.h"
+#include "LightningTower.h"
+#include "Cursor_Manager.h"
+
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -41,18 +47,13 @@ _int CPlayer::Tick(_float TimeDelta)
 	__super::Tick(TimeDelta);
 
 	SpecialAnimation_Check(TimeDelta);
-	Turn_Check(TimeDelta);
+
 	Key_Check(TimeDelta);
-
-
-	//static_cast<CCamera*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera_Free"))->TargetRotate_Check(m_pMovementCom);
 
 	if (nullptr != m_pStrikerTower)
 		m_pStrikerTower->Tick(TimeDelta);
 
 	m_pColliderCom->Update_Collider(m_pMovementCom->Get_WorldMatrix());
-	//m_pColliderCom->Update_Collider(m_pMovementCom->Get_State(EState::Position));
-
 
 	return _int();
 }
@@ -62,6 +63,12 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 	__super::Late_Tick(TimeDelta);
 
 	Level_Check();
+
+	if (true == m_IsCasting_Move)
+	{
+		m_IsSecondAnimation = true;
+		m_eAnimationState_Next_Second = EPlayerAnimation::Heal;
+	}
 	
 	Animation_Check(TimeDelta);
 
@@ -146,8 +153,14 @@ _bool CPlayer::Get_Skill_Using(_int iSkillIndex)
 
 void CPlayer::Key_Check(_float TimeDelta)
 {
+	// Break First
+	m_IsCasting_Move = false;
 
-
+	if (true == m_IsCast_ManaBomb	|| 
+		true == m_IsCast_Meteor		|| 
+		true == m_IsCast_PowerUp	|| 
+		true == m_IsCast_BrainWash	) return;
+		
 	_long dwMouseMove = 0;
 
 	if (dwMouseMove = GET_MOUSE_X)
@@ -160,42 +173,100 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	}
 
+
+
+#pragma region Tower
+	if (GET_KEY_INPUT(DIK_6))
+	{
+	}
+
+	if (GET_KEY_INPUT(DIK_7))
+	{
+	}
+
 	if (GET_KEY_INPUT(DIK_8))
 	{
-		static_cast<CCamera*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera_Free"))->Set_CameraView_Mode(ECameraViewMode::TopView);
+		if (ETowerSpawn::End == m_eTowerSpawn)
+		{
+			m_eAnimationState_Next = EPlayerAnimation::Summon_Start;
+			m_eTowerSpawn = ETowerSpawn::Start;
+		}
+		static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_CameraView_Mode(ECameraViewMode::TopView);
+
+		_vector vMouseWorldPos, vMouseWorldDir;
+
+		CCursor_Manager::GetInstance()->Get_MousePos_WorldSpace(m_pDevice_Context, &vMouseWorldPos, &vMouseWorldDir);//Get_MousePos_WorldSpace(m_pDevice_Context, &vMouseWorldPos, &vMouseWorldDir);
 
 		TOWER_DESC Data;
-		lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower");
+		lstrcpy(Data.szModelName, L"Component_Mesh_BlockcadeTower");
 		Data.eTowerRange = ETowerRange::Quarter;
-		XMStoreFloat4(&Data.MoveState_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
+		Data.MoveState_Desc.fRotatePerSec = 0.5f;
+		Data.MoveState_Desc.vPos = { -10.f, 0.f, 20.f, 1.f };
+		Data.MoveState_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
 
-		m_pStrikerTower = CStrikerTower::Create(m_pDevice, m_pDevice_Context);
-		m_pStrikerTower->NativeConstruct(&Data);
+		
+
+		m_pBlockadeTower = CBlockadeTower::Create(m_pDevice, m_pDevice_Context);
+		m_pBlockadeTower->NativeConstruct(&Data);
+
+
 	}
+
+	if (GET_MOUSE_CLICK(MOUSEKEYSTATE::LB))
+	{
+		if (ETowerSpawn::End == m_eTowerSpawn)
+			return;
+
+		switch (m_eTowerSpawn)
+		{
+		case Client::ETowerSpawn::Start:
+			
+			break;
+		case Client::ETowerSpawn::Locate:
+			break;
+		case Client::ETowerSpawn::Rotate:
+			break;
+		case Client::ETowerSpawn::Spawn:
+			break;
+		}
+	}
+
+
+#pragma endregion
 
 	if (GET_KEY_INPUT(DIK_W))
 	{
+		Casting_Move_Check(&TimeDelta);
 		m_pMovementCom->Go_LookDir(TimeDelta);
 		m_eAnimationState_Next = EPlayerAnimation::RunForward;
 	}
 
 	if (GET_KEY_INPUT(DIK_S))
 	{
+		Casting_Move_Check(&TimeDelta);
 		m_pMovementCom->Go_LookDir(-TimeDelta);
 		m_eAnimationState_Next = EPlayerAnimation::Move_Backward;
 	}
 
 	if (GET_KEY_INPUT(DIK_A))
 	{
+		Casting_Move_Check(&TimeDelta);
 		m_pMovementCom->Go_Left(TimeDelta);
 		m_eAnimationState_Next = EPlayerAnimation::Move_Left;
 	}
 
 	if (GET_KEY_INPUT(DIK_D))
 	{
+		Casting_Move_Check(&TimeDelta);
 		m_pMovementCom->Go_Right(TimeDelta);
 		m_eAnimationState_Next = EPlayerAnimation::Move_Right;
 	}
+
+	// Break Second
+	if (true == m_IsCast_Healing)
+		return;
+
+#pragma region Skill
 
 	if (GET_KEY_INPUT(DIK_1))
 	{
@@ -239,22 +310,24 @@ void CPlayer::Key_Check(_float TimeDelta)
 			m_eAnimationState_Next = EPlayerAnimation::ChargeMax;
 			m_fChargeSkill = 3.f;
 			m_IsCharging = true;
-			m_IsAttack = true;
+			m_IsCast_BrainWash = true;
 		}
 	}
 
 	if (GET_KEY_INPUT(DIK_5))
 	{
 		CPlayerSkill* pSkill = static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"));
-		if (true == pSkill->Get_IsCoolDown(3))
+		if (true == pSkill->Get_IsCoolDown(4))
 		{
-			pSkill->Set_Skill_CoolDown(3, 5.f);
+			pSkill->Set_Skill_CoolDown(4, 7.f);
 			m_eAnimationState_Next = EPlayerAnimation::Heal;
-			m_fChargeSkill = 3.f;
+			m_fChargeSkill = 5.f;
 			m_IsCharging = true;
-			m_IsAttack = true;
+			m_IsCast_Healing = true;
 		}
 	}
+
+#pragma endregion
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
@@ -286,8 +359,6 @@ void CPlayer::Turn_Check(_float TimeDelta)
 void CPlayer::Idle_Check()
 {
 	// 키입력 한번으로 동작을 계속 수행해야 하는 놈들
-
-
 
 	_bool IsCurState = false;
 	if (m_pModelCom->Get_IsFinishedAnimaion())
@@ -399,6 +470,8 @@ void CPlayer::Animation_Check(_float TimeDelta)
 	if(m_eAnimationState_Cur != m_eAnimationState_Next)
 		m_pModelCom->Set_AnimationIndex_Start((_float)m_eAnimationState_Next, Animation_Term(m_eAnimationState_Next));
 
+	if (true == m_IsCasting_Move)
+		TimeDelta *= 0.4f;
 
 	m_pModelCom->Update_AnimaionMatrix(TimeDelta);
 
@@ -407,7 +480,13 @@ void CPlayer::Animation_Check(_float TimeDelta)
 		if (m_eAnimationState_Cur_Second != m_eAnimationState_Next_Second)
 			m_pModelCom->Set_AnimationIndex_Start_SecondNode((_float)m_eAnimationState_Next_Second, Animation_Term(m_eAnimationState_Next_Second));
 
-		m_pModelCom->Update_AnimaionMatrix_Second("b_Torso", TimeDelta);
+		if(true == m_IsCasting_Move)
+			m_pModelCom->Update_AnimaionMatrix_Second("b_Torso", TimeDelta);
+
+		else
+			m_pModelCom->Update_AnimaionMatrix_Second("b_Torso", TimeDelta);
+
+
 
 		if (true == m_pModelCom->Get_IsFinishedAnimaion_Second())
 		{
@@ -426,8 +505,8 @@ void CPlayer::Animation_Check(_float TimeDelta)
 
 	if (true == m_pModelCom->Get_IsFinishedAnimaion())
 	{
-		m_IsSpawn_ManaBomb = false;
-		m_IsSpawn_Meteor = false;
+		m_IsCast_ManaBomb = false;
+		m_IsCast_Meteor = false;
 	}
 }
 
@@ -463,7 +542,7 @@ _float CPlayer::Animation_Term(EPlayerAnimation eNextAnimation)
 
 	switch (eNextAnimation)
 	{
-	case Client::EPlayerAnimation::CallOut:
+	case Client::EPlayerAnimation::CallOut: 
 		NewtAnimaion = EPlayerAnimation::ChargeMax;
 		break;
 	case Client::EPlayerAnimation::ChargeMax:
@@ -585,7 +664,7 @@ void CPlayer::Skill_ManaBomb()
 	{
 		_float fAnimTime = m_pModelCom->Get_AnimTime();
 
-		if (false == m_IsSpawn_ManaBomb && 720 == (_uint)fAnimTime)
+		if (false == m_IsCast_ManaBomb && 720 == (_uint)fAnimTime)
 		{
 			_vector vPos = m_pMovementCom->Get_State(EState::Position) + m_pMovementCom->Get_State(EState::Up) * 13.f;
 			BULLET_DESC Data;
@@ -596,7 +675,7 @@ void CPlayer::Skill_ManaBomb()
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Skill_ManaBomb", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
 
-			m_IsSpawn_ManaBomb = true;
+			m_IsCast_ManaBomb = true;
 		}
 	}
 }
@@ -607,7 +686,7 @@ void CPlayer::Skill_Meteor()
 	{
 		_float fAnimTime = m_pModelCom->Get_AnimTime();
 
-		if (false == m_IsSpawn_Meteor && 242 == (_uint)fAnimTime)
+		if (false == m_IsCast_Meteor && 242 == (_uint)fAnimTime)
 		{
 			_vector vPos = m_pMovementCom->Get_State(EState::Position) + m_pMovementCom->Get_State(EState::Up) * 13.f;
 			BULLET_DESC Data;
@@ -618,13 +697,18 @@ void CPlayer::Skill_Meteor()
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Skill_Meteor", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
 
-			m_IsSpawn_Meteor = true;
+			m_IsCast_Meteor = true;
 		}
 	}
 }
 
+void CPlayer::Skill_Healing(_float TimeDelta)
+{
+}
+
 void CPlayer::SpecialAnimation_Check(_float TimeDelta)
 {
+	_bool IsFinished = m_pModelCom->Get_IsFinishedAnimaion();
 	if (false == m_IsAttack)
 	{
 		if(false == m_IsCharging)
@@ -632,7 +716,7 @@ void CPlayer::SpecialAnimation_Check(_float TimeDelta)
 	}
 
 
-	if (true == m_IsAttack && m_pModelCom->Get_IsFinishedAnimaion())
+	if (true == m_IsAttack && true == IsFinished)
 	{
 		m_eAnimationState_Next = EPlayerAnimation::Idle;
 		m_IsAttack = false;
@@ -641,15 +725,37 @@ void CPlayer::SpecialAnimation_Check(_float TimeDelta)
 	if (true == m_IsCharging)
 	{
 		m_fChargeSkill -= TimeDelta;
-		if (0.f == m_fChargeSkill)
+		if (0.f >= m_fChargeSkill)
 		{
 			m_IsAttack = false;
 			m_fChargeSkill = 0.f;
 			m_IsCharging = false;
+			m_IsCast_Healing = false;
+			m_IsCast_BrainWash = false;
 			m_eAnimationState_Next = EPlayerAnimation::Idle;
 		}
 	}
 
+	if (ETowerSpawn::End != m_eTowerSpawn)
+	{
+		if (ETowerSpawn::Start == m_eTowerSpawn && true == IsFinished)
+		{
+			m_eAnimationState_Next = EPlayerAnimation::Summon;
+		}
+
+
+	}
+
+}
+
+void CPlayer::Casting_Move_Check(_float* TimeDelta)
+{
+	if (true == m_IsCast_Healing)
+	{
+		if (false == m_IsCasting_Move)
+			*TimeDelta *= 0.4f;
+		m_IsCasting_Move = true;
+	}
 }
 
 CPlayer * CPlayer::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

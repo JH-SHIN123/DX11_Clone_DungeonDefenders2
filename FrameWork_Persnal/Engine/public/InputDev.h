@@ -34,7 +34,7 @@ private:
 private:
 	_byte					m_byKeyState[256];
 	DIMOUSESTATE			m_tMouseState;
-	_bool					m_bMouseDown[256];
+	_bool					m_bMouseDown[10];
 
 	_bool					m_IsReady_InputDev = false;
 

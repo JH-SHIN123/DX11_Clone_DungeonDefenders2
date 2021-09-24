@@ -22,7 +22,7 @@ HRESULT CSkill_Meteor::NativeConstruct(void * pArg)
 
 	Ready_Component(pArg);
 
-	Set_Pivot(XMVectorSet(0.5f, 0.5f, 0.5f, 0.f));
+	Set_Pivot(XMVectorSet(0.05f, 0.05f, 0.05f, 0.f));
 
 	return S_OK;
 }
@@ -37,6 +37,7 @@ _int CSkill_Meteor::Tick(_float TimeDelta)
 
 	if (true == m_IsFall)
 	{
+		// 이거 몬스터 방향으로 
 		m_pMovementCom->Go_Straight(TimeDelta * 13.f);
 
 	}
