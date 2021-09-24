@@ -165,11 +165,38 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	if (dwMouseMove = GET_MOUSE_X)
 	{
-		m_eAnimationState_Next = EPlayerAnimation::Turn_Left;
+		switch (m_eTowerSpawn)
+		{
+		case Client::ETowerSpawn::Start:
+			break;
+		case Client::ETowerSpawn::Locate:
+			break;
+		case Client::ETowerSpawn::Rotate:
+			break;
+		case Client::ETowerSpawn::Spawn:
+			break;
+		default:
+			m_eAnimationState_Next = EPlayerAnimation::Turn_Left;
+			break;
+		}
 	}
 
 	if (dwMouseMove = GET_MOUSE_Y)
 	{
+		switch (m_eTowerSpawn)
+		{
+		case Client::ETowerSpawn::Start:
+			break;
+		case Client::ETowerSpawn::Locate:
+			break;
+		case Client::ETowerSpawn::Rotate:
+			break;
+		case Client::ETowerSpawn::Spawn:
+			break;
+		default:
+			m_eAnimationState_Next = EPlayerAnimation::Turn_Left;
+			break;
+		}
 
 	}
 
@@ -195,21 +222,20 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 		_vector vMouseWorldPos, vMouseWorldDir;
 
-		CCursor_Manager::GetInstance()->Get_MousePos_WorldSpace(m_pDevice_Context, &vMouseWorldPos, &vMouseWorldDir);//Get_MousePos_WorldSpace(m_pDevice_Context, &vMouseWorldPos, &vMouseWorldDir);
+		// 비교할 대상이 없네 ㅋㅋ;
+		CCursor_Manager::GetInstance()->Get_MousePos_WorldSpace(m_pDevice_Context, &vMouseWorldPos, &vMouseWorldDir);
 
+		_vector vPos = m_pMovementCom->Get_State(EState::Position) + m_pMovementCom->Get_State(EState::Look) * 5.f;
 		TOWER_DESC Data;
 		lstrcpy(Data.szModelName, L"Component_Mesh_BlockcadeTower");
 		Data.eTowerRange = ETowerRange::Quarter;
 		Data.MoveState_Desc.fRotatePerSec = 0.5f;
-		Data.MoveState_Desc.vPos = { -10.f, 0.f, 20.f, 1.f };
 		Data.MoveState_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
-
-		
-
+		XMStoreFloat4(&Data.MoveState_Desc.vPos, vPos);
+		m_CreateTower_Desc.vPos = Data.MoveState_Desc.vPos;
+	
 		m_pBlockadeTower = CBlockadeTower::Create(m_pDevice, m_pDevice_Context);
 		m_pBlockadeTower->NativeConstruct(&Data);
-
-
 	}
 
 	if (GET_MOUSE_CLICK(MOUSEKEYSTATE::LB))

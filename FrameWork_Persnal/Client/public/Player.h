@@ -116,6 +116,7 @@ private: // Tower
 	class CLightningTower*		m_pLightningTower	= nullptr;
 	ETowerSpawn					m_eTowerSpawn		= ETowerSpawn::End;
 	_bool						m_IsTowerPick		= false;
+	MOVESTATE_DESC				m_CreateTower_Desc;
 
 private:
 	EPlayerAnimation		m_eAnimationState_Cur		= EPlayerAnimation::End;
