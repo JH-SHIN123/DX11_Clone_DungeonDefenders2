@@ -28,6 +28,8 @@ _int CBullet::Tick(_float TimeDelta)
 	if (true == m_IsDelete_This)
 		return OBJECT_DEAD;
 
+	m_pColliderCom->Update_Collider(m_pMovementCom->Get_WorldMatrix());
+
 	return _int();
 }
 
@@ -99,6 +101,9 @@ HRESULT CBullet::Ready_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Status"), (CComponent**)&m_pStatusCom, &Data.Stat_Desc);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &Data.MoveState_Desc);
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
+
+
+
 
 	//if (ELevel::End != Data.eTextureLevel)
 	//{

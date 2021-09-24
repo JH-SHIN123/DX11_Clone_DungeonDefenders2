@@ -78,11 +78,16 @@ private: // Tick
 	void	Key_Check(_float TimeDelta);
 	void	Turn_Check(_float TimeDelta);
 	void	Idle_Check();
+	void	Skill_Check();
 
 private: // LateTick
 	void	Level_Check();
 	void	Animation_Check(_float TimeDelta);
 	_float	Animation_Term(EPlayerAnimation eNextAnimation);
+
+private: 
+	void Skill_ManaBomb();
+	void Skill_Meteor();
 
 private:
 	void SpecialAnimation_Check(_float TimeDelta);
@@ -111,6 +116,10 @@ private:
 	EPlayerAnimation		m_eAnimationState_Next_Second = EPlayerAnimation::End;
 
 	_bool					m_IsSecondAnimation = false;
+
+private: // Skill
+	_bool m_IsSpawn_ManaBomb = false;
+	_bool m_IsSpawn_Meteor = false;
 
 private:
 	HRESULT	Ready_Component(void* pArg);

@@ -18,22 +18,71 @@ HRESULT CSkill_ManaBomb::NativeConstruct_Prototype()
 
 HRESULT CSkill_ManaBomb::NativeConstruct(void * pArg)
 {
+	__super::NativeConstruct(pArg);
+
+	Ready_Component(pArg);
+
+	Set_Pivot(XMVectorSet(0.01f, 0.01f, 0.01f, 0.f));
+
 	return S_OK;
 }
 
 _int CSkill_ManaBomb::Tick(_float TimeDelta)
 {
-	return _int();
+	if (__super::Tick(TimeDelta))
+	{
+
+		return OBJECT_DEAD;
+	}
+
+	if (true == m_IsFall)
+	{
+		m_pMovementCom->Go_Up(-TimeDelta * 13.f);
+
+	}
+
+	else
+	{
+		m_fCastTime -= TimeDelta;
+		m_pMovementCom->Go_Up(TimeDelta);
+		
+		if (0.f >= m_fCastTime)
+			m_IsFall = true;
+	}
+
+	if (1) // ºÎ‹HÇû´Ù¸é
+	{
+		//Æã
+	}
+
+	return 0;
 }
 
 _int CSkill_ManaBomb::Late_Tick(_float TimeDelta)
 {
-	return _int();
+	return __super::Late_Tick(TimeDelta);
 }
 
 HRESULT CSkill_ManaBomb::Render()
 {
+	__super::Render();
+
 	return S_OK;
+}
+
+HRESULT CSkill_ManaBomb::Ready_Component(void * pArg)
+{
+	HRESULT hr = S_OK;
+
+	COLLIDER_DESC Data;
+	Data.vScale = { 2.f, 2.f, 2.f };
+
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &Data);
+
+	if (S_OK != hr)
+		MSG_BOX("CSkill_ManaBomb::Ready_Component");
+
+	return hr;
 }
 
 CSkill_ManaBomb * CSkill_ManaBomb::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -49,10 +98,10 @@ CSkill_ManaBomb * CSkill_ManaBomb::Create(ID3D11Device * pDevice, ID3D11DeviceCo
 
 CGameObject * CSkill_ManaBomb::Clone_GameObject(void * pArg)
 {
-	CGameObject* pInstance = new CGameObject(*this);
+	CSkill_ManaBomb* pInstance = new CSkill_ManaBomb(*this);
 	if (FAILED(pInstance->NativeConstruct(pArg)))
 	{
-		MSG_BOX("Failed to Creating clone (CGameObject) ");
+		MSG_BOX("Failed to Creating clone (CSkill_ManaBomb) ");
 		Safe_Release(pInstance);
 	}
 	return pInstance;

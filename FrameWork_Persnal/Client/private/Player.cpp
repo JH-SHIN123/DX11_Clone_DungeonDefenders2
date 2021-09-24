@@ -4,6 +4,7 @@
 #include "Data_Manager.h"
 #include "Camera_Target.h"
 #include "StrikerTower.h"
+#include "Skill_ManaBomb.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -63,6 +64,10 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 	Level_Check();
 	
 	Animation_Check(TimeDelta);
+
+
+
+	Skill_Check();
 
 	if (nullptr != m_pStrikerTower)
 	{
@@ -370,6 +375,12 @@ void CPlayer::Idle_Check()
 	
 }
 
+void CPlayer::Skill_Check()
+{
+	Skill_ManaBomb();
+	Skill_Meteor();
+}
+
 void CPlayer::Level_Check()
 {
 	_bool IsLevelUp = m_pStatusCom->Level_Check();
@@ -411,6 +422,13 @@ void CPlayer::Animation_Check(_float TimeDelta)
 
 	m_eAnimationState_Cur		 = m_eAnimationState_Next;
 	m_eAnimationState_Cur_Second = m_eAnimationState_Next_Second;
+
+
+	if (true == m_pModelCom->Get_IsFinishedAnimaion())
+	{
+		m_IsSpawn_ManaBomb = false;
+		m_IsSpawn_Meteor = false;
+	}
 }
 
 HRESULT CPlayer::Ready_Component(void* pArg)
@@ -559,6 +577,50 @@ _float CPlayer::Animation_Term(EPlayerAnimation eNextAnimation)
 	_float fAnimationTime = (_float)NewtAnimaion - (_float)eNextAnimation;
 
 	return fAnimationTime - 1.f;
+}
+
+void CPlayer::Skill_ManaBomb()
+{
+	if (EPlayerAnimation::ManaBomb == m_eAnimationState_Next)
+	{
+		_float fAnimTime = m_pModelCom->Get_AnimTime();
+
+		if (false == m_IsSpawn_ManaBomb && 720 == (_uint)fAnimTime)
+		{
+			_vector vPos = m_pMovementCom->Get_State(EState::Position) + m_pMovementCom->Get_State(EState::Up) * 13.f;
+			BULLET_DESC Data;
+			Data.fLifeTime = 0.85f;
+			lstrcpy(Data.szModelName, L"Component_Mesh_Skill_ManaBomb");
+			XMStoreFloat4(&Data.MoveState_Desc.vPos, vPos);
+			Data.MoveState_Desc.fSpeedPerSec = 3.f;
+			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Skill_ManaBomb", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
+
+			m_IsSpawn_ManaBomb = true;
+		}
+	}
+}
+
+void CPlayer::Skill_Meteor()
+{
+	if (EPlayerAnimation::FireMaxPower == m_eAnimationState_Next)
+	{
+		_float fAnimTime = m_pModelCom->Get_AnimTime();
+
+		if (false == m_IsSpawn_Meteor && 242 == (_uint)fAnimTime)
+		{
+			_vector vPos = m_pMovementCom->Get_State(EState::Position) + m_pMovementCom->Get_State(EState::Up) * 13.f;
+			BULLET_DESC Data;
+			Data.fLifeTime = 0.85f;
+			lstrcpy(Data.szModelName, L"Component_Mesh_Skill_Meteor");
+			XMStoreFloat4(&Data.MoveState_Desc.vPos, vPos);
+			Data.MoveState_Desc.fSpeedPerSec = 30.f;
+			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Skill_Meteor", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
+
+			m_IsSpawn_Meteor = true;
+		}
+	}
 }
 
 void CPlayer::SpecialAnimation_Check(_float TimeDelta)

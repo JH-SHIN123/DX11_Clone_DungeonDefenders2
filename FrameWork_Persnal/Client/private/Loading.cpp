@@ -23,6 +23,8 @@
 #include "LightningTower_Bullet.h"
 #include "LightningTower_Bullet_Effect.h"
 #include "Goblin.h"
+#include "Skill_ManaBomb.h"
+#include "Skill_Meteor.h"
 
 USING(Engine)
 
@@ -171,9 +173,11 @@ HRESULT CLoading::LoadingForStage()
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Goblin"), CGoblin::Create(m_pDevice, m_pDevice_Context));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_ManaBomb"), CSkill_ManaBomb::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_Meteor"), CSkill_Meteor::Create(m_pDevice, m_pDevice_Context));
+
 
 	// Model
-
 	//hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Level_1"),
 	//	CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Magus.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
@@ -206,6 +210,8 @@ HRESULT CLoading::LoadingForStage()
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Skill_ManaBomb"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Skill/ManaBomb/", "ManaBomb.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Skill_Meteor"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Skill/Meteor/", "Meteor.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
 
 	if (hr != S_OK)
