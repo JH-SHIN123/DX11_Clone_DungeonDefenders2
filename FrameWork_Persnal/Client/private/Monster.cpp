@@ -96,8 +96,81 @@ HRESULT CMonster::Render()
 	return S_OK;
 }
 
-EMonsterAI CMonster::AI_Check()
+EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos)
 {
+	// 먼저 플레이어 거리 탐색
+	CMovement* pTarget = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
+
+	if (nullptr == pTarget)
+		return EMonsterAI::End;
+
+	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
+	_vector vTargetPos = pTarget->Get_State(EState::Position);
+
+	_float fDis = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
+
+	if (m_fAttackDis > fDis)
+	{
+		return EMonsterAI::Attack;
+	}
+
+
+	if (m_fDetectDis > fDis)
+	{
+		_vector vDir = XMVector3Normalize(vTargetPos - vMyPos);
+		_float fTurnAngle = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)), vDir))));
+
+		*pTargetPos = vTargetPos;
+
+		if (80.f < fTurnAngle)
+		{
+			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 2.f, vTargetPos);
+
+			return EMonsterAI::Turn;
+		}
+		else if (60.f < fTurnAngle)
+		{
+			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 1.5f, vTargetPos);
+			return EMonsterAI::Move;
+		}
+		else if (40.f < fTurnAngle)
+		{
+			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta, vTargetPos);
+			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
+			return EMonsterAI::Move;
+		}
+		else if (20.f < fTurnAngle)
+		{
+			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 0.8f, vTargetPos);
+			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
+			return EMonsterAI::Move;
+		}
+		else if (10.f < fTurnAngle)
+		{
+			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 0.3f, vTargetPos);
+			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
+			return EMonsterAI::Move;
+		}
+
+
+
+		m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
+		return EMonsterAI::Move;
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 	CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Tower");
 	if (nullptr == pLayer)
 		return EMonsterAI::End;
@@ -115,7 +188,10 @@ EMonsterAI CMonster::AI_Check()
 	*/
 
 
+
+
 	list<CGameObject*> listObject = pLayer->Get_GameObject_List();
+
 
 	for (auto& iter : listObject)
 	{
@@ -126,7 +202,7 @@ EMonsterAI CMonster::AI_Check()
 
 
 
-	return EMonsterAI::End;
+	return EMonsterAI::Idle;
 }
 
 HRESULT CMonster::Ready_Component(void * pArg)
@@ -142,8 +218,8 @@ HRESULT CMonster::Ready_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)Data.eLevel, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
 
 
-
-
+	m_fDetectDis = Data.fDetectDis;
+	m_fAttackDis = Data.fAttackDis;
 
 	if (S_OK != hr)
 		MSG_BOX("CMonster::Ready_Component Failed");

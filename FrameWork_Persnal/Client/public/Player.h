@@ -102,7 +102,7 @@ private:
 	CStatus*			m_pStatusCom	= nullptr;
 	CMovement*			m_pMovementCom	= nullptr;
 	CRenderer*			m_pRendererCom	= nullptr;
-	CCollider*			m_pColliderCom	= nullptr;
+	CCollider*			m_pColliderCom_Hit = nullptr;
 
 private:
 	_bool			m_IsSkill_Use[10] = { false };

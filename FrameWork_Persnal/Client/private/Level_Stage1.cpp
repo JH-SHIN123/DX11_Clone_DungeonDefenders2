@@ -64,10 +64,21 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	MONSTER_DESC MonData;
 	lstrcpy(MonData.szModelName, L"Component_Mesh_Goblin");
 	MonData.eLevel = ELevel::Stage1;
+	MonData.fDetectDis = 20.f;
+	MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(20.f);
+	MonData.Movement_Desc.fSpeedPerSec = 15.f;
 	MonData.Movement_Desc.vPos = { 0.f, 0.f, 30.f, 1.f };
 	MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Goblin", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
 
+	lstrcpy(MonData.szModelName, L"Component_Mesh_Archer");
+	MonData.eLevel = ELevel::Stage1;
+	MonData.fDetectDis = 35.f;
+	MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(20.f);
+	MonData.Movement_Desc.fSpeedPerSec = 15.f;
+	MonData.Movement_Desc.vPos = { 10.f, 0.f, 30.f, 1.f };
+	MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Archer", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
 
 	return S_OK;
 }

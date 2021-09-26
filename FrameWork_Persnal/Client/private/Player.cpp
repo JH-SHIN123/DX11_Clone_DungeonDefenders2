@@ -53,7 +53,7 @@ _int CPlayer::Tick(_float TimeDelta)
 	if (nullptr != m_pStrikerTower)
 		m_pStrikerTower->Tick(TimeDelta);
 
-	m_pColliderCom->Update_Collider(m_pMovementCom->Get_WorldMatrix());
+	m_pColliderCom_Hit->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 
 	return _int();
 }
@@ -136,7 +136,7 @@ HRESULT CPlayer::Render()
 
 
 #ifdef _DEBUG
-	m_pColliderCom->Render_Collider();
+	m_pColliderCom_Hit->Render_Collider();
 #endif
 
 
@@ -369,7 +369,7 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	if (GET_KEY_INPUT(DIK_Q))
 	{
-		HIT_DESC Data;
+		ATTACK_DESC Data;
 		
 		m_pStatusCom->Set_Hp(50);
 	}
@@ -553,7 +553,7 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 
 	ColliderDesc.vScale = XMFLOAT3(3.f, 3.f, 3.f);
 
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &ColliderDesc);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pColliderCom_Hit, &ColliderDesc);
 
 
 	
@@ -812,7 +812,7 @@ void CPlayer::Free()
 	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pMovementCom);
-	Safe_Release(m_pColliderCom);
+	Safe_Release(m_pColliderCom_Hit);
 
 	Safe_Release(m_pStrikerTower);
 

@@ -167,6 +167,8 @@
   <ItemGroup>
     <ClInclude Include="..\Bin\Shader\Shader_Defines.hpp" />
     <ClInclude Include="..\public\Animate_Effect.h" />
+    <ClInclude Include="..\public\Archer.h" />
+    <ClInclude Include="..\public\Archer_Arrow.h" />
     <ClInclude Include="..\public\BackGround_Logo.h" />
     <ClInclude Include="..\public\BlockadeTower.h" />
     <ClInclude Include="..\public\Bullet.h" />
@@ -228,6 +230,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Animate_Effect.cpp" />
+    <ClCompile Include="..\private\Archer.cpp" />
+    <ClCompile Include="..\private\Archer_Arrow.cpp" />
     <ClCompile Include="..\private\BackGround_Logo.cpp" />
     <ClCompile Include="..\private\BlockadeTower.cpp" />
     <ClCompile Include="..\private\Bullet.cpp" />

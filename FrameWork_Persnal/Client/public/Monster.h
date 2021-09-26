@@ -11,6 +11,8 @@ class CMasking_MeterBar_3D;
 
 typedef struct tagMonsterDesc
 {
+	_float fDetectDis = 30.f;
+	_float fAttackDis = 10.f;
 	STATUS_DESC Stat_Desc;
 	
 	MOVESTATE_DESC Movement_Desc;
@@ -21,7 +23,7 @@ typedef struct tagMonsterDesc
 }MONSTER_DESC;
 
 enum class EMonsterAI
-{ Idle, Attack, Hurt, Dead, Shock, End };
+{ Idle, Attack, Hurt, Dead, Shock, Move, Turn, End };
 
 class CMonster abstract : public CGameObject
 {
@@ -38,7 +40,7 @@ public:
 	virtual HRESULT Render() override;
 
 protected:
-	EMonsterAI AI_Check();
+	EMonsterAI AI_Check(_float TimeDelta, _vector* pTargetPos);
 
 private:
 	HRESULT	Ready_Component(void* pArg);
@@ -55,6 +57,8 @@ protected:
 private:
 	EMonsterAI		m_eAI_Cur	= EMonsterAI::End;
 	EMonsterAI		m_eAI_Next	= EMonsterAI::Idle;
+	_float			m_fDetectDis = 0.f;
+	_float			m_fAttackDis = 0.f;
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

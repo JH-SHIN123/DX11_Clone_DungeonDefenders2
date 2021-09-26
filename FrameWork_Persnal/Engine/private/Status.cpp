@@ -62,9 +62,14 @@ _bool CStatus::Level_Check()
 	return false;
 }
 
-void CStatus::Set_Damage(const HIT_DESC & pDamage)
+void CStatus::Set_Damage(const ATTACK_DESC & pDamage)
 {
-	m_IsHit = true;
+	m_Hit_Desc = pDamage;
+	m_Status_Desc.iHp -= pDamage.iDamage;
+}
+
+void CStatus::Set_Damage_Dot(const ATTACK_DESC & pDamage)
+{
 	m_Hit_Desc = pDamage;
 }
 
@@ -75,22 +80,15 @@ void CStatus::Set_Hp(_int iHp)
 
 void CStatus::Damage_Check(_float TimeDelta)
 {
-	if (true == m_IsHit)
-	{
-		switch (m_Hit_Desc.eDamageType)
-		{
-		case EDamageType::Direct:
+	if (0 >= m_Status_Desc.iHp)
+		m_IsDead = true;
 
-			break;
-		case EDamageType::Dot:
-			m_IsHit = false;
-			break;
-		case EDamageType::Dot_Slow:
-			m_IsHit = false;
-			break;
-		default:
-			break;
-		}
+	m_Hit_Desc.fHitTime -= TimeDelta;
+	if (0.f >= m_Hit_Desc.fHitTime)
+		ZeroMemory(&m_Hit_Desc, sizeof(ATTACK_DESC));
+	else
+	{
+		m_Status_Desc.iHp -= m_Hit_Desc.iDamage;
 	}
 }
 

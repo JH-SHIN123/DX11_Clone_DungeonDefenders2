@@ -182,6 +182,66 @@ HRESULT CCollider::Render_Collider(/*_fmatrix WorldMatrix*/)
 	return S_OK;
 }
 
+_bool CCollider::Intersect_Collider(CCollider* pCollide)
+{
+	if (nullptr == pCollide)
+		return false;
+
+	ECollideType eSrcColType = pCollide->m_eColliderType;
+
+	m_IsCollision = false;
+
+	switch (m_eColliderType)
+	{
+	case Engine::ECollideType::AABB:
+		switch (eSrcColType)
+		{
+		case Engine::ECollideType::AABB:
+			m_IsCollision = m_pAABB->Intersects(*pCollide->m_pAABB);
+			break;;
+		case Engine::ECollideType::OBB:
+			m_IsCollision = m_pAABB->Intersects(*pCollide->m_pOBB);
+			break;
+		case Engine::ECollideType::SPHERE:
+			m_IsCollision = m_pAABB->Intersects(*pCollide->m_pSphere);
+			break;
+		}
+		break;
+	case Engine::ECollideType::OBB:
+		switch (eSrcColType)
+		{
+		case Engine::ECollideType::AABB:
+			m_IsCollision = m_pOBB->Intersects(*pCollide->m_pAABB);
+			break;
+		case Engine::ECollideType::OBB:
+			m_IsCollision = m_pOBB->Intersects(*pCollide->m_pOBB);
+			break;
+		case Engine::ECollideType::SPHERE:
+			m_IsCollision = m_pOBB->Intersects(*pCollide->m_pSphere);
+			break;
+		}
+		break;
+	case Engine::ECollideType::SPHERE:
+		switch (eSrcColType)
+		{
+		case Engine::ECollideType::AABB:
+			m_IsCollision = m_pSphere->Intersects(*pCollide->m_pAABB);
+			break;
+		case Engine::ECollideType::OBB:
+			m_IsCollision = m_pSphere->Intersects(*pCollide->m_pOBB);
+			break;
+		case Engine::ECollideType::SPHERE:
+			m_IsCollision = m_pSphere->Intersects(*pCollide->m_pSphere);
+			break;
+		}
+		break;
+	}
+
+	pCollide->m_IsCollision = m_IsCollision;
+
+	return m_IsCollision;
+}
+
 _matrix CCollider::Remove_Scale(_matrix Transform)
 {
 	_matrix		Result;

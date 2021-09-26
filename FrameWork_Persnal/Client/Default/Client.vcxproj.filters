@@ -190,6 +190,12 @@
     <Filter Include="05.Utility\05.Collide_Manager">
       <UniqueIdentifier>{c015e515-69a7-4080-80bd-d706ca161490}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\01.Archer">
+      <UniqueIdentifier>{99bb0f43-1301-46ea-916c-abf037056a46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet\04.Archer_Arrow">
+      <UniqueIdentifier>{c352eea6-fee9-4b7f-a4b1-dabfe00e05a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -372,6 +378,12 @@
     <ClInclude Include="..\public\Skill_Meteor.h">
       <Filter>02.GameObject\07.Bullet\03.Skill_Meteor</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Archer.h">
+      <Filter>02.GameObject\05.Monster\01.Archer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Archer_Arrow.h">
+      <Filter>02.GameObject\07.Bullet\04.Archer_Arrow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -532,6 +544,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Skill_Meteor.cpp">
       <Filter>02.GameObject\07.Bullet\03.Skill_Meteor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Archer.cpp">
+      <Filter>02.GameObject\05.Monster\01.Archer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Archer_Arrow.cpp">
+      <Filter>02.GameObject\07.Bullet\04.Archer_Arrow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

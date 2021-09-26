@@ -38,6 +38,7 @@ public:
 
 public:
 	void Anim_Check(_float TimeDelta);
+	void Attack_Check();
 
 private:
 	HRESULT		Ready_Component(void* pArg);
@@ -48,6 +49,11 @@ private:
 private:
 	EGoblinAnim	m_eAnim_Cur			= EGoblinAnim::End;
 	EGoblinAnim	m_eAnim_Next		= EGoblinAnim::Idle;
+
+private:
+	_int	m_iAttackCount = 0;
+	_bool	m_IsSecondAttack = false;
+	_bool	m_IsAttack = false;
 
 private:
 	CCollider*				m_pColliderCom_Attack = nullptr;

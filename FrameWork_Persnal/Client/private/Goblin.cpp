@@ -34,8 +34,65 @@ HRESULT CGoblin::NativeConstruct(void * pArg)
 
 _int CGoblin::Tick(_float TimeDelta)
 {
+	//Attack_Check();
+	_vector vTargetPos;
+	switch (__super::AI_Check(TimeDelta, &vTargetPos))
+	{
+	case Client::EMonsterAI::Idle:
+		m_IsAttack = false;
+		m_iAttackCount = 0;
+		m_eAnim_Next = EGoblinAnim::Idle;
+		break;
+	case Client::EMonsterAI::Attack:
+		m_IsAttack = true;
+		break;
+	case Client::EMonsterAI::Hurt:
+		break;
+	case Client::EMonsterAI::Dead:
+		break;
+	case Client::EMonsterAI::Shock:
+		break;
+	case Client::EMonsterAI::Move:
+		m_IsAttack = false;
+		m_iAttackCount = 0;
+		m_eAnim_Next = EGoblinAnim::Move_Forward;
+		break;
+	case Client::EMonsterAI::Turn:
+		m_IsAttack = false;
+		m_iAttackCount = 0;
+		m_eAnim_Next = EGoblinAnim::Turn_Left;
+		break;
+	default:
+		break;
+	}
+
+
+	if (true == m_IsAttack)
+	{
+		if(0 == m_iAttackCount)
+			m_eAnim_Next = EGoblinAnim::Attack_1;
+
+		if (m_iAttackCount % 2 == 0)
+			m_eAnim_Next = EGoblinAnim::Attack_1;
+		else
+			m_eAnim_Next = EGoblinAnim::Attack_2;
+
+		if (true == m_pModelCom->Get_IsFinishedAnimaion())
+		{
+			// ÀÌ°Å »ìÂ¦ ²÷±â³ß;
+
+			++m_iAttackCount;
+		}
+
+
+	}
+
+
+
 	m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 	m_pColliderCom_Hurt->Update_Collider(m_pMovementCom->Get_State(EState::Position));
+
+	
 
 
 	return _int();
@@ -79,6 +136,40 @@ void CGoblin::Anim_Check(_float TimeDelta)
 	m_eAnim_Cur = m_eAnim_Next;
 }
 
+void CGoblin::Attack_Check()
+{
+	_bool IsFinished = m_pModelCom->Get_IsFinishedAnimaion();
+
+	if (true == m_IsAttack)
+	{
+		//if (false == m_IsSecondAttack && true == IsFinished)
+		//{
+		//	m_eAnim_Next = EGoblinAnim::Attack_1;
+		//	return;
+		//}
+
+		if (EGoblinAnim::Attack_1 == m_eAnim_Next && true == IsFinished)
+		{
+			m_IsSecondAttack = true;
+			m_eAnim_Next = EGoblinAnim::Attack_2;
+			return;
+		}
+
+		if (EGoblinAnim::Attack_2 == m_eAnim_Next && true == IsFinished)
+		{
+			m_IsSecondAttack = false;
+			m_eAnim_Next = EGoblinAnim::Attack_1;
+			return;
+		}
+	}
+
+	else
+	{
+		m_IsSecondAttack = false;
+		m_IsAttack = false;
+	}
+}
+
 HRESULT CGoblin::Ready_Component(void * pArg)
 {
 	HRESULT  hr = S_OK;
@@ -87,8 +178,8 @@ HRESULT CGoblin::Ready_Component(void * pArg)
 	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
 	Data.vScale = { 7.f, 7.f, 7.f };
 	
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Attack_Collider"), (CComponent**)&m_pColliderCom_Attack, &Data);
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_AABB"), TEXT("Com_Hurt_Collider"), (CComponent**)&m_pColliderCom_Hurt, &Data);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pColliderCom_Hurt, &Data);
 
 
 	return S_OK;
@@ -136,6 +227,12 @@ _float CGoblin::Anim_Changer(EGoblinAnim eAnim)
 	_float fAnim = (_float)eAnim_Term - (_float)m_eAnim_Next  - 1.f;
 
 	return fAnim;
+}
+
+void CGoblin::AI_Check()
+{
+
+
 }
 
 CGoblin * CGoblin::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
