@@ -84,6 +84,16 @@ _float CModel::Get_AnimTime(_uint iAniIndex)
 	return m_Animations[iAniIndex]->Get_AnimTime();
 }
 
+_fmatrix CModel::Get_BoneMatrix(const char * szBoneName)
+{
+	CHierarchyNode* pNode = Find_HierarchyNode(szBoneName);
+
+	if (nullptr == pNode)
+		return XMMatrixIdentity();
+
+	return pNode->Get_CombindTransformationMatrix() * pNode->Get_OffSetMatrix();
+}
+
 void CModel::Set_AnimationIndex(_uint iAnimationIndex)
 {
 	if (iAnimationIndex >= m_iNumAnimations)
@@ -524,6 +534,7 @@ HRESULT CModel::SetUp_SkinnedInfo(const aiScene * pScene)
 			Safe_AddRef(pHierarchyNode);
 
 			memcpy(&pBoneDesc->OffsetMatrix, &XMMatrixTranspose(XMMATRIX(pBone->mOffsetMatrix[0])), sizeof(_matrix));
+			pHierarchyNode->Set_OffsetMatrix(XMLoadFloat4x4(&pBoneDesc->OffsetMatrix));
 
 			if (false == m_IsClone)
 			{

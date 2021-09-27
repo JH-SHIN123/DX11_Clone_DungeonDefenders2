@@ -10,6 +10,7 @@
 #include "StrikerTower.h"
 #include "LightningTower.h"
 #include "Cursor_Manager.h"
+#include "Staff_Basic.h"
 
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -37,7 +38,7 @@ HRESULT CPlayer::NativeConstruct(void * pArg)
 
 	m_pModelCom->Set_AnimationIndex(0); // 나는 애니메이션 하나에 다 있는 상황 원테이크
 	m_pModelCom->Set_AnimationIndex_Start(292.f, 118.f);
-	Set_Pivot(XMVectorSet(0.25f, 0.25f, 0.25f, 0.f));
+	//Set_Pivot(XMVectorSet(0.25f, 0.25f, 0.25f, 0.f));
 
 	return S_OK;
 }
@@ -54,6 +55,8 @@ _int CPlayer::Tick(_float TimeDelta)
 		m_pStrikerTower->Tick(TimeDelta);
 
 	m_pColliderCom_Hit->Update_Collider(m_pMovementCom->Get_WorldMatrix());
+
+	m_pWeapon->Tick(TimeDelta);
 
 	return _int();
 }
@@ -86,7 +89,12 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 
 		//m_pStrikerTower->
 	}
+	// b_HandR
 
+	
+	m_pWeapon->Weapon_Equip(m_pModelCom->Get_BoneMatrix("b_FingersR"), m_pMovementCom->Get_WorldMatrix());
+
+	m_pWeapon->Late_Tick(TimeDelta);
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
@@ -556,7 +564,13 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pColliderCom_Hit, &ColliderDesc);
 
 
-	
+	WEAPON_DESC Weapon_Data;
+	ZeroMemory(&Weapon_Data, sizeof(WEAPON_DESC));
+
+	lstrcpy(Weapon_Data.szModelName, L"Component_Mesh_Staff_0");
+
+	m_pWeapon = CStaff_Basic::Create(m_pDevice, m_pDevice_Context);
+	m_pWeapon->NativeConstruct(&Weapon_Data);
 
 
 	return S_OK;
@@ -815,6 +829,6 @@ void CPlayer::Free()
 	Safe_Release(m_pColliderCom_Hit);
 
 	Safe_Release(m_pStrikerTower);
-
+	Safe_Release(m_pWeapon);
 	__super::Free();
 }

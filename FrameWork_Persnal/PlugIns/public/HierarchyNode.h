@@ -19,10 +19,12 @@ public:
 	_uint		Get_Depth() const { return m_iDepth; }
 	_fmatrix Get_CombindTransformationMatrix() const { return XMLoadFloat4x4(&m_CombinedTransformationMatrix); }
 	_fmatrix Get_TransformationMatrix() const { return XMLoadFloat4x4(&m_TransformationMatrix); }
+	_fmatrix Get_OffSetMatrix() const { return XMLoadFloat4x4(&m_OffsetMatrix); }
 	class CAnimChannel** Get_AnimChannel() const { return m_ppAnimChannel; }
 
 public:
 	HRESULT Set_AnimChannelPointer(_uint iAnimIndex, class CAnimChannel* pAnimChannel);
+	void	Set_OffsetMatrix(_fmatrix OffsetMatrix) { XMStoreFloat4x4(&m_OffsetMatrix, OffsetMatrix); }
 
 public:
 	HRESULT NativeConstruct(char* pName, _fmatrix TransformationMatrix, CHierarchyNode* pParent, _uint iDepth);
@@ -33,6 +35,7 @@ private:
 	char					m_szNodeName[MAX_PATH] = "";
 	_float4x4				m_TransformationMatrix;
 	_float4x4				m_CombinedTransformationMatrix;
+	_float4x4				m_OffsetMatrix;
 	CHierarchyNode*			m_pParent = nullptr;
 	_uint					m_iDepth = 0;
 	_uint					m_iNumAnimation = 0;

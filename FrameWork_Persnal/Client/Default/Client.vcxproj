@@ -213,6 +213,7 @@
     <ClInclude Include="..\public\PlayerSkill.h" />
     <ClInclude Include="..\public\Skill_ManaBomb.h" />
     <ClInclude Include="..\public\Skill_Meteor.h" />
+    <ClInclude Include="..\public\Staff_Basic.h" />
     <ClInclude Include="..\public\StatusMenu.h" />
     <ClInclude Include="..\public\Status_Panel.h" />
     <ClInclude Include="..\public\StrikerTower.h" />
@@ -223,6 +224,7 @@
     <ClInclude Include="..\public\UI_3D.h" />
     <ClInclude Include="..\public\PhaseInfo.h" />
     <ClInclude Include="..\public\Wave_Manger.h" />
+    <ClInclude Include="..\public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -272,6 +274,7 @@
     <ClCompile Include="..\private\PlayerSkill.cpp" />
     <ClCompile Include="..\private\Skill_ManaBomb.cpp" />
     <ClCompile Include="..\private\Skill_Meteor.cpp" />
+    <ClCompile Include="..\private\Staff_Basic.cpp" />
     <ClCompile Include="..\private\StatusMenu.cpp" />
     <ClCompile Include="..\private\Status_Panel.cpp" />
     <ClCompile Include="..\private\StrikerTower.cpp" />
@@ -282,6 +285,7 @@
     <ClCompile Include="..\private\UI_3D.cpp" />
     <ClCompile Include="..\private\PhaseInfo.cpp" />
     <ClCompile Include="..\private\Wave_Manger.cpp" />
+    <ClCompile Include="..\private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

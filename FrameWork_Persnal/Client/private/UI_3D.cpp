@@ -99,7 +99,7 @@ void CUI_3D::BillBoarding()
 	_float fAngle = acosf(XMVectorGetX(XMVector3Dot(vCamLook, XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)))));
 	_matrix RotateMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), fAngle);
 
-
+	// 리셋시켰다가 다시 돌리자 
 	
 	m_pMovementCom->Set_State(EState::Look, XMVector3TransformNormal(m_pMovementCom->Get_State(EState::Look), RotateMatrix));
 	m_pMovementCom->Set_State(EState::Right, XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_pMovementCom->Get_State(EState::Look))) * m_pMovementCom->Get_Scale(EState::Right));

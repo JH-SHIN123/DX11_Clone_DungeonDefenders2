@@ -98,6 +98,9 @@ private:
 	void Casting_Move_Check(_float* TimeDelta);
 
 private:
+	class CWeapon* m_pWeapon = nullptr;
+
+private:
 	CModel*				m_pModelCom		= nullptr;
 	CStatus*			m_pStatusCom	= nullptr;
 	CMovement*			m_pMovementCom	= nullptr;

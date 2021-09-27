@@ -7,6 +7,7 @@ CHierarchyNode::CHierarchyNode()
 CHierarchyNode::CHierarchyNode(const CHierarchyNode& rhs)
 	: m_CombinedTransformationMatrix(rhs.m_CombinedTransformationMatrix)
 	, m_TransformationMatrix(rhs.m_TransformationMatrix)
+	, m_OffsetMatrix(rhs.m_OffsetMatrix)
 	, m_iDepth(rhs.m_iDepth)
 {
 	strcpy(m_szNodeName, rhs.m_szNodeName);

@@ -50,7 +50,7 @@ _int CMonster::Late_Tick(_float TimeDelta)
 	if (nullptr != m_pMeterBar_Hp && 0 < m_pStatusCom->Get_Hp())
 	{
 		m_pMeterBar_Hp->Set_Count((_float)m_pStatusCom->Get_Hp(), (_float)m_pStatusCom->Get_HpMax());
-		m_pMeterBar_Hp->Late_Tick(TimeDelta);
+		//m_pMeterBar_Hp->Late_Tick(TimeDelta);
 	}
 
 

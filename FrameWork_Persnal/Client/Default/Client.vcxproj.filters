@@ -196,6 +196,12 @@
     <Filter Include="02.GameObject\07.Bullet\04.Archer_Arrow">
       <UniqueIdentifier>{c352eea6-fee9-4b7f-a4b1-dabfe00e05a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\09.Weapon">
+      <UniqueIdentifier>{166f40ba-7f77-422d-ad13-ebf1a0799f43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\09.Weapon\00.Staff_Basic">
+      <UniqueIdentifier>{9931eb5d-0404-4f8e-9915-f2f4458e3ac4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -384,6 +390,12 @@
     <ClInclude Include="..\public\Archer_Arrow.h">
       <Filter>02.GameObject\07.Bullet\04.Archer_Arrow</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Weapon.h">
+      <Filter>02.GameObject\09.Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Staff_Basic.h">
+      <Filter>02.GameObject\09.Weapon\00.Staff_Basic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -550,6 +562,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Archer_Arrow.cpp">
       <Filter>02.GameObject\07.Bullet\04.Archer_Arrow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Weapon.cpp">
+      <Filter>02.GameObject\09.Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Staff_Basic.cpp">
+      <Filter>02.GameObject\09.Weapon\00.Staff_Basic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
