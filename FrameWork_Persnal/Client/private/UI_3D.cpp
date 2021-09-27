@@ -79,20 +79,32 @@ HRESULT CUI_3D::SetUp_Default_Component(void * pArg)
 void CUI_3D::BillBoarding()
 {
 	// 카메라 right 방향 * 타겟 X크기
-	_vector vCam = XMVector4Normalize(GET_CAMERA_RIGHT);
+	//_vector vCam = XMVector4Normalize(GET_CAMERA_RIGHT);
+	//
+	//_vector vNewRight = vCam;
+	//_vector vRightUp_Cross	= XMVector3Cross(vNewRight, XMVectorSet(0.f, 1.f, 0.f, 0.f));
+	//_vector vNewLook		= XMVector4Normalize(vRightUp_Cross);
+	//_vector vNewUp			= XMVector4Normalize(XMVector3Cross(vNewLook, vNewRight)) ;
+	//
+	//m_pMovementCom->Set_State(EState::Right, vNewRight * m_pMovementCom->Get_Scale(EState::Right));
+	//m_pMovementCom->Set_State(EState::Look, vNewLook * m_pMovementCom->Get_Scale(EState::Look));
+	//m_pMovementCom->Set_State(EState::Up, vNewUp * m_pMovementCom->Get_Scale(EState::Up));
+	//
+	//_float fAngle = acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(vNewLook), XMVector3Normalize(XMVector3Cross(vNewUp, vNewRight)))));	
+	//
+	//m_pMovementCom->Set_RotateAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), fAngle);
 
- 	_vector vNewRight		= vCam * m_pMovementCom->Get_Scale(EState::Right);
-	_vector vRightUp_Cross	= XMVector3Cross(vNewRight, XMVectorSet(0.f, 1.f, 0.f, 0.f));
-	_vector vNewLook		= XMVector4Normalize(vRightUp_Cross) * m_pMovementCom->Get_Scale(EState::Look);
-	_vector vNewUp			= XMVector4Normalize(XMVector3Cross(vNewLook, vNewRight)) * m_pMovementCom->Get_Scale(EState::Up);
 
-	m_pMovementCom->Set_State(EState::Right, vNewRight);
-	m_pMovementCom->Set_State(EState::Look, vNewLook);
-	m_pMovementCom->Set_State(EState::Up, vNewUp);
+	_vector vCamLook = XMVector3Normalize(GET_CAMERA_LOOK);
+	_float fAngle = acosf(XMVectorGetX(XMVector3Dot(vCamLook, XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)))));
+	_matrix RotateMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), fAngle);
 
-	_float fAngle = acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(vNewLook), XMVector3Normalize(XMVector3Cross(vNewUp, vNewRight)))));	
 
-	m_pMovementCom->Set_RotateAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), fAngle);
+	
+	m_pMovementCom->Set_State(EState::Look, XMVector3TransformNormal(m_pMovementCom->Get_State(EState::Look), RotateMatrix));
+	m_pMovementCom->Set_State(EState::Right, XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_pMovementCom->Get_State(EState::Look))) * m_pMovementCom->Get_Scale(EState::Right));
+	m_pMovementCom->Set_State(EState::Up, XMVector3Normalize(XMVector3Cross(m_pMovementCom->Get_State(EState::Look), m_pMovementCom->Get_State(EState::Right))* m_pMovementCom->Get_Scale(EState::Right)));
+
 }
 
 void CUI_3D::Free()

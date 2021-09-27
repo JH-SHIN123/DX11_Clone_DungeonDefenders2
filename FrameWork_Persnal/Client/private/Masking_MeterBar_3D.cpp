@@ -29,7 +29,7 @@ _int CMasking_MeterBar_3D::Tick(_float TimeDelta)
 {
 	Count_Check(TimeDelta);
 
-	//__super::BillBoarding();
+	__super::BillBoarding();
 
 	return _int();
 }
