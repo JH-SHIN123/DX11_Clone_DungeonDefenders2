@@ -29,6 +29,7 @@ public:	// Getter
 
 public:	// Setter
 	void Set_Transform(ETransformState eState, _fmatrix TransformStateMatrix) { XMStoreFloat4x4(&m_StateMatrices[(_uint)eState], TransformStateMatrix); }
+	void Set_WorldTransform(_fmatrix TransformStateMatrix) { XMStoreFloat4x4(&m_CameraWorldMatrix, TransformStateMatrix); }
 
 private:
 	_float4x4				m_StateMatrices[(_uint)ETransformState::End];

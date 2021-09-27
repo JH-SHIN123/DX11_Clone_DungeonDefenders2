@@ -33,6 +33,7 @@ private:
 private:
 	vector<class CLightningTower_Bullet_Effect*>	m_vecEffectMesh = { nullptr };
 
+
 public:
 	static CLightningTower_Bullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

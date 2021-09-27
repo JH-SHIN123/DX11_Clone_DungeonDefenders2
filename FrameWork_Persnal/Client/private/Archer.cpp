@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Archer.h"
+#include "Archer_Arrow.h"
 
 CArcher::CArcher(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CMonster(pDevice, pDevice_Context)
@@ -22,6 +23,7 @@ HRESULT CArcher::NativeConstruct(void * pArg)
 
 	Ready_Component(pArg);
 
+	Set_HpBar_OffSet_Position(_float3(0.f, 12.f, 0.f));
 
 	m_pModelCom->Set_AnimationIndex(0);
 
@@ -34,16 +36,110 @@ HRESULT CArcher::NativeConstruct(void * pArg)
 
 _int CArcher::Tick(_float TimeDelta)
 {
+	if (0 >= m_pStatusCom->Get_Hp())
+	{
+		if (EArcherAnim::Death == m_eAnim_Next)
+		{
+			if (true == m_pModelCom->Get_IsFinishedAnimaion())
+				return OBJECT_DEAD;
+		}
+	}
+
+	_matrix Matrix = m_pMovementCom->Get_WorldMatrix();
+	m_pColliderCom_Hurt->Update_Collider(Matrix);
+	m_pStatusCom->Tick(TimeDelta);
+
+
+	_vector vTargetPos;
+	m_IsAttack = true;
+	if (true == m_pModelCom->Get_IsFinishedAnimaion())
+	{
+		if (EArcherAnim::Hurt == m_eAnim_Next)
+		{
+			m_IsHurt = false;
+			m_eAnim_Next = EArcherAnim::Idle;
+		}
+
+	}
+
+	if (true == m_pColliderCom_Hurt->Get_IsCollide() || true == m_IsHurt)
+	{
+		m_IsAttack = false;
+		m_pColliderCom_Hurt->Set_IsCollide(false);
+		m_IsHurt = true;
+
+
+		switch (m_pStatusCom->Get_DamageType())
+		{
+		case Engine::EDamageType::Direct:
+			m_eAnim_Next = EArcherAnim::Hurt;
+			break;
+		case Engine::EDamageType::Shock:
+			m_eAnim_Next = EArcherAnim::Shock;
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+		switch (__super::AI_Check(TimeDelta, &vTargetPos))
+		{
+		case Client::EMonsterAI::Idle:
+			m_IsAttack = false;
+			m_eAnim_Next = EArcherAnim::Idle;
+			break;
+		case Client::EMonsterAI::Attack:
+			m_IsAttack = true;
+			m_eAnim_Next = EArcherAnim::Attack;
+			break;
+		case Client::EMonsterAI::Hurt:
+
+			break;
+		case Client::EMonsterAI::Dead:
+			m_eAnim_Next = EArcherAnim::Death;
+			break;
+		case Client::EMonsterAI::Shock:
+			break;
+		case Client::EMonsterAI::Move:
+			m_IsAttack = false;
+			m_eAnim_Next = EArcherAnim::Move_Forward;
+			break;
+		case Client::EMonsterAI::Turn:
+			m_IsAttack = false;
+			m_eAnim_Next = EArcherAnim::Turn_Left;
+			break;
+		default:
+			break;
+		}
+	}
+
+
+
+
+
+
+
 	m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 	m_pColliderCom_Hurt->Update_Collider(m_pMovementCom->Get_State(EState::Position));
 
 
+
+	__super::Tick(TimeDelta);
 	return _int();
 }
 
 _int CArcher::Late_Tick(_float TimeDelta)
 {
 	Anim_Check(TimeDelta);
+	Attack_Check();
+
+
+	if (0 >= m_pStatusCom->Get_Hp())
+	{
+		if (true == m_pModelCom->Get_IsFinishedAnimaion())
+			return OBJECT_DEAD;
+	}
 
 
 	return __super::Late_Tick(TimeDelta);
@@ -81,12 +177,32 @@ void CArcher::Anim_Check(_float TimeDelta)
 
 void CArcher::Attack_Check()
 {
-	m_IsAttack = false;
-	if (EArcherAnim::Attack == m_eAnim_Next)
+	if (true == m_IsAttack && 75 == (_uint)m_pModelCom->Get_AnimTime())
 	{
-		m_IsAttack = true;
+		_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
+		vMyPos += XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * 8.f;
 
-		//if()
+		BULLET_DESC Data;
+		lstrcpy(Data.szModelName, L"Component_Mesh_Archer_Arrow");
+		Data.MoveState_Desc.fRotatePerSec = 50.f;
+
+		_vector vDir = XMVector3Normalize(m_pMovementCom->Get_State(EState::Look));
+
+		XMStoreFloat3(&Data.vDir, vDir);
+		XMStoreFloat4(&Data.MoveState_Desc.vPos, vMyPos);
+		Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+		Data.MoveState_Desc.fSpeedPerSec = 10.f;
+		Data.fLifeTime = 10.f;
+
+		Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Shock;
+		Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+		Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+		Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
+		//Data.Attack_Collide_Desc.vPosition = { 0.f, 50.f, 0.f };
+		Data.Attack_Collide_Desc.IsCenter = true;
+
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Archer_Arrow", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
+
 	}
 }
 

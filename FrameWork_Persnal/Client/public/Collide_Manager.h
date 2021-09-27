@@ -14,7 +14,7 @@ public:
 	virtual ~CCollide_Manager();
 
 public:
-	_bool Collide_Check(const _tchar* szDstObjectName, ELevel eDstObjectLevel, const _tchar* szSrcObjectName, ELevel eSrcObjectLevel);
+	_bool Collide_Check(const _tchar* szDstObjectLayer, ELevel eDstObjectLevel, const _tchar* szSrcObjectLayer, ELevel eSrcObjectLevel);
 
 
 

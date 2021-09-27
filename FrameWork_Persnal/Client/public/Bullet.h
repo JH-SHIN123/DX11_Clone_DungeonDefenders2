@@ -14,6 +14,7 @@ typedef struct tagBulletDesc
 	ELevel			eTextureLevel = ELevel::Stage1;
 	STATUS_DESC		Stat_Desc;
 	MOVESTATE_DESC	MoveState_Desc;
+	COLLIDER_DESC	Attack_Collide_Desc;
 	_float3			vDir;
 	_float			fLifeTime = 5.f;
 }BULLET_DESC;
@@ -39,9 +40,9 @@ protected:
 	CStatus*				m_pStatusCom		= nullptr;
 	CRenderer*				m_pRendererCom		= nullptr;
 	CMovement*				m_pMovementCom		= nullptr;
-	CCollider*				m_pColliderCom		= nullptr;
 
 	CModel*					m_pModelCom			= nullptr;
+	CCollider*				m_pColliderCom_Attack = nullptr;
 
 	CVIBuffer_Rect*			m_pBufferRectCom	= nullptr;
 	CTextures*				m_pTextureCom		= nullptr;

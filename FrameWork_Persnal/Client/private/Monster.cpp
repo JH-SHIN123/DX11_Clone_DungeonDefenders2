@@ -31,7 +31,15 @@ HRESULT CMonster::NativeConstruct(void * pArg)
 _int CMonster::Tick(_float TimeDelta)
 {
 	if (nullptr != m_pMeterBar_Hp)
+	{
+		_vector vMyPos = m_pMovementCom->Get_State(EState::Position) + XMLoadFloat3(&m_vHpBar_OffSet_Position);
+
+		m_pMeterBar_Hp->Set_Position(vMyPos);
+
 		m_pMeterBar_Hp->Tick(TimeDelta);
+	}
+
+
 
 
 	return _int();
@@ -39,7 +47,7 @@ _int CMonster::Tick(_float TimeDelta)
 
 _int CMonster::Late_Tick(_float TimeDelta)
 {
-	if (nullptr != m_pMeterBar_Hp)
+	if (nullptr != m_pMeterBar_Hp && 0 < m_pStatusCom->Get_Hp())
 	{
 		m_pMeterBar_Hp->Set_Count((_float)m_pStatusCom->Get_Hp(), (_float)m_pStatusCom->Get_HpMax());
 		m_pMeterBar_Hp->Late_Tick(TimeDelta);
@@ -99,6 +107,12 @@ HRESULT CMonster::Render()
 EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos)
 {
 	// 먼저 플레이어 거리 탐색
+
+	if (0 >= m_pStatusCom->Get_Hp())
+		return EMonsterAI::Dead;
+
+
+
 	CMovement* pTarget = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
 
 	if (nullptr == pTarget)
@@ -135,19 +149,19 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos)
 		}
 		else if (40.f < fTurnAngle)
 		{
-			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta, vTargetPos);
-			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
+			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 1.5f, vTargetPos);
+			//m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
 			return EMonsterAI::Move;
 		}
 		else if (20.f < fTurnAngle)
 		{
-			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 0.8f, vTargetPos);
+			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta* 1.5f, vTargetPos);
 			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
 			return EMonsterAI::Move;
 		}
 		else if (10.f < fTurnAngle)
 		{
-			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 0.3f, vTargetPos);
+			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta, vTargetPos);
 			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
 			return EMonsterAI::Move;
 		}
@@ -216,6 +230,20 @@ HRESULT CMonster::Ready_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Status"), (CComponent**)&m_pStatusCom, &Data.Stat_Desc);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &Data.Movement_Desc);
 	hr = CGameObject::Add_Component((_uint)Data.eLevel, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
+
+
+	MASK_METERBAR_DESC_3D HP_Bar;
+	HP_Bar.eFillMode = EMeterBar_FillMode::ZeroToFull;
+	HP_Bar.eFrame_Render = ECastingBar_Frame_Render::Second;
+	HP_Bar.HasFrameBar = true;
+	HP_Bar.fCount = 100.f;
+	HP_Bar.fCount_Max = 100.f;
+	HP_Bar.UI_Desc.eLevel = ELevel::Static;
+	HP_Bar.UI_Desc.Movement_Desc.vScale = { 8.f, 2.f, 0.1f, 0.f };
+	HP_Bar.UI_Desc.Movement_Desc.vPos = { 0.f, 0.f, 0.f, 1.f };
+	lstrcpy(HP_Bar.UI_Desc.szTextureName, L"Component_Texture_ExpBar");
+
+	m_pMeterBar_Hp = CMasking_MeterBar_3D::Create(m_pDevice, m_pDevice_Context, &HP_Bar);
 
 
 	m_fDetectDis = Data.fDetectDis;

@@ -22,6 +22,7 @@ HRESULT CGoblin::NativeConstruct(void * pArg)
 
 	Ready_Component(pArg);
 
+	Set_HpBar_OffSet_Position(_float3(0.f, 12.f, 0.f));
 
 	m_pModelCom->Set_AnimationIndex(0);
 
@@ -35,36 +36,86 @@ HRESULT CGoblin::NativeConstruct(void * pArg)
 _int CGoblin::Tick(_float TimeDelta)
 {
 	//Attack_Check();
-	_vector vTargetPos;
-	switch (__super::AI_Check(TimeDelta, &vTargetPos))
+
+	if (0 >= m_pStatusCom->Get_Hp())
 	{
-	case Client::EMonsterAI::Idle:
-		m_IsAttack = false;
-		m_iAttackCount = 0;
-		m_eAnim_Next = EGoblinAnim::Idle;
-		break;
-	case Client::EMonsterAI::Attack:
-		m_IsAttack = true;
-		break;
-	case Client::EMonsterAI::Hurt:
-		break;
-	case Client::EMonsterAI::Dead:
-		break;
-	case Client::EMonsterAI::Shock:
-		break;
-	case Client::EMonsterAI::Move:
-		m_IsAttack = false;
-		m_iAttackCount = 0;
-		m_eAnim_Next = EGoblinAnim::Move_Forward;
-		break;
-	case Client::EMonsterAI::Turn:
-		m_IsAttack = false;
-		m_iAttackCount = 0;
-		m_eAnim_Next = EGoblinAnim::Turn_Left;
-		break;
-	default:
-		break;
+		if (EGoblinAnim::Death == m_eAnim_Next)
+		{
+			if (true == m_pModelCom->Get_IsFinishedAnimaion())
+				return OBJECT_DEAD;
+		}
 	}
+
+	_matrix Matrix = m_pMovementCom->Get_WorldMatrix();
+	m_pColliderCom_Hurt->Update_Collider(Matrix);
+	m_pStatusCom->Tick(TimeDelta);
+
+
+	_vector vTargetPos;
+
+	if (true == m_pModelCom->Get_IsFinishedAnimaion())
+	{
+		if (EGoblinAnim::Hurt == m_eAnim_Next)
+		{
+			m_IsHurt = false;
+			m_eAnim_Next = EGoblinAnim::Idle;
+		}
+
+	}
+
+	if (true == m_pColliderCom_Hurt->Get_IsCollide() || true == m_IsHurt)
+	{
+		m_IsAttack = false;
+		m_pColliderCom_Hurt->Set_IsCollide(false);
+		m_IsHurt = true;
+
+
+		switch (m_pStatusCom->Get_DamageType())
+		{
+		case Engine::EDamageType::Direct:
+			m_eAnim_Next = EGoblinAnim::Hurt;
+			break;
+		case Engine::EDamageType::Shock:
+			m_eAnim_Next = EGoblinAnim::Shock;
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+		switch (__super::AI_Check(TimeDelta, &vTargetPos))
+		{
+			case Client::EMonsterAI::Idle:
+				m_IsAttack = false;
+				m_iAttackCount = 0;
+				m_eAnim_Next = EGoblinAnim::Idle;
+				break;
+			case Client::EMonsterAI::Attack:
+				m_IsAttack = true;
+				break;
+			case Client::EMonsterAI::Hurt:
+
+				break;
+			case Client::EMonsterAI::Dead:
+				m_eAnim_Next = EGoblinAnim::Death;
+				break;
+			case Client::EMonsterAI::Shock:
+				break;
+			case Client::EMonsterAI::Move:
+				m_IsAttack = false;
+				m_iAttackCount = 0;
+				m_eAnim_Next = EGoblinAnim::Move_Forward;
+				break;
+			case Client::EMonsterAI::Turn:
+				m_IsAttack = false;
+				m_iAttackCount = 0;
+				m_eAnim_Next = EGoblinAnim::Turn_Left;
+				break;
+			default:
+				break;
+			}
+		}
 
 
 	if (true == m_IsAttack)
@@ -89,18 +140,29 @@ _int CGoblin::Tick(_float TimeDelta)
 
 
 
+
+
+
+
+
 	m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 	m_pColliderCom_Hurt->Update_Collider(m_pMovementCom->Get_State(EState::Position));
 
 	
 
-
+	__super::Tick(TimeDelta);
 	return _int();
 }
 
 _int CGoblin::Late_Tick(_float TimeDelta)
 {
 	Anim_Check(TimeDelta);
+
+	if (0 >= m_pStatusCom->Get_Hp())
+	{
+		if (true == m_pModelCom->Get_IsFinishedAnimaion())
+			return OBJECT_DEAD;
+	}
 
 
 	return __super::Late_Tick(TimeDelta);
@@ -125,6 +187,17 @@ void CGoblin::Anim_Check(_float TimeDelta)
 {
 	if (nullptr == m_pModelCom)
 		return;
+
+
+	if (true == m_pModelCom->Get_IsFinishedAnimaion())
+	{
+		if (EGoblinAnim::Hurt == m_eAnim_Next)
+		{
+			m_IsHurt = false;
+			m_eAnim_Next = EGoblinAnim::Idle;
+		}
+
+	}
 
 	if (m_eAnim_Cur != m_eAnim_Next)
 		m_pModelCom->Set_AnimationIndex_Start((_float)m_eAnim_Next, Anim_Changer(m_eAnim_Next));
@@ -178,8 +251,11 @@ HRESULT CGoblin::Ready_Component(void * pArg)
 	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
 	Data.vScale = { 7.f, 7.f, 7.f };
 	
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pColliderCom_Hurt, &Data);
+
+	Data.Attack_Desc.eDamageType = EDamageType::Direct;
+	Data.Attack_Desc.iDamage = 30;
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data);
 
 
 	return S_OK;

@@ -45,6 +45,16 @@ protected:
 private:
 	HRESULT	Ready_Component(void* pArg);
 
+
+
+protected:
+	void Set_HpBar_OffSet_Position(_float3 vOffSet_Pos) { m_vHpBar_OffSet_Position = vOffSet_Pos; }
+
+
+private:
+	CMasking_MeterBar_3D*	m_pMeterBar_Hp	= nullptr;
+	_float3 m_vHpBar_OffSet_Position;
+
 protected:
 	CModel*					m_pModelCom		= nullptr;
 	CStatus*				m_pStatusCom	= nullptr;
@@ -52,13 +62,13 @@ protected:
 	CMovement*				m_pMovementCom	= nullptr;
 
 
-	CMasking_MeterBar_3D*	m_pMeterBar_Hp	= nullptr;
 
 private:
 	EMonsterAI		m_eAI_Cur	= EMonsterAI::End;
 	EMonsterAI		m_eAI_Next	= EMonsterAI::Idle;
 	_float			m_fDetectDis = 0.f;
 	_float			m_fAttackDis = 0.f;
+	_bool			m_IsDead = false;
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

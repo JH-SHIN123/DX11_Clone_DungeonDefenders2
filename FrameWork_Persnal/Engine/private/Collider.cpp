@@ -59,8 +59,8 @@ HRESULT CCollider::NativeConstruct(void * pArg)
 	if (nullptr != pArg)
 		memcpy(&m_ColliderDesc, pArg, sizeof(COLLIDER_DESC));
 
-
-	m_ColliderDesc.vPosition.y += m_ColliderDesc.vScale.y;	
+	if(false == m_ColliderDesc.IsCenter)
+		m_ColliderDesc.vPosition.y += m_ColliderDesc.vScale.y;
 
 	switch (m_eColliderType)
 	{
@@ -175,6 +175,8 @@ HRESULT CCollider::Render_Collider(/*_fmatrix WorldMatrix*/)
 		break;
 	}
 
+	//m_IsCollision = false;
+
 	m_pBatch->End();
 
 	Safe_Release(pPipeLine);
@@ -285,7 +287,8 @@ _fvector CCollider::Fix_Position(_fvector vPosition)
 		break;
 	}
 
-	vResult.m128_f32[1] += fScaleY;
+	if (false == m_ColliderDesc.IsCenter)
+		vResult.m128_f32[1] += fScaleY;
 
 	return vResult;
 }

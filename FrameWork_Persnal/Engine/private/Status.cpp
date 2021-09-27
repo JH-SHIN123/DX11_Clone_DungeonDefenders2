@@ -84,11 +84,17 @@ void CStatus::Damage_Check(_float TimeDelta)
 		m_IsDead = true;
 
 	m_Hit_Desc.fHitTime -= TimeDelta;
+	m_fDamageTick += TimeDelta;
+
 	if (0.f >= m_Hit_Desc.fHitTime)
 		ZeroMemory(&m_Hit_Desc, sizeof(ATTACK_DESC));
 	else
 	{
-		m_Status_Desc.iHp -= m_Hit_Desc.iDamage;
+		if (0.25f <= m_fDamageTick)
+		{
+			m_Status_Desc.iHp -= m_Hit_Desc.iDamage;
+			m_fDamageTick = 0.f;
+		}
 	}
 }
 

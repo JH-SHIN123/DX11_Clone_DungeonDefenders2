@@ -29,7 +29,7 @@ _int CMasking_MeterBar_3D::Tick(_float TimeDelta)
 {
 	Count_Check(TimeDelta);
 
-	__super::BillBoarding();
+	//__super::BillBoarding();
 
 	return _int();
 }
@@ -39,7 +39,7 @@ _int CMasking_MeterBar_3D::Late_Tick(_float TimeDelta)
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::UI, this);
 }
 
-HRESULT CMasking_MeterBar_3D::Render(_uint MaskShaderPass, _uint UIFramePass)
+HRESULT CMasking_MeterBar_3D::Render()
 {
 	__super::Render();
 
@@ -57,7 +57,7 @@ HRESULT CMasking_MeterBar_3D::Render(_uint MaskShaderPass, _uint UIFramePass)
 		if (ECastingBar_Frame_Render::First == m_MeterBar_Desc.eFrame_Render)
 		{
 			m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(2));
-			m_pBufferRectCom->Render(UIFramePass);
+			m_pBufferRectCom->Render(m_MeterBar_Desc.iUIFramePass);
 		}
 	}
 
@@ -66,14 +66,14 @@ HRESULT CMasking_MeterBar_3D::Render(_uint MaskShaderPass, _uint UIFramePass)
 	m_pBufferRectCom->Set_Variable("g_Textrue_UV", &m_fRatio, sizeof(_float2));
 	m_pBufferRectCom->Set_ShaderResourceView("g_MaskTexture", m_pTextureCom->Get_ShaderResourceView(0));
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(1));
-	m_pBufferRectCom->Render(MaskShaderPass);
+	m_pBufferRectCom->Render(m_MeterBar_Desc.iMaskShaderPass);
 
 	if (m_MeterBar_Desc.HasFrameBar)
 	{
 		if (ECastingBar_Frame_Render::Second == m_MeterBar_Desc.eFrame_Render)
 		{
 			m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(2));
-			m_pBufferRectCom->Render(UIFramePass);
+			m_pBufferRectCom->Render(m_MeterBar_Desc.iUIFramePass);
 		}
 	}
 
@@ -85,6 +85,9 @@ void CMasking_MeterBar_3D::Set_Count(_float fCount, _float fCount_Max)
 {
 	m_MeterBar_Desc.fCount = fCount;
 	m_MeterBar_Desc.fCount_Max = fCount_Max;
+
+
+
 }
 
 void CMasking_MeterBar_3D::Render_Frame_First(_uint MaskShaderPass, _uint UIFramePass)
@@ -113,6 +116,7 @@ void CMasking_MeterBar_3D::Count_Check(_float TimeDelta)
 	m_fTime += TimeDelta;
 	if (m_fTime >= 3.f)
 		m_fTime = 0.f;
+
 }
 
 CMasking_MeterBar_3D * CMasking_MeterBar_3D::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, void * pArg)

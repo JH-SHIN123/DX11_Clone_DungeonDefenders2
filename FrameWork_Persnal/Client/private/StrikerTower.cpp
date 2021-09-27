@@ -73,6 +73,13 @@ _int CStrikerTower::Late_Tick(_float TimeDelta)
 			Data.MoveState_Desc.fSpeedPerSec = 40.f;
 			Data.fLifeTime = 10.f;
 
+			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Shock;
+			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+			Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+			Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
+			//Data.Attack_Collide_Desc.vPosition = { 0.f, 50.f, 0.f };
+			Data.Attack_Collide_Desc.IsCenter = true;
+
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_StrikerTower_Bullet", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
 		}
 	}

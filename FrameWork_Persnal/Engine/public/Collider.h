@@ -6,7 +6,7 @@
 BEGIN(Engine)
 
 enum class ECollideType { AABB, OBB, SPHERE, End };
-enum class EDamageType { Direct, Dot, Dot_Slow, End };
+enum class EDamageType { Direct, Dot, Dot_Slow, Shock, End };
 
 typedef struct tagAttackDesc
 {
@@ -20,6 +20,7 @@ typedef struct tagAttackDesc
 typedef struct tagColliderDesc
 {
 	_float3		vScale = { 0.f,0.f,0.f }, vRotation = { 0.f,0.f,0.f }, vPosition = { 1.f,1.f,1.f };
+	_bool		IsCenter = false;
 	ATTACK_DESC Attack_Desc;
 }COLLIDER_DESC;
 
@@ -35,9 +36,13 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg)override;
 
 public:
+	_bool	Get_IsCollide() { return m_IsCollision; }
 	EDamageType Get_DamageType() const { return m_ColliderDesc.Attack_Desc.eDamageType; }
 	_int Get_Damage() const { return m_ColliderDesc.Attack_Desc.iDamage; }
 	_float Get_HitTime() const { return m_ColliderDesc.Attack_Desc.fHitTime; }
+
+public:
+	void Set_IsCollide(_bool IsCollide) { m_IsCollision = IsCollide; }
 
 public:
 	_int Update_Collider(_fmatrix WorldMatrix);

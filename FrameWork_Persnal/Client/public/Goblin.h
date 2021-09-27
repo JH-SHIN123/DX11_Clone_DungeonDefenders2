@@ -58,6 +58,7 @@ private:
 private:
 	CCollider*				m_pColliderCom_Attack = nullptr;
 	CCollider*				m_pColliderCom_Hurt = nullptr;
+	_bool					m_IsHurt = false;
 
 
 public:

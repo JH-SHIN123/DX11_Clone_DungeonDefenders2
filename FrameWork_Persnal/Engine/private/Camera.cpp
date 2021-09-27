@@ -20,6 +20,7 @@ HRESULT CCamera::NativeConstruct_Prototype()
 {
 	__super::NativeConstruct_Prototype();
 
+	m_pPipeline_Manager->Set_WorldTransform(XMMatrixIdentity());
 
 
 	return S_OK;
@@ -66,6 +67,8 @@ HRESULT CCamera::NativeConstruct(void * pArg)
 	m_pMovementCom->Set_State(EState::Up, vUp);
 
 	m_pMovementCom->Set_State(EState::Position, vEye);
+
+	m_pPipeline_Manager->Set_WorldTransform(XMMatrixIdentity());
 
 	return S_OK;
 }
@@ -433,6 +436,7 @@ void CCamera::SetUp_PipeLine_Matrix()
 
 	_matrix ViewMatrix = XMMatrixLookAtLH(m_pMovementCom->Get_State(EState::Position), vAt, vAxisY);
 
+	m_pPipeline_Manager->Set_WorldTransform(m_pMovementCom->Get_WorldMatrix());
 	m_pPipeline_Manager->Set_Transform(ETransformState::View, ViewMatrix);
 	m_pPipeline_Manager->Set_Transform(ETransformState::Proj, XMMatrixPerspectiveFovLH(m_CameraDesc.fFovy, m_CameraDesc.fAspect, m_CameraDesc.fNear, m_CameraDesc.fFar));
 }

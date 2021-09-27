@@ -14,6 +14,9 @@ typedef struct tagMask_MeterBar_desc3D
 	UI3D_DESC					UI_Desc;
 	EMeterBar_FillMode			eFillMode;
 	ECastingBar_Frame_Render	eFrame_Render;
+
+	_uint iMaskShaderPass = 12;
+	_uint iUIFramePass = 1;
 }MASK_METERBAR_DESC_3D;
 
 class CMasking_MeterBar_3D final : public CUI_3D
@@ -28,7 +31,7 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg);				
 	virtual _int	Tick(_float TimeDelta) override;
 	virtual	_int	Late_Tick(_float TimeDelta) override;
-	virtual HRESULT Render(_uint MaskShaderPass = 12, _uint UIFramePass = 1);		
+	virtual HRESULT Render() override;
 
 public: // Getter
 	const _float	Get_Count() const { return m_MeterBar_Desc.fCount; }
@@ -39,6 +42,7 @@ public: // Getter
 
 public: // Setter
 	void Set_Count(_float fCount, _float fCount_Max);
+	void Set_Position(_fvector vPos) { m_pMovementCom->Set_State(EState::Position, vPos); }
 
 public:
 	void Render_Frame_First(_uint MaskShaderPass, _uint UIFramePass);

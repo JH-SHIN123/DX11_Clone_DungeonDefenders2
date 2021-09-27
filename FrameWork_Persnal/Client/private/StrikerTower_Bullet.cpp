@@ -29,18 +29,30 @@ HRESULT CStrikerTower_Bullet::NativeConstruct(void * pArg)
 
 _int CStrikerTower_Bullet::Tick(_float TimeDelta)
 {
-	__super::Tick(TimeDelta);
+	_int iReturn = 0;
+	if (iReturn = __super::Tick(TimeDelta))
+		return iReturn;
+
 
 	_vector vDir = XMLoadFloat3(&m_vGoDir);
 	m_pMovementCom->Go_Dir_Vector(TimeDelta, vDir);
 
 
-	return _int();
+	if (nullptr != m_pColliderCom_Attack)
+	{
+		if (true == m_pColliderCom_Attack->Get_IsCollide())
+			return OBJECT_DEAD;
+
+		m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
+	}
+
+	return iReturn;
 }
 
 _int CStrikerTower_Bullet::Late_Tick(_float TimeDelta)
 {
-
+	if (true == m_pColliderCom_Attack->Get_IsCollide())
+		return OBJECT_DEAD;
 
 	return __super::Late_Tick(TimeDelta);
 }
@@ -49,17 +61,18 @@ HRESULT CStrikerTower_Bullet::Render()
 {
 	__super::Render();
 
+
+#ifdef _DEBUG
+	m_pColliderCom_Attack->Render_Collider();
+#endif // _DEBUG
+
+
 	return S_OK;
 }
 
 HRESULT CStrikerTower_Bullet::Ready_Component(void * pArg)
 {
 	HRESULT hr = S_OK;
-
-	COLLIDER_DESC Data;
-	Data.vScale = { 2.f, 2.f, 2.f };
-	
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &Data);
 
 
 

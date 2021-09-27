@@ -74,10 +74,7 @@ HRESULT CSkill_ManaBomb::Ready_Component(void * pArg)
 {
 	HRESULT hr = S_OK;
 
-	COLLIDER_DESC Data;
-	Data.vScale = { 2.f, 2.f, 2.f };
 
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collider"), (CComponent**)&m_pColliderCom, &Data);
 
 	if (S_OK != hr)
 		MSG_BOX("CSkill_ManaBomb::Ready_Component");

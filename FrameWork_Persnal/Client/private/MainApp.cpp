@@ -283,6 +283,7 @@ void CMainApp::Free()
 
 	Safe_Release(m_pGameInstance);
 
+	CCollide_Manager::DestroyInstance();
 	CText_Manager::DestroyInstance();
 	CData_Manager::DestroyInstance();
 	CCursor_Manager::DestroyInstance();

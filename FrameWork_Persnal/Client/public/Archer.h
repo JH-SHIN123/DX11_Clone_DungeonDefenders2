@@ -4,6 +4,7 @@
 
 #include "Monster.h"
 
+BEGIN(Client)
 enum class EArcherAnim
 {
 	Attack = 0,
@@ -22,7 +23,6 @@ enum class EArcherAnim
 	End = -1
 };
 
-BEGIN(Client)
 class CArcher final : public CMonster
 {
 private:
@@ -54,6 +54,7 @@ private:
 private:
 	CCollider*				m_pColliderCom_Attack = nullptr;
 	CCollider*				m_pColliderCom_Hurt = nullptr;
+	_bool					m_IsHurt = false;
 
 private:
 	_bool		m_IsAttack = false;

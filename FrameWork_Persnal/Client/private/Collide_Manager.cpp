@@ -14,18 +14,18 @@ CCollide_Manager::~CCollide_Manager()
 {
 }
 
-_bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectName, ELevel eDstObjectLevel, const _tchar * szSrcObjectName, ELevel eSrcObjectLevel)
+_bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectLayer, ELevel eDstObjectLevel, const _tchar * szSrcObjectLayer, ELevel eSrcObjectLevel)
 {
-	CLayer* pDstLayer = GET_GAMEINSTANCE->Get_Layer((_uint)eDstObjectLevel, szDstObjectName);
+	CLayer* pDstLayer = GET_GAMEINSTANCE->Get_Layer((_uint)eDstObjectLevel, szDstObjectLayer);
 	if (nullptr == pDstLayer)
 		return false;
 
-	CLayer* pSrcLayer = GET_GAMEINSTANCE->Get_Layer((_uint)eSrcObjectLevel, szSrcObjectName);
+	CLayer* pSrcLayer = GET_GAMEINSTANCE->Get_Layer((_uint)eSrcObjectLevel, szSrcObjectLayer);
 	if (nullptr == pSrcLayer)
 		return false;
 
 	list<CGameObject*> Dst_Object = pDstLayer->Get_GameObject_List();
-	list<CGameObject*> Src_Object = pDstLayer->Get_GameObject_List();
+	list<CGameObject*> Src_Object = pSrcLayer->Get_GameObject_List();
 
 	for (auto& Dst : Dst_Object) // Com_Collide_Hit
 	{
@@ -54,10 +54,11 @@ _bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectName, ELevel eDs
 				Data.fHitTime = pSrcCol_Attack->Get_HitTime();
 
 				pDstStat->Set_Damage(Data);
+				//pDstCol_Hit->
 				// 데미지 계산은 스탯이 하지만 데미지의 정보는 콜라이더가 가지는 형식이다.
 
 
-				return true;
+				//return true;
 			}
 		}
 	}

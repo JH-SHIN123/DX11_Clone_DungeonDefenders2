@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "DefenceTower.h"
 #include "Monster.h"
+#include "Collide_Manager.h"
 
 CLevel_Stage1::CLevel_Stage1(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CLevel(pDevice, pDevice_Context)
@@ -25,8 +26,8 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	//if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
 	//	return E_FAIL;
 
-	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera_Free(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -69,6 +70,9 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	MonData.Movement_Desc.fSpeedPerSec = 15.f;
 	MonData.Movement_Desc.vPos = { 0.f, 0.f, 30.f, 1.f };
 	MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+	MonData.Stat_Desc.iHp_Max = 100;
+	MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
+	MonData.Stat_Desc.iExp = 15;
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Goblin", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
 
 	lstrcpy(MonData.szModelName, L"Component_Mesh_Archer");
@@ -78,7 +82,11 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	MonData.Movement_Desc.fSpeedPerSec = 15.f;
 	MonData.Movement_Desc.vPos = { 10.f, 0.f, 30.f, 1.f };
 	MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+	MonData.Stat_Desc.iHp_Max = 10000;
+	MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
+	MonData.Stat_Desc.iExp = 15;
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Archer", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
+
 
 	return S_OK;
 }
@@ -112,6 +120,10 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 
 	if (GET_KEY_INPUT(DIK_F4))
 		CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Combat);
+
+
+	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Monster", ELevel::Stage1, L"Layer_Bullet", ELevel::Stage1);
+
 
 	return 0;
 }

@@ -67,6 +67,7 @@ private:
 private:
 	STATUS_DESC		m_Status_Desc;
 	ATTACK_DESC		m_Hit_Desc;
+	_float			m_fDamageTick = 0.f;
 	_bool			m_IsDead	= false;
 
 public:
