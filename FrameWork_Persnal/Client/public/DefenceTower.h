@@ -62,7 +62,7 @@ protected:
 	CStatus*		m_pStatusCom	= nullptr;
 	CMovement*		m_pMovementCom	= nullptr;
 	CRenderer*		m_pRendererCom	= nullptr;
-	CTextures*		m_pTexturesCom	= nullptr;	// 타워 반경 
+	CTextures*		m_pTexturesCom	= nullptr;	// 타워 반경
 
 private: 
 	ETowerState		m_eTowerState_Cur	= ETowerState::End;

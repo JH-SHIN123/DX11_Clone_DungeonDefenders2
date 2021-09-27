@@ -25,6 +25,8 @@ HRESULT CBlockadeTower::NativeConstruct(void * pArg)
 	m_pModelCom->Set_AnimationIndex(0); // 나는 애니메이션 하나에 다 있는 상황 원테이크
 	m_pModelCom->Set_AnimationIndex_Start(0.f, m_fIdleAnimation);
 
+	Ready_Component(nullptr);
+
 	Set_Pivot(XMVectorSet(0.035f, 0.035f, 0.035f, 0.f));
 
 	return S_OK;
@@ -32,6 +34,9 @@ HRESULT CBlockadeTower::NativeConstruct(void * pArg)
 
 _int CBlockadeTower::Tick(_float TimeDelta)
 {
+
+	m_pCollider_Hit->Update_Collider(m_pMovementCom->Get_WorldMatrix());
+
 	return _int();
 }
 
@@ -51,11 +56,26 @@ HRESULT CBlockadeTower::Render()
 
 	__super::Render();
 
+#ifdef _DEBUG
+	m_pCollider_Hit->Render_Collider();
+#endif // _DEBUG
+
+
 	return S_OK;
 }
 
 HRESULT CBlockadeTower::Ready_Component(void * pArg)
 {
+	HRESULT  hr = S_OK;
+
+	COLLIDER_DESC Data;
+	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
+	Data.vScale = { 3.f, 3.f, 3.f };
+
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pCollider_Hit, &Data);
+
+
+
 	return S_OK;
 }
 
@@ -83,5 +103,6 @@ CGameObject * CBlockadeTower::Clone_GameObject(void * pArg)
 
 void CBlockadeTower::Free()
 {
+	Safe_Release(m_pCollider_Hit);
 	__super::Free();
 }

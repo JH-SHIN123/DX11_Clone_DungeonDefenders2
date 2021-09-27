@@ -22,6 +22,8 @@ public:
 protected:
 	HRESULT		Ready_Component(void* pArg);
 	_float		m_fIdleAnimation = 80.f;
+	CCollider*		m_pCollider_Hit = nullptr;
+
 
 public:
 	static	CBlockadeTower* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
