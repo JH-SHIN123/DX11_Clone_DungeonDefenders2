@@ -89,6 +89,7 @@ private: // LateTick
 	_float	Animation_Term(EPlayerAnimation eNextAnimation);
 
 private: 
+	//void Skill_ManaBomb
 	void Skill_ManaBomb();
 	void Skill_Meteor();
 	void Skill_Healing(_float TimeDelta);
@@ -136,6 +137,8 @@ private: // Skill
 	_bool	m_IsCast_BrainWash		= false;
 	_bool	m_IsCast_Healing		= false;
 	_bool	m_IsCasting_Move		= false;
+
+	_bool	m_IsZoom = false;
 
 private:
 	HRESULT	Ready_Component(void* pArg);

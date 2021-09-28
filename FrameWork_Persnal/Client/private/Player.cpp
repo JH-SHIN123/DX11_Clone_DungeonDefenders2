@@ -320,6 +320,7 @@ void CPlayer::Key_Check(_float TimeDelta)
 		{
 			pSkill->Set_Skill_CoolDown(1, 5.f);
 			m_eAnimationState_Next = EPlayerAnimation::ManaBomb;
+			m_IsZoom = true;
 			m_IsAttack = true;
 		}
 	}
@@ -542,6 +543,7 @@ void CPlayer::Animation_Check(_float TimeDelta)
 	{
 		m_IsCast_ManaBomb = false;
 		m_IsCast_Meteor = false;
+		m_IsZoom = false;
 	}
 }
 
@@ -704,6 +706,12 @@ void CPlayer::Skill_ManaBomb()
 	if (EPlayerAnimation::ManaBomb == m_eAnimationState_Next)
 	{
 		_float fAnimTime = m_pModelCom->Get_AnimTime();
+
+		if (true == m_IsZoom && 700 == (_uint)fAnimTime)
+		{
+			static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_ZoomOut(110.f);
+			m_IsZoom = false;
+		}
 
 		if (false == m_IsCast_ManaBomb && 720 == (_uint)fAnimTime)
 		{
