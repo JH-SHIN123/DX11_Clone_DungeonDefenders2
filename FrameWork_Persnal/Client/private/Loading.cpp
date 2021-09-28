@@ -221,6 +221,8 @@ HRESULT CLoading::LoadingForStage()
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Staff_0"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Staff/0/", "Staff_0.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Staff_1"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Staff/1/", "Staff_1.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Skill_ManaBomb"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Skill/ManaBomb/", "ManaBomb.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));

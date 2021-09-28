@@ -70,7 +70,7 @@ HRESULT CWeapon::Render()
 		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_SPECULAR)))
 		//	return E_FAIL;
 
-		m_pModelCom->Render_Model(i, 1);
+		m_pModelCom->Render_Model(i, 0);
 	}
 
 	return S_OK;
@@ -78,7 +78,8 @@ HRESULT CWeapon::Render()
 
 void CWeapon::Weapon_Equip(_fmatrix BoneMatrix, _fmatrix ParentMatrix)
 {
-	_matrix MyMatrix = BoneMatrix * ParentMatrix  /** XMMatrixTranslation(0.f, 0.f, 0.f)*/ *XMLoadFloat4x4(&m_RotateMatrix);
+	// 스 자이공부
+	_matrix MyMatrix = XMLoadFloat4x4(&m_RotateMatrix) * XMMatrixTranslation(-2.3f, 2.4f, 0.f) * BoneMatrix * ParentMatrix;
 	 
 	//_vector vOffSet = XMVectorSet(5.f, 5.f, 0.f, 0.f);
 	//MyMatrix.r[3] += vOffSet;

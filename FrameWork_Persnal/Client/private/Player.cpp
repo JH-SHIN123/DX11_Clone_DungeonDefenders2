@@ -567,7 +567,7 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 	WEAPON_DESC Weapon_Data;
 	ZeroMemory(&Weapon_Data, sizeof(WEAPON_DESC));
 
-	lstrcpy(Weapon_Data.szModelName, L"Component_Mesh_Staff_0");
+	lstrcpy(Weapon_Data.szModelName, L"Component_Mesh_Staff_1");
 
 	m_pWeapon = CStaff_Basic::Create(m_pDevice, m_pDevice_Context);
 	m_pWeapon->NativeConstruct(&Weapon_Data);

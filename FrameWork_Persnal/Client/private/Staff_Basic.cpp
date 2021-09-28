@@ -20,9 +20,12 @@ HRESULT CStaff_Basic::NativeConstruct(void * pArg)
 {
 	__super::NativeConstruct(pArg);
 
-	//Set_Pivot(XMVectorSet(0.05f, 0.05f, 0.05f, 0.f));
-	//_matrix RotateMatrix = XMMatrixRotationAxis(XMVectorSet(1.f, 0.f, 0.f, 0.f), XMConvertToDegrees(90.f));
-	//Set_RotateMatrix(RotateMatrix);
+	//Set_Pivot(XMVectorSet(0.75f, 0.75f, 0.75f, 0.f));
+	_matrix RotateMatrix = XMMatrixRotationRollPitchYaw(XMConvertToDegrees(-50.f), XMConvertToDegrees(-5.f), 0.f);// * );
+	Set_RotateMatrix(RotateMatrix);
+
+	m_pModelCom->Set_AnimationIndex(0);
+	m_pModelCom->Set_AnimationIndex_Start(0.f, 179.f);
 
 	return S_OK;
 }
@@ -31,12 +34,20 @@ _int CStaff_Basic::Tick(_float TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+
 	return _int();
 }
 
 _int CStaff_Basic::Late_Tick(_float TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
+
+	_matrix RotateMatrix = XMMatrixRotationRollPitchYaw(XMConvertToDegrees(-50.f), XMConvertToDegrees(-210.f), 0.f);// * );
+	Set_RotateMatrix(RotateMatrix);
+
+
+	m_pModelCom->Update_AnimaionMatrix(TimeDelta);
+	m_pModelCom->Update_CombindTransformationMatrix();
 
 	return _int();
 }

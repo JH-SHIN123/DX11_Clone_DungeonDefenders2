@@ -91,7 +91,7 @@ _fmatrix CModel::Get_BoneMatrix(const char * szBoneName)
 	if (nullptr == pNode)
 		return XMMatrixIdentity();
 
-	return pNode->Get_CombindTransformationMatrix() * pNode->Get_OffSetMatrix();
+	return pNode->Get_OffSetMatrix() * pNode->Get_CombindTransformationMatrix();
 }
 
 void CModel::Set_AnimationIndex(_uint iAnimationIndex)

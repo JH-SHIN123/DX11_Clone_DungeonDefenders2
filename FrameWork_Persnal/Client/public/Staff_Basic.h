@@ -22,12 +22,6 @@ public:
 private:
 	HRESULT			Ready_Component(void* pArg);
 
-protected:
-	CRenderer*				m_pRendererCom = nullptr;
-	CMovement*				m_pMovementCom = nullptr;
-	CModel*					m_pModelCom = nullptr;
-	CTextures*				m_pTextureCom = nullptr;
-
 public:
 	static CStaff_Basic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;
