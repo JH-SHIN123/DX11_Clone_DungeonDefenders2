@@ -27,6 +27,7 @@ void CForm::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CForm, CFormView)
 	ON_BN_CLICKED(IDC_BUTTON1, &CForm::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON2, &CForm::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 
@@ -58,4 +59,16 @@ void CForm::OnBnClickedButton1() //  MapTool
 	m_tMapTool.ShowWindow(SW_SHOW);
 
 
+}
+
+
+void CForm::OnBnClickedButton2()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (nullptr == m_Navi.GetSafeHwnd())
+		m_Navi.Create(IDD_NAVIMAP);
+	m_Navi.ShowWindow(SW_SHOW);
+
+
+	
 }

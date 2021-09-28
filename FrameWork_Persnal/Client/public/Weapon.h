@@ -34,6 +34,8 @@ public:
 	void Set_RotateMatrix(_fmatrix RotateMatrix);
 	void Set_OffSetPosition(_fmatrix vPosition);
 
+public:
+	void Create_Bullet();
 
 private:
 	HRESULT			Ready_Component(void* pArg);

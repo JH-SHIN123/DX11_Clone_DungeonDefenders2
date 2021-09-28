@@ -367,6 +367,7 @@ void CPlayer::Key_Check(_float TimeDelta)
 	{
 		m_eAnimationState_Next_Second = EPlayerAnimation::Fire;
 		m_IsSecondAnimation = true;
+		m_pWeapon->Create_Bullet();
 	}
 
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)

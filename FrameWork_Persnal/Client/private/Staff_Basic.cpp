@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Staff_Basic.h"
+#include "StrikerTower_Bullet.h"
 
 CStaff_Basic::CStaff_Basic(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CWeapon(pDevice, pDevice_Context)

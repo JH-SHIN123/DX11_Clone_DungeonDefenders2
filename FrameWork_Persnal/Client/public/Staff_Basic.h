@@ -22,6 +22,7 @@ public:
 private:
 	HRESULT			Ready_Component(void* pArg);
 
+
 public:
 	static CStaff_Basic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

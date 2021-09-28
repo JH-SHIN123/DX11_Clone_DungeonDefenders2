@@ -23,8 +23,7 @@
 #include "LightningTower_Bullet.h"
 #include "LightningTower_Bullet_Effect.h"
 #include "Goblin.h"
-#include "Archer.h"
-#include "Archer_Arrow.h"
+#include "Ogre.h"
 #include "Skill_ManaBomb.h"
 #include "Skill_Meteor.h"
 
@@ -174,10 +173,13 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_LightningTower_Bullet_Effect"), CLightningTower_Bullet_Effect::Create(m_pDevice, m_pDevice_Context));
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Goblin"), CGoblin::Create(m_pDevice, m_pDevice_Context));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Archer"), CArcher::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Ogre"), COgre::Create(m_pDevice, m_pDevice_Context));
 
 
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Archer_Arrow"), CArcher_Arrow::Create(m_pDevice, m_pDevice_Context));
+	//hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Archer"), CArcher::Create(m_pDevice, m_pDevice_Context));
+	//hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Archer_Arrow"), CArcher_Arrow::Create(m_pDevice, m_pDevice_Context));
+
+
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_ManaBomb"), CSkill_ManaBomb::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_Meteor"), CSkill_Meteor::Create(m_pDevice, m_pDevice_Context));
@@ -214,10 +216,8 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Goblin"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Monster/Goblin/", "Goblin.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Archer"),
-		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Monster/Archer/", "Archer.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Archer_Arrow"),
-		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Monster/Archer/Arrow/", "Archer_Arrow.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Ogre"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Monster/Ogre/", "Ogre.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Staff_0"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Staff/0/", "Staff_0.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));

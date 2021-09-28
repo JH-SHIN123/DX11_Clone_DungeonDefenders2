@@ -199,13 +199,16 @@ _bool CCollider::Intersect_Collider(CCollider* pCollide)
 		switch (eSrcColType)
 		{
 		case Engine::ECollideType::AABB:
-			m_IsCollision = m_pAABB->Intersects(*pCollide->m_pAABB);
-			break;;
+			if (nullptr != pCollide->m_pAABB)
+				m_IsCollision = m_pAABB->Intersects(*pCollide->m_pAABB);
+			break;
 		case Engine::ECollideType::OBB:
-			m_IsCollision = m_pAABB->Intersects(*pCollide->m_pOBB);
+			if (nullptr != pCollide->m_pOBB)
+				m_IsCollision = m_pAABB->Intersects(*pCollide->m_pOBB);
 			break;
 		case Engine::ECollideType::SPHERE:
-			m_IsCollision = m_pAABB->Intersects(*pCollide->m_pSphere);
+			if (nullptr != pCollide->m_pSphere)
+				m_IsCollision = m_pAABB->Intersects(*pCollide->m_pSphere);
 			break;
 		}
 		break;
@@ -213,13 +216,16 @@ _bool CCollider::Intersect_Collider(CCollider* pCollide)
 		switch (eSrcColType)
 		{
 		case Engine::ECollideType::AABB:
-			m_IsCollision = m_pOBB->Intersects(*pCollide->m_pAABB);
+			if (nullptr != pCollide->m_pAABB)
+				m_IsCollision = m_pOBB->Intersects(*pCollide->m_pAABB);
 			break;
 		case Engine::ECollideType::OBB:
-			m_IsCollision = m_pOBB->Intersects(*pCollide->m_pOBB);
+			if (nullptr != pCollide->m_pOBB)
+				m_IsCollision = m_pOBB->Intersects(*pCollide->m_pOBB);
 			break;
 		case Engine::ECollideType::SPHERE:
-			m_IsCollision = m_pOBB->Intersects(*pCollide->m_pSphere);
+			if (nullptr != pCollide->m_pSphere)
+				m_IsCollision = m_pOBB->Intersects(*pCollide->m_pSphere);
 			break;
 		}
 		break;
@@ -227,13 +233,16 @@ _bool CCollider::Intersect_Collider(CCollider* pCollide)
 		switch (eSrcColType)
 		{
 		case Engine::ECollideType::AABB:
-			m_IsCollision = m_pSphere->Intersects(*pCollide->m_pAABB);
+			if(nullptr != pCollide->m_pAABB)
+				m_IsCollision = m_pSphere->Intersects(*pCollide->m_pAABB);
 			break;
 		case Engine::ECollideType::OBB:
-			m_IsCollision = m_pSphere->Intersects(*pCollide->m_pOBB);
+			if (nullptr != pCollide->m_pOBB)
+				m_IsCollision = m_pSphere->Intersects(*pCollide->m_pOBB);
 			break;
 		case Engine::ECollideType::SPHERE:
-			m_IsCollision = m_pSphere->Intersects(*pCollide->m_pSphere);
+			if (nullptr != pCollide->m_pSphere)
+				m_IsCollision = m_pSphere->Intersects(*pCollide->m_pSphere);
 			break;
 		}
 		break;

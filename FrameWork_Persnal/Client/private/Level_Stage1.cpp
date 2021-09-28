@@ -26,8 +26,8 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	//if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
 	//	return E_FAIL;
 
-	//if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera_Free(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -62,30 +62,30 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_LightningTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
 	//
 	//
-	//MONSTER_DESC MonData;
-	//lstrcpy(MonData.szModelName, L"Component_Mesh_Goblin");
-	//MonData.eLevel = ELevel::Stage1;
-	//MonData.fDetectDis = 20.f;
-	//MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(20.f);
-	//MonData.Movement_Desc.fSpeedPerSec = 15.f;
-	//MonData.Movement_Desc.vPos = { 0.f, 0.f, 30.f, 1.f };
-	//MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
-	//MonData.Stat_Desc.iHp_Max = 100;
-	//MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
-	//MonData.Stat_Desc.iExp = 15;
-	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Goblin", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
+	MONSTER_DESC MonData;
+	lstrcpy(MonData.szModelName, L"Component_Mesh_Goblin");
+	MonData.eLevel = ELevel::Stage1;
+	MonData.fDetectDis = 20.f;
+	MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(20.f);
+	MonData.Movement_Desc.fSpeedPerSec = 15.f;
+	MonData.Movement_Desc.vPos = { 0.f, 0.f, 30.f, 1.f };
+	MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+	MonData.Stat_Desc.iHp_Max = 100;
+	MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
+	MonData.Stat_Desc.iExp = 15;
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Goblin", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
 	//
-	//lstrcpy(MonData.szModelName, L"Component_Mesh_Archer");
-	//MonData.eLevel = ELevel::Stage1;
-	//MonData.fDetectDis = 35.f;
-	//MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(20.f);
-	//MonData.Movement_Desc.fSpeedPerSec = 15.f;
-	//MonData.Movement_Desc.vPos = { 10.f, 0.f, 30.f, 1.f };
-	//MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
-	//MonData.Stat_Desc.iHp_Max = 10000;
-	//MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
-	//MonData.Stat_Desc.iExp = 15;
-	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Archer", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
+	lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
+	MonData.eLevel = ELevel::Stage1;
+	MonData.fDetectDis = 35.f;
+	MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(20.f);
+	MonData.Movement_Desc.fSpeedPerSec = 15.f;
+	MonData.Movement_Desc.vPos = { 10.f, 0.f, 30.f, 1.f };
+	MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+	MonData.Stat_Desc.iHp_Max = 10000;
+	MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
+	MonData.Stat_Desc.iExp = 15;
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
 
 
 	return S_OK;
@@ -123,6 +123,7 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 
 
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Monster", ELevel::Stage1, L"Layer_Bullet", ELevel::Stage1);
+	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
 
 
 	return 0;

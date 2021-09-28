@@ -207,6 +207,7 @@
     <ClInclude Include="..\public\MyFont.h" />
     <ClInclude Include="..\public\MyButton_NoText.h" />
     <ClInclude Include="..\public\MyText.h" />
+    <ClInclude Include="..\public\Ogre.h" />
     <ClInclude Include="..\public\PauseMenu.h" />
     <ClInclude Include="..\public\Phase_Panel.h" />
     <ClInclude Include="..\public\Player.h" />
@@ -268,6 +269,7 @@
     <ClCompile Include="..\private\MyFont.cpp" />
     <ClCompile Include="..\private\MyButton_NoText.cpp" />
     <ClCompile Include="..\private\MyText.cpp" />
+    <ClCompile Include="..\private\Ogre.cpp" />
     <ClCompile Include="..\private\PauseMenu.cpp" />
     <ClCompile Include="..\private\Phase_Panel.cpp" />
     <ClCompile Include="..\private\Player.cpp" />

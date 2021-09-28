@@ -3,6 +3,7 @@
 
 // CForm Æû ºäÀÔ´Ï´Ù.
 #include "MapTool.h"
+#include "NaviMap.h"
 
 
 class CForm : public CFormView
@@ -31,9 +32,11 @@ protected:
 
 public:
 	CMapTool m_tMapTool;
+	CNaviMap m_Navi;
 
 public:
 	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedButton2();
 };
 
 

@@ -84,7 +84,7 @@ _int CGoblin::Tick(_float TimeDelta)
 	}
 	else
 	{
-		switch (__super::AI_Check(TimeDelta, &vTargetPos))
+		switch (__super::AI_Check(TimeDelta, &vTargetPos, m_IsAttack ||m_IsHurt ))
 		{
 			case Client::EMonsterAI::Idle:
 				m_IsAttack = false;

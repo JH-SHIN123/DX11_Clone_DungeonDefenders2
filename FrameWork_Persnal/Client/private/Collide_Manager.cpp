@@ -38,7 +38,7 @@ _bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectLayer, ELevel eD
 		{
 			CCollider* pSrcCol_Attack = (CCollider*)Src->Get_Component(L"Com_Collide_Attack");
 
-			if (nullptr == pSrcCol_Attack)
+			if (nullptr == pSrcCol_Attack || true == pSrcCol_Attack->Get_NotCollide())
 				continue;
 
 			if (true == pDstCol_Hit->Intersect_Collider(pSrcCol_Attack))

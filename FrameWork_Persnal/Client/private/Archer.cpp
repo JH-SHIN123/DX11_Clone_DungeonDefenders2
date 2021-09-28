@@ -29,7 +29,7 @@ HRESULT CArcher::NativeConstruct(void * pArg)
 
 	m_pModelCom->Set_AnimationIndex_Start(0.f, 40.f);
 
-	Set_Pivot(XMVectorSet(0.3f, 0.3f, 0.3f, 0.f));
+	//Set_Pivot(XMVectorSet(0.3f, 0.3f, 0.3f, 0.f));
 
 	return S_OK;
 }
@@ -50,7 +50,6 @@ _int CArcher::Tick(_float TimeDelta)
 	m_pStatusCom->Tick(TimeDelta);
 
 
-	_vector vTargetPos;
 	m_IsAttack = true;
 	if (true == m_pModelCom->Get_IsFinishedAnimaion())
 	{
@@ -83,35 +82,35 @@ _int CArcher::Tick(_float TimeDelta)
 	}
 	else
 	{
-		switch (__super::AI_Check(TimeDelta, &vTargetPos))
-		{
-		case Client::EMonsterAI::Idle:
-			m_IsAttack = false;
-			m_eAnim_Next = EArcherAnim::Idle;
-			break;
-		case Client::EMonsterAI::Attack:
-			m_IsAttack = true;
-			m_eAnim_Next = EArcherAnim::Attack;
-			break;
-		case Client::EMonsterAI::Hurt:
+		//switch (__super::AI_Check(TimeDelta, &vTargetPos))
+		//{
+		//case Client::EMonsterAI::Idle:
+		//	m_IsAttack = false;
+		//	m_eAnim_Next = EArcherAnim::Idle;
+		//	break;
+		//case Client::EMonsterAI::Attack:
+		//	m_IsAttack = true;
+		//	m_eAnim_Next = EArcherAnim::Attack;
+		//	break;
+		//case Client::EMonsterAI::Hurt:
 
-			break;
-		case Client::EMonsterAI::Dead:
-			m_eAnim_Next = EArcherAnim::Death;
-			break;
-		case Client::EMonsterAI::Shock:
-			break;
-		case Client::EMonsterAI::Move:
-			m_IsAttack = false;
-			m_eAnim_Next = EArcherAnim::Move_Forward;
-			break;
-		case Client::EMonsterAI::Turn:
-			m_IsAttack = false;
-			m_eAnim_Next = EArcherAnim::Turn_Left;
-			break;
-		default:
-			break;
-		}
+		//	break;
+		//case Client::EMonsterAI::Dead:
+		//	m_eAnim_Next = EArcherAnim::Death;
+		//	break;
+		//case Client::EMonsterAI::Shock:
+		//	break;
+		//case Client::EMonsterAI::Move:
+		//	m_IsAttack = false;
+		//	m_eAnim_Next = EArcherAnim::Move_Forward;
+		//	break;
+		//case Client::EMonsterAI::Turn:
+		//	m_IsAttack = false;
+		//	m_eAnim_Next = EArcherAnim::Turn_Left;
+		//	break;
+		//default:
+		//	break;
+		//}
 	}
 
 
@@ -172,12 +171,34 @@ void CArcher::Anim_Check(_float TimeDelta)
 
 	m_pModelCom->Update_CombindTransformationMatrix();
 
+	if (true == m_IsBowPulling)
+	{
+		_matrix Matrix = m_pModelCom->Get_BoneMatrix("b_FingersL");
+		_float fX = XMVectorGetX(Matrix.r[3]);
+		_float fY = XMVectorGetY(Matrix.r[3]);
+		_float fZ = XMVectorGetZ(Matrix.r[3]);
+
+		m_pModelCom->Set_CombindTransformationMatrix("b_BowString", XMMatrixTranslation(fX + 2.f, fY + 1.f, fZ) * Matrix);
+	}
+
 	m_eAnim_Cur = m_eAnim_Next;
 }
 
 void CArcher::Attack_Check()
 {
-	if (true == m_IsAttack && 75 == (_uint)m_pModelCom->Get_AnimTime())
+	_uint iAnimTime = (_uint)m_pModelCom->Get_AnimTime();
+
+	m_IsPickArrow = false;
+	m_IsBowPulling = false;
+
+	if (33 <= iAnimTime && iAnimTime <= 50)
+		m_IsBowPulling = true;
+
+	//if (5 <= iAnimTime && iAnimTime <= 50)
+	//	m_IsBowPulling = true;
+
+
+	if (true == m_IsAttack && 75 == iAnimTime)
 	{
 		_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
 		vMyPos += XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * 8.f;

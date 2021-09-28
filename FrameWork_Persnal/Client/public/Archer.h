@@ -58,6 +58,8 @@ private:
 
 private:
 	_bool		m_IsAttack = false;
+	_bool		m_IsPickArrow = false;
+	_bool		m_IsBowPulling = false;
 
 
 public:

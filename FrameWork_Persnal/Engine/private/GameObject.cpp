@@ -64,14 +64,14 @@ void CGameObject::Set_Pivot(_fvector vScale)
 	_matrix PivotMatrix = XMMatrixIdentity();
 
 	PivotMatrix = XMMatrixScalingFromVector(vScale);
-	//if(nullptr != vRotate)
-	//PivotMatrix *= XMMatrixRotationRollPitchYawFromVector(vRotate);
-
-	//m_PivotMatrix._11 = XMVectorGetX(vScale);
-	//m_PivotMatrix._22 = XMVectorGetX(vScale);
-	//m_PivotMatrix._33 = XMVectorGetX(vScale);
 
 	XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);
+}
+
+void CGameObject::Set_Pivot_Rotate(_fvector RotateXYZW)
+{
+	XMStoreFloat4x4(&m_PivotMatrix,XMLoadFloat4x4(&m_PivotMatrix) * XMMatrixRotationRollPitchYaw(
+		XMConvertToDegrees(XMVectorGetX(RotateXYZW)), XMConvertToDegrees(XMVectorGetY(RotateXYZW)), XMConvertToDegrees(XMVectorGetZ(RotateXYZW))));
 }
 
 HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar * pPrototypeTag, const _tchar * pComponentTag, CComponent ** ppOut, void * pArg)

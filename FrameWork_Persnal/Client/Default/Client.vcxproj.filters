@@ -190,9 +190,6 @@
     <Filter Include="05.Utility\05.Collide_Manager">
       <UniqueIdentifier>{c015e515-69a7-4080-80bd-d706ca161490}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\05.Monster\01.Archer">
-      <UniqueIdentifier>{99bb0f43-1301-46ea-916c-abf037056a46}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\07.Bullet\04.Archer_Arrow">
       <UniqueIdentifier>{c352eea6-fee9-4b7f-a4b1-dabfe00e05a0}</UniqueIdentifier>
     </Filter>
@@ -201,6 +198,15 @@
     </Filter>
     <Filter Include="02.GameObject\09.Weapon\00.Staff_Basic">
       <UniqueIdentifier>{9931eb5d-0404-4f8e-9915-f2f4458e3ac4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\Dummy">
+      <UniqueIdentifier>{c8476d4d-dc45-4445-9e65-4f90bbe4ffc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\Dummy\01.Archer">
+      <UniqueIdentifier>{99bb0f43-1301-46ea-916c-abf037056a46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\05.Monster\01.Ogre">
+      <UniqueIdentifier>{ce8952c6-600e-41c9-918b-6e734e5dc725}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -385,7 +391,7 @@
       <Filter>02.GameObject\07.Bullet\03.Skill_Meteor</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Archer.h">
-      <Filter>02.GameObject\05.Monster\01.Archer</Filter>
+      <Filter>02.GameObject\05.Monster\Dummy\01.Archer</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Archer_Arrow.h">
       <Filter>02.GameObject\07.Bullet\04.Archer_Arrow</Filter>
@@ -395,6 +401,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Staff_Basic.h">
       <Filter>02.GameObject\09.Weapon\00.Staff_Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Ogre.h">
+      <Filter>02.GameObject\05.Monster\01.Ogre</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -558,7 +567,7 @@
       <Filter>02.GameObject\07.Bullet\03.Skill_Meteor</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Archer.cpp">
-      <Filter>02.GameObject\05.Monster\01.Archer</Filter>
+      <Filter>02.GameObject\05.Monster\Dummy\01.Archer</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Archer_Arrow.cpp">
       <Filter>02.GameObject\07.Bullet\04.Archer_Arrow</Filter>
@@ -568,6 +577,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Staff_Basic.cpp">
       <Filter>02.GameObject\09.Weapon\00.Staff_Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Ogre.cpp">
+      <Filter>02.GameObject\05.Monster\01.Ogre</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

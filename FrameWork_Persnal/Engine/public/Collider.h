@@ -45,6 +45,11 @@ public:
 	void Set_IsCollide(_bool IsCollide) { m_IsCollision = IsCollide; }
 
 public:
+	_bool Get_NotCollide() { return m_IsNotCollide; }
+	void  Set_NotCollide(_bool IsNotCollide) { m_IsNotCollide = IsNotCollide; }
+
+
+public:
 	_int Update_Collider(_fmatrix WorldMatrix);
 	_int Update_Collider(_fvector vPosition);
 	HRESULT Render_Collider();
@@ -58,6 +63,9 @@ private:
 	BoundingSphere*			m_pSphere = nullptr;
 	_bool					m_IsCollision = false;
 	_float4					m_vColor;
+
+private:
+	_bool		m_IsNotCollide = false;
 
 
 private:

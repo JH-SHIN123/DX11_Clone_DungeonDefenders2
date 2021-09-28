@@ -31,6 +31,9 @@
     <ClCompile Include="MapTool.cpp">
       <Filter>Tool\MapTool</Filter>
     </ClCompile>
+    <ClCompile Include="NaviMap.cpp">
+      <Filter>Tool\NaviMap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -74,6 +77,9 @@
     </ClInclude>
     <ClInclude Include="MapTool.h">
       <Filter>Tool\MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="NaviMap.h">
+      <Filter>Tool\NaviMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +132,9 @@
     </Filter>
     <Filter Include="Tool\MapTool">
       <UniqueIdentifier>{4623ef43-1bf5-4dc1-933c-9e5ffec844b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tool\NaviMap">
+      <UniqueIdentifier>{3c2b499a-3dc4-4575-be84-2c694866a7cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

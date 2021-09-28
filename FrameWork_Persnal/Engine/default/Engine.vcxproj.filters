@@ -145,6 +145,12 @@
     <Filter Include="02.Utility\06.DebugDraw">
       <UniqueIdentifier>{10f6d977-1126-4b87-9cf6-dd04c4bb2a59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Utility\02.Component\09.Navigation">
+      <UniqueIdentifier>{9e4ec541-0ae7-424d-a13a-39fd38ae0171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\09.Navigation\Cell">
+      <UniqueIdentifier>{6027ba10-c399-431c-92f7-b4d362f6608e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
@@ -294,6 +300,12 @@
     <ClInclude Include="..\public\DebugDraw.h">
       <Filter>02.Utility\06.DebugDraw</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Navigation.h">
+      <Filter>02.Utility\02.Component\09.Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Cell.h">
+      <Filter>02.Utility\02.Component\09.Navigation\Cell</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -415,6 +427,12 @@
     </ClCompile>
     <ClCompile Include="..\private\DebugDraw.cpp">
       <Filter>02.Utility\06.DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Navigation.cpp">
+      <Filter>02.Utility\02.Component\09.Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Cell.cpp">
+      <Filter>02.Utility\02.Component\09.Navigation\Cell</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

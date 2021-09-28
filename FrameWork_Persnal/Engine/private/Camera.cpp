@@ -88,7 +88,7 @@ _int CCamera::Late_Tick(_float TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
-
+	Shake_Check(TimeDelta);
 	Zoom_Check(TimeDelta);
 
 
@@ -131,11 +131,32 @@ void CCamera::Target_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* C
 	_vector vUp = XMVector4Normalize(pTarget->Get_State(EState::Up));
 	_vector vLook = XMVector4Normalize(pTarget->Get_State(EState::Look));
 
-	_vector vMyPos = vTargetPos + (vRight * m_CameraDesc.vTargetAxis.x);
-	vMyPos = vTargetPos + (vUp * m_CameraDesc.vTargetAxis.y);
-	vMyPos = vTargetPos + (vLook * m_CameraDesc.vTargetAxis.z);
+	if (0 >= m_fShakeTime)
+	{
+		_vector vMyPos = vTargetPos + (vRight * (m_CameraDesc.vTargetAxis.x));
+		vMyPos = vTargetPos + (vUp * m_CameraDesc.vTargetAxis.y);
+		vMyPos = vTargetPos + (vLook * m_CameraDesc.vTargetAxis.z);
+		m_pMovementCom->Set_State(EState::Position, vMyPos);
+	}
 
-	m_pMovementCom->Set_State(EState::Position, vMyPos);
+	else
+	{
+		_uint Shake = (_uint)m_fShakeTime % 2;
+
+		if (0 < Shake)
+			Shake *= -1;
+
+		_vector vMyPos = vTargetPos + (vRight * (m_CameraDesc.vTargetAxis.x + m_vShakePower.x * Shake));
+		vMyPos = vTargetPos + (vUp * (m_CameraDesc.vTargetAxis.y + m_vShakePower.y * Shake));
+
+		Shake = (_uint)m_fShakeTime % 2;
+
+		if (0 < Shake)
+			Shake *= -1;
+
+		vMyPos = vTargetPos + (vLook * (m_CameraDesc.vTargetAxis.z + m_vShakePower.z *Shake));
+		m_pMovementCom->Set_State(EState::Position, vMyPos);
+	}
 }
 
 void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _tchar * ComponentTag)
@@ -164,6 +185,16 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 
 	_vector vAt = m_pMovementCom->Get_State(EState::Position) + (XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * 20.f);
 
+	if (ECameraViewMode::TopView == m_eCameraMode_Next)
+	{
+		//m_CameraDesc.vAt
+	}
+	else if (ECameraViewMode::TopToTPS == m_eCameraMode_Next)
+	{
+
+	}
+
+
 	XMStoreFloat3(&m_CameraDesc.vAt, vAt);
 }
 
@@ -186,6 +217,13 @@ void CCamera::TargetRotate_Check(CTransform* pTransform)
 	_vector vAt = m_pMovementCom->Get_State(EState::Position) + (XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * 20.f);
 
 	XMStoreFloat3(&m_CameraDesc.vAt, vAt);
+}
+
+void CCamera::Cam_Shake(_float3 vPower, _float ShakeTime)
+{
+	m_fShakeTime = ShakeTime;
+
+	m_vShakePower = vPower;
 }
 
 void CCamera::View_Check(_float TimeDelata)
@@ -428,9 +466,22 @@ void CCamera::Zoom_Check(_float TimeDelta)
 	}
 }
 
+void CCamera::Shake_Check(_float TimeDelta)
+{
+	if (0.f >= m_fShakeTime)
+		return;
+
+	m_fShakeTime -= TimeDelta;
+}
+
 void CCamera::SetUp_PipeLine_Matrix()
 {
 	_vector vAt = XMLoadFloat3(&m_CameraDesc.vAt);
+
+	//if (ECameraViewMode::TopView == m_eCameraMode_Next)
+	//	vAt = XMVectorZero();
+
+
 	_vector vAxisY = XMLoadFloat3(&m_CameraDesc.vAxisY);
 	vAxisY = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 

@@ -28,6 +28,7 @@ public:
 	void Set_AnimationIndex(_uint iAnimationIndex);
 	void Set_AnimationIndex_Start(_float fAnimationStart, _float fAnimationStart_Term, _uint iAnimationIndex = 0);
 	void Set_AnimationIndex_Start_SecondNode(_float fAnimationStart, _float fAnimationStart_Term, _uint iAnimationIndex = 0);
+	void Set_CombindTransformationMatrix(const char* pBoneName, _fmatrix CombindTransformationMatrix);
 
 public:
 	virtual HRESULT NativeConstruct_Prototype(const char* pMeshFilePath, const char* pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix); /* 버퍼를 생성한다.*/

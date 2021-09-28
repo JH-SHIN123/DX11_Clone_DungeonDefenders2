@@ -30,6 +30,7 @@ public:
 	HRESULT NativeConstruct(char* pName, _fmatrix TransformationMatrix, CHierarchyNode* pParent, _uint iDepth);
 	HRESULT Reserve_AnimChannel(_uint iNumAnimation);
 	void Update_CombindTransformationMatrix(_uint iAnimationIndex);
+	void Set_CombindTransformationMatrix(_fmatrix CombindTransformationMatrix);
 
 private:
 	char					m_szNodeName[MAX_PATH] = "";

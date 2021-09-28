@@ -61,9 +61,22 @@ void CHierarchyNode::Update_CombindTransformationMatrix(_uint iAnimationIndex)
 
 	if (nullptr != m_pParent)       // 부모노드의 행렬과 내 행렬을 곱하자
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix, TransformationMatrix * XMLoadFloat4x4(&m_pParent->m_CombinedTransformationMatrix));
-
 	else                            // 루트노드
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix, TransformationMatrix); 
+}
+
+void CHierarchyNode::Set_CombindTransformationMatrix(_fmatrix CombindTransformationMatrix)
+{
+	//_float3 vOffSetPos;
+	//
+	//XMStoreFloat3(&vOffSetPos, CombindTransformationMatrix.r[3] - CombindTransformationMatrix.r[3]);
+	XMStoreFloat4x4(&m_CombinedTransformationMatrix, CombindTransformationMatrix);
+
+	//_fvector vPos = CombindTransformationMatrix.r[3];
+	//m_CombinedTransformationMatrix.m[3][0] = XMVectorGetX(vPos);
+	//m_CombinedTransformationMatrix.m[3][1] = XMVectorGetY(vPos);
+	//m_CombinedTransformationMatrix.m[3][2] = XMVectorGetZ(vPos);
+
 }
 
 CHierarchyNode * CHierarchyNode::Create(char * pName, _fmatrix TransformationMatrix, CHierarchyNode * pParent, _uint iDepth)

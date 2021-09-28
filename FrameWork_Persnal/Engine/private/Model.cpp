@@ -120,6 +120,16 @@ void CModel::Set_AnimationIndex_Start_SecondNode(_float fAnimationStart, _float 
 	m_Animations[iAnimationIndex]->Set_AnimationIndex_Start_Second(fAnimationStart, fAnimationStart_Term);
 }
 
+void CModel::Set_CombindTransformationMatrix(const char * pBoneName, _fmatrix CombindTransformationMatrix)
+{
+	CHierarchyNode* pNode = Find_HierarchyNode(pBoneName);
+	if (nullptr == pNode)
+		return;
+
+	pNode->Set_CombindTransformationMatrix(CombindTransformationMatrix);
+	return;
+}
+
 HRESULT CModel::NativeConstruct_Prototype(const char * pMeshFilePath, const char * pMeshFileName, const _tchar* pShaderFilePath, const char* pTechniqueName, _fmatrix PivotMatrix)
 {
 	if (nullptr == m_pModelLoader)
@@ -702,16 +712,7 @@ CHierarchyNode * CModel::Find_HierarchyNode_Parent(const char * pNodeName, _uint
 
 HRESULT CModel::Update_Animation_Node(CHierarchyNode * pNode, vector <string>* vecNodeNames, _float TimeDelta, _float fFrameSpeed, _uint iAnimationIndex, _bool IsStartNode)
 {
-	// 필요한거 부모노드의 이름, 이름이 담긴 벡터
-	// 노드의 부모노드 이름 == 부모노드의 이름
-	// 내 이름 != 이름벡터
-	
-	// 재귀 이거 어떻게 탈출함 시발 ㅋㅋㅋ
 
-
-
-
-	// 노드 하나의 바닥까지는 도달 가능
 	CHierarchyNode* pChildNode = Find_HierarchyNode_Parent(pNode->Get_Name(), pNode->Get_Depth(), vecNodeNames);
 
 	if (nullptr != pChildNode)

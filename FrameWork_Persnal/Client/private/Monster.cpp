@@ -50,7 +50,7 @@ _int CMonster::Late_Tick(_float TimeDelta)
 	if (nullptr != m_pMeterBar_Hp && 0 < m_pStatusCom->Get_Hp())
 	{
 		m_pMeterBar_Hp->Set_Count((_float)m_pStatusCom->Get_Hp(), (_float)m_pStatusCom->Get_HpMax());
-		//m_pMeterBar_Hp->Late_Tick(TimeDelta);
+		m_pMeterBar_Hp->Late_Tick(TimeDelta);
 	}
 
 
@@ -104,14 +104,15 @@ HRESULT CMonster::Render()
 	return S_OK;
 }
 
-EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos)
+EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsContinueAnimation)
 {
 	// 먼저 플레이어 거리 탐색
+	if (EMonsterAI::Attack == m_eAI_Next && IsContinueAnimation)
+		return EMonsterAI::Attack;
+
 
 	if (0 >= m_pStatusCom->Get_Hp())
 		return EMonsterAI::Dead;
-
-
 
 	CMovement* pTarget = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
 
@@ -125,7 +126,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos)
 
 	if (m_fAttackDis > fDis)
 	{
-		return EMonsterAI::Attack;
+		return m_eAI_Next = EMonsterAI::Attack;
 	}
 
 
@@ -140,36 +141,36 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos)
 		{
 			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 2.f, vTargetPos);
 
-			return EMonsterAI::Turn;
+			return m_eAI_Next = EMonsterAI::Turn;
 		}
 		else if (60.f < fTurnAngle)
 		{
 			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 1.5f, vTargetPos);
-			return EMonsterAI::Move;
+			return m_eAI_Next = EMonsterAI::Turn;
 		}
 		else if (40.f < fTurnAngle)
 		{
 			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 1.5f, vTargetPos);
 			//m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
-			return EMonsterAI::Move;
+			return m_eAI_Next = EMonsterAI::Turn;
 		}
 		else if (20.f < fTurnAngle)
 		{
 			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta* 1.5f, vTargetPos);
 			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
-			return EMonsterAI::Move;
+			return m_eAI_Next = EMonsterAI::Move;
 		}
 		else if (10.f < fTurnAngle)
 		{
 			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta, vTargetPos);
 			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
-			return EMonsterAI::Move;
+			return m_eAI_Next = EMonsterAI::Move;
 		}
 
 
 
 		m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
-		return EMonsterAI::Move;
+		return m_eAI_Next = EMonsterAI::Move;
 
 	}
 
@@ -187,7 +188,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos)
 
 	CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Tower");
 	if (nullptr == pLayer)
-		return EMonsterAI::End;
+		return m_eAI_Next = EMonsterAI::Idle;
 
 	// AI를 구상 해보자
 	/*
@@ -216,7 +217,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos)
 
 
 
-	return EMonsterAI::Idle;
+	return m_eAI_Next = EMonsterAI::Idle;
 }
 
 HRESULT CMonster::Ready_Component(void * pArg)

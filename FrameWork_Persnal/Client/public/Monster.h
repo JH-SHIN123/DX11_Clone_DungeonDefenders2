@@ -40,7 +40,7 @@ public:
 	virtual HRESULT Render() override;
 
 protected:
-	EMonsterAI AI_Check(_float TimeDelta, _vector* pTargetPos);
+	EMonsterAI AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsContinueAnimation);
 
 private:
 	HRESULT	Ready_Component(void* pArg);

@@ -62,6 +62,9 @@ public: // Tick
 	void	TargetRotate_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag);
 	void	TargetRotate_Check(CTransform* pTransform);
 
+public:
+	void Cam_Shake(_float3 vPower, _float ShakeTime = 0.5f);
+
 protected:
 	void	View_Check(_float TimeDelata);
 
@@ -73,6 +76,7 @@ private: //
 
 private:
 	void Zoom_Check(_float TimeDelta);
+	void Shake_Check(_float TimeDelta);
 
 private:
 	void SetUp_PipeLine_Matrix();
@@ -94,6 +98,9 @@ protected:
 	//_float					m_fAxisX_Lenght = 0.f;
 	//_float3					m_vNoRotate_TargetAxis;
 	//_float3					m_vCalculate_TargetAxis;
+
+	_float3	m_vShakePower = {1.f, 1.f, 1.f};
+	_float	m_fShakeTime = 0.f;
 
 protected:
 	ECameraViewMode			m_eCameraMode_Now = ECameraViewMode::ThirdPerson;
