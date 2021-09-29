@@ -39,17 +39,23 @@ public:
 	virtual _int	Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	_float Get_HpRatio() const;
+
+public:
+	void Set_IsBrainWash(_bool IsBrainWash);
+	void Set_IsBrainWash_Complete(_bool IsBrainWash);
+
+
 protected:
 	EMonsterAI AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsContinueAnimation);
-
-private:
-	HRESULT	Ready_Component(void* pArg);
-
-
+	EMonsterAI AI_BrainWashed(_float TimeDelta, _vector* pTargetPos, _bool IsContinueAnimation);
 
 protected:
 	void Set_HpBar_OffSet_Position(_float3 vOffSet_Pos) { m_vHpBar_OffSet_Position = vOffSet_Pos; }
 
+private:
+	HRESULT	Ready_Component(void* pArg);
 
 private:
 	CMasking_MeterBar_3D*	m_pMeterBar_Hp	= nullptr;
@@ -61,6 +67,11 @@ protected:
 	CRenderer*				m_pRendererCom	= nullptr;
 	CMovement*				m_pMovementCom	= nullptr;
 
+private:
+	_bool	m_IsBrainWashed				= false;
+	_bool	m_IsBrainWashed_Complete = false;
+
+	_float	m_fBrainWashTime = 0.f;
 
 
 private:

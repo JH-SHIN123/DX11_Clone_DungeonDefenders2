@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Monster.h"
 #include "Masking_MeterBar_3D.h"
+#include "Player.h"
 
 CMonster::CMonster(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -38,7 +39,6 @@ _int CMonster::Tick(_float TimeDelta)
 
 		m_pMeterBar_Hp->Tick(TimeDelta);
 	}
-
 
 
 
@@ -106,13 +106,19 @@ HRESULT CMonster::Render()
 
 EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsContinueAnimation)
 {
+	if (0 >= m_pStatusCom->Get_Hp())
+		return EMonsterAI::Dead;
+
+	// 세뇌중
+	if (true == m_IsBrainWashed)
+		return AI_BrainWashed(TimeDelta, pTargetPos, IsContinueAnimation);
+
+
 	// 먼저 플레이어 거리 탐색
 	if (EMonsterAI::Attack == m_eAI_Next && IsContinueAnimation)
 		return EMonsterAI::Attack;
 
 
-	if (0 >= m_pStatusCom->Get_Hp())
-		return EMonsterAI::Dead;
 
 	CMovement* pTarget = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
 
@@ -220,6 +226,22 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 	return m_eAI_Next = EMonsterAI::Idle;
 }
 
+EMonsterAI CMonster::AI_BrainWashed(_float TimeDelta, _vector * pTargetPos, _bool IsContinueAnimation)
+{
+	// 주말에...
+	m_pMeterBar_Hp->Set_ShaderPass(15);
+
+	if (true == IsContinueAnimation ||
+		true == m_IsBrainWashed)
+		return EMonsterAI::Shock;
+
+	if (true == m_IsBrainWashed_Complete)
+	{
+	}
+
+	return EMonsterAI::Idle;
+}
+
 HRESULT CMonster::Ready_Component(void * pArg)
 {
 	MONSTER_DESC Data;
@@ -254,6 +276,26 @@ HRESULT CMonster::Ready_Component(void * pArg)
 		MSG_BOX("CMonster::Ready_Component Failed");
 
 	return hr;
+}
+
+_float CMonster::Get_HpRatio() const
+{
+	return m_pMeterBar_Hp->Get_Ratio(); 
+}
+
+void CMonster::Set_IsBrainWash(_bool IsBrainWash)
+{
+	m_IsBrainWashed = IsBrainWash;
+
+	m_fBrainWashTime = m_pMeterBar_Hp->Get_Ratio() * 2.f;
+
+	//static_cast<CPlayer*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Set_Casting_BrainWash_MaxTime(m_pMeterBar_Hp->Get_Ratio() * 2.f);
+}
+
+void CMonster::Set_IsBrainWash_Complete(_bool IsBrainWash)
+{
+	m_IsBrainWashed = !m_IsBrainWashed;
+	//m_IsBrainWashed_Complete = IsBrainWash;
 }
 
 CGameObject * CMonster::Clone_GameObject(void * pArg)

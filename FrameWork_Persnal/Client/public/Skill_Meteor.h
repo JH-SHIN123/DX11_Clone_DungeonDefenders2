@@ -22,6 +22,9 @@ public:
 public:
 	HRESULT Ready_Component(void* pArg);
 
+public:
+	void Create_Explosion();
+
 private:
 	_bool	m_IsFall = false;
 	_float	m_fCastTime = 0.5f;

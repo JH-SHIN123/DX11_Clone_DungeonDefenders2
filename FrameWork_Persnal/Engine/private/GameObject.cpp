@@ -74,6 +74,12 @@ void CGameObject::Set_Pivot_Rotate(_fvector RotateXYZW)
 		XMConvertToDegrees(XMVectorGetX(RotateXYZW)), XMConvertToDegrees(XMVectorGetY(RotateXYZW)), XMConvertToDegrees(XMVectorGetZ(RotateXYZW))));
 }
 
+void CGameObject::Set_Pivot_Rotate_Radian(_fvector RadianXYZW)
+{
+	XMStoreFloat4x4(&m_PivotMatrix, XMLoadFloat4x4(&m_PivotMatrix) * XMMatrixRotationRollPitchYaw(
+		XMConvertToRadians(XMVectorGetX(RadianXYZW)), XMConvertToRadians(XMVectorGetY(RadianXYZW)), XMConvertToRadians(XMVectorGetZ(RadianXYZW))));
+}
+
 HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar * pPrototypeTag, const _tchar * pComponentTag, CComponent ** ppOut, void * pArg)
 {
 	// 레벨인덱스 예외처리 없는게 아쉽네

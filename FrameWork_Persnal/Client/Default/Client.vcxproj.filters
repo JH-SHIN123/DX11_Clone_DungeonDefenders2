@@ -190,9 +190,6 @@
     <Filter Include="05.Utility\05.Collide_Manager">
       <UniqueIdentifier>{c015e515-69a7-4080-80bd-d706ca161490}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\07.Bullet\04.Archer_Arrow">
-      <UniqueIdentifier>{c352eea6-fee9-4b7f-a4b1-dabfe00e05a0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\09.Weapon">
       <UniqueIdentifier>{166f40ba-7f77-422d-ad13-ebf1a0799f43}</UniqueIdentifier>
     </Filter>
@@ -207,6 +204,24 @@
     </Filter>
     <Filter Include="02.GameObject\05.Monster\01.Ogre">
       <UniqueIdentifier>{ce8952c6-600e-41c9-918b-6e734e5dc725}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet\02.Skill_ManaBomb\Boom">
+      <UniqueIdentifier>{e0ae193d-2e3f-4d5f-9ede-b4910ac88a59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet\03.Skill_Meteor\00.Meteor_Explosion">
+      <UniqueIdentifier>{fcf20bb8-e7cf-44cb-850b-dad83a2adc0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet\03.Skill_Meteor\00.Meteor_Explosion\Effect_0">
+      <UniqueIdentifier>{dd918fc9-9c47-4d7e-aee3-fb9e47a74d7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet\03.Skill_Meteor\00.Meteor_Explosion\Effect_1">
+      <UniqueIdentifier>{22394e8b-c381-45fa-ad4c-eeddd2c8abed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet\04.Skill_BrainWash">
+      <UniqueIdentifier>{53a9a771-e406-455d-984e-fdc391937afb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet\04.Skill_BrainWash\Skill_BrainWash_Effect">
+      <UniqueIdentifier>{e2c9e602-e5de-4d92-b3cb-91f1bbd08c9e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -393,9 +408,6 @@
     <ClInclude Include="..\public\Archer.h">
       <Filter>02.GameObject\05.Monster\Dummy\01.Archer</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Archer_Arrow.h">
-      <Filter>02.GameObject\07.Bullet\04.Archer_Arrow</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Weapon.h">
       <Filter>02.GameObject\09.Weapon</Filter>
     </ClInclude>
@@ -404,6 +416,24 @@
     </ClInclude>
     <ClInclude Include="..\public\Ogre.h">
       <Filter>02.GameObject\05.Monster\01.Ogre</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boom.h">
+      <Filter>02.GameObject\07.Bullet\02.Skill_ManaBomb\Boom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Meteor_Explosion.h">
+      <Filter>02.GameObject\07.Bullet\03.Skill_Meteor\00.Meteor_Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Meteor_Explosion_Effect_2.h">
+      <Filter>02.GameObject\07.Bullet\03.Skill_Meteor\00.Meteor_Explosion\Effect_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Meteor_Explosion_Effect.h">
+      <Filter>02.GameObject\07.Bullet\03.Skill_Meteor\00.Meteor_Explosion\Effect_0</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Skill_BrainWash.h">
+      <Filter>02.GameObject\07.Bullet\04.Skill_BrainWash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Skill_BrainWash_Effect.h">
+      <Filter>02.GameObject\07.Bullet\04.Skill_BrainWash\Skill_BrainWash_Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -569,9 +599,6 @@
     <ClCompile Include="..\private\Archer.cpp">
       <Filter>02.GameObject\05.Monster\Dummy\01.Archer</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Archer_Arrow.cpp">
-      <Filter>02.GameObject\07.Bullet\04.Archer_Arrow</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Weapon.cpp">
       <Filter>02.GameObject\09.Weapon</Filter>
     </ClCompile>
@@ -580,6 +607,24 @@
     </ClCompile>
     <ClCompile Include="..\private\Ogre.cpp">
       <Filter>02.GameObject\05.Monster\01.Ogre</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boom.cpp">
+      <Filter>02.GameObject\07.Bullet\02.Skill_ManaBomb\Boom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Meteor_Explosion.cpp">
+      <Filter>02.GameObject\07.Bullet\03.Skill_Meteor\00.Meteor_Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Meteor_Explosion_Effect_2.cpp">
+      <Filter>02.GameObject\07.Bullet\03.Skill_Meteor\00.Meteor_Explosion\Effect_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Meteor_Explosion_Effect.cpp">
+      <Filter>02.GameObject\07.Bullet\03.Skill_Meteor\00.Meteor_Explosion\Effect_0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Skill_BrainWash.cpp">
+      <Filter>02.GameObject\07.Bullet\04.Skill_BrainWash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Skill_BrainWash_Effect.cpp">
+      <Filter>02.GameObject\07.Bullet\04.Skill_BrainWash\Skill_BrainWash_Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

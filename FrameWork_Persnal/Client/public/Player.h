@@ -77,6 +77,9 @@ public:
 public:
 	_bool	Get_Skill_Using(_int iSkillIndex);
 
+//public:
+//	void Set_Casting_BrainWash_MaxTime(const _float& fTime) { m_fBrainWash_Time_Max = fTime; }
+
 private: // Tick
 	void	Key_Check(_float TimeDelta);
 	void	Turn_Check(_float TimeDelta);
@@ -92,6 +95,7 @@ private:
 	//void Skill_ManaBomb
 	void Skill_ManaBomb();
 	void Skill_Meteor();
+	void Skill_BrainWash();
 	void Skill_Healing(_float TimeDelta);
 
 private:
@@ -112,6 +116,7 @@ private:
 	_bool			m_IsSkill_Use[10] = { false };
 	_bool			m_IsAttack = false;
 	_float			m_fChargeSkill = 0.f;
+	//_bool			m_IsChargeSkill_Change = false;
 	_bool			m_IsCharging = false;
 
 private: // Tower
@@ -123,10 +128,10 @@ private: // Tower
 	MOVESTATE_DESC				m_CreateTower_Desc;
 
 private:
-	EPlayerAnimation		m_eAnimationState_Cur		= EPlayerAnimation::End;
-	EPlayerAnimation		m_eAnimationState_Next		= EPlayerAnimation::Idle;
-	EPlayerAnimation		m_eAnimationState_Cur_Second = EPlayerAnimation::End;
-	EPlayerAnimation		m_eAnimationState_Next_Second = EPlayerAnimation::End;
+	EPlayerAnimation		m_eAnimationState_Cur			= EPlayerAnimation::End;
+	EPlayerAnimation		m_eAnimationState_Next			= EPlayerAnimation::Idle;
+	EPlayerAnimation		m_eAnimationState_Cur_Second	= EPlayerAnimation::End;
+	EPlayerAnimation		m_eAnimationState_Next_Second	= EPlayerAnimation::End;
 
 	_bool					m_IsSecondAnimation = false;
 
@@ -135,10 +140,15 @@ private: // Skill
 	_bool	m_IsCast_ManaBomb		= false;
 	_bool	m_IsCast_Meteor			= false;
 	_bool	m_IsCast_BrainWash		= false;
+	_bool	m_IsCast_BrainWash_End	= false;
 	_bool	m_IsCast_Healing		= false;
 	_bool	m_IsCasting_Move		= false;
 
 	_bool	m_IsZoom = false;
+
+	//_float	m_fBrainWash_Time		= 0.f; 
+	//_float	m_fBrainWash_Time_Max	= 0.f; // 몬스터가 세팅해줌
+
 
 private:
 	HRESULT	Ready_Component(void* pArg);

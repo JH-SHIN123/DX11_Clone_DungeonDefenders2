@@ -62,7 +62,7 @@ _int COgre::Tick(_float TimeDelta)
 			m_IsHurt = false;
 			m_eAnim_Next = EOgreAnim::Idle;
 		}
-
+		m_IsHurt = false;
 	}
 
 	if (true == m_pColliderCom_Hurt->Get_IsCollide() || true == m_IsHurt)
@@ -101,6 +101,7 @@ _int COgre::Tick(_float TimeDelta)
 			m_eAnim_Next = EOgreAnim::Death;
 			break;
 		case Client::EMonsterAI::Shock:
+			m_eAnim_Next = EOgreAnim::Hurt;
 			break;
 		case Client::EMonsterAI::Move:
 			if (true == m_IsAttack)

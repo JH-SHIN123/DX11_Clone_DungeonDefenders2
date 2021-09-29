@@ -2,6 +2,7 @@
 #include "..\public\Collide_Manager.h"
 #include "Collider.h"
 #include "Status.h"
+#include "Monster.h"
 
 IMPLEMENT_SINGLETON(CCollide_Manager)
 
@@ -27,18 +28,18 @@ _bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectLayer, ELevel eD
 	list<CGameObject*> Dst_Object = pDstLayer->Get_GameObject_List();
 	list<CGameObject*> Src_Object = pSrcLayer->Get_GameObject_List();
 
-	for (auto& Dst : Dst_Object) // Com_Collide_Hit
+	for (auto& Src : Src_Object) // Com_Collide_Attack
 	{
-		CCollider* pDstCol_Hit = (CCollider*)Dst->Get_Component(L"Com_Collide_Hit");
+		CCollider* pSrcCol_Attack = (CCollider*)Src->Get_Component(L"Com_Collide_Attack");
 
-		if (nullptr == pDstCol_Hit)
+		if (nullptr == pSrcCol_Attack || true == pSrcCol_Attack->Get_NotCollide())
 			continue;
 
-		for (auto& Src : Src_Object) // Com_Collide_Attack
+		for (auto& Dst : Dst_Object) // Com_Collide_Hit
 		{
-			CCollider* pSrcCol_Attack = (CCollider*)Src->Get_Component(L"Com_Collide_Attack");
+			CCollider* pDstCol_Hit = (CCollider*)Dst->Get_Component(L"Com_Collide_Hit");
 
-			if (nullptr == pSrcCol_Attack || true == pSrcCol_Attack->Get_NotCollide())
+			if (nullptr == pDstCol_Hit)
 				continue;
 
 			if (true == pDstCol_Hit->Intersect_Collider(pSrcCol_Attack))
@@ -52,8 +53,8 @@ _bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectLayer, ELevel eD
 				Data.eDamageType = pSrcCol_Attack->Get_DamageType();
 				Data.iDamage = pSrcCol_Attack->Get_Damage();
 				Data.fHitTime = pSrcCol_Attack->Get_HitTime();
-
 				pDstStat->Set_Damage(Data);
+
 				//pDstCol_Hit->
 				// 데미지 계산은 스탯이 하지만 데미지의 정보는 콜라이더가 가지는 형식이다.
 
@@ -67,14 +68,42 @@ _bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectLayer, ELevel eD
 	return false;
 }
 
+void CCollide_Manager::Collide_Check_BrainWash(const _tchar * szDstObjectLayer, ELevel eDstObjectLevel, const _tchar * szSrcObjectLayer, ELevel eSrcObjectLevel)
+{
+	CLayer* pDstLayer = GET_GAMEINSTANCE->Get_Layer((_uint)eDstObjectLevel, szDstObjectLayer);
+	if (nullptr == pDstLayer)
+		return;
+
+	CLayer* pSrcLayer = GET_GAMEINSTANCE->Get_Layer((_uint)eSrcObjectLevel, szSrcObjectLayer);
+	if (nullptr == pSrcLayer)
+		return;
+
+	list<CGameObject*> Dst_Object = pDstLayer->Get_GameObject_List();
+	list<CGameObject*> Src_Object = pSrcLayer->Get_GameObject_List();
+
+	for (auto& Src : Src_Object) // Com_Collide_Attack
+	{
+		CCollider* pSrcCol_Attack = (CCollider*)Src->Get_Component(L"Com_Collide_Attack");
+
+		if (nullptr == pSrcCol_Attack || true == pSrcCol_Attack->Get_NotCollide())
+			continue;
+
+		for (auto& Dst : Dst_Object) // Com_Collide_Hit
+		{
+			CCollider* pDstCol_Hit = (CCollider*)Dst->Get_Component(L"Com_Collide_Hit");
+
+			if (nullptr == pDstCol_Hit)
+				continue;
 
 
+			if (true == pDstCol_Hit->Intersect_Collider(pSrcCol_Attack))
+				static_cast<CMonster*>(Dst)->Set_IsBrainWash(true);
+		}
+	}
 
 
-
-
-
-
+	return;
+}
 
 void CCollide_Manager::Free()
 {

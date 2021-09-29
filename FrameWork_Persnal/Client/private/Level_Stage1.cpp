@@ -121,9 +121,10 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 	if (GET_KEY_INPUT(DIK_F4))
 		CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Combat);
 
-
-	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Monster", ELevel::Stage1, L"Layer_Bullet", ELevel::Stage1);
-	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
+	//Layer_Bullet_BrainWash
+	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Monster", ELevel::Stage1,			L"Layer_Bullet", ELevel::Stage1);
+	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1,				L"Layer_Monster", ELevel::Stage1);
+	CCollide_Manager::GetInstance()->Collide_Check_BrainWash(L"Layer_Monster", ELevel::Stage1,			L"Layer_Bullet_BrainWash", ELevel::Stage1);
 
 
 	return 0;

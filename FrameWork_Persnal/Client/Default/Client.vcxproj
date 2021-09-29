@@ -168,9 +168,9 @@
     <ClInclude Include="..\Bin\Shader\Shader_Defines.hpp" />
     <ClInclude Include="..\public\Animate_Effect.h" />
     <ClInclude Include="..\public\Archer.h" />
-    <ClInclude Include="..\public\Archer_Arrow.h" />
     <ClInclude Include="..\public\BackGround_Logo.h" />
     <ClInclude Include="..\public\BlockadeTower.h" />
+    <ClInclude Include="..\public\Boom.h" />
     <ClInclude Include="..\public\Bullet.h" />
     <ClInclude Include="..\public\Calculator.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
@@ -202,6 +202,9 @@
     <ClInclude Include="..\public\Masking_MeterBar_3D.h" />
     <ClInclude Include="..\public\Masking_UI.h" />
     <ClInclude Include="..\public\Masking_MeterBar.h" />
+    <ClInclude Include="..\public\Meteor_Explosion.h" />
+    <ClInclude Include="..\public\Meteor_Explosion_Effect.h" />
+    <ClInclude Include="..\public\Meteor_Explosion_Effect_2.h" />
     <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\public\MyButton.h" />
     <ClInclude Include="..\public\MyFont.h" />
@@ -212,6 +215,8 @@
     <ClInclude Include="..\public\Phase_Panel.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\PlayerSkill.h" />
+    <ClInclude Include="..\public\Skill_BrainWash.h" />
+    <ClInclude Include="..\public\Skill_BrainWash_Effect.h" />
     <ClInclude Include="..\public\Skill_ManaBomb.h" />
     <ClInclude Include="..\public\Skill_Meteor.h" />
     <ClInclude Include="..\public\Staff_Basic.h" />
@@ -234,9 +239,9 @@
   <ItemGroup>
     <ClCompile Include="..\private\Animate_Effect.cpp" />
     <ClCompile Include="..\private\Archer.cpp" />
-    <ClCompile Include="..\private\Archer_Arrow.cpp" />
     <ClCompile Include="..\private\BackGround_Logo.cpp" />
     <ClCompile Include="..\private\BlockadeTower.cpp" />
+    <ClCompile Include="..\private\Boom.cpp" />
     <ClCompile Include="..\private\Bullet.cpp" />
     <ClCompile Include="..\private\Calculator.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
@@ -264,6 +269,9 @@
     <ClCompile Include="..\private\Masking_MeterBar_3D.cpp" />
     <ClCompile Include="..\private\Masking_UI.cpp" />
     <ClCompile Include="..\private\Masking_MeterBar.cpp" />
+    <ClCompile Include="..\private\Meteor_Explosion.cpp" />
+    <ClCompile Include="..\private\Meteor_Explosion_Effect.cpp" />
+    <ClCompile Include="..\private\Meteor_Explosion_Effect_2.cpp" />
     <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\private\MyButton.cpp" />
     <ClCompile Include="..\private\MyFont.cpp" />
@@ -274,6 +282,8 @@
     <ClCompile Include="..\private\Phase_Panel.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\PlayerSkill.cpp" />
+    <ClCompile Include="..\private\Skill_BrainWash.cpp" />
+    <ClCompile Include="..\private\Skill_BrainWash_Effect.cpp" />
     <ClCompile Include="..\private\Skill_ManaBomb.cpp" />
     <ClCompile Include="..\private\Skill_Meteor.cpp" />
     <ClCompile Include="..\private\Staff_Basic.cpp" />

@@ -35,6 +35,9 @@ public:
 	void Set_OffSetPosition(_fmatrix vPosition);
 
 public:
+	_fvector Get_State(EState eState) { return m_pMovementCom->Get_State(eState); }
+
+public:
 	void Create_Bullet();
 
 private:

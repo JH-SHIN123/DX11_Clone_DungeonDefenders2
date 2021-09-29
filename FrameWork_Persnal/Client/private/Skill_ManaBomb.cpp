@@ -31,7 +31,7 @@ _int CSkill_ManaBomb::Tick(_float TimeDelta)
 {
 	if (__super::Tick(TimeDelta))
 	{
-
+		Create_Explosion();
 		return OBJECT_DEAD;
 	}
 
@@ -60,7 +60,13 @@ _int CSkill_ManaBomb::Tick(_float TimeDelta)
 
 _int CSkill_ManaBomb::Late_Tick(_float TimeDelta)
 {
-	return __super::Late_Tick(TimeDelta);
+	int iReturn = 0;
+	if (iReturn = __super::Late_Tick(TimeDelta))
+	{
+		Create_Explosion();
+		return iReturn;
+	}
+	return iReturn;
 }
 
 HRESULT CSkill_ManaBomb::Render()
@@ -80,6 +86,36 @@ HRESULT CSkill_ManaBomb::Ready_Component(void * pArg)
 		MSG_BOX("CSkill_ManaBomb::Ready_Component");
 
 	return hr;
+}
+
+void CSkill_ManaBomb::Create_Explosion()
+{
+	_vector vDir;
+	_vector vPos = m_pMovementCom->Get_State(EState::Position);
+	BULLET_DESC Data;
+	Data.fLifeTime = 0.3f;
+	XMStoreFloat4(&Data.MoveState_Desc.vPos, vPos);
+	Data.MoveState_Desc.fSpeedPerSec = 30.f;
+	Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+
+	Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
+	Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+	Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+	Data.Attack_Collide_Desc.vScale = { 5.f, 5.f, 5.f };
+	Data.Attack_Collide_Desc.IsCenter = false;
+
+	_float fAngle = 0;
+	_matrix RotateMatrix;
+
+	for (_int i = 0; i < 10; ++i)
+	{
+		RotateMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(fAngle));
+		vDir = XMVector3Normalize(RotateMatrix.r[2]);
+		XMStoreFloat3(&Data.vDir, vDir);
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Boom"), (_uint)ELevel::Stage1, TEXT("Layer_Bullet"), &Data);
+
+		fAngle += 360.f / 10.f;
+	}
 }
 
 CSkill_ManaBomb * CSkill_ManaBomb::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

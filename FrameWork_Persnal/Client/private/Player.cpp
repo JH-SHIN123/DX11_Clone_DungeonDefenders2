@@ -164,10 +164,12 @@ void CPlayer::Key_Check(_float TimeDelta)
 	// Break First
 	m_IsCasting_Move = false;
 
-	if (true == m_IsCast_ManaBomb	|| 
-		true == m_IsCast_Meteor		|| 
-		true == m_IsCast_PowerUp	|| 
-		true == m_IsCast_BrainWash	) return;
+	if (true == m_IsCast_ManaBomb		|| 
+		true == m_IsCast_Meteor			|| 
+		true == m_IsCast_PowerUp		|| 
+		true == m_IsCast_BrainWash		||
+		true == m_IsCast_BrainWash_End	||
+		true == m_IsCast_Healing	) return;
 		
 	_long dwMouseMove = 0;
 
@@ -343,9 +345,9 @@ void CPlayer::Key_Check(_float TimeDelta)
 		{
 			pSkill->Set_Skill_CoolDown(3, 15.f);
 			m_eAnimationState_Next = EPlayerAnimation::ChargeMax;
-			m_fChargeSkill = 3.f;
+			m_fChargeSkill = 2.f;
 			m_IsCharging = true;
-			m_IsCast_BrainWash = true;
+			//m_IsChargeSkill_Change = false;
 		}
 	}
 
@@ -358,7 +360,6 @@ void CPlayer::Key_Check(_float TimeDelta)
 			m_eAnimationState_Next = EPlayerAnimation::Heal;
 			m_fChargeSkill = 5.f;
 			m_IsCharging = true;
-			m_IsCast_Healing = true;
 		}
 	}
 
@@ -486,6 +487,7 @@ void CPlayer::Skill_Check()
 {
 	Skill_ManaBomb();
 	Skill_Meteor();
+	Skill_BrainWash();
 }
 
 void CPlayer::Level_Check()
@@ -543,6 +545,7 @@ void CPlayer::Animation_Check(_float TimeDelta)
 	{
 		m_IsCast_ManaBomb = false;
 		m_IsCast_Meteor = false;
+		m_IsCast_BrainWash_End = false;
 		m_IsZoom = false;
 	}
 }
@@ -722,7 +725,14 @@ void CPlayer::Skill_ManaBomb()
 			XMStoreFloat4(&Data.MoveState_Desc.vPos, vPos);
 			Data.MoveState_Desc.fSpeedPerSec = 3.f;
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
-			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Skill_ManaBomb", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
+
+			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
+			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 0;
+			Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+			Data.Attack_Collide_Desc.vScale = { 3.f, 3.f, 3.f };
+			Data.Attack_Collide_Desc.IsCenter = true;
+
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Skill_ManaBomb", (_uint)ELevel::Stage1, L"Layer_Skill", &Data);
 
 			m_IsCast_ManaBomb = true;
 		}
@@ -737,18 +747,105 @@ void CPlayer::Skill_Meteor()
 
 		if (false == m_IsCast_Meteor && 242 == (_uint)fAnimTime)
 		{
+			_vector vDir = XMVector3Normalize(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) + XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * -1.f);
 			_vector vPos = m_pMovementCom->Get_State(EState::Position) + m_pMovementCom->Get_State(EState::Up) * 13.f;
 			BULLET_DESC Data;
-			Data.fLifeTime = 0.85f;
+			Data.fLifeTime = 2.f;
 			lstrcpy(Data.szModelName, L"Component_Mesh_Skill_Meteor");
 			XMStoreFloat4(&Data.MoveState_Desc.vPos, vPos);
+			XMStoreFloat3(&Data.vDir, vDir);
 			Data.MoveState_Desc.fSpeedPerSec = 30.f;
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+
+			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Shock;
+			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+			Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+			Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
+			Data.Attack_Collide_Desc.IsCenter = true;
+
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Skill_Meteor", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
 
 			m_IsCast_Meteor = true;
 		}
 	}
+}
+
+void CPlayer::Skill_BrainWash()
+{
+	//if (0 < m_fBrainWash_Time_Max && false == m_IsChargeSkill_Change)
+	//{
+	//	m_IsChargeSkill_Change = true;
+	//	m_fChargeSkill = m_fBrainWash_Time_Max;
+	//}
+
+	if (EPlayerAnimation::ChargeMax == m_eAnimationState_Next)
+	{
+		_float fAnimTime = m_pModelCom->Get_AnimTime();
+
+		if (false == m_IsCast_BrainWash && 37 == (_uint)fAnimTime /*&& 5 == (_uint)m_fChargeSkill * 10*/)
+		{
+			//m_eAnimationState_Next = EPlayerAnimation::KnockBack;
+
+
+			// Dir은 나중에 네비메쉬가 추가되면 바꾼다 
+			_vector vDir = XMVector3Normalize(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) + XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * -1.f);
+			_vector vPos = m_pWeapon->Get_State(EState::Position);
+			vPos += XMVector3Normalize(m_pWeapon->Get_State(EState::Look)) * -8.f;
+
+			BULLET_DESC Data;
+			Data.fLifeTime = 2.f;
+			lstrcpy(Data.szModelName, L"Component_Mesh_Skill_BrainWash");
+			XMStoreFloat4(&Data.MoveState_Desc.vPos, vPos);
+			XMStoreFloat3(&Data.vDir, vDir);
+			Data.MoveState_Desc.fSpeedPerSec = 30.f;
+			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+
+			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Shock;
+			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+			Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+			Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
+			Data.Attack_Collide_Desc.IsCenter = true;
+
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Skill_BrainWash", (_uint)ELevel::Stage1, L"Layer_Bullet_BrainWash", &Data);
+
+
+			m_IsCast_BrainWash = true;
+			//m_IsCast_BrainWash_End = false;
+		}
+	}
+
+	//if (false == m_IsCast_BrainWash_End && true == m_IsCast_BrainWash)
+	//{
+	//	if (EPlayerAnimation::ChargeMax == m_eAnimationState_Next)
+	//	{
+	//
+	//		_float fAnimTime = m_pModelCom->Get_AnimTime();
+	//
+	//		if (false == m_IsCast_BrainWash_End && 536 == (_uint)fAnimTime)
+	//		{
+	//			m_IsCast_BrainWash_End = true;
+	//
+	//			// Dir은 나중에 네비메쉬가 추가되면 바꾼다 
+	//			_vector vDir = XMVector3Normalize(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) + XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * -1.f);
+	//			_vector vPos = m_pWeapon->Get_State(EState::Position);
+	//			BULLET_DESC Data;
+	//			Data.fLifeTime = 2.f;
+	//			lstrcpy(Data.szModelName, L"Component_Mesh_Skill_BrainWash");
+	//			XMStoreFloat4(&Data.MoveState_Desc.vPos, vPos);
+	//			XMStoreFloat3(&Data.vDir, vDir);
+	//			Data.MoveState_Desc.fSpeedPerSec = 30.f;
+	//			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+	//
+	//			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Shock;
+	//			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+	//			Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+	//			Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
+	//			Data.Attack_Collide_Desc.IsCenter = true;
+	//
+	//			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Skill_BrainWash", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
+	//		}
+	//	}
+	//}
 }
 
 void CPlayer::Skill_Healing(_float TimeDelta)
@@ -839,5 +936,6 @@ void CPlayer::Free()
 
 	Safe_Release(m_pStrikerTower);
 	Safe_Release(m_pWeapon);
+
 	__super::Free();
 }

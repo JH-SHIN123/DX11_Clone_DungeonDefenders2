@@ -26,6 +26,12 @@
 #include "Ogre.h"
 #include "Skill_ManaBomb.h"
 #include "Skill_Meteor.h"
+#include "Boom.h"
+#include "Meteor_Explosion.h"
+#include "Meteor_Explosion_Effect.h"
+#include "Meteor_Explosion_Effect_2.h"
+#include "Skill_BrainWash.h"
+#include "Skill_BrainWash_Effect.h"
 
 USING(Engine)
 
@@ -176,13 +182,15 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Ogre"), COgre::Create(m_pDevice, m_pDevice_Context));
 
 
-	//hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Archer"), CArcher::Create(m_pDevice, m_pDevice_Context));
-	//hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Archer_Arrow"), CArcher_Arrow::Create(m_pDevice, m_pDevice_Context));
 
-
-
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Boom"), CBoom::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_ManaBomb"), CSkill_ManaBomb::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_Meteor"), CSkill_Meteor::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_Meteor_Explosion"), CMeteor_Explosion::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_Meteor_Explosion_Ring"), CMeteor_Explosion_Effect::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_Meteor_Explosion_Effect"), CMeteor_Explosion_Effect_2::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_BrainWash"), CSkill_BrainWash::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_BrainWash_Effect"), CSkill_BrainWash_Effect::Create(m_pDevice, m_pDevice_Context));
 
 
 	// Model
@@ -228,6 +236,15 @@ HRESULT CLoading::LoadingForStage()
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Skill/ManaBomb/", "ManaBomb.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Skill_Meteor"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Skill/Meteor/", "Meteor.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Skill_Meteor_Explosion"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Skill/Meteor/Explosion/", "Meteor_Explosion.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Skill_Meteor_Explosion_Ring"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Skill/Meteor/Ring/", "Meteor_Explosion_Effect_1.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Skill_Meteor_Explosion_Effect"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Skill/Meteor/Effect/", "Meteor_Explosion_Effect_2.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Skill_BrainWash"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Skill/BrainWash/", "Skill_BrainWash.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
 
 	if (hr != S_OK)
@@ -240,7 +257,7 @@ HRESULT CLoading::LoadingForStage()
 
 HRESULT CLoading::Loading_UI()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 CLoading * CLoading::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, ELevel eNextSceneID)

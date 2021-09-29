@@ -7,6 +7,7 @@ texture2D		g_MaskTexture;
 float			g_AlphaTime;
 float2			g_TextureTime_UV;
 float2			g_Textrue_UV;
+//float3			g_Color;
 
 // 샘플러 : 텍스처를 어떻게 필터링하고 샘플링 할것인지 세팅하는것
 // RS보다 세밀한 설정느낌
@@ -349,8 +350,28 @@ PS_OUT PS_MASKING_UV_RATIO(PS_IN_TEX2 In)
 	float4 vMask = g_MaskTexture.Sample(DiffuseSampler, In.vTexUV_2);
 	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
-	Out.vColor.r *= 1.f;
+	Out.vColor.r *= 1.7f;
 	Out.vColor.gb *= 0.01f;
+	Out.vColor.a = vMask.g;
+
+	return Out;
+}
+
+PS_OUT PS_MASKING_UV_RATIO_GREEN(PS_IN_TEX2 In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	if (In.vTexUV_2.x >= g_Textrue_UV.x)
+	{
+		Out.vColor.a = 0.f;
+		return Out;
+	}
+	// 마스킹을 던져야 함
+	float4 vMask = g_MaskTexture.Sample(DiffuseSampler, In.vTexUV_2);
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	Out.vColor.g *= 1.7f;
+	Out.vColor.rb *= 0.01f;
 	Out.vColor.a = vMask.g;
 
 	return Out;
@@ -558,6 +579,16 @@ technique11		DefaultTechnique
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI();
 		PixelShader = compile ps_5_0 PS_TEX_ALPHA();
+	}
+
+	pass TimeTextureX_Masking_UV_Ratio_Green // 15
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE2_UV_TIME();
+		PixelShader = compile ps_5_0 PS_MASKING_UV_RATIO_GREEN();
 	}
 };
 

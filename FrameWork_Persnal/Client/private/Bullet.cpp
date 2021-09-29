@@ -30,7 +30,6 @@ _int CBullet::Tick(_float TimeDelta)
 
 	if (nullptr != m_pColliderCom_Attack)
 	{
-
 		m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 	}
 
@@ -51,6 +50,12 @@ _int CBullet::Late_Tick(_float TimeDelta)
 
 HRESULT CBullet::Render()
 {
+#ifdef _DEBUG
+	if(nullptr != m_pColliderCom_Attack)
+		m_pColliderCom_Attack->Render_Collider();
+#endif // _DEBUG
+
+
 	if (nullptr == m_pModelCom)
 		return S_OK;
 
@@ -104,10 +109,11 @@ HRESULT CBullet::Ready_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Status"), (CComponent**)&m_pStatusCom, &Data.Stat_Desc);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &Data.MoveState_Desc);
-	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data.Attack_Collide_Desc);
 
+	if(2 < lstrlen(Data.szModelName))
+		hr = CGameObject::Add_Component((_uint)ELevel::Stage1, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
 
 	//if (ELevel::End != Data.eTextureLevel)
 	//{

@@ -31,14 +31,14 @@ _int CSkill_Meteor::Tick(_float TimeDelta)
 {
 	if (__super::Tick(TimeDelta))
 	{
-
+		Create_Explosion();
 		return OBJECT_DEAD;
 	}
 
 	if (true == m_IsFall)
 	{
 		// 이거 몬스터 방향으로 
-		m_pMovementCom->Go_Straight(TimeDelta * 13.f);
+		m_pMovementCom->Go_Dir_Vector(TimeDelta, XMLoadFloat3(&m_vGoDir));
 
 	}
 
@@ -60,7 +60,16 @@ _int CSkill_Meteor::Tick(_float TimeDelta)
 
 _int CSkill_Meteor::Late_Tick(_float TimeDelta)
 {
-	return __super::Late_Tick(TimeDelta);
+	_int iReturn = 0;
+
+	if (iReturn = __super::Late_Tick(TimeDelta))
+	{
+		Create_Explosion();
+
+		return iReturn;
+	}
+
+	return iReturn;
 }
 
 HRESULT CSkill_Meteor::Render()
@@ -80,6 +89,19 @@ HRESULT CSkill_Meteor::Ready_Component(void * pArg)
 		MSG_BOX("CSkill_Meteor::Ready_Component");
 
 	return hr;
+}
+
+void CSkill_Meteor::Create_Explosion()
+{
+	BULLET_DESC Data;
+	ZeroMemory(&Data, sizeof(BULLET_DESC));
+
+	Data.fLifeTime = 1.f;
+	lstrcpy(Data.szModelName, L"Component_Mesh_Skill_Meteor_Explosion");
+	XMStoreFloat4(&Data.MoveState_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
+	Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Skill_Meteor_Explosion"), (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
 }
 
 CSkill_Meteor * CSkill_Meteor::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

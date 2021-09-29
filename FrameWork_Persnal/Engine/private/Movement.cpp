@@ -166,6 +166,11 @@ void CMovement::Go_LookDir(_float TimeDelta)
 	__super::Set_State(EState::Position, vPosition);
 }
 
+void CMovement::RotateTick(_float TimeDelta)
+{
+	RotationY_CCW(TimeDelta);
+}
+
 void CMovement::RotateToAxis_Tick(_float TimeDelta, _fvector vAxis)
 {
 	_vector	vRight	= __super::Get_State(EState::Right);
