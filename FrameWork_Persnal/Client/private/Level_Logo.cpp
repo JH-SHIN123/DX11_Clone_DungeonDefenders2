@@ -14,10 +14,17 @@ HRESULT CLevel_Logo::NativeConstruct()
 {
 	CLevel::NativeConstruct();
 
+	GET_GAMEINSTANCE->Clear_This_Level((_uint)ELevel::Loading);
+
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
 	Ready_Layer_MainMenu(L"Layer_MainMenu");
+
+
+
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, L"Prototype_Fade", (_uint)ELevel::Logo, L"Layer_Fade");
+
 
 	return S_OK;
 }
@@ -42,7 +49,7 @@ HRESULT CLevel_Logo::Render()
 		if (nullptr == pGameInstance)
 			return -1;
 
-		if (FAILED(pGameInstance->SetUp_CurrentLevel(CLevel_Loading::Create(m_pDevice, m_pDevice_Context, ELevel::Stage1))))
+		if (FAILED(pGameInstance->SetUp_CurrentLevel(CLevel_Loading::Create(m_pDevice, m_pDevice_Context, m_eNextLevel))))
 			return -1;
 
 		pGameInstance->Clear_This_Level((_uint)ELevel::Logo);

@@ -9,6 +9,8 @@
 #include "Animate_Effect.h"
 #include "Collider.h"
 #include "Collide_Manager.h"
+#include "LoadingScreen.h"
+#include "Fade.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -35,6 +37,9 @@ HRESULT CMainApp::Ready_MainApp()
 
 	if (FAILED(Ready_UI_Texture()))
 		return E_FAIL;
+
+	if (FAILED(Ready_Loading()))
+		return E_FAIL;	
 
 	if (FAILED(Ready_Cursor()))
 		return E_FAIL;
@@ -76,7 +81,7 @@ HRESULT CMainApp::Render_MainApp()
 	// LateUpdate °³³ä
 	CData_Manager::GetInstance()->TicK_Data();
 
-	m_pGameInstance->Clear_Back_Buffer(_float4(0.f, 0.f, 1.f, 1.f));
+	m_pGameInstance->Clear_Back_Buffer(_float4(0.f, 0.f, 0.f, 1.f));
 	m_pGameInstance->Clear_Depth_Stencil_Buffer();
 
 	m_pRenderer->Draw_Renderer();
@@ -151,7 +156,6 @@ HRESULT CMainApp::Ready_Component_PrototypeForStatic()
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Collider_OBB"),
 		CCollider::Create(m_pDevice, m_pDevice_Context, ECollideType::OBB))))
 		return E_FAIL;
-
 
 	//Animate_Effect
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Animate_Effect"), CAnimate_Effect::Create(m_pDevice, m_pDevice_Context))))
@@ -260,6 +264,25 @@ HRESULT CMainApp::Ready_Cursor()
 		return E_FAIL;
 
 	CCursor_Manager::GetInstance()->Set_Cursor(CCursor::Create(m_pDevice, m_pDevice_Context, TextureName));
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Loading()
+{
+	// Texture
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Texture_Loading_Ring")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/Loading/%d.tga"), 2))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_LoadingScreen"), CLoadingScreen::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Fade"), CFade::Create(m_pDevice, m_pDevice_Context))))
+		return E_FAIL;
+
+
 
 	return S_OK;
 }

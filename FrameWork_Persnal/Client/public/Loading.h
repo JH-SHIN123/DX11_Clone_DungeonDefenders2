@@ -10,7 +10,7 @@
 BEGIN(Client)
 
 enum class ELevel
-{Static, Logo, Stage1, End };
+{Static, Logo, Stage1, Loading, End };
 
 class CLoading final : public CBase
 {

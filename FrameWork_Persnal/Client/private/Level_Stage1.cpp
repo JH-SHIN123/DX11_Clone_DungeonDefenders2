@@ -9,6 +9,7 @@
 #include "DefenceTower.h"
 #include "Monster.h"
 #include "Collide_Manager.h"
+#include "Level_Loading.h"
 
 CLevel_Stage1::CLevel_Stage1(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CLevel(pDevice, pDevice_Context)
@@ -19,6 +20,8 @@ CLevel_Stage1::CLevel_Stage1(ID3D11Device * pDevice, ID3D11DeviceContext * pDevi
 HRESULT CLevel_Stage1::NativeConstruct()
 {
 	CLevel::NativeConstruct();
+
+	GET_GAMEINSTANCE->Clear_This_Level((_uint)ELevel::Loading);
 
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
@@ -88,6 +91,10 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
 
 
+
+
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, L"Prototype_Fade", (_uint)ELevel::Stage1, L"Layer_Fade");
+
 	return S_OK;
 }
 
@@ -136,6 +143,18 @@ HRESULT CLevel_Stage1::Render()
 	SetWindowText(g_hWnd, TEXT("지금 이거 로고씬."));
 #endif // _DEBUG
 
+	if (m_IsChange == true)
+	{
+		CGameInstance* pGameInstance = GET_GAMEINSTANCE;
+
+		if (nullptr == pGameInstance)
+			return -1;
+
+		if (FAILED(pGameInstance->SetUp_CurrentLevel(CLevel_Loading::Create(m_pDevice, m_pDevice_Context, m_eNextLevel))))
+			return -1;
+
+		pGameInstance->Clear_This_Level((_uint)ELevel::Stage1);
+	}
 
 
 
@@ -259,6 +278,12 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
 	pGameInstance->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_Player"), (_uint)ELevel::Stage1, pLayerTag, &Data);
 
 	return S_OK;
+}
+
+void CLevel_Stage1::Scene_Change(ELevel eLevel)
+{
+	m_IsChange = true;
+	m_eNextLevel = eLevel;
 }
 
 CLevel_Stage1 * CLevel_Stage1::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

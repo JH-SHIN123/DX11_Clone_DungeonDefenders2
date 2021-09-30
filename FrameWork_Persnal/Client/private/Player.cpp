@@ -77,7 +77,7 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 
 
 
-	Skill_Check();
+	Skill_Check(TimeDelta);
 
 	if (nullptr != m_pStrikerTower)
 	{
@@ -360,6 +360,8 @@ void CPlayer::Key_Check(_float TimeDelta)
 			m_eAnimationState_Next = EPlayerAnimation::Heal;
 			m_fChargeSkill = 5.f;
 			m_IsCharging = true;
+			m_fHealTime = 0.f;
+			m_iHealSize = m_pStatusCom->Get_HpMax() - m_pStatusCom->Get_Hp();
 		}
 	}
 
@@ -483,11 +485,12 @@ void CPlayer::Idle_Check()
 	
 }
 
-void CPlayer::Skill_Check()
+void CPlayer::Skill_Check(_float TimeDelta)
 {
 	Skill_ManaBomb();
 	Skill_Meteor();
 	Skill_BrainWash();
+	Skill_Healing(TimeDelta);
 }
 
 void CPlayer::Level_Check()
@@ -850,6 +853,25 @@ void CPlayer::Skill_BrainWash()
 
 void CPlayer::Skill_Healing(_float TimeDelta)
 {
+	if (EPlayerAnimation::Heal == m_eAnimationState_Next)
+	{
+		m_fHealTime += TimeDelta;
+
+		if (0.125 <= m_fHealTime)
+		{
+			m_fHealTime = 0.f;
+
+			_int iHp = m_pStatusCom->Get_Hp() + 5/*(m_iHealSize / 500.f)*/;
+
+			if ((_int)iHp > m_pStatusCom->Get_HpMax())
+				iHp = m_pStatusCom->Get_HpMax();
+
+			m_pStatusCom->Set_Hp((_int)iHp);
+
+		}
+	}
+	//else
+	//	m_fHealTime = 0.f;
 }
 
 void CPlayer::SpecialAnimation_Check(_float TimeDelta)

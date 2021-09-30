@@ -20,9 +20,16 @@ public:
 	virtual int Tick(_float Timedelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void Set_RealFinish(_bool IsRealFinish) { m_IsRealFinish = IsRealFinish; }
+
 private:
 	CLoading*		m_pLoading = nullptr;
 	ELevel			m_eNextLevelID = ELevel::End;
+
+	_bool m_IsCreateFadeIn = false;
+
+	_bool m_IsRealFinish = false;
 
 public:
 	static CLevel_Loading* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, ELevel eNextSceneID);

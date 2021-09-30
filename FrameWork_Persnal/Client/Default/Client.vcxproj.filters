@@ -223,6 +223,9 @@
     <Filter Include="02.GameObject\07.Bullet\04.Skill_BrainWash\Skill_BrainWash_Effect">
       <UniqueIdentifier>{e2c9e602-e5de-4d92-b3cb-91f1bbd08c9e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\00.Loading\Fade">
+      <UniqueIdentifier>{7fe4da06-ff18-447e-bae0-c80cd930bef6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -435,6 +438,12 @@
     <ClInclude Include="..\public\Skill_BrainWash_Effect.h">
       <Filter>02.GameObject\07.Bullet\04.Skill_BrainWash\Skill_BrainWash_Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\LoadingScreen.h">
+      <Filter>02.GameObject\00.Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Fade.h">
+      <Filter>02.GameObject\00.Loading\Fade</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -625,6 +634,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Skill_BrainWash_Effect.cpp">
       <Filter>02.GameObject\07.Bullet\04.Skill_BrainWash\Skill_BrainWash_Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LoadingScreen.cpp">
+      <Filter>02.GameObject\00.Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Fade.cpp">
+      <Filter>02.GameObject\00.Loading\Fade</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

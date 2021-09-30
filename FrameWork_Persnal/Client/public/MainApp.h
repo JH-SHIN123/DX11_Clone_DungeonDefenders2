@@ -39,6 +39,7 @@ private:
 	HRESULT	Ready_Component_PrototypeForStatic();
 	HRESULT	Ready_UI_Texture();
 	HRESULT Ready_Cursor();
+	HRESULT Ready_Loading();
 
 public:
 	static CMainApp* Create();

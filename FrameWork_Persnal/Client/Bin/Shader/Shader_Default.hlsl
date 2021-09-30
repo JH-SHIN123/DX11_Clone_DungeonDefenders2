@@ -7,7 +7,7 @@ texture2D		g_MaskTexture;
 float			g_AlphaTime;
 float2			g_TextureTime_UV;
 float2			g_Textrue_UV;
-//float3			g_Color;
+float3			g_Color;
 
 // 샘플러 : 텍스처를 어떻게 필터링하고 샘플링 할것인지 세팅하는것
 // RS보다 세밀한 설정느낌
@@ -337,6 +337,42 @@ PS_OUT PS_ALPHAMIDDLE(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_ALPHA_COLOR_R(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	Out.vColor.a = Out.vColor.r;
+	Out.vColor.rgb = g_Color.rgb;
+
+	return Out;
+}
+
+PS_OUT PS_ALPHA_COLOR_G(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	Out.vColor.a = Out.vColor.g;
+	Out.vColor.rgb = g_Color.rgb;
+
+	return Out;
+}
+
+PS_OUT PS_ALPHA_COLOR_B(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	Out.vColor.a = Out.vColor.b;
+	Out.vColor.rgb = g_Color.rgb;
+
+	return Out;
+}
+
 PS_OUT PS_MASKING_UV_RATIO(PS_IN_TEX2 In)
 {
 	PS_OUT		Out = (PS_OUT)0;
@@ -373,6 +409,27 @@ PS_OUT PS_MASKING_UV_RATIO_GREEN(PS_IN_TEX2 In)
 	Out.vColor.g *= 1.7f;
 	Out.vColor.rb *= 0.01f;
 	Out.vColor.a = vMask.g;
+
+	return Out;
+}
+
+PS_OUT PS_MASKING_UV_RATIO_COLOR(PS_IN_TEX2 In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	//if (In.vTexUV_2.x >= g_Textrue_UV.x)
+	//{
+	//	Out.vColor.a = 0.f;
+	//	return Out;
+	//}
+	// 마스킹을 던져야 함
+	float4 vMask = g_MaskTexture.Sample(DiffuseSampler, In.vTexUV_2);
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	Out.vColor.a = vMask.r;
+
+	Out.vColor.rg = Out.vColor.b * 0.8f;
+
 
 	return Out;
 }
@@ -589,6 +646,47 @@ technique11		DefaultTechnique
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE2_UV_TIME();
 		PixelShader = compile ps_5_0 PS_MASKING_UV_RATIO_GREEN();
+	}
+
+	pass MainUI_Color_R //16
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		PixelShader = compile ps_5_0 PS_ALPHA_COLOR_R();
+	}
+
+	pass MainUI_Color_G //17
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		PixelShader = compile ps_5_0 PS_ALPHA_COLOR_G();
+	}
+
+	pass MainUI_Color_B //18
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		PixelShader = compile ps_5_0 PS_ALPHA_COLOR_B();
+	}
+
+	//PS_MASKING_UV_RATIO_COLOR
+	pass Tex2Time_Masking //19
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE2_UV_TIME();
+		PixelShader = compile ps_5_0 PS_MASKING_UV_RATIO_COLOR();
 	}
 };
 

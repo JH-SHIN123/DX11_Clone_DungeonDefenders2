@@ -39,7 +39,7 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
-	CGameInstance::Release_Engine();
+	//CGameInstance::Release_Engine();
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)

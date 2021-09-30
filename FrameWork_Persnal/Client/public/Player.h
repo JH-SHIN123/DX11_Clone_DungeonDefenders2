@@ -84,7 +84,7 @@ private: // Tick
 	void	Key_Check(_float TimeDelta);
 	void	Turn_Check(_float TimeDelta);
 	void	Idle_Check();
-	void	Skill_Check();
+	void	Skill_Check(_float TimeDelta);
 
 private: // LateTick
 	void	Level_Check();
@@ -145,6 +145,9 @@ private: // Skill
 	_bool	m_IsCasting_Move		= false;
 
 	_bool	m_IsZoom = false;
+
+	_float	m_fHealTime = 0.f;
+	_int	m_iHealSize = 0;
 
 	//_float	m_fBrainWash_Time		= 0.f; 
 	//_float	m_fBrainWash_Time_Max	= 0.f; // 몬스터가 세팅해줌

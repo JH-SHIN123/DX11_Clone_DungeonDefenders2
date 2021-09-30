@@ -22,12 +22,21 @@ public:
 	virtual HRESULT NativeConstruct_Prototype(const _tchar* pNavigationDataFile);
 	virtual HRESULT NativeConstruct(void* pArg) override;
 
+public:
+	_bool IsMove(_fvector vOriginalPos, _fvector vDirection);
+
+
 private:
 	vector<class CCell*>				m_pCells;
 	typedef vector<class CCell*>		CELLS;
 
 private:
 	NAVI_DESC				m_NavigationDesc;
+
+private:
+	HRESULT Ready_CellNeighbor();
+
+
 
 public:
 	static CNavigation* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const _tchar* pNavigationDataFile);

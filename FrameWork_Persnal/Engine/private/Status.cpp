@@ -76,6 +76,9 @@ void CStatus::Set_Damage_Dot(const ATTACK_DESC & pDamage)
 void CStatus::Set_Hp(_int iHp)
 {
 	m_Status_Desc.iHp = iHp;
+
+	if (0 >= m_Status_Desc.iHp)
+		m_Status_Desc.iHp = 0;
 }
 
 void CStatus::Damage_Check(_float TimeDelta)
