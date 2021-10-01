@@ -80,6 +80,12 @@ namespace Engine
 		XMFLOAT2			vTexUV;
 	}VTXTEX;
 
+	typedef struct tagVertexColor
+	{
+		XMFLOAT3			vPosition;
+		XMFLOAT4			vColor;
+	}VTXCOL;
+
 	/* vPosition + UVmap */
 	typedef struct tagVertexTexture_Cube
 	{
@@ -96,6 +102,8 @@ namespace Engine
 	{
 		unsigned long		_0, _1, _2;
 	}POLYGONINDICES32;
+
+
 #pragma endregion
 
 #pragma region Shader

@@ -436,7 +436,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\bin\새 폴더\Shader_Cell.hlsl">
+    <FxCompile Include="..\bin\Shader\Shader_Cell.hlsl">
       <Filter>02.Utility\02.Component\09.Navigation\Cell</Filter>
     </FxCompile>
   </ItemGroup>

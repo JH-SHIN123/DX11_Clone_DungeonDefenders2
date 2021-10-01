@@ -208,7 +208,7 @@ HRESULT CCell::Ready_VertexBuffer()
 
 	m_InputLayouts.reserve(TechniqueDesc.Passes);
 
-	for (int i = 0; i < TechniqueDesc.Passes; ++i)
+	for (uint32_t i = 0; i < TechniqueDesc.Passes; ++i)
 	{
 		INPUTLAYOUTDESC			InputLayoutDesc;
 

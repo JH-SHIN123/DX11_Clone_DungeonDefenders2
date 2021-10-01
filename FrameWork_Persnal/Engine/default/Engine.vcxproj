@@ -126,6 +126,12 @@ xcopy	/y	/e 	..\Bin\*.lib	..\..\PlugIns\Librarys\
 xcopy	/y	/e	..\Bin\*.dll	..\..\Client\Bin\
 xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     </PostBuildEvent>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -272,7 +278,7 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     <ClCompile Include="VIBuffer_Cube.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\bin\새 폴더\Shader_Cell.hlsl" />
+    <FxCompile Include="..\bin\Shader\Shader_Cell.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

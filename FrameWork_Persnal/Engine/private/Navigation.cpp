@@ -33,7 +33,7 @@ HRESULT CNavigation::NativeConstruct_Prototype(const _tchar * pNavigationDataFil
 		if (nullptr == pCell)
 			return E_FAIL;
 
-		pCell->Set_Index(m_pCells.size());
+		pCell->Set_Index((_uint)m_pCells.size());
 
 		m_pCells.push_back(pCell);
 	}
