@@ -12,7 +12,7 @@ enum class EMouseMode
 {Default, Reverse_X, Reverse_Y, Reverse_XY ,End};
 
 enum class EMouseTexture
-{Default, Build, Repair, End};
+{Default, Build, Repair, TPS, End};
 
 class CCursor final : public CGameObject
 {
@@ -46,6 +46,9 @@ private:
 	CVIBuffer_Rect*			m_pVIBufferCom	= nullptr;
 	CTextures*				m_pTextureCom	= nullptr;
 	CTransform*				m_pTransformCom = nullptr;
+
+	CTextures*				m_pTextureCom_TPSAim	= nullptr;
+	CTransform*				m_pTransformCom_TPSAim	= nullptr;
 
 private:
 	POINT			m_tMouse;

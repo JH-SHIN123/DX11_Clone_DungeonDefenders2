@@ -89,7 +89,8 @@ VS_OUT VS_MAIN_DIRECTIONAL(VS_IN In)
 	Out.vTexUV = In.vTexUV;
 
 	vector		vWorldPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);
-	vector		vWorldNormal = normalize(mul(vector(In.vNormal, 0.f), WorldMatrix));
+	vector		vWorldNormal = normalize(mul(vector(In.vNormal, 0.f), g_PivotMatrix));
+	vWorldNormal = mul(vWorldNormal, WorldMatrix);
 
 	Out.vShade = max(dot(normalize(vector(vLightDirection, 0.f)) * -1.f, vWorldNormal), 0.f);
 	Out.vShade.a = 1.f;

@@ -226,6 +226,9 @@
     <Filter Include="02.GameObject\00.Loading\Fade">
       <UniqueIdentifier>{7fe4da06-ff18-447e-bae0-c80cd930bef6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\02.Stage\Navi">
+      <UniqueIdentifier>{196f849a-c28f-4281-8354-4d76b631e9b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -444,6 +447,9 @@
     <ClInclude Include="..\public\Fade.h">
       <Filter>02.GameObject\00.Loading\Fade</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\TestNavi.h">
+      <Filter>02.GameObject\02.Stage\Navi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -640,6 +646,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Fade.cpp">
       <Filter>02.GameObject\00.Loading\Fade</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TestNavi.cpp">
+      <Filter>02.GameObject\02.Stage\Navi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

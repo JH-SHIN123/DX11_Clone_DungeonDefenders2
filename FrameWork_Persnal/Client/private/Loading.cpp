@@ -32,6 +32,7 @@
 #include "Meteor_Explosion_Effect_2.h"
 #include "Skill_BrainWash.h"
 #include "Skill_BrainWash_Effect.h"
+#include "TestNavi.h"
 
 USING(Engine)
 
@@ -191,6 +192,11 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_Meteor_Explosion_Effect"), CMeteor_Explosion_Effect_2::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_BrainWash"), CSkill_BrainWash::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_BrainWash_Effect"), CSkill_BrainWash_Effect::Create(m_pDevice, m_pDevice_Context));
+
+
+	//hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Level_1_TestNavi"),
+	//	CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "TestNavi.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+	//hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Terrain_TestNavi"), CTestNavi::Create(m_pDevice, m_pDevice_Context));
 
 
 	// Model

@@ -178,14 +178,19 @@ void CPlayer::Key_Check(_float TimeDelta)
 		switch (m_eTowerSpawn)
 		{
 		case Client::ETowerSpawn::Start:
+			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::Build);
 			break;
 		case Client::ETowerSpawn::Locate:
+			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::Build);
 			break;
 		case Client::ETowerSpawn::Rotate:
+			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::Build);
 			break;
 		case Client::ETowerSpawn::Spawn:
+			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::TPS);
 			break;
 		default:
+			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::TPS);
 			m_eAnimationState_Next = EPlayerAnimation::Turn_Left;
 			break;
 		}
@@ -196,14 +201,19 @@ void CPlayer::Key_Check(_float TimeDelta)
 		switch (m_eTowerSpawn)
 		{
 		case Client::ETowerSpawn::Start:
+			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::Build);
 			break;
 		case Client::ETowerSpawn::Locate:
+			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::Build);
 			break;
 		case Client::ETowerSpawn::Rotate:
+			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::Build);
 			break;
 		case Client::ETowerSpawn::Spawn:
+			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::TPS);
 			break;
 		default:
+			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::TPS);
 			m_eAnimationState_Next = EPlayerAnimation::Turn_Left;
 			break;
 		}
@@ -229,7 +239,6 @@ void CPlayer::Key_Check(_float TimeDelta)
 			m_eTowerSpawn = ETowerSpawn::Start;
 		}
 		static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_CameraView_Mode(ECameraViewMode::TopView);
-
 		_vector vMouseWorldPos, vMouseWorldDir;
 
 		// 비교할 대상이 없네 ㅋㅋ;

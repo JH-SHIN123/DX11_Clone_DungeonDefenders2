@@ -2,6 +2,7 @@
 #include "..\public\Camera_Target.h"
 #include "Player.h"
 #include "Data_Manager.h"
+#include "Cursor_Manager.h"
 
 CCamera_Target::CCamera_Target(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CCamera(pDevice, pDevice_Context)
@@ -27,6 +28,8 @@ HRESULT CCamera_Target::NativeConstruct(void * pArg)
 	Ready_Component();
 
 	Set_CameraView_Mode(Engine::ECameraViewMode::ThirdPerson);
+	CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::TPS);
+
 	return S_OK;
 }
 

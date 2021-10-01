@@ -263,6 +263,10 @@ HRESULT CMainApp::Ready_Cursor()
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/Cursor/Icon_%d.tga"), 3))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, L"Component_Texture_Cursor_TPSAim"
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Cursor/0.png")))))
+		return E_FAIL;
+
 	CCursor_Manager::GetInstance()->Set_Cursor(CCursor::Create(m_pDevice, m_pDevice_Context, TextureName));
 
 	return S_OK;

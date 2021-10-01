@@ -271,6 +271,9 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     <ClCompile Include="..\private\VIBuffer_Terrain.cpp" />
     <ClCompile Include="VIBuffer_Cube.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\bin\새 폴더\Shader_Cell.hlsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

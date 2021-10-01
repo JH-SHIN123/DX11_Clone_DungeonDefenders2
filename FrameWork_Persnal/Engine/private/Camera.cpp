@@ -183,11 +183,11 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 	pTarget->Set_State(EState::Right, vNewRight);
 	pTarget->Set_State(EState::Look, vNewLook);
 
-	_vector vAt = m_pMovementCom->Get_State(EState::Position) + (XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * 20.f);
+	_vector vAt = m_pMovementCom->Get_State(EState::Position) + (XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * 5.f);
 
 	if (ECameraViewMode::TopView == m_eCameraMode_Next)
 	{
-		//m_CameraDesc.vAt
+		vAt -= (XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * 0.7f);
 	}
 	else if (ECameraViewMode::TopToTPS == m_eCameraMode_Next)
 	{

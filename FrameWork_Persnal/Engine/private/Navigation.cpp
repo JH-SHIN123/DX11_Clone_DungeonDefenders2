@@ -33,7 +33,7 @@ HRESULT CNavigation::NativeConstruct_Prototype(const _tchar * pNavigationDataFil
 		if (nullptr == pCell)
 			return E_FAIL;
 
-		pCell->Set_Index((_int)m_pCells.size());
+		pCell->Set_Index(m_pCells.size());
 
 		m_pCells.push_back(pCell);
 	}
@@ -54,19 +54,26 @@ HRESULT CNavigation::NativeConstruct(void * pArg)
 	return S_OK;
 }
 
-_bool CNavigation::IsMove(_fvector vOriginalPos, _fvector vDirection)
+_bool CNavigation::IsMove(_fvector vOriginalPos, _fvector vDirection, _float* Cell_Y, _vector* vOutSlidingDir)
 {
 	_vector			vGoalPos = vOriginalPos + vDirection;
 
-	CCell::RESULTDESC ResultDesc = m_pCells[m_NavigationDesc.iCurrentIndex]->isIn(m_pCells, vGoalPos);
+	CCell::RESULTDESC ResultDesc = m_pCells[m_NavigationDesc.iCurrentIndex]->isIn(m_pCells, vGoalPos, Cell_Y);
 
 	if (false == ResultDesc.isIn)
 	{
 		/* 아에 움직일 수 없다. */
 		if (0 > ResultDesc.iResultIndex)
 		{
+			// 여기서 슬라이딩
+			_vector vLineNormal = XMVector3Normalize(XMLoadFloat3(&ResultDesc.vDstPoints));
+			vLineNormal = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLineNormal);
 
-			return false;
+			*vOutSlidingDir = vDirection - (vLineNormal * (XMVector3Dot(vDirection, vLineNormal)));
+
+			//vGoalPos = vOriginalPos + *vOutSlidingDir;
+			//ResultDesc = m_pCells[m_NavigationDesc.iCurrentIndex]->isIn(m_pCells, vGoalPos, Cell_Y);
+			return true;
 		}
 		/* 움직일 수 있다. 이웃으로 이동했다. */
 		else
@@ -81,6 +88,18 @@ _bool CNavigation::IsMove(_fvector vOriginalPos, _fvector vDirection)
 
 
 }
+
+#ifdef _DEBUG
+
+HRESULT CNavigation::Render_Navigation()
+{
+	for (auto& pCell : m_pCells)
+		pCell->Render_Cell(m_NavigationDesc.iCurrentIndex);
+
+	return S_OK;
+}
+
+#endif
 
 HRESULT CNavigation::Ready_CellNeighbor()
 {

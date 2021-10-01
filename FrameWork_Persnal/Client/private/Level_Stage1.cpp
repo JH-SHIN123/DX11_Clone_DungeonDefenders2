@@ -26,8 +26,9 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
+		return E_FAIL;
+
 
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
 		return E_FAIL;
@@ -190,6 +191,8 @@ HRESULT CLevel_Stage1::Ready_Layer_Terrain(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
 
 	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Terrain"), (_uint)ELevel::Stage1, pLayerTag);
+
+	//pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Terrain_TestNavi"), (_uint)ELevel::Stage1, L"Layer_Terrain_Navi");
 
 	return S_OK;
 }

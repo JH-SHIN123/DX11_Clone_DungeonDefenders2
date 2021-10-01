@@ -227,6 +227,7 @@
     <ClInclude Include="..\public\StrikerTower.h" />
     <ClInclude Include="..\public\StrikerTower_Bullet.h" />
     <ClInclude Include="..\public\Terrain.h" />
+    <ClInclude Include="..\public\TestNavi.h" />
     <ClInclude Include="..\public\Text_Manager.h" />
     <ClInclude Include="..\public\UI_2D.h" />
     <ClInclude Include="..\public\UI_3D.h" />
@@ -296,6 +297,7 @@
     <ClCompile Include="..\private\StrikerTower.cpp" />
     <ClCompile Include="..\private\StrikerTower_Bullet.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
+    <ClCompile Include="..\private\TestNavi.cpp" />
     <ClCompile Include="..\private\Text_Manager.cpp" />
     <ClCompile Include="..\private\UI_2D.cpp" />
     <ClCompile Include="..\private\UI_3D.cpp" />

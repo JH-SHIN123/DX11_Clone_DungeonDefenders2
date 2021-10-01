@@ -47,6 +47,8 @@ _int CCursor_Manager::Tick(_float TimeDelta)
 {
 	m_Cursor->Tick(TimeDelta);
 
+
+
 	m_Cursor->Late_Tick(TimeDelta);
 	return _int();
 }

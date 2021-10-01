@@ -26,6 +26,15 @@ _int CCursor::Tick(_float TimeDelta)
 {
 	Tracking_Mouse();
 
+	//if (EMouseTexture::TPS == m_eMouseTexture)
+	//{
+	//	POINT	pt{ g_iWinCX >> 1, g_iWinCY >> 1 };
+	//
+	//	ClientToScreen(g_hWnd, &pt);
+	//	SetCursorPos(pt.x, pt.y);
+	//}
+
+
 	return _int();
 }
 
@@ -39,12 +48,25 @@ HRESULT CCursor::Render()
 	if (false == m_IsShowCursor)
 		return S_OK;
 
-	m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransformCom->Get_WorldMatrix()), sizeof(_matrix));
-	m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
-	m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
+	if (EMouseTexture::TPS != m_eMouseTexture)
+	{
+		m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransformCom->Get_WorldMatrix()), sizeof(_matrix));
+		m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
+		m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
 
-	m_pVIBufferCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView((_uint)m_eMouseTexture));
-	m_pVIBufferCom->Render(1);
+		m_pVIBufferCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView((_uint)m_eMouseTexture));
+		m_pVIBufferCom->Render(1);
+	}
+
+	else
+	{
+		m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pTransformCom_TPSAim->Get_WorldMatrix()), sizeof(_matrix));
+		m_pVIBufferCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
+		m_pVIBufferCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
+
+		m_pVIBufferCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_TPSAim->Get_ShaderResourceView(0));
+		m_pVIBufferCom->Render(1);
+	}
 
 	return S_OK;
 }
@@ -106,6 +128,13 @@ HRESULT CCursor::Ready_Component(const _tchar* TextureName)
 	m_pTransformCom->Set_Scale(XMVectorSet(64.f, 64.f, 1.f, 0.f));
 	m_pTransformCom->Set_State(EState::Position, XMVectorSet(0.f, 0.f, 0.f, 1.f));
 
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Texture_Cursor_TPSAim"), TEXT("Com_Texture_TPSAim"), (CComponent**)&m_pTextureCom_TPSAim);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Transform"), TEXT("Com_Movement_TPSAim"), (CComponent**)&m_pTransformCom_TPSAim);
+
+	m_pTransformCom_TPSAim->Set_Scale(XMVectorSet(128.f, 128.f, 1.f, 0.f));
+	m_pTransformCom_TPSAim->Set_State(EState::Position, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+
+
 	if (hr != S_OK)
 		MSG_BOX("CCursor::Ready_Component Failed");
 
@@ -137,4 +166,6 @@ void CCursor::Free()
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pTransformCom);
+	Safe_Release(m_pTextureCom_TPSAim);
+	Safe_Release(m_pTransformCom_TPSAim);
 }

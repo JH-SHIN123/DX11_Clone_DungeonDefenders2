@@ -5,6 +5,7 @@
 #include "Component.h"
 
 BEGIN(Engine)
+
 class ENGINE_DLL CNavigation final : public CComponent
 {
 public:
@@ -12,7 +13,6 @@ public:
 	{
 		_uint		iCurrentIndex = 0;
 	}NAVI_DESC;
-
 private:
 	explicit CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	explicit CNavigation(const CNavigation& rhs);
@@ -23,8 +23,13 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg) override;
 
 public:
-	_bool IsMove(_fvector vOriginalPos, _fvector vDirection);
+	_bool IsMove(_fvector vOriginalPos, _fvector vDirection, _float* Cell_Y, _vector* vOutSlidingDir);
 
+#ifdef _DEBUG
+public:
+	HRESULT Render_Navigation();
+
+#endif
 
 private:
 	vector<class CCell*>				m_pCells;
