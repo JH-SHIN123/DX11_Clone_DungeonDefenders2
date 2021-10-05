@@ -1,4 +1,5 @@
 #include "..\public\Movement.h"
+#include "Navigation.h"
 
 CMovement::CMovement(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CTransform(pDevice, pDevice_Context)
@@ -59,24 +60,46 @@ void CMovement::Set_Scale_Tick(_float TimeDelta, _fvector vScale, _bool IsScaleU
 	}
 }
 
-void CMovement::Go_Straight(_float TimeDelta)
+void CMovement::Go_Straight(_float TimeDelta, CNavigation* pNavigation, _bool IsJump)
 {
 	_vector vPosition	= __super::Get_State(EState::Position);
 	_vector vLook		= __super::Get_State(EState::Look);
 
 	vLook = XMVector4Normalize(vLook);
-	// 위치 = 위치 + (앞으로 보는 방향 * 시간값 * 초당 이속)
+
+	if (nullptr != pNavigation)
+	{
+		_float fCellY = 0.f;
+		_vector vDir = XMVectorZero();
+		if (false == pNavigation->IsMove(vPosition, vLook, &fCellY, &vDir))
+			vLook = vDir;
+
+		if (false == IsJump)
+			vPosition += XMVectorSetY(vPosition, fCellY);
+	}
+
 	vPosition += vLook * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
 
 	Set_State(EState::Position, vPosition);
 }
 
-void CMovement::Go_Backward(_float TimeDelta)
+void CMovement::Go_Backward(_float TimeDelta, CNavigation* pNavigation, _bool IsJump)
 {
 	_vector vPosition	= __super::Get_State(EState::Position);
 	_vector vLook		= __super::Get_State(EState::Look);
 
 	vLook = XMVector4Normalize(vLook);
+
+	if (nullptr != pNavigation)
+	{
+		_float fCellY = 0.f;
+		_vector vDir = XMVectorZero();
+		if (false == pNavigation->IsMove(vPosition, vLook, &fCellY, &vDir))
+			vLook = vDir;
+
+		if (false == IsJump)
+			vPosition += XMVectorSetY(vPosition, fCellY);
+	}
 
 	vPosition -= vLook * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
 
@@ -123,6 +146,8 @@ void CMovement::Go_Dir(_float TimeDelta, _fvector vTargetPos)
 
 	vDir = XMVector4Normalize(vDir);
 
+
+
 	vPosition += vDir * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
 
 	__super::Set_State(EState::Position, vPosition);
@@ -154,12 +179,26 @@ void CMovement::Go_Up(_float TimeDelta)
 	__super::Set_State(EState::Position, vPosition);
 }
 
-void CMovement::Go_LookDir(_float TimeDelta)
+void CMovement::Go_LookDir(_float TimeDelta, CNavigation* pNavigation, _bool IsJump)
 {
 	_vector vPosition = __super::Get_State(EState::Position);
 	_vector vLook = __super::Get_State(EState::Look);
 
 	vLook = XMVector4Normalize(vLook);
+
+	if (nullptr != pNavigation)
+	{
+		_float fCellY = 0.f;
+		_vector vDir = XMVectorZero();
+
+		_bool IsCheck = pNavigation->IsMove(vPosition, vLook, &fCellY, &vDir);
+
+		if (false == IsCheck)
+			vLook = vDir;
+
+		else if (false == IsJump && true == IsCheck)
+			vPosition = XMVectorSetY(vPosition, fCellY);
+	}
 
 	vPosition += vLook * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
 

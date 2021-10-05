@@ -58,6 +58,12 @@ _int CPlayer::Tick(_float TimeDelta)
 
 	m_pWeapon->Tick(TimeDelta);
 
+	Tower_Pick();
+
+	m_pBlockadeTower->Tick(TimeDelta);
+	m_pStrikerTower->Tick(TimeDelta);
+	m_pLightningTower->Tick(TimeDelta);
+
 	return _int();
 }
 
@@ -85,16 +91,19 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 		_vector vDir = m_pMovementCom->Get_State(EState::Look);
 		vPos += vDir * 5.f;
 
-		m_pStrikerTower->Set_TowerPos(vPos);
-
-		//m_pStrikerTower->
+		m_pStrikerTower->Set_TowerPos(vPos);		
 	}
-	// b_HandR
+	
 
 	
 	m_pWeapon->Weapon_Equip(m_pModelCom->Get_BoneMatrix("b_FingersR"), m_pMovementCom->Get_WorldMatrix());
 
 	m_pWeapon->Late_Tick(TimeDelta);
+
+
+	m_pBlockadeTower->Update_Anim(TimeDelta);
+	m_pStrikerTower->Update_Anim(TimeDelta);
+	m_pLightningTower->Update_Anim(TimeDelta);
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
@@ -137,14 +146,19 @@ HRESULT CPlayer::Render()
 	}
 
 
-	if (nullptr != m_pStrikerTower)
-	{
+
+	if (true == m_IsRenderTower[RENDER_BLOCAKE])
+		m_pBlockadeTower->Render();
+	if (true == m_IsRenderTower[RENDER_STRIKER])
 		m_pStrikerTower->Render();
-	}
+	if (true == m_IsRenderTower[RENDER_LIGHTING])
+		m_pLightningTower->Render();
+
 
 
 #ifdef _DEBUG
 	m_pColliderCom_Hit->Render_Collider();
+	m_pNaviCom->Render_Navigation();
 #endif
 
 
@@ -238,23 +252,9 @@ void CPlayer::Key_Check(_float TimeDelta)
 			m_eAnimationState_Next = EPlayerAnimation::Summon_Start;
 			m_eTowerSpawn = ETowerSpawn::Start;
 		}
-		static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_CameraView_Mode(ECameraViewMode::TopView);
-		_vector vMouseWorldPos, vMouseWorldDir;
 
-		// 비교할 대상이 없네 ㅋㅋ;
-		CCursor_Manager::GetInstance()->Get_MousePos_WorldSpace(m_pDevice_Context, &vMouseWorldPos, &vMouseWorldDir);
+		m_IsRenderTower[RENDER_BLOCAKE] = true;
 
-		_vector vPos = m_pMovementCom->Get_State(EState::Position) + m_pMovementCom->Get_State(EState::Look) * 5.f;
-		TOWER_DESC Data;
-		lstrcpy(Data.szModelName, L"Component_Mesh_BlockcadeTower");
-		Data.eTowerRange = ETowerRange::Quarter;
-		Data.MoveState_Desc.fRotatePerSec = 0.5f;
-		Data.MoveState_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
-		XMStoreFloat4(&Data.MoveState_Desc.vPos, vPos);
-		m_CreateTower_Desc.vPos = Data.MoveState_Desc.vPos;
-	
-		m_pBlockadeTower = CBlockadeTower::Create(m_pDevice, m_pDevice_Context);
-		m_pBlockadeTower->NativeConstruct(&Data);
 	}
 
 	if (GET_MOUSE_CLICK(MOUSEKEYSTATE::LB))
@@ -276,20 +276,44 @@ void CPlayer::Key_Check(_float TimeDelta)
 		}
 	}
 
+	if (GET_MOUSE_CLICK(MOUSEKEYSTATE::RB))
+	{
+		if (ETowerSpawn::End == m_eTowerSpawn)
+			return;
+
+		for(_int i = 0; i < RENDER_END; ++i)
+			m_IsRenderTower[i] = false;
+
+
+		switch (m_eTowerSpawn)
+		{
+		case Client::ETowerSpawn::Start:
+
+			break;
+		case Client::ETowerSpawn::Locate:
+			break;
+		case Client::ETowerSpawn::Rotate:
+			break;
+		case Client::ETowerSpawn::Spawn:
+			break;
+		}
+	}
+
+
 
 #pragma endregion
 
 	if (GET_KEY_INPUT(DIK_W))
 	{
 		Casting_Move_Check(&TimeDelta);
-		m_pMovementCom->Go_LookDir(TimeDelta);
+		m_pMovementCom->Go_LookDir(TimeDelta, m_pNaviCom);
 		m_eAnimationState_Next = EPlayerAnimation::RunForward;
 	}
 
 	if (GET_KEY_INPUT(DIK_S))
 	{
 		Casting_Move_Check(&TimeDelta);
-		m_pMovementCom->Go_LookDir(-TimeDelta);
+		m_pMovementCom->Go_LookDir(-TimeDelta, m_pNaviCom);
 		m_eAnimationState_Next = EPlayerAnimation::Move_Backward;
 	}
 
@@ -502,6 +526,49 @@ void CPlayer::Skill_Check(_float TimeDelta)
 	Skill_Healing(TimeDelta);
 }
 
+void CPlayer::Tower_Pick()
+{
+	switch (m_eTowerSpawn)
+	{
+	case Client::ETowerSpawn::Start:
+	{
+		if (true == m_IsRenderTower[RENDER_BLOCAKE])
+		{
+			static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_CameraView_Mode(ECameraViewMode::TopView);
+			_vector vMouseWorldPos = m_pMovementCom->Get_State(EState::Position) + XMVectorSet(0.f,5.f,0.f,0.f);
+			_vector vMouseWorldDir = XMVectorZero();
+
+			CCursor_Manager::GetInstance()->Get_MousePos_WorldSpace(m_pDevice_Context, &vMouseWorldPos, &vMouseWorldDir);
+
+			_bool bGetCell = false;
+			_vector vOutPos = XMVectorZero();
+
+			
+			bGetCell = m_pNaviCom->Get_CellPos(vMouseWorldDir, vMouseWorldPos, &vOutPos);
+
+			if (true == bGetCell)
+			{
+				m_pBlockadeTower->Set_TowerPos(vOutPos);
+
+
+			}
+		}
+
+	}
+		break;
+	case Client::ETowerSpawn::Locate:
+		break;
+	case Client::ETowerSpawn::Rotate:
+		break;
+	case Client::ETowerSpawn::Spawn:
+		break;
+	default:
+		for (_int i = 0; i < RENDER_END; ++i)
+			m_IsRenderTower[i] = false;
+		break;
+	}
+}
+
 void CPlayer::Level_Check()
 {
 	_bool IsLevelUp = m_pStatusCom->Level_Check();
@@ -581,6 +648,8 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pColliderCom_Hit, &ColliderDesc);
 
+	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_MeshLevel_1_Navi"), TEXT("Com_Navi"), (CComponent**)&m_pNaviCom);
+
 
 	WEAPON_DESC Weapon_Data;
 	ZeroMemory(&Weapon_Data, sizeof(WEAPON_DESC));
@@ -589,6 +658,44 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 
 	m_pWeapon = CStaff_Basic::Create(m_pDevice, m_pDevice_Context);
 	m_pWeapon->NativeConstruct(&Weapon_Data);
+
+
+	// BLOCKADE TOWER
+	TOWER_DESC TowerData;
+	_vector vPos = m_pMovementCom->Get_State(EState::Position) + m_pMovementCom->Get_State(EState::Look) * 5.f;
+	lstrcpy(TowerData.szModelName, L"Component_Mesh_BlockcadeTower");
+	TowerData.eTowerRange = ETowerRange::Quarter;
+	TowerData.MoveState_Desc.fRotatePerSec = 0.5f;
+	TowerData.MoveState_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
+	XMStoreFloat4(&TowerData.MoveState_Desc.vPos, vPos);
+	m_CreateTower_Desc.vPos = TowerData.MoveState_Desc.vPos;
+
+	m_pBlockadeTower = CBlockadeTower::Create(m_pDevice, m_pDevice_Context);
+	m_pBlockadeTower->NativeConstruct(&TowerData);
+
+
+	// STRIKER
+	lstrcpy(TowerData.szModelName, L"Component_Mesh_StrikerTower");
+	TowerData.eTowerRange = ETowerRange::Quarter;
+	TowerData.MoveState_Desc.fRotatePerSec = 0.5f;
+	TowerData.MoveState_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
+	XMStoreFloat4(&TowerData.MoveState_Desc.vPos, vPos);
+	m_CreateTower_Desc.vPos = TowerData.MoveState_Desc.vPos;
+
+	m_pStrikerTower = CStrikerTower::Create(m_pDevice, m_pDevice_Context);
+	m_pStrikerTower->NativeConstruct(&TowerData);
+
+
+	// LIGHTNING
+	lstrcpy(TowerData.szModelName, L"Component_Mesh_LightningTower");
+	TowerData.eTowerRange = ETowerRange::Quarter;
+	TowerData.MoveState_Desc.fRotatePerSec = 0.5f;
+	TowerData.MoveState_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
+	XMStoreFloat4(&TowerData.MoveState_Desc.vPos, vPos);
+	m_CreateTower_Desc.vPos = TowerData.MoveState_Desc.vPos;
+
+	m_pLightningTower = CLightningTower::Create(m_pDevice, m_pDevice_Context);
+	m_pLightningTower->NativeConstruct(&TowerData);
 
 
 	return S_OK;
@@ -964,8 +1071,12 @@ void CPlayer::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pMovementCom);
 	Safe_Release(m_pColliderCom_Hit);
+	Safe_Release(m_pNaviCom);
 
+	Safe_Release(m_pBlockadeTower);
 	Safe_Release(m_pStrikerTower);
+	Safe_Release(m_pLightningTower);
+
 	Safe_Release(m_pWeapon);
 
 	__super::Free();

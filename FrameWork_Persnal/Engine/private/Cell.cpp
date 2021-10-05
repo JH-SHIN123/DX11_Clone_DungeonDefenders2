@@ -15,8 +15,10 @@ void CCell::Set_Neighbor(NEIGHBOR eNeighbor, _uint iIndex)
 	m_Neighbor[eNeighbor] = iIndex;
 }
 
-HRESULT CCell::NativeContruct(const _float3 * pPoints)
+HRESULT CCell::NativeContruct(const _float3 * pPoints, _int iCellOption)
 {
+	m_iCellOption = iCellOption;
+
 	memcpy(m_vPoints, pPoints, sizeof(_float3) * POINT_END);
 
 	memset(m_Neighbor, -1, sizeof(_int) * NEIGHBOR_END);
@@ -33,36 +35,68 @@ HRESULT CCell::NativeContruct(const _float3 * pPoints)
 
 _bool CCell::Compare_Points(_fvector vSourPoint, _fvector vDestPoint)
 {
-	if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_A]), vSourPoint))
+	//if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_A]), vSourPoint))
+	//{
+	//	if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_B]), vDestPoint))
+	//		return true;
+	//	else if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_C]), vDestPoint))
+	//		return true;
+	//}
+
+	//if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_B]), vSourPoint))
+	//{
+	//	if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_A]), vDestPoint))
+	//		return true;
+	//	else if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_C]), vDestPoint))
+	//		return true;
+	//}
+
+	//if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_C]), vSourPoint))
+	//{
+	//	if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_A]), vDestPoint))
+	//		return true;
+	//	else if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_B]), vDestPoint))
+	//		return true;
+	//}
+
+	//return false;
+
+	_float fOffSet = 0.001f;
+
+	//if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_A]), vSourPoint))
+	if (true == fOffSet >= XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vPoints[POINT_A]) - vSourPoint)))
 	{
-		if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_B]), vDestPoint))
+		if (true == fOffSet >= XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vPoints[POINT_B]) - vDestPoint)))
 			return true;
-		else if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_C]), vDestPoint))
+		else if (true == fOffSet >= XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vPoints[POINT_C]) - vDestPoint)))
 			return true;
 	}
 
-	if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_B]), vSourPoint))
+	if (true == fOffSet >= XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vPoints[POINT_B]) - vSourPoint)))
 	{
-		if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_A]), vDestPoint))
+		if (true == fOffSet >= XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vPoints[POINT_A]) - vDestPoint)))
 			return true;
-		else if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_C]), vDestPoint))
+		else if (true == fOffSet >= XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vPoints[POINT_C]) - vDestPoint)))
 			return true;
 	}
 
-	if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_C]), vSourPoint))
+	if (true == fOffSet >= XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vPoints[POINT_C]) - vSourPoint)))
 	{
-		if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_A]), vDestPoint))
+		if (true == fOffSet >= XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vPoints[POINT_A]) - vDestPoint)))
 			return true;
-		else if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_B]), vDestPoint))
+		else if (true == fOffSet >= XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vPoints[POINT_B]) - vDestPoint)))
 			return true;
 	}
 
 	return false;
+
 }
 
-CCell::RESULTDESC CCell::isIn(vector<CCell*>& Cells, _fvector vGoalPos, _float* Cell_Y)
+CCell::RESULTDESC CCell::isIn(vector<CCell*>& Cells, _fvector vGoalPos, _float* Cell_Y, _int iCount)
 {
 	RESULTDESC		ResultDesc;
+
+	//ResultDesc.iCount = iCount;
 
 	ResultDesc.isIn = true;
 
@@ -85,8 +119,15 @@ CCell::RESULTDESC CCell::isIn(vector<CCell*>& Cells, _fvector vGoalPos, _float* 
 			ResultDesc.isIn = false;
 			ResultDesc.vDstPoints = m_vLine[i];
 
-			if (0 <= m_Neighbor[i])
-				ResultDesc = Cells[m_Neighbor[i]]->isIn(Cells, vGoalPos, Cell_Y);
+			if (0 <= m_Neighbor[i] && 5 >= ResultDesc.iCount)
+			{
+				++ResultDesc.iCount;
+				ResultDesc = Cells[m_Neighbor[i]]->isIn(Cells, vGoalPos, Cell_Y, ResultDesc.iCount);
+			}
+			//else if (0 <= m_Neighbor[1])
+			//	ResultDesc = Cells[m_Neighbor[1]]->isIn(Cells, vGoalPos, Cell_Y);
+			//else if (0 <= m_Neighbor[2])
+			//	ResultDesc = Cells[m_Neighbor[2]]->isIn(Cells, vGoalPos, Cell_Y);
 
 			// 꼭짓점 예외처리...
 
@@ -103,6 +144,41 @@ CCell::RESULTDESC CCell::isIn(vector<CCell*>& Cells, _fvector vGoalPos, _float* 
 	}
 
 	return ResultDesc;
+}
+
+_bool CCell::Check_Cell(_fvector vMouseDir, _fvector vMousePos_World, _vector* vOutPos)
+{
+	_bool IsIn = false;
+	_float fDis = 0.f;
+
+	IsIn = TriangleTests::Intersects(vMousePos_World, vMouseDir, XMLoadFloat3(&m_vPoints[0]), XMLoadFloat3(&m_vPoints[1]), XMLoadFloat3(&m_vPoints[2]), fDis);
+
+	if (true == IsIn)
+	{
+		_vector vWorldMouseDir = XMVectorZero();
+		_vector vWorldMousePos = XMVectorZero();
+
+		vWorldMouseDir = vMouseDir * fDis;
+		vWorldMousePos = vMousePos_World + vWorldMouseDir;
+
+		_vector	vSour = XMVector3Normalize(vWorldMousePos - XMLoadFloat3(&m_vPoints[0]));
+		_vector vDest = XMVector3Normalize(XMVectorSet(m_vLine[0].z * -1.f, 0.f, m_vLine[0].x, 0.f));
+
+
+		_vector vTri_A, vTri_B, vTri_C;
+		vTri_A = XMLoadFloat3(&m_vPoints[0]);
+		vTri_B = XMLoadFloat3(&m_vPoints[1]);
+		vTri_C = XMLoadFloat3(&m_vPoints[2]);
+		_vector vOut = XMPlaneFromPoints(vTri_A, vTri_B, vTri_C);
+		
+		// y는 구한듯?
+		vWorldMousePos = XMVectorSetY(vWorldMousePos, -(XMVectorGetX(vOut) * XMVectorGetX(vWorldMousePos) + XMVectorGetZ(vOut) * XMVectorGetZ(vWorldMousePos) + XMVectorGetW(vOut)) / XMVectorGetY(vOut));
+
+		vWorldMousePos = XMVectorSetW(vWorldMousePos, 1.f);
+		*vOutPos = vWorldMousePos;
+	}
+
+	return IsIn;
 }
 
 #ifdef _DEBUG
@@ -190,7 +266,8 @@ HRESULT CCell::Ready_VertexBuffer()
 	ID3DBlob*		pCompileShader = nullptr;
 	ID3DBlob*		pCompileShaderErrorMsg = nullptr;
 
-	if (FAILED(D3DCompileFromFile(L"../Bin/ShaderFiles/Shader_Cell.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, nullptr, "fx_5_0", iFlag, 0, &pCompileShader, &pCompileShaderErrorMsg)))
+	HRESULT hr = S_OK;
+	if (FAILED(hr = D3DCompileFromFile(L"../Bin/Shader/Shader_Cell.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, nullptr, "fx_5_0", iFlag, 0, &pCompileShader, &pCompileShaderErrorMsg)))
 		return E_FAIL;
 
 	if (FAILED(D3DX11CreateEffectFromMemory(pCompileShader->GetBufferPointer(), pCompileShader->GetBufferSize(), 0, m_pDevice, &m_pEffect)))
@@ -232,11 +309,10 @@ HRESULT CCell::Ready_VertexBuffer()
 
 #endif
 
-CCell * CCell::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const _float3 * pPoints)
+CCell * CCell::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const _float3 * pPoints,_int iCellOption)
 {
 	CCell*		pInstance = new CCell(pDevice, pDevice_Context);
-
-	if (FAILED(pInstance->NativeContruct(pPoints)))
+	if (FAILED(pInstance->NativeContruct(pPoints, iCellOption)))
 	{
 		MSG_BOX("Failed to Creating Instance (CCell) ");
 		Safe_Release(pInstance);

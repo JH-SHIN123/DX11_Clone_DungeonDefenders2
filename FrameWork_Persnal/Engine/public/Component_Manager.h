@@ -10,6 +10,7 @@
 #include "Movement.h"
 #include "Transform.h"
 #include "Component.h"
+#include "Navigation.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Font.h"

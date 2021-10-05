@@ -62,6 +62,11 @@ typedef struct tagGameObject_Desc
 
 class CPlayer final : public CGameObject
 {
+private:
+	enum RENDER_TOWER
+	{
+		RENDER_BLOCAKE, RENDER_STRIKER, RENDER_LIGHTING, RENDER_END
+	};
 protected:
 	explicit CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	explicit CPlayer(const CPlayer& rhs);
@@ -85,6 +90,9 @@ private: // Tick
 	void	Turn_Check(_float TimeDelta);
 	void	Idle_Check();
 	void	Skill_Check(_float TimeDelta);
+
+private:
+	void	Tower_Pick();
 
 private: // LateTick
 	void	Level_Check();
@@ -111,6 +119,7 @@ private:
 	CMovement*			m_pMovementCom	= nullptr;
 	CRenderer*			m_pRendererCom	= nullptr;
 	CCollider*			m_pColliderCom_Hit = nullptr;
+	CNavigation*		m_pNaviCom = nullptr;
 
 private:
 	_bool			m_IsSkill_Use[10] = { false };
@@ -120,11 +129,12 @@ private:
 	_bool			m_IsCharging = false;
 
 private: // Tower
-	class CBlockadeTower*		m_pBlockadeTower	= nullptr;
-	class CStrikerTower*		m_pStrikerTower		= nullptr;
-	class CLightningTower*		m_pLightningTower	= nullptr;
-	ETowerSpawn					m_eTowerSpawn		= ETowerSpawn::End;
-	_bool						m_IsTowerPick		= false;
+	class CBlockadeTower*		m_pBlockadeTower			= nullptr;
+	class CStrikerTower*		m_pStrikerTower				= nullptr;
+	class CLightningTower*		m_pLightningTower			= nullptr;
+	_bool						m_IsRenderTower[RENDER_END]	= { false };
+	ETowerSpawn					m_eTowerSpawn				= ETowerSpawn::End;
+	_bool						m_IsTowerPick				= false;
 	MOVESTATE_DESC				m_CreateTower_Desc;
 
 private:

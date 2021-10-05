@@ -19,11 +19,12 @@ private:
 	virtual ~CNavigation() = default;
 
 public:
-	virtual HRESULT NativeConstruct_Prototype(const _tchar* pNavigationDataFile);
+	virtual HRESULT NativeConstruct_Prototype(const char * pNaviFilePath, const char * pNaviFileName);
 	virtual HRESULT NativeConstruct(void* pArg) override;
 
 public:
 	_bool IsMove(_fvector vOriginalPos, _fvector vDirection, _float* Cell_Y, _vector* vOutSlidingDir);
+	_bool Get_CellPos(_fvector vMouseDir, _fvector vMousePos_World, _vector* vOutCellPos);
 
 #ifdef _DEBUG
 public:
@@ -41,10 +42,15 @@ private:
 private:
 	HRESULT Ready_CellNeighbor();
 
+private:
+	class CModelLoader* m_pModelLoader = nullptr;
+	const aiScene*			m_pScene = nullptr;
+	Assimp::Importer		m_Importer;
+
 
 
 public:
-	static CNavigation* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const _tchar* pNavigationDataFile);
+	static CNavigation* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const char* pNavigationDataFile, const char * pNaviFileName);
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };

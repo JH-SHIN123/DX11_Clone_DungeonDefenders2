@@ -11,7 +11,6 @@ void CCursor_Manager::Get_MousePos_WorldSpace(ID3D11DeviceContext* pDevice_Const
 {
 	POINT ptMouse = Get_Mouse();
 
-
 	_uint iNum = 0;
 	D3D11_VIEWPORT ViewPort;
 	pDevice_Constext->RSGetViewports(&iNum, &ViewPort);
@@ -19,7 +18,6 @@ void CCursor_Manager::Get_MousePos_WorldSpace(ID3D11DeviceContext* pDevice_Const
 	_float fViewX = ptMouse.x / (g_iWinCX * 0.5f) - 1.f;
 	vMousePos = XMVectorSetX(vMousePos, ptMouse.x / (g_iWinCX * 0.5f) - 1.f);
 	vMousePos = XMVectorSetY(vMousePos, ptMouse.y / -(g_iWinCY * 0.5f) + 1.f);
-
 
 	_matrix Proj = XMMatrixInverse(nullptr, GET_PROJ_SPACE);
 	vMousePos = XMVector3TransformCoord(vMousePos, Proj);

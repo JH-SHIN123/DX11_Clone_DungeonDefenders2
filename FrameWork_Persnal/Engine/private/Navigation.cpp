@@ -1,44 +1,132 @@
 #include "..\public\Navigation.h"
 #include "Cell.h"
+#include "ModelLoader.h"
+#include <fstream>
+#include "string.h"
 
 CNavigation::CNavigation(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CComponent(pDevice, pDevice_Context)
+	, m_pModelLoader(CModelLoader::Create())
 {
 }
 
 CNavigation::CNavigation(const CNavigation & rhs)
 	: CComponent(rhs)
 	, m_pCells(rhs.m_pCells)
+	, m_pModelLoader(rhs.m_pModelLoader)
 {
 	for (auto& pCell : m_pCells)
 		Safe_AddRef(pCell);
 }
 
-HRESULT CNavigation::NativeConstruct_Prototype(const _tchar * pNavigationDataFile)
+HRESULT CNavigation::NativeConstruct_Prototype(const char * pNaviFilePath, const char * pNaviFileName)
 {
-	_ulong			dwByte = 0;
-	HANDLE			hFile = CreateFile(pNavigationDataFile, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
+	char			szFullPath[MAX_PATH] = "";
+
+	strcpy(szFullPath, pNaviFilePath);
+	strcat(szFullPath, pNaviFileName);
+
+	m_pScene = m_Importer.ReadFile(szFullPath, aiProcess_ConvertToLeftHanded | aiProcess_Triangulate | 
+		aiProcess_FlipWindingOrder | aiProcess_JoinIdenticalVertices);
+	if (nullptr == m_pScene)
 		return E_FAIL;
 
-	_float3			vPoint[3];
 
-	while (true)
+	_uint		iNumVertices = 0;
+
+	for (_uint i = 0; i < m_pScene->mNumMeshes; ++i)
+		iNumVertices += m_pScene->mMeshes[i]->mNumVertices;
+
+	m_pCells.reserve(iNumVertices);
+
+	fstream fin;
+	fin.open(L"../Bin/Resources/Mesh/Level_1/Navi.txt");
+
+	
+	for (_uint i = 0; i < m_pScene->mNumMeshes; ++i)
 	{
-		ReadFile(hFile, vPoint, sizeof(_float3) * 3, &dwByte, nullptr);
-		if (0 == dwByte)
-			break;
+		for (_uint j = 0; j < m_pScene->mMeshes[i]->mNumVertices; ++j)
+		{
+			_float3 vPoint[3], vPoint_2[3];
+			_float fOffSet_X = 0.05f;//+ (_float)m_pScene->mMeshes[i]->mBones[0]->mOffsetMatrix.d1;
+			_float fOffSet_Y = -0.05f;//+ (_float)m_pScene->mMeshes[i]->mBones[0]->mOffsetMatrix.d2;
+			_float fOffSet_Z = -0.05f;//+ (_float)m_pScene->mMeshes[i]->mBones[0]->mOffsetMatrix.d3;
+			
+			//00
+			//1
+			//21
+			//2
+			
+			vPoint[0].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+			vPoint[0].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+			vPoint[0].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+			vPoint_2[0].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+			vPoint_2[0].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+			vPoint_2[0].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+			++j;
 
-		CCell*		pCell = CCell::Create(m_pDevice, m_pDevice_Context, vPoint);
-		if (nullptr == pCell)
-			return E_FAIL;
+			vPoint[1].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+			vPoint[1].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+			vPoint[1].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+			++j;
 
-		pCell->Set_Index((_uint)m_pCells.size());
+			vPoint[2].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+			vPoint[2].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+			vPoint[2].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+			vPoint_2[1].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+			vPoint_2[1].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+			vPoint_2[1].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+			++j;
 
-		m_pCells.push_back(pCell);
+			vPoint_2[2].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+			vPoint_2[2].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+			vPoint_2[2].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+			
+
+			//vPoint[0].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+			//vPoint[0].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+			//vPoint[0].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+			//vPoint_2[1].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+			//vPoint_2[1].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+			//vPoint_2[1].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+			//++j;
+			//
+			//vPoint[1].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+			//vPoint[1].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+			//vPoint[1].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+			//++j;
+			//
+			//vPoint[2].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+			//vPoint[2].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+			//vPoint[2].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+			//vPoint_2[0].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+			//vPoint_2[0].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+			//vPoint_2[0].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+			//++j;
+			//
+			//vPoint_2[2].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+			//vPoint_2[2].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+			//vPoint_2[2].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+
+			CCell*		pCell = CCell::Create(m_pDevice, m_pDevice_Context, vPoint, 0);
+			if (nullptr == pCell)
+				return E_FAIL;
+			
+			pCell->Set_Index((_uint)m_pCells.size());
+
+			m_pCells.push_back(pCell);	
+
+			CCell*		pCell_2 = CCell::Create(m_pDevice, m_pDevice_Context, vPoint_2, 0);
+			if (nullptr == pCell)
+				return E_FAIL;
+
+			pCell_2->Set_Index((_uint)m_pCells.size());
+
+			m_pCells.push_back(pCell_2);
+
+		}
 	}
-
-	CloseHandle(hFile);
+	fin.close();
 
 	if (FAILED(Ready_CellNeighbor()))
 		return E_FAIL;
@@ -73,7 +161,7 @@ _bool CNavigation::IsMove(_fvector vOriginalPos, _fvector vDirection, _float* Ce
 
 			//vGoalPos = vOriginalPos + *vOutSlidingDir;
 			//ResultDesc = m_pCells[m_NavigationDesc.iCurrentIndex]->isIn(m_pCells, vGoalPos, Cell_Y);
-			return true;
+			return false;
 		}
 		/* 움직일 수 있다. 이웃으로 이동했다. */
 		else
@@ -87,6 +175,22 @@ _bool CNavigation::IsMove(_fvector vOriginalPos, _fvector vDirection, _float* Ce
 
 
 
+}
+
+_bool CNavigation::Get_CellPos(_fvector vMouseDir, _fvector vMousePos_World, _vector* vOutCellPos)
+{
+	_vector vCellPos = XMVectorZero();
+
+	_bool IsGetPos = false;
+	for (auto& pCell : m_pCells)
+	{
+		IsGetPos = pCell->Check_Cell(XMVector3Normalize(vMouseDir), vMousePos_World, vOutCellPos);
+
+		if (true == IsGetPos)
+			break;
+	}
+
+	return IsGetPos;
 }
 
 #ifdef _DEBUG
@@ -123,11 +227,11 @@ HRESULT CNavigation::Ready_CellNeighbor()
 	return S_OK;
 }
 
-CNavigation * CNavigation::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const _tchar * pNavigationDataFile)
+CNavigation * CNavigation::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const char * pNavigationDataFile, const char * pNaviFileName)
 {
 	CNavigation*		pInstance = new CNavigation(pDevice, pDevice_Context);
 
-	if (FAILED(pInstance->NativeConstruct_Prototype(pNavigationDataFile)))
+	if (FAILED(pInstance->NativeConstruct_Prototype(pNavigationDataFile, pNaviFileName)))
 	{
 		MSG_BOX("Failed to Creating Instance (CNavigation) ");
 		Safe_Release(pInstance);
@@ -158,4 +262,113 @@ void CNavigation::Free()
 
 	m_pCells.clear();
 
+	//Safe_Delete(m_pScene);
+	Safe_Release(m_pModelLoader);
+	//Safe_Release(m_pDevice_Context);
+	//Safe_Release(m_pDevice);
+
 }
+
+//_float3			vPoint[3], vPoint_2[3];
+
+//_float fOffSet_X = 0.05f;//+ (_float)m_pScene->mMeshes[i]->mBones[0]->mOffsetMatrix.d1;
+//_float fOffSet_Y = -0.05f;//+ (_float)m_pScene->mMeshes[i]->mBones[0]->mOffsetMatrix.d2;
+//_float fOffSet_Z = -0.05f;//+ (_float)m_pScene->mMeshes[i]->mBones[0]->mOffsetMatrix.d3;
+
+//if (4 == m_pScene->mMeshes[i]->mNumVertices)
+//{
+//	vPoint[0].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+//	vPoint[0].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+//	vPoint[0].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+//	vPoint_2[0].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+//	vPoint_2[0].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+//	vPoint_2[0].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+//	++j;
+
+//	vPoint[1].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+//	vPoint[1].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+//	vPoint[1].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+//	++j;
+
+//	vPoint[2].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+//	vPoint[2].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+//	vPoint[2].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+//	vPoint_2[1].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+//	vPoint_2[1].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+//	vPoint_2[1].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+//	++j;
+
+//	vPoint_2[2].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+//	vPoint_2[2].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+//	vPoint_2[2].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+//	++j;
+//}
+
+//if (6 == m_pScene->mMeshes[i]->mNumVertices)
+//{
+//	vPoint[0].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+//	vPoint[0].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+//	vPoint[0].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+//	++j;
+//	vPoint[1].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+//	vPoint[1].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+//	vPoint[1].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+//	++j;
+//	vPoint[2].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+//	vPoint[2].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+//	vPoint[2].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+//	++j;
+
+//	vPoint_2[0].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+//	vPoint_2[0].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+//	vPoint_2[0].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+//	++j;
+//	vPoint_2[1].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+//	vPoint_2[1].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+//	vPoint_2[1].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+//	++j;
+//	vPoint_2[2].x = m_pScene->mMeshes[i]->mVertices[j].x * fOffSet_X;
+//	vPoint_2[2].y = m_pScene->mMeshes[i]->mVertices[j].z * fOffSet_Y;
+//	vPoint_2[2].z = m_pScene->mMeshes[i]->mVertices[j].y * fOffSet_Z;
+//	++j;
+//}
+
+//char szPosX[MAX_PATH] = "";
+//char szPosY[MAX_PATH] = "";
+//char szPosZ[MAX_PATH] = "";
+
+//if (!fin.fail())
+//{
+//	fin.getline(szPosX, MAX_PATH, L'|');
+//	fin.getline(szPosY, MAX_PATH, L'|');
+//	fin.getline(szPosZ, MAX_PATH, L'|');
+//
+//	for (_int i = 0; i < 3; ++i)
+//	{
+//		vPoint[i].x += atof(szPosX) * fOffSet_X;
+//		vPoint[i].y += atof(szPosY) * fOffSet_Y;
+//		vPoint[i].z += atof(szPosZ) * fOffSet_Z;
+//
+//		vPoint_2[i].x += atof(szPosX) * fOffSet_X;
+//		vPoint_2[i].y += atof(szPosY) * fOffSet_Y;
+//		vPoint_2[i].z += atof(szPosZ) * fOffSet_Z;
+//
+//	}
+//}
+
+//CCell*		pCell = CCell::Create(m_pDevice, m_pDevice_Context, vPoint, 0);
+//if (nullptr == pCell)
+//	return E_FAIL;
+//
+//pCell->Set_Index((_uint)m_pCells.size());
+
+//m_pCells.push_back(pCell);	
+
+
+//CCell*		pCell_2 = CCell::Create(m_pDevice, m_pDevice_Context, vPoint_2, 0);
+//if (nullptr == pCell)
+//	return E_FAIL;
+//
+//pCell_2->Set_Index((_uint)m_pCells.size());
+//
+//m_pCells.push_back(pCell_2);

@@ -190,7 +190,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Terrain(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
 
-	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Terrain"), (_uint)ELevel::Stage1, pLayerTag);
+	//pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Terrain"), (_uint)ELevel::Stage1, pLayerTag);
 
 	//pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Terrain_TestNavi"), (_uint)ELevel::Stage1, L"Layer_Terrain_Navi");
 
@@ -263,7 +263,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
 
 	GAMEOBJ_DESC Data;
-	Data.Movement_Desc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
+	Data.Movement_Desc.vPos = _float4(-3.f, 0.f, 0.f, 1.f);
 	Data.Movement_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
 	Data.Movement_Desc.fSpeedPerSec = 20.f;
 

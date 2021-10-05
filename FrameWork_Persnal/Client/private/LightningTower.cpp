@@ -140,6 +140,12 @@ HRESULT CLightningTower::Render()
 	return S_OK;
 }
 
+void CLightningTower::Update_Anim(_float TimeDelta)
+{
+	m_pModelCom->Update_AnimaionMatrix(TimeDelta);
+	m_pModelCom->Update_CombindTransformationMatrix();
+}
+
 HRESULT CLightningTower::Ready_Component(void * pArg)
 {
 	HRESULT hr = S_OK;

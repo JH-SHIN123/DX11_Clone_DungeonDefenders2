@@ -17,7 +17,7 @@ public:
 		_bool isIn = false;
 		_int iResultIndex = -1;
 		_float3 vDstPoints;
-
+		_int iCount = 0;
 	}RESULTDESC;
 
 public:
@@ -38,9 +38,11 @@ public:
 		m_iIndex = iIndex;
 	}
 public:
-	HRESULT NativeContruct(const _float3* pPoints);
+	HRESULT NativeContruct(const _float3* pPoints, _int iCellOption);
 	_bool Compare_Points(_fvector vSourPoint, _fvector vDestPoint);
-	RESULTDESC isIn(vector<CCell*>& Cells, _fvector vGoalPos, _float* Cell_Y);
+	RESULTDESC isIn(vector<CCell*>& Cells, _fvector vGoalPos, _float* Cell_Y, _int iCount = 0);
+
+	_bool Check_Cell(_fvector vMouseDir, _fvector vMousePos_World, _vector* vOutPos);
 
 #ifdef _DEBUG
 public:
@@ -53,6 +55,7 @@ private:
 	_float3			m_vPoints[POINT_END];
 	_int			m_Neighbor[NEIGHBOR_END];
 	_uint			m_iIndex = 0;
+	_int			m_iCellOption = 0;
 
 	_float3			m_vLine[LINE_END];
 
@@ -74,7 +77,7 @@ private:
 #endif
 
 public:
-	static CCell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const _float3* pPoints);
+	static CCell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const _float3* pPoints, _int iCellOption );
 	virtual void Free() override;
 };
 

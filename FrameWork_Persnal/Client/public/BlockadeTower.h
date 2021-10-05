@@ -19,6 +19,9 @@ public:
 	virtual _int	Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void Update_Anim(_float TimeDelta);
+
 protected:
 	HRESULT		Ready_Component(void* pArg);
 	_float		m_fIdleAnimation = 80.f;

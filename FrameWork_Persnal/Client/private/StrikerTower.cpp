@@ -122,6 +122,12 @@ HRESULT CStrikerTower::Render()
 	return S_OK;
 }
 
+void CStrikerTower::Update_Anim(_float TimeDelta)
+{
+	m_pModelCom->Update_AnimaionMatrix(TimeDelta);
+	m_pModelCom->Update_CombindTransformationMatrix();
+}
+
 HRESULT CStrikerTower::Ready_Component(void * pArg)
 {
 	return S_OK;

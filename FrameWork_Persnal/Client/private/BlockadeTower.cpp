@@ -64,6 +64,12 @@ HRESULT CBlockadeTower::Render()
 	return S_OK;
 }
 
+void CBlockadeTower::Update_Anim(_float TimeDelta)
+{
+	m_pModelCom->Update_AnimaionMatrix(TimeDelta);
+	m_pModelCom->Update_CombindTransformationMatrix();
+}
+
 HRESULT CBlockadeTower::Ready_Component(void * pArg)
 {
 	HRESULT  hr = S_OK;
