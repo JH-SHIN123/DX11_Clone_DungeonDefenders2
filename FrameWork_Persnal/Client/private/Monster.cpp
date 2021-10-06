@@ -113,6 +113,25 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 	if (true == m_IsBrainWashed)
 		return AI_BrainWashed(TimeDelta, pTargetPos, IsContinueAnimation);
 
+	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
+	_vector vTargetCell = m_pNaviCom->Get_Less_NearOption_Pos(&vMyPos);
+
+	/*
+	1. 현재 셀 안에서 움직인다
+	2. 현재 셀을 벗어날 시간이다.
+	*/
+
+	// 임시
+	_vector vDir = XMVector3Normalize(vTargetCell - m_pMovementCom->Get_State(EState::Position));
+
+	vDir = XMVectorSetY(vDir, 0.f);
+	m_pMovementCom->Go_Dir_Vector(TimeDelta, vDir);
+
+
+
+
+	return EMonsterAI::Move_Cell;
+
 
 	// 먼저 플레이어 거리 탐색
 	if (EMonsterAI::Attack == m_eAI_Next && IsContinueAnimation)
@@ -125,7 +144,6 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 	if (nullptr == pTarget)
 		return EMonsterAI::End;
 
-	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
 	_vector vTargetPos = pTarget->Get_State(EState::Position);
 
 	_float fDis = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
@@ -164,19 +182,19 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 		{
 			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta* 1.5f, vTargetPos);
 			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
-			return m_eAI_Next = EMonsterAI::Move;
+			return m_eAI_Next = EMonsterAI::Move_Target;
 		}
 		else if (10.f < fTurnAngle)
 		{
 			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta, vTargetPos);
 			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
-			return m_eAI_Next = EMonsterAI::Move;
+			return m_eAI_Next = EMonsterAI::Move_Target;
 		}
 
 
 
 		m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
-		return m_eAI_Next = EMonsterAI::Move;
+		return m_eAI_Next = EMonsterAI::Move_Target;
 
 	}
 
@@ -254,6 +272,7 @@ HRESULT CMonster::Ready_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &Data.Movement_Desc);
 	hr = CGameObject::Add_Component((_uint)Data.eLevel, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
 
+	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_MeshLevel_1_Navi"), TEXT("Com_Navi"), (CComponent**)&m_pNaviCom);
 
 	MASK_METERBAR_DESC_3D HP_Bar;
 	HP_Bar.eFillMode = EMeterBar_FillMode::ZeroToFull;
@@ -268,6 +287,8 @@ HRESULT CMonster::Ready_Component(void * pArg)
 
 	m_pMeterBar_Hp = CMasking_MeterBar_3D::Create(m_pDevice, m_pDevice_Context, &HP_Bar);
 
+
+	m_pNaviCom->Get_CellOption(m_pMovementCom->Get_State(EState::Position));
 
 	m_fDetectDis = Data.fDetectDis;
 	m_fAttackDis = Data.fAttackDis;
@@ -309,6 +330,7 @@ void CMonster::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pMovementCom);
 	Safe_Release(m_pModelCom);
+	Safe_Release(m_pNaviCom);
 
 	Safe_Release(m_pMeterBar_Hp);
 

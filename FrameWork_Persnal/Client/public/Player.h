@@ -125,7 +125,6 @@ private:
 	_bool			m_IsSkill_Use[10] = { false };
 	_bool			m_IsAttack = false;
 	_float			m_fChargeSkill = 0.f;
-	//_bool			m_IsChargeSkill_Change = false;
 	_bool			m_IsCharging = false;
 
 private: // Tower
@@ -159,10 +158,6 @@ private: // Skill
 
 	_float	m_fHealTime = 0.f;
 	_int	m_iHealSize = 0;
-
-	//_float	m_fBrainWash_Time		= 0.f; 
-	//_float	m_fBrainWash_Time_Max	= 0.f; // 몬스터가 세팅해줌
-
 
 private:
 	HRESULT	Ready_Component(void* pArg);

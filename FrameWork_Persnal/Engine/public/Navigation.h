@@ -26,6 +26,9 @@ public:
 	_bool IsMove(_fvector vOriginalPos, _fvector vDirection, _float* Cell_Y, _vector* vOutSlidingDir);
 	_bool Get_CellPos(_fvector vMouseDir, _fvector vMousePos_World, _vector* vOutCellPos);
 
+	void Get_CellOption(_fvector vPos);
+	_fvector Get_Less_NearOption_Pos(_vector* vMyPos);
+
 #ifdef _DEBUG
 public:
 	HRESULT Render_Navigation();
@@ -35,6 +38,8 @@ public:
 private:
 	vector<class CCell*>				m_pCells;
 	typedef vector<class CCell*>		CELLS;
+
+	_int m_iNowCellOption = 0;
 
 private:
 	NAVI_DESC				m_NavigationDesc;

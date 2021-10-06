@@ -36,6 +36,7 @@ using namespace DirectX;
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
+#include <functional>
 using namespace std;
 
 #ifdef _DEBUG

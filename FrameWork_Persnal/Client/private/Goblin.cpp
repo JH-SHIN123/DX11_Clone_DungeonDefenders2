@@ -102,7 +102,7 @@ _int CGoblin::Tick(_float TimeDelta)
 				break;
 			case Client::EMonsterAI::Shock:
 				break;
-			case Client::EMonsterAI::Move:
+			case Client::EMonsterAI::Move_Target:
 				m_IsAttack = false;
 				m_iAttackCount = 0;
 				m_eAnim_Next = EGoblinAnim::Move_Forward;

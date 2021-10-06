@@ -10,6 +10,25 @@ CCell::CCell(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	Safe_AddRef(m_pDevice_Context);
 }
 
+_uint CCell::Check_CellOptoin(_fvector vPos)
+{
+	_bool IsIn = true;
+
+	for (_uint i = 0; i < LINE_END; ++i)
+	{
+		_vector	vSour = XMVector3Normalize(vPos - XMLoadFloat3(&m_vPoints[i]));
+		_vector vDest = XMVector3Normalize(XMVectorSet(m_vLine[i].z * -1.f, 0.f, m_vLine[i].x, 0.f));
+
+		if (0 < XMVectorGetX(XMVector3Dot(vSour, vDest)))
+			IsIn = false;
+	}
+
+	if (true == IsIn)
+		return m_iCellOption;
+	else
+		return -1;
+}
+
 void CCell::Set_Neighbor(NEIGHBOR eNeighbor, _uint iIndex)
 {
 	m_Neighbor[eNeighbor] = iIndex;
@@ -35,35 +54,8 @@ HRESULT CCell::NativeContruct(const _float3 * pPoints, _int iCellOption)
 
 _bool CCell::Compare_Points(_fvector vSourPoint, _fvector vDestPoint)
 {
-	//if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_A]), vSourPoint))
-	//{
-	//	if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_B]), vDestPoint))
-	//		return true;
-	//	else if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_C]), vDestPoint))
-	//		return true;
-	//}
-
-	//if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_B]), vSourPoint))
-	//{
-	//	if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_A]), vDestPoint))
-	//		return true;
-	//	else if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_C]), vDestPoint))
-	//		return true;
-	//}
-
-	//if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_C]), vSourPoint))
-	//{
-	//	if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_A]), vDestPoint))
-	//		return true;
-	//	else if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_B]), vDestPoint))
-	//		return true;
-	//}
-
-	//return false;
-
 	_float fOffSet = 0.001f;
 
-	//if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[POINT_A]), vSourPoint))
 	if (true == fOffSet >= XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vPoints[POINT_A]) - vSourPoint)))
 	{
 		if (true == fOffSet >= XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vPoints[POINT_B]) - vDestPoint)))
@@ -89,22 +81,19 @@ _bool CCell::Compare_Points(_fvector vSourPoint, _fvector vDestPoint)
 	}
 
 	return false;
-
 }
 
 CCell::RESULTDESC CCell::isIn(vector<CCell*>& Cells, _fvector vGoalPos, _float* Cell_Y, _int iCount)
 {
 	RESULTDESC		ResultDesc;
 
-	//ResultDesc.iCount = iCount;
-
 	ResultDesc.isIn = true;
+	ResultDesc.iCellOption = m_iCellOption;
 
 	for (_uint i = 0; i < LINE_END; ++i)
 	{
 		_vector	vSour = XMVector3Normalize(vGoalPos - XMLoadFloat3(&m_vPoints[i]));
 		_vector vDest = XMVector3Normalize(XMVectorSet(m_vLine[i].z * -1.f, 0.f, m_vLine[i].x, 0.f));
-
 
 		_vector vTri_A, vTri_B, vTri_C;
 		vTri_A = XMLoadFloat3(&m_vPoints[0]);
@@ -124,16 +113,9 @@ CCell::RESULTDESC CCell::isIn(vector<CCell*>& Cells, _fvector vGoalPos, _float* 
 				++ResultDesc.iCount;
 				ResultDesc = Cells[m_Neighbor[i]]->isIn(Cells, vGoalPos, Cell_Y, ResultDesc.iCount);
 			}
-			//else if (0 <= m_Neighbor[1])
-			//	ResultDesc = Cells[m_Neighbor[1]]->isIn(Cells, vGoalPos, Cell_Y);
-			//else if (0 <= m_Neighbor[2])
-			//	ResultDesc = Cells[m_Neighbor[2]]->isIn(Cells, vGoalPos, Cell_Y);
-
-			// 꼭짓점 예외처리...
 
 			if (true == ResultDesc.isIn)
 			{
-				/* 현재 이웃을 탐색한 부모기준의 정보로 채운다. */
 				ResultDesc.isIn = false;
 				ResultDesc.iResultIndex = Cells[m_Neighbor[i]]->Get_Index();
 				break;
@@ -160,7 +142,7 @@ _bool CCell::Check_Cell(_fvector vMouseDir, _fvector vMousePos_World, _vector* v
 
 		_float fDirX = XMVectorGetX(vMouseDir);
 		_float fDirY = XMVectorGetY(vMouseDir);
-		_float fDirZ = XMVectorGetZ(vMouseDir);// *-1.f;
+		_float fDirZ = XMVectorGetZ(vMouseDir);
 
 		fDis *= 0.5f;
 
@@ -181,39 +163,37 @@ _bool CCell::Check_Cell(_fvector vMouseDir, _fvector vMousePos_World, _vector* v
 		// y는 구한듯?
 		vWorldMousePos = XMVectorSetY(vWorldMousePos, -(XMVectorGetX(vOut) * XMVectorGetX(vWorldMousePos) + XMVectorGetZ(vOut) * XMVectorGetZ(vWorldMousePos) + XMVectorGetW(vOut)) / XMVectorGetY(vOut));
 
-		_vector vWorld = vWorldMousePos;
-		vWorld = XMVectorSetY(vWorldMousePos, 0.f);
-
-		_int TriCheck[3] = { 1, 1, 1 };
-		for (_uint i = 0; i < LINE_END; ++i)
-		{
-			_vector	vSour = XMVector3Normalize(vWorld - XMLoadFloat3(&m_vPoints[i]));
-			_vector vDest = XMVector3Normalize(XMVectorSet(m_vLine[i].z * -1.f, 0.f, m_vLine[i].x, 0.f));
-
-			/* 현재 셀을 나갔다. */
-			if (0 < XMVectorGetX(XMVector3Dot(vSour, vDest)))
-				TriCheck[i] = 0;
-
-		}
-		_int iCheck = TriCheck[0] * TriCheck[1] * TriCheck[2];
-
-		if (0 == iCheck)
-		{
-
-		}
-		else
-		{
-
-		}
-
-
-
 		*vOutPos = vWorldMousePos;
-
 	}
 
-
 	return IsIn;
+}
+
+_fvector CCell::Get_CellCenter(_uint iOption, _vector* vMyPos, _vector* vTargetPos)
+{
+	_vector vCenterPos = XMVectorZero();
+
+	vCenterPos = XMVectorSetX(vCenterPos, (m_vPoints[0].x + m_vPoints[1].x + m_vPoints[2].x) / 3.f);
+	vCenterPos = XMVectorSetZ(vCenterPos, (m_vPoints[0].z + m_vPoints[1].z + m_vPoints[2].z) / 3.f);
+	vCenterPos = XMVectorSetW(vCenterPos, 1.f);
+
+	if (0 == XMVectorGetW(*vTargetPos))
+	{
+		*vTargetPos = vCenterPos;
+
+		return vCenterPos;
+	}
+
+	if (m_iCellOption == iOption)
+	{
+		_float fPos_Center = XMVectorGetX(XMVector3Length(vCenterPos - *vMyPos));
+		_float fPos_Target = XMVectorGetX(XMVector3Length(*vTargetPos - *vMyPos));
+
+		if(fPos_Center <= fPos_Target)
+			*vTargetPos = vCenterPos;
+	}
+
+	return vCenterPos;
 }
 
 #ifdef _DEBUG
@@ -224,15 +204,41 @@ HRESULT CCell::Render_Cell(_uint iCurrentIndex)
 
 	m_pDevice_Context->IASetVertexBuffers(0, 1, &m_pVB, &m_iStride, &iOffSet);
 
-	if (m_iIndex == iCurrentIndex)
-	{
+	//if (m_iIndex == iCurrentIndex)
+	//{
 		m_pDevice_Context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.7f, 0.7f, 1.f), 0, sizeof(_vector));
-	}
-	else
+	//}
+	//else
+	//{
+	//	m_pDevice_Context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
+	//	m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 1.f, 1.f, 1.f), 0, sizeof(_vector));
+	//}
+
+	switch (m_iCellOption)
 	{
-		m_pDevice_Context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
-		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 1.f, 1.f, 1.f), 0, sizeof(_vector));
+	case 0:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.f, 0.f, 1.f), 0, sizeof(_vector));
+		break;
+	case 1:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.15f, 0.15f, 1.f), 0, sizeof(_vector));
+		break;
+	case 2:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.3f, 0.3f, 1.f), 0, sizeof(_vector));
+		break;
+	case 3:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.45f, 0.45f, 1.f), 0, sizeof(_vector));
+		break;
+	case 4:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.6f, 0.6f, 1.f), 0, sizeof(_vector));
+		break;
+	case 5:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.75, 0.75f, 1.f), 0, sizeof(_vector));
+		break;
+	case 6:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.9f, 0.9f, 1.f), 0, sizeof(_vector));
+		break;
+	default:
+		break;
 	}
 
 	m_pDevice_Context->IASetInputLayout(m_InputLayouts[0].pLayout);

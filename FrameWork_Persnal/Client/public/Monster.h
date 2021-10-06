@@ -23,7 +23,7 @@ typedef struct tagMonsterDesc
 }MONSTER_DESC;
 
 enum class EMonsterAI
-{ Idle, Attack, Hurt, Dead, Shock, Move, Turn, End };
+{ Idle, Attack, Hurt, Dead, Shock, Move_Cell, Move_Target, Turn, End };
 
 class CMonster abstract : public CGameObject
 {
@@ -66,6 +66,7 @@ protected:
 	CStatus*				m_pStatusCom	= nullptr;
 	CRenderer*				m_pRendererCom	= nullptr;
 	CMovement*				m_pMovementCom	= nullptr;
+	CNavigation*			m_pNaviCom		= nullptr;
 
 private:
 	_bool	m_IsBrainWashed				= false;

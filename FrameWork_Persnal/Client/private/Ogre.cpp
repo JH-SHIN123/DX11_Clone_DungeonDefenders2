@@ -103,7 +103,14 @@ _int COgre::Tick(_float TimeDelta)
 		case Client::EMonsterAI::Shock:
 			m_eAnim_Next = EOgreAnim::Hurt;
 			break;
-		case Client::EMonsterAI::Move:
+		case Client::EMonsterAI::Move_Cell:
+			if (true == m_IsAttack)
+				break;
+			m_IsAttack = false;
+			m_iAttackCount = 0;
+			m_eAnim_Next = EOgreAnim::Walk;
+			break;
+		case Client::EMonsterAI::Move_Target:
 			if (true == m_IsAttack)
 				break;
 			m_IsAttack = false;
