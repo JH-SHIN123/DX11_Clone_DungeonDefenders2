@@ -49,7 +49,7 @@ enum class EPlayerAnimation
 };
 
 enum class ETowerSpawn
-{ Start, Locate, Rotate, Spawn, End };
+{ Locate, Rotate, Spawn, End };
 
 typedef struct tagGameObject_Desc
 {
@@ -134,8 +134,9 @@ private: // Tower
 	class CLightningTower*		m_pLightningTower			= nullptr;
 	_bool						m_IsRenderTower[RENDER_END]	= { false };
 	ETowerSpawn					m_eTowerSpawn				= ETowerSpawn::End;
-	_bool						m_IsTowerPick				= false;
+	_bool						m_IsTowerSpawning			= false;
 	MOVESTATE_DESC				m_CreateTower_Desc;
+	POINT						m_tTowerPickPoint;
 
 private:
 	EPlayerAnimation		m_eAnimationState_Cur			= EPlayerAnimation::End;

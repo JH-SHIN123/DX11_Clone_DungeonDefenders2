@@ -31,6 +31,18 @@ HRESULT CMovement::NativeConstruct(void * pArg)
 
 		_vector vPos = XMLoadFloat4(&m_MoveStateDesc.vPos);
 		Set_State(EState::Position, vPos);
+
+		if (1.f != m_MoveStateDesc.vRotateLook.z)
+		{
+			_vector vLook	= XMVector3Normalize(XMLoadFloat4(&m_MoveStateDesc.vRotateLook)) * m_MoveStateDesc.vScale.z;
+			_vector vUp		= XMVectorSet(0.f, 1.f, 0.f, 0.f) * m_MoveStateDesc.vScale.y;
+			_vector vRight	= XMVector3Normalize(XMVector3Cross(vUp, vLook)) * m_MoveStateDesc.vScale.x;
+
+			Set_State(EState::Right, vRight);
+			Set_State(EState::Up, vUp);
+			Set_State(EState::Look, vLook);
+		}
+
 	}
 
 	return S_OK;

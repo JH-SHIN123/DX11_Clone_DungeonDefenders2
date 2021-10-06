@@ -17,6 +17,7 @@ typedef struct tagMoveStateDesc
 	_float	fRotatePerSec = 0.f;
 	_float4 vPos = {};
 	_float4 vScale = {};
+	_float4 vRotateLook = {0.f,0.f,1.f,0.f};
 
 	// JumpUp ~ JumpDown, Gravity(false)
 	_bool	IsJump = false;

@@ -7,12 +7,15 @@ CCursor_Manager::CCursor_Manager()
 {
 }
 
-void CCursor_Manager::Get_MousePos_WorldSpace( _vector* vMouseWorldPos, _vector* vMouseWorldDir)
+POINT CCursor_Manager::Get_MousePos_WorldSpace( _vector* vMouseWorldPos, _vector* vMouseWorldDir, const POINT& ptInMousePos)
 {
 	POINT ptMouse = Get_Mouse();
 
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
+
+	if ((g_iWinCX >> 1) > ptInMousePos.x)
+		ptMouse = ptInMousePos;
 
 	// 윈도우상의 마우스 좌표를 뷰포트까지
 	_float	fMouseX, fMouseY;
@@ -40,7 +43,8 @@ void CCursor_Manager::Get_MousePos_WorldSpace( _vector* vMouseWorldPos, _vector*
 
 	*vMouseWorldPos = vRayPos;
 	*vMouseWorldDir = XMVector3Normalize(vRayDir);
-	return;
+
+	return ptMouse;
 }
 
 HRESULT CCursor_Manager::Set_Cursor(CCursor * pCursor)

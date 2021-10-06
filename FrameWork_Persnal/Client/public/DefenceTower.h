@@ -23,6 +23,8 @@ typedef struct tagTowerDesc
 
 	_float			fSpawnTime_Max = 1.f;
 	ETowerRange		eTowerRange = ETowerRange::Half;
+
+
 }TOWER_DESC;
 
 
@@ -40,12 +42,19 @@ public:
 	virtual _int	Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
+public: // For.PlayerTower
+	void Set_TowerLookDir(_fvector vLookDir);
+	void Set_TowerRotatePosition(_fvector vDir);
+	void Set_OnEnemyCheck(_bool IsOn) { m_IsEnemyCheck = IsOn; }
+	void Set_IsSpawn(_bool IsSpawn) { m_IsSpawn = IsSpawn; }
+
 public: // Setter
 	void Set_TowerState(ETowerState eState) { m_eTowerState_Next = eState; }
 
 public: // Getter
 	_fvector Get_Pos() const { return m_pMovementCom->Get_State(EState::Position); }
 	ETowerState Get_TowerState() const { return m_eTowerState_Next; }
+	void Get_TowerDesc(TOWER_DESC* pOutTowerDesc);
 
 public:
 	void Set_TowerPos(_fvector vPosition);
@@ -79,6 +88,10 @@ private:
 	_float			m_fTowerRangeCenter = 0.f;
 	_float			m_fTowerRangeMax = 45.f; // ¿øÁ¡ 90
 	_float			m_fTowerRangeMin = -45.f;
+	TOWER_DESC		m_TowerDesc;
+	_bool			m_IsEnemyCheck = true;
+	_bool			m_IsSpawn = true;
+
 
 
 public:

@@ -22,7 +22,6 @@ HRESULT CDefenceTower::NativeConstruct(void * pArg)
 
 	Ready_Component(pArg);
 
-
 	return S_OK;
 }
 
@@ -80,6 +79,31 @@ HRESULT CDefenceTower::Render()
 	return S_OK;	
 }
 
+void CDefenceTower::Set_TowerLookDir(_fvector vLookDir)
+{
+	_vector vNewLookDir = XMVector3Normalize(vLookDir) * m_pMovementCom->Get_Scale(EState::Look);
+	_vector vRightDir = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vNewLookDir)) * m_pMovementCom->Get_Scale(EState::Right);
+	_vector vUpDir = XMVectorSet(0.f, 1.f, 0.f, 0.f) * m_pMovementCom->Get_Scale(EState::Up);
+
+	m_pMovementCom->Set_State(EState::Right, vRightDir);
+	m_pMovementCom->Set_State(EState::Up, vUpDir);
+	m_pMovementCom->Set_State(EState::Look, vNewLookDir);
+}
+
+void CDefenceTower::Set_TowerRotatePosition(_fvector vDir)
+{
+	_vector vMyLookDir = XMVector3Normalize(XMVectorSetY(vDir, 0.f)) * m_pMovementCom->Get_Scale(EState::Look);
+	_vector vRightDir = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vMyLookDir)) ;
+	_vector vUpDir = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	if (0 != XMVectorGetX(XMVector3Length(vMyLookDir)))
+	{
+		m_pMovementCom->Set_State(EState::Right, vRightDir * m_pMovementCom->Get_Scale(EState::Right));
+		m_pMovementCom->Set_State(EState::Up, vUpDir * m_pMovementCom->Get_Scale(EState::Up));
+		m_pMovementCom->Set_State(EState::Look, vMyLookDir);
+	}
+}
+
 void CDefenceTower::TowerState_Check()
 {
 	m_eTowerState_Next = ETowerState::Idle;
@@ -89,6 +113,10 @@ _bool CDefenceTower::Enemy_Check(_float TimeDelta, _vector* vTargetPos)
 {
 	// 몬스터가 내 공격범위안에 있다.
 	// 돌아라
+
+	if (false == m_IsEnemyCheck)
+		return false;
+
 	CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Monster");
 	if (nullptr == pLayer)
 		return false;
@@ -149,10 +177,19 @@ _bool CDefenceTower::Enemy_Check(_float TimeDelta, _vector* vTargetPos)
 	return false;
 }
 
+void CDefenceTower::Get_TowerDesc(TOWER_DESC * pOutTowerDesc)
+{
+	memcpy(pOutTowerDesc, &m_TowerDesc, sizeof(TOWER_DESC));
+
+	XMStoreFloat4(&pOutTowerDesc->MoveState_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
+	XMStoreFloat4(&pOutTowerDesc->MoveState_Desc.vRotateLook, m_pMovementCom->Get_State(EState::Look));
+
+}
+
 void CDefenceTower::Set_TowerPos(_fvector vPosition)
 {
-	if (ETowerState::Pick != m_eTowerState_Next)
-		return;
+	//if (ETowerState::Pick != m_eTowerState_Next)
+	//	return;
 
 	m_pMovementCom->Set_State(EState::Position, vPosition);
 }
@@ -168,21 +205,20 @@ HRESULT CDefenceTower::Ready_Component(void * pArg)
 {
 	HRESULT hr = S_OK;
 
-	TOWER_DESC Data;
-	memcpy(&Data, pArg, sizeof(TOWER_DESC));
+	memcpy(&m_TowerDesc, pArg, sizeof(TOWER_DESC));
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom);
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &Data.MoveState_Desc);
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Status"), (CComponent**)&m_pStatusCom, &Data.Stat_Desc);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &m_TowerDesc.MoveState_Desc);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Status"), (CComponent**)&m_pStatusCom, &m_TowerDesc.Stat_Desc);
 	
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Texture_TowerRange"), TEXT("Com_Textures"), (CComponent**)&m_pTexturesCom);
-	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
+	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, m_TowerDesc.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
 
 	XMStoreFloat3(&m_vFirstLook_Dir, m_pMovementCom->Get_State(EState::Look));
-	m_fSpawnTime_Max	= Data.fSpawnTime_Max;
-	m_eTowerRange		= Data.eTowerRange;
-	m_IsTurnable		= Data.IsTurnable;
-	m_fTowerRangeDis	= Data.fTowerRangeDis;
+	m_fSpawnTime_Max	= m_TowerDesc.fSpawnTime_Max;
+	m_eTowerRange		= m_TowerDesc.eTowerRange;
+	m_IsTurnable		= m_TowerDesc.IsTurnable;
+	m_fTowerRangeDis	= m_TowerDesc.fTowerRangeDis;
 
 	m_fTowerRangeCenter = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(XMVectorSet(1.f,0.f,0.f,0.f), XMLoadFloat3(&m_vFirstLook_Dir)))));
 

@@ -24,7 +24,7 @@ HRESULT CStrikerTower::NativeConstruct(void * pArg)
 	Ready_Component(pArg);
 
 	m_pModelCom->Set_AnimationIndex(0); // 나는 애니메이션 하나에 다 있는 상황 원테이크
-	m_pModelCom->Set_AnimationIndex_Start(0.f, (_float)m_eAnim_Next - 1.f);
+	m_pModelCom->Set_AnimationIndex_Start(85.f, 125.f - 86.f);
 
 	Set_Pivot(XMVectorSet(0.035f, 0.035f, 0.035f, 0.f));
 
