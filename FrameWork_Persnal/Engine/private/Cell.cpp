@@ -158,25 +158,60 @@ _bool CCell::Check_Cell(_fvector vMouseDir, _fvector vMousePos_World, _vector* v
 		_vector vWorldMouseDir = XMVectorZero();
 		_vector vWorldMousePos = XMVectorZero();
 
-		vWorldMouseDir = vMouseDir * fDis;
+		_float fDirX = XMVectorGetX(vMouseDir);
+		_float fDirY = XMVectorGetY(vMouseDir);
+		_float fDirZ = XMVectorGetZ(vMouseDir);// *-1.f;
+
+		fDis *= 0.5f;
+
+		vWorldMouseDir = vMouseDir;// *fDis;
+		vWorldMouseDir = XMVectorSetX(vWorldMouseDir, fDirX * fDis);
+		vWorldMouseDir = XMVectorSetY(vWorldMouseDir, fDirY * fDis);
+		vWorldMouseDir = XMVectorSetZ(vWorldMouseDir, fDirZ * fDis);
+		//vWorldMouseDir *= fDis;
+
 		vWorldMousePos = vMousePos_World + vWorldMouseDir;
-
-		_vector	vSour = XMVector3Normalize(vWorldMousePos - XMLoadFloat3(&m_vPoints[0]));
-		_vector vDest = XMVector3Normalize(XMVectorSet(m_vLine[0].z * -1.f, 0.f, m_vLine[0].x, 0.f));
-
 
 		_vector vTri_A, vTri_B, vTri_C;
 		vTri_A = XMLoadFloat3(&m_vPoints[0]);
 		vTri_B = XMLoadFloat3(&m_vPoints[1]);
 		vTri_C = XMLoadFloat3(&m_vPoints[2]);
 		_vector vOut = XMPlaneFromPoints(vTri_A, vTri_B, vTri_C);
-		
+
 		// y는 구한듯?
 		vWorldMousePos = XMVectorSetY(vWorldMousePos, -(XMVectorGetX(vOut) * XMVectorGetX(vWorldMousePos) + XMVectorGetZ(vOut) * XMVectorGetZ(vWorldMousePos) + XMVectorGetW(vOut)) / XMVectorGetY(vOut));
 
-		vWorldMousePos = XMVectorSetW(vWorldMousePos, 1.f);
+		_vector vWorld = vWorldMousePos;
+		vWorld = XMVectorSetY(vWorldMousePos, 0.f);
+
+		_int TriCheck[3] = { 1, 1, 1 };
+		for (_uint i = 0; i < LINE_END; ++i)
+		{
+			_vector	vSour = XMVector3Normalize(vWorld - XMLoadFloat3(&m_vPoints[i]));
+			_vector vDest = XMVector3Normalize(XMVectorSet(m_vLine[i].z * -1.f, 0.f, m_vLine[i].x, 0.f));
+
+			/* 현재 셀을 나갔다. */
+			if (0 < XMVectorGetX(XMVector3Dot(vSour, vDest)))
+				TriCheck[i] = 0;
+
+		}
+		_int iCheck = TriCheck[0] * TriCheck[1] * TriCheck[2];
+
+		if (0 == iCheck)
+		{
+
+		}
+		else
+		{
+
+		}
+
+
+
 		*vOutPos = vWorldMousePos;
+
 	}
+
 
 	return IsIn;
 }

@@ -11,6 +11,7 @@
 #include "LightningTower.h"
 #include "Cursor_Manager.h"
 #include "Staff_Basic.h"
+#include "Calculator.h"
 
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -535,10 +536,13 @@ void CPlayer::Tower_Pick()
 		if (true == m_IsRenderTower[RENDER_BLOCAKE])
 		{
 			static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_CameraView_Mode(ECameraViewMode::TopView);
-			_vector vMouseWorldPos = m_pMovementCom->Get_State(EState::Position) + XMVectorSet(0.f,5.f,0.f,0.f);
+			_vector vMouseWorldPos = /*m_pMovementCom->Get_State(EState::Position) +*/ XMVectorSet(0.f,0.f,0.f,1.f);
 			_vector vMouseWorldDir = XMVectorZero();
 
-			CCursor_Manager::GetInstance()->Get_MousePos_WorldSpace(m_pDevice_Context, &vMouseWorldPos, &vMouseWorldDir);
+			//CCalculator::Convert_MouseRay(vMouseWorldPos, &vMouseWorldDir);
+
+
+			CCursor_Manager::GetInstance()->Get_MousePos_WorldSpace(&vMouseWorldPos, &vMouseWorldDir);
 
 			_bool bGetCell = false;
 			_vector vOutPos = XMVectorZero();
@@ -553,7 +557,6 @@ void CPlayer::Tower_Pick()
 
 			}
 		}
-
 	}
 		break;
 	case Client::ETowerSpawn::Locate:

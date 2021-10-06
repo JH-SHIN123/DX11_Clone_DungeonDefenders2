@@ -7,30 +7,39 @@ CCursor_Manager::CCursor_Manager()
 {
 }
 
-void CCursor_Manager::Get_MousePos_WorldSpace(ID3D11DeviceContext* pDevice_Constext, _vector* vMouseWorldPos, _vector* vMouseWorldDir)
+void CCursor_Manager::Get_MousePos_WorldSpace( _vector* vMouseWorldPos, _vector* vMouseWorldDir)
 {
 	POINT ptMouse = Get_Mouse();
 
-	_uint iNum = 0;
-	D3D11_VIEWPORT ViewPort;
-	pDevice_Constext->RSGetViewports(&iNum, &ViewPort);
-	_vector vMousePos = XMVectorZero();
-	_float fViewX = ptMouse.x / (g_iWinCX * 0.5f) - 1.f;
-	vMousePos = XMVectorSetX(vMousePos, ptMouse.x / (g_iWinCX * 0.5f) - 1.f);
-	vMousePos = XMVectorSetY(vMousePos, ptMouse.y / -(g_iWinCY * 0.5f) + 1.f);
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
 
-	_matrix Proj = XMMatrixInverse(nullptr, GET_PROJ_SPACE);
+	// 윈도우상의 마우스 좌표를 뷰포트까지
+	_float	fMouseX, fMouseY;
+
+	fMouseX = (ptMouse.x / (g_iWinCX * 0.5f)) - 1.f;
+	fMouseY = ((g_iWinCY * 0.5f) / ptMouse.y) - 1.f;
+
+	//_uint iNum = 0;
+	//D3D11_VIEWPORT ViewPort;
+	//pDevice_Constext->RSGetViewports(&iNum, &ViewPort);
+
+	_vector vMousePos = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	vMousePos = XMVectorSetX(vMousePos, fMouseX);// / (g_iWinCX  * 0.25f) - 1.f);
+	vMousePos = XMVectorSetY(vMousePos, fMouseY);// / -(g_iWinCY * 0.25f) + 1.f);
+
+	_matrix Proj = XMMatrixInverse(0, GET_PROJ_SPACE);
 	vMousePos = XMVector3TransformCoord(vMousePos, Proj);
-	_vector vRayPos = XMVectorZero();
+	_vector vRayPos = XMVectorSet(0.f,0.f,0.f,1.f);
 	_vector vRayDir = vMousePos - vRayPos;
 
 
-	_matrix View = XMMatrixInverse(nullptr, GET_VIEW_SPACE);
-	XMVector3TransformCoord(vRayPos, View);
-	XMVector3TransformNormal(vRayDir, View);
+	_matrix View = XMMatrixInverse(0, GET_VIEW_SPACE);
+	vRayPos = XMVector3TransformCoord(vRayPos, View);
+	vRayDir = XMVector3TransformNormal(vRayDir, View);
 
 	*vMouseWorldPos = vRayPos;
-	*vMouseWorldDir = vRayDir;
+	*vMouseWorldDir = XMVector3Normalize(vRayDir);
 	return;
 }
 

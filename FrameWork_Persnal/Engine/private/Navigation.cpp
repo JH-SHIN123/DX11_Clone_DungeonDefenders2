@@ -182,7 +182,7 @@ _bool CNavigation::Get_CellPos(_fvector vMouseDir, _fvector vMousePos_World, _ve
 	_vector vCellPos = XMVectorZero();
 
 	_bool IsGetPos = false;
-	for (auto& pCell : m_pCells)
+	for (auto& pCell : m_pCells) 
 	{
 		IsGetPos = pCell->Check_Cell(XMVector3Normalize(vMouseDir), vMousePos_World, vOutCellPos);
 

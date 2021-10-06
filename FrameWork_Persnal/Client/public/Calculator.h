@@ -16,6 +16,7 @@ private:
 public:
 	static _vector Convert_LayToAim(_fvector vPos = XMVectorSet(0.f,0.f,0.f,1.f));
 
+	static void Convert_MouseRay(_fvector vPos, _vector* vOutDir);
 
 };
 

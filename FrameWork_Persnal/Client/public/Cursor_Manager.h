@@ -18,7 +18,7 @@ private:
 public: // Getter
 	POINT		Get_Mouse() const { return m_Cursor->Get_Mouse(); }
 	_bool		Get_IsShowCursor(_bool IsShow) { return m_Cursor->Get_IsShowCursor(); }
-	void	Get_MousePos_WorldSpace(ID3D11DeviceContext* pDevice_Constext, _vector* vMouseWorldPos, _vector* vMouseWorldDir);
+	void	Get_MousePos_WorldSpace( _vector* vMouseWorldPos, _vector* vMouseWorldDir);
 
 public: // Setter
 	HRESULT Set_Cursor(CCursor* pCursor);
