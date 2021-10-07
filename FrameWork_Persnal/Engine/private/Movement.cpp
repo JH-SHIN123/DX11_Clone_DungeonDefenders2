@@ -158,8 +158,6 @@ void CMovement::Go_Dir(_float TimeDelta, _fvector vTargetPos)
 
 	vDir = XMVector4Normalize(vDir);
 
-
-
 	vPosition += vDir * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
 
 	__super::Set_State(EState::Position, vPosition);
@@ -213,6 +211,15 @@ void CMovement::Go_LookDir(_float TimeDelta, CNavigation* pNavigation, _bool IsJ
 	}
 
 	vPosition += vLook * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
+
+	__super::Set_State(EState::Position, vPosition);
+}
+
+void CMovement::Go_Dir_NoUp(_float TimeDelta, _fvector vDir, CNavigation * pNavigation)
+{
+	_vector vPosition = __super::Get_State(EState::Position);
+
+	vPosition += XMVectorSetY(XMVector3Normalize(vDir), 0.f) * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
 
 	__super::Set_State(EState::Position, vPosition);
 }

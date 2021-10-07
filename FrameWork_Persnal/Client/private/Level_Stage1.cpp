@@ -84,12 +84,14 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	MonData.fDetectDis = 15.f;
 	MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(20.f);
 	MonData.Movement_Desc.fSpeedPerSec = 15.f;
-	MonData.Movement_Desc.vPos = { 30.f, -30.f, -262.f, 1.f };
+	MonData.eMovePath = EMonster_MovePath::West_R;
 	MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 	MonData.Stat_Desc.iHp_Max = 10000;
 	MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
 	MonData.Stat_Desc.iExp = 15;
-	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
+
+	//for(int i = 0; i < 20; ++i)
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);	
 
 
 
@@ -141,7 +143,7 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 HRESULT CLevel_Stage1::Render()
 {
 #ifdef _DEBUG
-	SetWindowText(g_hWnd, TEXT("지금 이거 로고씬."));
+	//SetWindowText(g_hWnd, TEXT("지금 이거 로고씬."));
 #endif // _DEBUG
 
 	if (m_IsChange == true)
@@ -153,7 +155,7 @@ HRESULT CLevel_Stage1::Render()
 
 		if (FAILED(pGameInstance->SetUp_CurrentLevel(CLevel_Loading::Create(m_pDevice, m_pDevice_Context, m_eNextLevel))))
 			return -1;
-
+		
 		pGameInstance->Clear_This_Level((_uint)ELevel::Stage1);
 	}
 
@@ -263,7 +265,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
 
 	GAMEOBJ_DESC Data;
-	Data.Movement_Desc.vPos = _float4(8.f, 0.f, 0.f, 1.f);
+	Data.Movement_Desc.vPos = { 0.f, 0.f, 0.f, 1.f };
 	Data.Movement_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
 	Data.Movement_Desc.fSpeedPerSec = 20.f;
 

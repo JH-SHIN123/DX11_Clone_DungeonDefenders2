@@ -165,37 +165,124 @@ _bool CNavigation::Get_CellPos(_fvector vMouseDir, _fvector vMousePos_World, _ve
 	return IsGetPos;
 }
 
-void CNavigation::Get_CellOption(_fvector vPos)
+const _int CNavigation::Get_CellIndex(_fvector vPos)
 {
-	_int iIndex = 0;
-
-	for (iIndex; iIndex < m_pCells.size(); ++iIndex)
+	for (auto& iter : m_pCells)
 	{
-		if (nullptr == m_pCells[iIndex])
-			continue;
+		_int iCellIndex = -1;
+		iCellIndex = iter->Check_CellIndex(vPos);
 
+		if (0 <= iCellIndex)
+			return iCellIndex;			
+	}
+
+	return -1;
+}
+
+_fvector CNavigation::Check_NeighborCell_Center(const _int & iCellIndex, _bool IsGreater)
+{
+	//_int iNeighbor_Option[CCell::NEIGHBOR_END];
+	//_int iNeighbor_Index[CCell::NEIGHBOR_END];
+	//_vector vNeighbor_Center[CCell::NEIGHBOR_END];
+	//
+	//for (_int i = 0; i < CCell::LINE_END; ++i)
+	//{
+	//	iNeighbor_Option[i] = m_pCells[m_pCells[iCellIndex]->Get_Neighbor_Index((CCell::NEIGHBOR)i)]->Get_CellOption();
+	//	iNeighbor_Index[i] = m_pCells[m_pCells[iCellIndex]->Get_Neighbor_Index((CCell::NEIGHBOR)i)]->Get_Index();
+	//	vNeighbor_Center[i] = m_pCells[m_pCells[iCellIndex]->Get_Neighbor_Index((CCell::NEIGHBOR)i)]->Get_CellCenter();
+	//}
+	//
+	//_int iLess_Option = iNeighbor_Option[0];
+	//_int iLess_Index = iNeighbor_Index[0];
+	//_vector vLess_Center = vNeighbor_Center[0];
+	//
+	//
+	//if (iLess_Option > iNeighbor_Option[1])
+	//{
+	//	iLess_Option = iNeighbor_Option[1];
+	//	iLess_Index = iNeighbor_Index[1];
+	//	vLess_Center = vNeighbor_Center[1];
+	//}
+	//else if(iLess_Option ==  iNeighbor_Option[1])
+	//{
+	//	// 이웃의 옵션값이 같으면 그 이웃의 가장 작은 옵션 값을 구하자
+	//	// Dest 원래 작은 값 
+	//	// Sour 새로운 작은 값
+	//	//_int iDest_Option[CCell::NEIGHBOR_END];
+	//	//_vector vDest_Center[CCell::NEIGHBOR_END];
+	//
+	//	_int iDest_Index_Less;
+	//	_int iDest_Option_Less = 999;//iDest_Option[0];
+	//	_int iSour_Index_Less;
+	//	_int iSour_Option_Less = 999;//iSour_Option[0];
+	//
+	//	for (_int i = 0; i < CCell::LINE_END; ++i)
+	//	{
+	//		_int iOption = m_pCells[m_pCells[iLess_Index]->Get_Neighbor_Index((CCell::NEIGHBOR)i)]->Get_CellOption();
+	//		if (iOption <= iDest_Option_Less)
+	//		{
+	//			iDest_Option_Less = iOption;
+	//			iDest_Index_Less = m_pCells[m_pCells[iLess_Index]->Get_Neighbor_Index((CCell::NEIGHBOR)i)]->Get_Index();
+	//		}
+	//
+	//		iOption = m_pCells[m_pCells[iNeighbor_Index[1]]->Get_Neighbor_Index((CCell::NEIGHBOR)i)]->Get_CellOption();
+	//		if (iOption <= iSour_Option_Less)
+	//		{
+	//			iSour_Option_Less = iOption;
+	//			iSour_Index_Less = m_pCells[m_pCells[iNeighbor_Index[1]]->Get_Neighbor_Index((CCell::NEIGHBOR)i)]->Get_Index();
+	//		}
+	//	}
+	//
+	//	// 옵셔 ㄴ비교
+	//
+	//
+	//}
+	
+	return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+}
+
+_vector CNavigation::Get_CellCenter_Pos(const _int& iCellIndex)
+{
+	return m_pCells[iCellIndex]->Get_CellCenter();
+}
+
+_bool CNavigation::IsChanged_CellOption(_fvector vPos)
+{
+	for (auto& iter : m_pCells)
+	{
 		_int iCellOption = -1;
-		iCellOption = m_pCells[iIndex]->Check_CellOptoin(vPos);
+		iCellOption = iter->Check_CellOptoin(vPos);
 
 		if (0 <= iCellOption)
 		{
 			m_iNowCellOption = iCellOption;
-			return;
+			return true;
 		}
-			
 	}
 
-	return ;
+	return false;
 }
 
-_fvector CNavigation::Get_Less_NearOption_Pos(_vector* vMyPos)
+_fvector CNavigation::Get_Less_NearOption_Pos(_fvector vMyPos)
 {
-	_int iIndex = m_iNowCellOption - 1;
+	_int iCellOption = m_iNowCellOption - 1;
 
 	_vector vTargetPos = XMVectorZero();
 
 	for (auto& iter : m_pCells)
-		iter->Get_CellCenter(iIndex, vMyPos, &vTargetPos);
+		iter->Get_CellCenter(iCellOption, vMyPos, &vTargetPos);
+
+	return vTargetPos;
+}
+
+_fvector CNavigation::Get_MyCell_Pos(_fvector vMyPos)
+{
+	_int iCellOption = m_iNowCellOption;
+
+	_vector vTargetPos = XMVectorZero();
+
+	for (auto& iter : m_pCells)
+		iter->Get_CellCenter(iCellOption, vMyPos, &vTargetPos);
 
 	return vTargetPos;
 }

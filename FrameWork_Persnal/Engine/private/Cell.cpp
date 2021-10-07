@@ -29,6 +29,25 @@ _uint CCell::Check_CellOptoin(_fvector vPos)
 		return -1;
 }
 
+_uint CCell::Check_CellIndex(_fvector vPos)
+{
+	_bool IsIn = true;
+
+	for (_uint i = 0; i < LINE_END; ++i)
+	{
+		_vector	vSour = XMVector3Normalize(vPos - XMLoadFloat3(&m_vPoints[i]));
+		_vector vDest = XMVector3Normalize(XMVectorSet(m_vLine[i].z * -1.f, 0.f, m_vLine[i].x, 0.f));
+
+		if (0 < XMVectorGetX(XMVector3Dot(vSour, vDest)))
+			IsIn = false;
+	}
+
+	if (true == IsIn)
+		return m_iIndex;
+	else
+		return -1;
+}
+
 void CCell::Set_Neighbor(NEIGHBOR eNeighbor, _uint iIndex)
 {
 	m_Neighbor[eNeighbor] = iIndex;
@@ -46,8 +65,10 @@ HRESULT CCell::NativeContruct(const _float3 * pPoints, _int iCellOption)
 	XMStoreFloat3(&m_vLine[LINE_BC], XMLoadFloat3(&m_vPoints[POINT_C]) - XMLoadFloat3(&m_vPoints[POINT_B]));
 	XMStoreFloat3(&m_vLine[LINE_CA], XMLoadFloat3(&m_vPoints[POINT_A]) - XMLoadFloat3(&m_vPoints[POINT_C]));
 
+#ifdef _DEBUG
 	if (FAILED(Ready_VertexBuffer()))
 		return E_FAIL;
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -169,7 +190,18 @@ _bool CCell::Check_Cell(_fvector vMouseDir, _fvector vMousePos_World, _vector* v
 	return IsIn;
 }
 
-_fvector CCell::Get_CellCenter(_uint iOption, _vector* vMyPos, _vector* vTargetPos)
+_fvector CCell::Get_CellCenter()
+{
+	_vector vCenterPos = XMVectorZero();
+
+	vCenterPos = XMVectorSetX(vCenterPos, (m_vPoints[0].x + m_vPoints[1].x + m_vPoints[2].x) / 3.f);
+	vCenterPos = XMVectorSetZ(vCenterPos, (m_vPoints[0].z + m_vPoints[1].z + m_vPoints[2].z) / 3.f);
+	vCenterPos = XMVectorSetW(vCenterPos, 1.f);
+
+	return vCenterPos;
+}
+
+_fvector CCell::Get_CellCenter(_uint iOption, _fvector vMyPos, _vector* vTargetPos)
 {
 	_vector vCenterPos = XMVectorZero();
 
@@ -186,14 +218,21 @@ _fvector CCell::Get_CellCenter(_uint iOption, _vector* vMyPos, _vector* vTargetP
 
 	if (m_iCellOption == iOption)
 	{
-		_float fPos_Center = XMVectorGetX(XMVector3Length(vCenterPos - *vMyPos));
-		_float fPos_Target = XMVectorGetX(XMVector3Length(*vTargetPos - *vMyPos));
+		_float fPos_Center = XMVectorGetX(XMVector3Length(vCenterPos - vMyPos));
+		_float fPos_Target = XMVectorGetX(XMVector3Length(*vTargetPos - vMyPos));
 
 		if(fPos_Center <= fPos_Target)
 			*vTargetPos = vCenterPos;
 	}
 
 	return vCenterPos;
+}
+
+_uint CCell::Check_NeighborCellOption_Less(_vector * pOutNeighborCell_CenterPos)
+{
+
+
+	return _uint();
 }
 
 #ifdef _DEBUG
@@ -220,24 +259,67 @@ HRESULT CCell::Render_Cell(_uint iCurrentIndex)
 		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.f, 0.f, 1.f), 0, sizeof(_vector));
 		break;
 	case 1:
-		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.15f, 0.15f, 1.f), 0, sizeof(_vector));
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.1f, 0.1f, 1.f), 0, sizeof(_vector));
 		break;
 	case 2:
-		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.3f, 0.3f, 1.f), 0, sizeof(_vector));
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.2f, 0.2f, 1.f), 0, sizeof(_vector));
 		break;
 	case 3:
-		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.45f, 0.45f, 1.f), 0, sizeof(_vector));
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.3f, 0.3f, 1.f), 0, sizeof(_vector));
 		break;
 	case 4:
-		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.6f, 0.6f, 1.f), 0, sizeof(_vector));
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.4f, 0.4f, 1.f), 0, sizeof(_vector));
 		break;
 	case 5:
-		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.75, 0.75f, 1.f), 0, sizeof(_vector));
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.5, 0.5f, 1.f), 0, sizeof(_vector));
 		break;
 	case 6:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.6f, 0.6f, 1.f), 0, sizeof(_vector));
+		break;
+	case 7:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.7f, 0.7f, 1.f), 0, sizeof(_vector));
+		break;
+	case 8:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.8f, 0.8f, 1.f), 0, sizeof(_vector));
+		break;
+	case 9:
 		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 0.9f, 0.9f, 1.f), 0, sizeof(_vector));
+		break;	
+	case 10:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(1.f, 1.f, 1.f, 1.f), 0, sizeof(_vector));
+		break;
+	case 11:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(0.9f, 0.9f, 1.f, 1.f), 0, sizeof(_vector));
+		break;
+	case 12:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(0.8f, 0.8f, 1.f, 1.f), 0, sizeof(_vector));
+		break;
+	case 13:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(0.7f, 0.7f, 1.f, 1.f), 0, sizeof(_vector));
+		break;
+	case 14:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(0.6f, 0.6f, 1.f, 1.f), 0, sizeof(_vector));
+		break;
+	case 15:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(0.5, 0.5, 1.f, 1.f), 0, sizeof(_vector));
+		break;
+	case 16:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(0.4f, 0.4f, 1.f, 1.f), 0, sizeof(_vector));
+		break;
+	case 17:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(0.3f, 0.3f, 1.f, 1.f), 0, sizeof(_vector));
+		break;
+	case 18:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(0.2f, 0.2f, 1.f, 1.f), 0, sizeof(_vector));
+		break;
+	case 19:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(0.1f, 0.1f, 1.f, 1.f), 0, sizeof(_vector));
+		break;
+	case 20:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(0.f, 0.f, 1.f, 1.f), 0, sizeof(_vector));
 		break;
 	default:
+		m_pEffect->GetVariableByName("g_vCellColor")->SetRawValue(&XMVectorSet(0.25f, 0.25f, 0.25f, 1.f), 0, sizeof(_vector));
 		break;
 	}
 
@@ -363,6 +445,7 @@ CCell * CCell::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Cont
 
 void CCell::Free()
 {
+#ifdef _DEBUG
 	for (auto& InputLayout : m_InputLayouts)
 	{
 		Safe_Release(InputLayout.pPass);
@@ -372,6 +455,7 @@ void CCell::Free()
 
 	Safe_Release(m_pEffect);
 	Safe_Release(m_pVB);
+#endif
 
 	Safe_Release(m_pDevice_Context);
 	Safe_Release(m_pDevice);

@@ -72,6 +72,7 @@ public: // Move
 	void Go_Dir_NoSpeed(_float TimeDelta, _fvector vTargetPos, _float fSpeed);
 	void Go_Up(_float TimeDelta);
 	void Go_LookDir(_float TimeDelta, class CNavigation* pNavigation = nullptr, _bool IsJump = false);
+	void Go_Dir_NoUp(_float TimeDelta, _fvector vDir ,class CNavigation* pNavigation = nullptr);
 
 public: // Rotate Tick
 	void RotateTick(_float TimeDelta);

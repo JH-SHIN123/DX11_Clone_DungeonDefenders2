@@ -109,7 +109,7 @@ VS_OUT VS_MAIN_DIRECTIONAL_TERRAIN(VS_IN In)
 
 	matrix		matWV, matWVP;
 
-	In.vPosition = mul(In.vPosition, g_PivotMatrix);
+	In.vPosition = mul(vector(In.vPosition, 1.f), g_PivotMatrix);
 	matWV = mul(WorldMatrix, ViewMatrix);
 	matWVP = mul(matWV, ProjMatrix);
 	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP); // ¾î ½Ã¹ß;

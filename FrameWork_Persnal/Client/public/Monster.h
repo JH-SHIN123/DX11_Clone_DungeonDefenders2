@@ -9,6 +9,16 @@ BEGIN(Client)
 
 class CMasking_MeterBar_3D;
 
+enum class EMonsterAI
+{
+	Idle, Attack, Hurt, Dead, Shock, Move_Cell, Move_Target, Turn, End
+};
+
+enum class EMonster_MovePath
+{
+	North_L, North_R, West_L, West_R, End
+};
+
 typedef struct tagMonsterDesc
 {
 	_float fDetectDis = 30.f;
@@ -16,14 +26,12 @@ typedef struct tagMonsterDesc
 	STATUS_DESC Stat_Desc;
 	
 	MOVESTATE_DESC Movement_Desc;
+	EMonster_MovePath eMovePath = EMonster_MovePath::North_L;
 
 	_tchar  szModelName[MAX_PATH] = L"";
 	ELevel	eLevel = ELevel::Static;
 	
 }MONSTER_DESC;
-
-enum class EMonsterAI
-{ Idle, Attack, Hurt, Dead, Shock, Move_Cell, Move_Target, Turn, End };
 
 class CMonster abstract : public CGameObject
 {
@@ -41,6 +49,7 @@ public:
 
 public:
 	_float Get_HpRatio() const;
+	_float Get_DisToCell(const _int& iCellIndex);
 
 public:
 	void Set_IsBrainWash(_bool IsBrainWash);
@@ -53,6 +62,7 @@ protected:
 
 protected:
 	void Set_HpBar_OffSet_Position(_float3 vOffSet_Pos) { m_vHpBar_OffSet_Position = vOffSet_Pos; }
+	EMonster_MovePath Research_MovePath(const _int& iCellIndex);
 
 private:
 	HRESULT	Ready_Component(void* pArg);
@@ -81,6 +91,17 @@ private:
 	_float			m_fDetectDis = 0.f;
 	_float			m_fAttackDis = 0.f;
 	_bool			m_IsDead = false;
+
+
+private: //Path_Index
+	const _int m_iNorth_L[7]	= { 83,	81,	 77,  73,  100,	17,	 0 };
+	const _int m_iNorth_R[7]	= { 99,	119, 116, 107, 100,	17,	 0 };
+	const _int m_iWest_L[7]		= { 87,	85,	 36,  31,  24,	12,	 0 };
+	const _int m_iWest_R[7]		= { 93,	53,	 50,  44,  25,	12,	 0 };
+
+	_int m_iMoveCount = 0;
+	EMonster_MovePath m_eMovePath = EMonster_MovePath::End;
+
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

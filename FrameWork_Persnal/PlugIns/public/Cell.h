@@ -28,7 +28,10 @@ public:
 public:
 	_fvector Get_Point(POINT ePoint) const { return XMLoadFloat3(&m_vPoints[ePoint]); }
 	_uint Get_Index() const { return m_iIndex; }
+	_uint Get_CellOption() const { return m_iCellOption; }
+	_int Get_Neighbor_Index (NEIGHBOR eNeighbor) const { return m_Neighbor[eNeighbor]; }
 	_uint Check_CellOptoin(_fvector vPos);
+	_uint Check_CellIndex(_fvector vPos);
 
 public:
 	void Set_Neighbor(NEIGHBOR eNeighbor, _uint iIndex);
@@ -40,7 +43,10 @@ public:
 	RESULTDESC isIn(vector<CCell*>& Cells, _fvector vGoalPos, _float* Cell_Y, _int iCount = 0);
 
 	_bool Check_Cell(_fvector vMouseDir, _fvector vMousePos_World, _vector* vOutPos);
-	_fvector Get_CellCenter(_uint iOption, _vector* vMyPos, _vector* vTargetPos);
+	_fvector Get_CellCenter();
+	_fvector Get_CellCenter(_uint iOption, _fvector vMyPos, _vector* vTargetPos);
+	_uint Check_NeighborCellOption_Less(_vector* pOutNeighborCell_CenterPos);
+	
 
 #ifdef _DEBUG
 public:
@@ -52,6 +58,7 @@ private:
 private:
 	_float3			m_vPoints[POINT_END];
 	_int			m_Neighbor[NEIGHBOR_END];
+
 	_uint			m_iIndex = 0;
 	_int			m_iCellOption = 0;
 

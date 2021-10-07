@@ -8,11 +8,12 @@ CGraphic_Device::CGraphic_Device()
 
 HRESULT CGraphic_Device::Ready_Graphic_Device(WINMODE eWinMode, HWND hWnd, _uint iSizeX, _uint iSizeY, ID3D11Device** ppDevice, ID3D11DeviceContext** ppDevice_Context)
 {
-	_uint			iCreateFlag = 0;
+	_uint			iCreateFlag = D3D11_CREATE_DEVICE_SINGLETHREADED;
 
 #ifdef _DEBUG
 	iCreateFlag = D3D11_CREATE_DEVICE_DEBUG;
 #endif	
+
 	D3D_FEATURE_LEVEL			FeatureLevel;
 
 	if (FAILED(D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, iCreateFlag, nullptr, 0, D3D11_SDK_VERSION, &m_pDevice, &FeatureLevel, &m_pDevice_Context)))

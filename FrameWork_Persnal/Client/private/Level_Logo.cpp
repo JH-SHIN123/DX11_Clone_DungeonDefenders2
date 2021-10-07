@@ -39,7 +39,7 @@ _int CLevel_Logo::Tick(_float Timedelta)
 HRESULT CLevel_Logo::Render()
 {
 #ifdef _DEBUG
-	SetWindowText(g_hWnd, TEXT("지금 이거 로고씬."));
+	//SetWindowText(g_hWnd, TEXT("지금 이거 로고씬."));
 #endif // _DEBUG
 
 	if (m_IsChange == true)
