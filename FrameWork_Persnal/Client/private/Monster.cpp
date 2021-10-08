@@ -185,26 +185,6 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos, m_pNaviCom);
 			return m_eAI_Next = EMonsterAI::Move_Target;
 		}
-		/*
-		_float fTurnAngle = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)), vCur_Next_Dir))));
-
-		_vector vDir = XMVector3Normalize(vCur_Next_Dir - m_pMovementCom->Get_State(EState::Look));
-
-		if (3.f > fTurnAngle)
-		{
-		_vector vLook = vCur_Next_Dir;
-		_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-		_vector vRight = XMVector3Cross(vUp, vCur_Next_Dir);
-
-		m_pMovementCom->Set_State(EState::Right, vRight * m_pMovementCom->Get_Scale(EState::Right));
-		m_pMovementCom->Set_State(EState::Up, vUp * m_pMovementCom->Get_Scale(EState::Up));
-		m_pMovementCom->Set_State(EState::Look, vLook * m_pMovementCom->Get_Scale(EState::Look));
-		m_pMovementCom->Go_Dir_NoUp(TimeDelta, vCur_Next_Dir, m_pNaviCom);
-		}
-
-		else
-		m_pMovementCom->RotateToLookDir_Tick(TimeDelta, vDir);
-		*/
 	}
 #pragma endregion
 
@@ -315,42 +295,76 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 	_float fNextCellDis = XMVectorGetX(XMVector3Length(vCellPos - vNextCell_Pos));
 
 	// 내가 딴길로 샛다 == 플레이어 따라댕겼다
-	if (true == m_IsChaseTarget && fNextCellDis < fCellDis + 0.7f)
+	if (true == m_IsChaseTarget /*&& fNextCellDis < fCellDis + 0.7f*/)
 	{
 		// 가까운곳으로만 가면 그만
 		_int iNearCellIndex = -1;
 		_float fDis = -1.f;
 		fDis = Get_DisToCell(m_iNorth_L[m_iMoveCount]);
 		iNearCellIndex = m_iNorth_L[m_iMoveCount];
+
 		if (fDis > Get_DisToCell(m_iNorth_R[m_iMoveCount]))
+		{
 			iNearCellIndex = m_iNorth_R[m_iMoveCount];
+			fDis = Get_DisToCell(m_iNorth_R[m_iMoveCount]);
+		}
 		if (fDis > Get_DisToCell(m_iWest_L[m_iMoveCount]))
+		{
 			iNearCellIndex = m_iWest_L[m_iMoveCount];
+			fDis = Get_DisToCell(m_iWest_L[m_iMoveCount]);
+		}
 		if (fDis > Get_DisToCell(m_iWest_R[m_iMoveCount]))
+		{
 			iNearCellIndex = m_iWest_R[m_iMoveCount];
+			fDis = Get_DisToCell(m_iWest_R[m_iMoveCount]);
+		}
 
 		if (-1 < m_iMoveCount - 1)
 		{
 			if (fDis > Get_DisToCell(m_iNorth_L[m_iMoveCount - 1]))
+			{
 				iNearCellIndex = m_iNorth_L[m_iMoveCount - 1];
+				fDis = Get_DisToCell(m_iNorth_L[m_iMoveCount - 1]);
+			}
 			if (fDis > Get_DisToCell(m_iWest_R[m_iMoveCount - 1]))
+			{
 				iNearCellIndex = m_iWest_R[m_iMoveCount - 1];
+				fDis = Get_DisToCell(m_iWest_R[m_iMoveCount - 1]);
+			}
 			if (fDis > Get_DisToCell(m_iNorth_R[m_iMoveCount - 1]))
+			{
 				iNearCellIndex = m_iNorth_R[m_iMoveCount - 1];
+				fDis = Get_DisToCell(m_iNorth_R[m_iMoveCount - 1]);
+			}
 			if (fDis > Get_DisToCell(m_iWest_L[m_iMoveCount - 1]))
+			{
 				iNearCellIndex = m_iWest_L[m_iMoveCount - 1];
+				fDis = Get_DisToCell(m_iWest_L[m_iMoveCount - 1]);
+			}
 		}
 
 		if (8 > m_iMoveCount + 1)
 		{
 			if (fDis > Get_DisToCell(m_iNorth_L[m_iMoveCount + 1]))
+			{
 				iNearCellIndex = m_iNorth_L[m_iMoveCount + 1];
+				fDis = Get_DisToCell(m_iNorth_L[m_iMoveCount + 1]);
+			}
 			if (fDis > Get_DisToCell(m_iWest_R[m_iMoveCount + 1]))
+			{
 				iNearCellIndex = m_iWest_R[m_iMoveCount + 1];
+				fDis = Get_DisToCell(m_iWest_R[m_iMoveCount + 1]);
+			}
 			if (fDis > Get_DisToCell(m_iNorth_R[m_iMoveCount + 1]))
+			{
 				iNearCellIndex = m_iNorth_R[m_iMoveCount + 1];
+				fDis = Get_DisToCell(m_iNorth_R[m_iMoveCount + 1]);
+			}
 			if (fDis > Get_DisToCell(m_iWest_L[m_iMoveCount + 1]))
+			{
 				iNearCellIndex = m_iWest_L[m_iMoveCount + 1];
+				fDis = Get_DisToCell(m_iWest_L[m_iMoveCount + 1]);
+			}
 		}
 		// 제일 가까운 경로 찾음
 		vCellPos = m_pNaviCom->Get_CellCenter_Pos(iNearCellIndex);
