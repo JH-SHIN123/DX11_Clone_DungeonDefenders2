@@ -48,6 +48,7 @@ private:
 private:
 	CModel*			m_pModelCom_LightingBall = nullptr;
 	CMovement*		m_pMovmentCom_LightingBall = nullptr;
+	CCollider*		m_pCollider_Hit = nullptr;
 
 public:
 	static	CLightningTower* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

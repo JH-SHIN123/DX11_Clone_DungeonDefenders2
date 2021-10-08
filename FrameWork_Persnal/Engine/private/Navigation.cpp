@@ -376,5 +376,5 @@ void CNavigation::Free()
 
 	m_pCells.clear();
 
-	Safe_Release(m_pModelLoader);
+	//Safe_Release(m_pModelLoader);
 }

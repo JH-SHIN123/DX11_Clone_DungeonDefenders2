@@ -34,10 +34,13 @@ HRESULT CBlockadeTower::NativeConstruct(void * pArg)
 
 _int CBlockadeTower::Tick(_float TimeDelta)
 {
+	_int iReturn = 0;
+	if (iReturn = __super::Tick(TimeDelta))
+		return iReturn;
 
 	m_pCollider_Hit->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 
-	return _int();
+	return iReturn;
 }
 
 _int CBlockadeTower::Late_Tick(_float TimeDelta)

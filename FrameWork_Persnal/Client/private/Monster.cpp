@@ -131,7 +131,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 
 	_float fDis = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
 
-	if (m_fAttackDis > fDis)
+	if (m_fAttackDis > fDis && false == m_IsTowerAttack)
 	{
 		// 돌다가 때려
 		return m_eAI_Next = EMonsterAI::Attack;
@@ -201,7 +201,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 		for (auto& iter : listObject)
 		{
 			_vector vTowerPos = static_cast<CMovement*>(iter->Get_Component(L"Com_Movement"))->Get_State(EState::Position);
-			_float	fDis = XMVectorGetX(XMVector3Length(vTowerPos - vMyPos_Cell));
+			_float	fDis = XMVectorGetX(XMVector3Length(vTowerPos - vMyPos));
 			if (fTowerDis > fDis)
 			{
 				// 타워 때릴 준비 완료
@@ -210,11 +210,12 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 			}
 		}
 
-		if (m_fAttackDis < fTowerDis)
+		if (m_fAttackDis > fTowerDis)
 		{
 			// 내 눈앞에 있는가
-			m_IsChaseTarget = true;
-			_vector vDir = XMVector3Normalize(*pTargetPos - vMyPos_Cell);
+			m_IsTowerAttack = true;
+			m_IsChaseTarget = false;
+			_vector vDir = XMVector3Normalize(*pTargetPos - vMyPos);
 			_float fTurnAngle = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)), vDir))));
 
 			_vector vLookDir = XMVector3Normalize(vDir - m_pMovementCom->Get_State(EState::Look));
@@ -295,7 +296,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 	_float fNextCellDis = XMVectorGetX(XMVector3Length(vCellPos - vNextCell_Pos));
 
 	// 내가 딴길로 샛다 == 플레이어 따라댕겼다
-	if (true == m_IsChaseTarget /*&& fNextCellDis < fCellDis + 0.7f*/)
+	if ((true == m_IsChaseTarget) || (true == m_IsTowerAttack))
 	{
 		// 가까운곳으로만 가면 그만
 		_int iNearCellIndex = -1;
@@ -392,6 +393,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 		else
 			vCellPos = vMyPos_Cell;
 
+		m_IsTowerAttack = false;
 		m_IsChaseTarget = false;
 	}
 
@@ -428,7 +430,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 			m_pMovementCom->Go_Dir(TimeDelta, vCellPos, m_pNaviCom);
 		}
 
-		else
+		else // 이함수가 이상하게 반복되면 몬스터의 X스케일이 점점 작아짐 ㅋㅋㅋㅋㅋㅋ
 			m_pMovementCom->RotateToLookDir_Tick(TimeDelta, vDir);
 	}
 #pragma endregion

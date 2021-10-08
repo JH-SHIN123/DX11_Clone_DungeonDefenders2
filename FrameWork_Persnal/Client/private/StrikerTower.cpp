@@ -33,9 +33,13 @@ HRESULT CStrikerTower::NativeConstruct(void * pArg)
 
 _int CStrikerTower::Tick(_float TimeDelta)
 {
-	__super::Tick(TimeDelta);
+	_int iReturn = 0;
+	if (iReturn = __super::Tick(TimeDelta))
+		return iReturn;
 
-	return _int();
+	m_pCollider_Hit->Update_Collider(m_pMovementCom->Get_WorldMatrix());
+
+	return iReturn;
 }
 
 _int CStrikerTower::Late_Tick(_float TimeDelta)
@@ -130,6 +134,14 @@ void CStrikerTower::Update_Anim(_float TimeDelta)
 
 HRESULT CStrikerTower::Ready_Component(void * pArg)
 {
+	HRESULT  hr = S_OK;
+
+	COLLIDER_DESC Data;
+	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
+	Data.vScale = { 3.f, 3.f, 3.f };
+
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pCollider_Hit, &Data);
+
 	return S_OK;
 }
 
@@ -171,4 +183,6 @@ CGameObject * CStrikerTower::Clone_GameObject(void * pArg)
 void CStrikerTower::Free()
 {
 	__super::Free();
+	Safe_Release(m_pCollider_Hit);
+
 }

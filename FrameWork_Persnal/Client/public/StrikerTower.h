@@ -43,6 +43,9 @@ private:
 	_float				m_fCoolTime = 0.f;
 	const _float		m_fAttCoolTime = 4.f;
 
+private:
+	CCollider*		m_pCollider_Hit = nullptr;
+
 public:
 	static	CStrikerTower* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

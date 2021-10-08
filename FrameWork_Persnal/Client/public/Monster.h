@@ -101,6 +101,7 @@ private: //Path_Index
 
 	_int m_iMoveCount = 0;
 	_bool m_IsChaseTarget = false;
+	_bool m_IsTowerAttack = false;
 	EMonster_MovePath m_eMovePath = EMonster_MovePath::End;
 
 

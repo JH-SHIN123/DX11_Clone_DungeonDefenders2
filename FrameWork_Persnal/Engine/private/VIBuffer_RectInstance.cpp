@@ -92,7 +92,7 @@ HRESULT CVIBuffer_RectInstance::NativeConstruct_Prototype(const _tchar* pShaderF
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 
-		{ "TEXCOORD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "TEXCOORD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0,  D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "TEXCOORD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "TEXCOORD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "TEXCOORD", 4, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
@@ -159,17 +159,6 @@ void CVIBuffer_RectInstance::Update_Instance(_double TimeDelta)
 {
 	D3D11_MAPPED_SUBRESOURCE		MappedSubResource;
 
-	/*
-	m_pDevice_Context->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &MappedSubResource);
-
-	for (_uint i = 0; i < m_iNumInstance; ++i)
-	{
-	((VTXMATRIX*)MappedSubResource.pData + i)->vPosition.y += 0.1f * TimeDelta;
-	}
-
-	m_pDevice_Context->Unmap(m_pVBInstance, 0);
-	*/
-
 	m_pDevice_Context->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedSubResource);
 
 	for (_uint i = 0; i < m_iNumInstance; ++i)
@@ -178,7 +167,6 @@ void CVIBuffer_RectInstance::Update_Instance(_double TimeDelta)
 	}
 
 	m_pDevice_Context->Unmap(m_pVBInstance, 0);
-
 }
 
 CVIBuffer_RectInstance * CVIBuffer_RectInstance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const _tchar* pShaderFilePath, const char* pTechniqueName, _uint iNumInstance)

@@ -734,6 +734,7 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 	TowerData.MoveState_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
 	XMStoreFloat4(&TowerData.MoveState_Desc.vPos, vPos);
 	m_CreateTower_Desc.vPos = TowerData.MoveState_Desc.vPos;
+	TowerData.Stat_Desc.iHp_Max = 400;
 
 	m_pBlockadeTower = CBlockadeTower::Create(m_pDevice, m_pDevice_Context);
 	m_pBlockadeTower->NativeConstruct(&TowerData);
@@ -741,6 +742,7 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 	m_pBlockadeTower->Set_IsSpawn(false);
 
 	// STRIKER
+	TowerData.Stat_Desc.iHp_Max = 200;
 	lstrcpy(TowerData.szModelName, L"Component_Mesh_StrikerTower");
 	TowerData.eTowerRange = ETowerRange::Quarter;
 
@@ -750,6 +752,7 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 	m_pStrikerTower->Set_IsSpawn(false);
 
 	// LIGHTNING
+	TowerData.Stat_Desc.iHp_Max = 130;
 	lstrcpy(TowerData.szModelName, L"Component_Mesh_LightningTower");
 	TowerData.eTowerRange = ETowerRange::Pi;
 

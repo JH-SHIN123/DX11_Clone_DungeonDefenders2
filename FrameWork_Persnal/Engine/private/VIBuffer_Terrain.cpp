@@ -149,6 +149,9 @@ HRESULT CVIBuffer_Terrain::NativeConstruct_Prototype(const _tchar* pHeightMapPat
 	if (FAILED(CVIBuffer::SetUp_InputLayOuts(ElementDesc, 3, pShaderFilePath, pTechniqueName)))
 		return E_FAIL;
 
+	Safe_Delete_Array(pVertices);
+	Safe_Delete_Array(pPolygonIndices);
+
 	return S_OK;
 }
 

@@ -35,8 +35,11 @@ HRESULT CLightningTower::NativeConstruct(void * pArg)
 
 _int CLightningTower::Tick(_float TimeDelta)
 {
-	_int iReturn = __super::Tick(TimeDelta);
-	
+	_int iReturn = 0;
+	if (iReturn = __super::Tick(TimeDelta))
+		return iReturn;
+
+	m_pCollider_Hit->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 
 	return iReturn;
 }
@@ -150,16 +153,11 @@ HRESULT CLightningTower::Ready_Component(void * pArg)
 {
 	HRESULT hr = S_OK;
 
-	MOVESTATE_DESC Data;
-	ZeroMemory(&Data, sizeof(MOVESTATE_DESC));
+	COLLIDER_DESC Data;
+	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
+	Data.vScale = { 3.f, 3.f, 3.f };
 
-	_vector vPos = m_pMovementCom->Get_State(EState::Position);
-
-	//Data.vPos
-
-	//hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_Ball"), (CComponent**)&m_pMovementCom_, &Data);
-	//hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT(""), TEXT("Com_Model_Ball"), (CComponent**)&m_pModelCom);
-
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pCollider_Hit, &Data);
 
 	if (S_OK != hr)
 		MSG_BOX("CLightningTower::Ready_Component Failed!");
@@ -201,6 +199,7 @@ void CLightningTower::Free()
 {
 	Safe_Release(m_pModelCom_LightingBall);
 	Safe_Release(m_pMovmentCom_LightingBall);
+	Safe_Release(m_pCollider_Hit);
 
 	__super::Free();
 }

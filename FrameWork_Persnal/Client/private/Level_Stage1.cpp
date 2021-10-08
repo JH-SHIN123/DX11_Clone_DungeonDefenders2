@@ -39,33 +39,6 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
 		return E_FAIL;
 		
-
-	// Test
-	//TOWER_DESC Data;
-	//lstrcpy(Data.szModelName, L"Component_Mesh_BlockcadeTower");
-	//Data.eTowerRange = ETowerRange::Quarter;
-	//Data.MoveState_Desc.fRotatePerSec = 0.5f;
-	//Data.MoveState_Desc.vPos = { -10.f,0.f,20.f,1.f };
-	//Data.MoveState_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f); 
-	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_BlockadeTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
-	//
-	//
-	//lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower");
-	//Data.eTowerRange = ETowerRange::Quarter;
-	//Data.MoveState_Desc.fRotatePerSec = 0.5f;
-	//Data.MoveState_Desc.vPos = { 0.f,0.f,20.f,1.f };
-	//Data.MoveState_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
-	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_StrikerTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
-	//
-	//
-	//lstrcpy(Data.szModelName, L"Component_Mesh_LightningTower");
-	//Data.eTowerRange = ETowerRange::Quarter;
-	//Data.MoveState_Desc.fRotatePerSec = 0.5f;
-	//Data.MoveState_Desc.vPos = { 10.f,0.f,20.f,1.f };
-	//Data.MoveState_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
-	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_LightningTower", (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
-	//
-	//
 	MONSTER_DESC MonData;
 	//lstrcpy(MonData.szModelName, L"Component_Mesh_Goblin");
 	//MonData.eLevel = ELevel::Stage1;
@@ -131,10 +104,11 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 	if (GET_KEY_INPUT(DIK_F4))
 		CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Combat);
 
-	//Layer_Bullet_BrainWash
+	// ¸ÂÀ»³ð, ¶§¸±³ð
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Monster", ELevel::Stage1,			L"Layer_Bullet", ELevel::Stage1);
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1,				L"Layer_Monster", ELevel::Stage1);
-	CCollide_Manager::GetInstance()->Collide_Check_BrainWash(L"Layer_Monster", ELevel::Stage1,			L"Layer_Bullet_BrainWash", ELevel::Stage1);
+	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Tower", ELevel::Stage1,				L"Layer_Monster", ELevel::Stage1);
+	CCollide_Manager::GetInstance()->Collide_Check_BrainWash(L"Layer_Monster", ELevel::Stage1,	L"Layer_Bullet_BrainWash", ELevel::Stage1);
 
 
 

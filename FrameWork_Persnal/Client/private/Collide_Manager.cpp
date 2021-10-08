@@ -53,8 +53,8 @@ _bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectLayer, ELevel eD
 				// ¸Â¾Ò¾î!
 				CStatus* pDstStat = (CStatus*)Dst->Get_Component(L"Com_Status");
 				if (nullptr == pDstStat)
-					return true;
-				
+					continue;
+
 				ATTACK_DESC Data;
 				Data.eDamageType = pSrcCol_Attack->Get_DamageType();
 				Data.iDamage = pSrcCol_Attack->Get_Damage();

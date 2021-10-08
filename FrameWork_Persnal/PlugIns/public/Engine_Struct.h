@@ -59,6 +59,22 @@ namespace Engine
 #pragma endregion
 
 #pragma region VIBuffer
+	typedef struct tagVertexPoint
+	{
+		// For. 지오메트리 쉐이딩
+		XMFLOAT3			vPosition;
+		XMFLOAT2			vSize;
+	}VTXPOINT;
+
+	typedef struct tagVertexMatrix
+	{
+		// 행렬의 모습을 띄고있다. For. 인스턴싱
+		XMFLOAT4			vRight;
+		XMFLOAT4			vUp;
+		XMFLOAT4			vLook;
+		XMFLOAT4			vPosition;
+	}VTXMATRIX;
+
 	typedef struct tagVertexNormalTexture
 	{
 		XMFLOAT3			vPosition;

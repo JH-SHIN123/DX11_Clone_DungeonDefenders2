@@ -27,6 +27,9 @@ HRESULT CDefenceTower::NativeConstruct(void * pArg)
 
 _int CDefenceTower::Tick(_float TimeDelta)
 {
+	if (0 >= m_pStatusCom->Get_Hp())
+		return OBJECT_DEAD;
+
 	return _int();
 }
 

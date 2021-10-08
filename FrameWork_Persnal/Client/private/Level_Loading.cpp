@@ -60,6 +60,7 @@ int CLevel_Loading::Tick(_float Timedelta)
 
 		if (true == m_IsRealFinish)
 		{
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, L"Prototype_Fade", (_uint)m_eNextLevelID, L"Layer_Fade");
 			switch (m_eNextLevelID)
 			{
 			case ELevel::Logo:

@@ -44,7 +44,7 @@ END
 /*
 인스턴스 할 때 주목 해야 할 점
 D3D11_INPUT_ELEMENT_DESC 의 값 세팅과 Map/Unmap
-
+그리고 Render
 
 
 

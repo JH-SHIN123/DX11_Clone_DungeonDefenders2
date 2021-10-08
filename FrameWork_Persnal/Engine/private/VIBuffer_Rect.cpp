@@ -71,6 +71,7 @@ HRESULT CVIBuffer_Rect::NativeConstruct_Prototype(const _tchar* pShaderFilePath,
 		, 0									// 정점의 해당 정보의 시작 부분 (byte 단위이다) 1빠니까 0
 		, D3D11_INPUT_PER_VERTEX_DATA		// 정점이냐 인스턴스냐 인데 인스턴스를 잘 몰겠음
 		, 0 },								// 인스턴스 수 라는데 인스턴스가 아니니 0
+											// V-RAM에 넘길 데이터들을 구별하게 되는 숫자다 Rect를 그리기 위해 인덱스 4개에 같은 포지션 값을 받아야 한다(4개에 한묶음)
 
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 } // 위에있는걸 똑같이 침
 	};
@@ -78,6 +79,9 @@ HRESULT CVIBuffer_Rect::NativeConstruct_Prototype(const _tchar* pShaderFilePath,
 	// 레이아웃 설정 함수
 	if (FAILED(CVIBuffer::SetUp_InputLayOuts(ElementDesc, 2, pShaderFilePath, pTechniqueName)))
 		return E_FAIL;
+
+	Safe_Delete_Array(pVertices);
+	Safe_Delete_Array(pPolygonIndices);
 
 	return S_OK;
 }
