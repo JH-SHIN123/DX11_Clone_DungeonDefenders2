@@ -48,11 +48,6 @@ _int COgre::Tick(_float TimeDelta)
 		}
 	}
 
-	_matrix Matrix = m_pMovementCom->Get_WorldMatrix();
-	m_pColliderCom_Hurt->Update_Collider(Matrix);
-	m_pStatusCom->Tick(TimeDelta);
-
-
 	_vector vTargetPos;
 
 	if (true == m_pModelCom->Get_IsFinishedAnimaion())
@@ -132,7 +127,7 @@ _int COgre::Tick(_float TimeDelta)
 	//m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 	m_pColliderCom_Hurt->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 
-
+	m_pStatusCom->Tick(TimeDelta);
 
 	__super::Tick(TimeDelta);
 

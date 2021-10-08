@@ -239,8 +239,8 @@ void CVIBuffer::Free()
 	if (false == m_IsClone)
 	{
 		Safe_Delete_Array(m_pVertices);
-		Safe_Delete_Array(m_VBSubresourceData.pSysMem);
-		Safe_Delete_Array(m_IBSubresourceData.pSysMem);
+		//Safe_Delete_Array(m_VBSubresourceData.pSysMem);
+		//Safe_Delete_Array(m_IBSubresourceData.pSysMem);
 	}
 
 	for (auto& InputLayout : m_InputLayouts)
