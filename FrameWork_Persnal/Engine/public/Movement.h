@@ -65,10 +65,10 @@ public:	// Setter
 public: // Move
 	void Go_Straight(_float TimeDelta, class CNavigation* pNavigation = nullptr, _bool IsJump = false);
 	void Go_Backward(_float TimeDelta, class CNavigation* pNavigation = nullptr, _bool IsJump = false);
-	void Go_Right(_float TimeDelta);
-	void Go_Left(_float TimeDelta);
-	void Go_Dir(_float TimeDelta, _fvector vTargetPos);
-	void Go_Dir_Vector(_float TimeDelta, _fvector vDir);
+	void Go_Right(_float TimeDelta, class CNavigation* pNavigation = nullptr, _bool IsJump = false);
+	void Go_Left(_float TimeDelta, class CNavigation* pNavigation = nullptr, _bool IsJump = false);
+	void Go_Dir(_float TimeDelta, _fvector vTargetPos, class CNavigation* pNavigation = nullptr, _bool IsJump = false);
+	void Go_Dir_Vector(_float TimeDelta, _fvector vDir, class CNavigation* pNavigation = nullptr, _bool IsJump = false);
 	void Go_Dir_NoSpeed(_float TimeDelta, _fvector vTargetPos, _float fSpeed);
 	void Go_Up(_float TimeDelta);
 	void Go_LookDir(_float TimeDelta, class CNavigation* pNavigation = nullptr, _bool IsJump = false);
@@ -79,6 +79,7 @@ public: // Rotate Tick
 	void RotateToAxis_Tick(_float TimeDelta, _fvector vAxis);
 	void RotateToTarget_Tick(_float TimeDelta, _fvector vTargetPos); // Incomplete
 	void RotateToTargetOnLand_Tick(_float TimeDelta, _fvector vTargetPos);
+	void RotateToLookDir_Tick(_float  TimeDelta, _fvector vTargetDir);
 
 public: // Physics
 	void Jump_Begin();		// Incomplete
@@ -109,3 +110,27 @@ public:
 END
 #define __MOVEMENT_H__
 #endif // !__MOVEMENT_H__
+
+
+/*
+_vector vPosition	= __super::Get_State(EState::Position);
+_vector vLook		= __super::Get_State(EState::Look);
+
+vLook = XMVector4Normalize(vLook);
+
+if (nullptr != pNavigation)
+{
+_float fCellY = 0.f;
+_vector vDir = XMVectorZero();
+if (false == pNavigation->IsMove(vPosition, vLook, &fCellY, &vDir))
+vLook = vDir;
+
+if (false == IsJump)
+vPosition += XMVectorSetY(vPosition, fCellY);
+}
+
+vPosition += vLook * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
+
+Set_State(EState::Position, vPosition);
+
+*/

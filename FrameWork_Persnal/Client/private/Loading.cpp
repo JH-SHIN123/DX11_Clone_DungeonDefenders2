@@ -132,7 +132,7 @@ HRESULT CLoading::LoadingForStage()
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
-	SetWindowText(g_hWnd, TEXT("TMXPDLWL로딩 시작"));
+	//SetWindowText(g_hWnd, TEXT("TMXPDLWL로딩 시작"));
 
 	HRESULT hr = S_OK;
 

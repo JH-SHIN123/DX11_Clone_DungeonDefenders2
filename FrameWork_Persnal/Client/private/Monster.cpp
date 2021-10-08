@@ -119,8 +119,9 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 	if (EMonsterAI::Attack == m_eAI_Next && IsContinueAnimation)
 		return EMonsterAI::Attack;	
 
-	// 먼저 플레이어 거리 탐색
+#pragma region Player
 	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
+	_vector vMyPos_Cell = XMVectorSetY(vMyPos, 0.f);
 
 	CMovement* pTarget_Player = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
 	if (nullptr == pTarget_Player)
@@ -128,7 +129,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 
 	_vector vTargetPos = pTarget_Player->Get_State(EState::Position);
 
-	_float fDis = 999;//XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
+	_float fDis = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
 
 	if (m_fAttackDis > fDis)
 	{
@@ -138,6 +139,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 
 	if (m_fDetectDis > fDis)
 	{
+		m_IsChaseTarget = true;
 		_vector vDir = XMVector3Normalize(vTargetPos - vMyPos);
 		_float fTurnAngle = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)), vDir))));
 
@@ -167,7 +169,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 		else if (10.f < fTurnAngle)
 		{
 			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta, vTargetPos);
-			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
+			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos, m_pNaviCom);
 			return m_eAI_Next = EMonsterAI::Move_Target;
 		}
 		else
@@ -180,33 +182,115 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 			m_pMovementCom->Set_State(EState::Up, vUp * m_pMovementCom->Get_Scale(EState::Up));
 			m_pMovementCom->Set_State(EState::Look, vLook * m_pMovementCom->Get_Scale(EState::Look));
 
-			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos);
+			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos, m_pNaviCom);
 			return m_eAI_Next = EMonsterAI::Move_Target;
 		}
-	}
-	
+		/*
+		_float fTurnAngle = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)), vCur_Next_Dir))));
 
+		_vector vDir = XMVector3Normalize(vCur_Next_Dir - m_pMovementCom->Get_State(EState::Look));
+
+		if (3.f > fTurnAngle)
+		{
+		_vector vLook = vCur_Next_Dir;
+		_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+		_vector vRight = XMVector3Cross(vUp, vCur_Next_Dir);
+
+		m_pMovementCom->Set_State(EState::Right, vRight * m_pMovementCom->Get_Scale(EState::Right));
+		m_pMovementCom->Set_State(EState::Up, vUp * m_pMovementCom->Get_Scale(EState::Up));
+		m_pMovementCom->Set_State(EState::Look, vLook * m_pMovementCom->Get_Scale(EState::Look));
+		m_pMovementCom->Go_Dir_NoUp(TimeDelta, vCur_Next_Dir, m_pNaviCom);
+		}
+
+		else
+		m_pMovementCom->RotateToLookDir_Tick(TimeDelta, vDir);
+		*/
+	}
+#pragma endregion
+
+#pragma region Tower
+
+	// 타워 거리 탐색
+	CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Tower");
+
+	if (nullptr != pLayer)
+	{
+		list<CGameObject*> listObject = pLayer->Get_GameObject_List();
+
+		_float fTowerDis = m_fAttackDis;
+		for (auto& iter : listObject)
+		{
+			_vector vTowerPos = static_cast<CMovement*>(iter->Get_Component(L"Com_Movement"))->Get_State(EState::Position);
+			_float	fDis = XMVectorGetX(XMVector3Length(vTowerPos - vMyPos_Cell));
+			if (fTowerDis > fDis)
+			{
+				// 타워 때릴 준비 완료
+				fTowerDis = fDis;
+				*pTargetPos = vTowerPos;
+			}
+		}
+
+		if (m_fAttackDis < fTowerDis)
+		{
+			// 내 눈앞에 있는가
+			m_IsChaseTarget = true;
+			_vector vDir = XMVector3Normalize(*pTargetPos - vMyPos_Cell);
+			_float fTurnAngle = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)), vDir))));
+
+			_vector vLookDir = XMVector3Normalize(vDir - m_pMovementCom->Get_State(EState::Look));
+
+			if (3.f > fTurnAngle)
+			{
+				_vector vLook = vDir;
+				_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+				_vector vRight = XMVector3Cross(vUp, vDir);
+
+				m_pMovementCom->Set_State(EState::Right, vRight * m_pMovementCom->Get_Scale(EState::Right));
+				m_pMovementCom->Set_State(EState::Up, vUp * m_pMovementCom->Get_Scale(EState::Up));
+				m_pMovementCom->Set_State(EState::Look, vLook * m_pMovementCom->Get_Scale(EState::Look));
+				//m_pMovementCom->Go_Dir(TimeDelta, vDir, m_pNaviCom);
+			}
+
+			else
+			{
+				m_pMovementCom->RotateToLookDir_Tick(TimeDelta * 2.f, vLookDir);
+
+			}
+
+			return EMonsterAI::Attack;
+		}
+	}
+
+#pragma endregion
+
+#pragma region Navigation
 	// 너 갈길 가라
 	_vector vCellPos = XMVectorSet(0.f,0.f,0.f,1.f);
-	switch (m_eMovePath)
+
+	if (7 > m_iMoveCount)
 	{
-	case Client::EMonster_MovePath::North_L:
-		vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iNorth_L[m_iMoveCount]);
-		break;
-	case Client::EMonster_MovePath::North_R:
-		vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iNorth_R[m_iMoveCount]);
-		break;
-	case Client::EMonster_MovePath::West_L:
-		vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_L[m_iMoveCount]);
-		break;
-	case Client::EMonster_MovePath::West_R:
-		vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_R[m_iMoveCount]);
-		break;
+		switch (m_eMovePath)
+		{
+		case Client::EMonster_MovePath::North_L:
+			vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iNorth_L[m_iMoveCount]);
+			break;
+		case Client::EMonster_MovePath::North_R:
+			vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iNorth_R[m_iMoveCount]);
+			break;
+		case Client::EMonster_MovePath::West_L:
+			vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_L[m_iMoveCount]);
+			break;
+		case Client::EMonster_MovePath::West_R:
+			vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_R[m_iMoveCount]);
+			break;
+		}
 	}
+	else
+		vCellPos = m_pNaviCom->Get_CellCenter_Pos(0);
 
 	// 다음 루트가 멀어져버렸다
 	_vector vNextCell_Pos = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-	if (7 > m_iMoveCount + 1)
+	if (8 > m_iMoveCount + 1)
 	{
 		switch (m_eMovePath)
 		{
@@ -220,18 +304,18 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 			vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_L[m_iMoveCount + 1]);
 			break;
 		case Client::EMonster_MovePath::West_R:
-			vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_R[m_iMoveCount] + 1);
+			vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_R[m_iMoveCount + 1]);
 			break;
 		}
 	}
 	else
 		vNextCell_Pos = vCellPos;
 
-	_float fCellDis = XMVectorGetX(XMVector3Length(vCellPos - vMyPos));
+	_float fCellDis = XMVectorGetX(XMVector3Length(vCellPos - vMyPos_Cell));
 	_float fNextCellDis = XMVectorGetX(XMVector3Length(vCellPos - vNextCell_Pos));
 
 	// 내가 딴길로 샛다 == 플레이어 따라댕겼다
-	if (fNextCellDis < fCellDis + 0.7f)
+	if (true == m_IsChaseTarget && fNextCellDis < fCellDis + 0.7f)
 	{
 		// 가까운곳으로만 가면 그만
 		_int iNearCellIndex = -1;
@@ -257,7 +341,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 				iNearCellIndex = m_iWest_L[m_iMoveCount - 1];
 		}
 
-		if (7 > m_iMoveCount + 1)
+		if (8 > m_iMoveCount + 1)
 		{
 			if (fDis > Get_DisToCell(m_iNorth_L[m_iMoveCount + 1]))
 				iNearCellIndex = m_iNorth_L[m_iMoveCount + 1];
@@ -273,7 +357,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 		m_eMovePath = Research_MovePath(iNearCellIndex);
 
 		vNextCell_Pos = XMVectorSet(0.f,0.f,0.f,1.f);
-		if (7 > m_iMoveCount + 1)
+		if (8 > m_iMoveCount + 1)
 		{
 			switch (m_eMovePath)
 			{
@@ -292,55 +376,31 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 			}
 		}
 		else
-			vCellPos = vMyPos;
+			vCellPos = vMyPos_Cell;
+
+		m_IsChaseTarget = false;
 	}
 
 	// 다음꺼 검색하셈
-	if (0.5f >= fCellDis && 7 > m_iMoveCount + 1)
+	if (0.5f >= fCellDis && 8 > m_iMoveCount + 1)
+	{
 		++m_iMoveCount;
+		return EMonsterAI::Idle;
+	}
 
 	*pTargetPos = vCellPos;
 
 	// 방향 바꿔주자
-	_vector vCur_Next_Dir = XMVector3Normalize(vCellPos - vMyPos);
+	_vector vCur_Next_Dir = XMVector3Normalize(vCellPos - vMyPos_Cell);
 	_vector vTest = XMVectorZero();
 
 	if (false == XMVector3Equal(vCur_Next_Dir, vTest))
 	{
 		_float fTurnAngle = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)), vCur_Next_Dir))));
-		_float Test = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)), XMVector3Normalize(m_pMovementCom->Get_State(EState::Right))))));
-		Test = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(-XMVector3Normalize(m_pMovementCom->Get_State(EState::Right)), XMVector3Normalize(m_pMovementCom->Get_State(EState::Look))))));
-		Test = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)), XMVector3Normalize(m_pMovementCom->Get_State(EState::Look))))));
 
-		//   Left90 ~ Right 90
-		if (80.f < fTurnAngle  )
-		{
-			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 4.f, vCur_Next_Dir);
+		_vector vDir = XMVector3Normalize(vCur_Next_Dir - m_pMovementCom->Get_State(EState::Look));
 
-			return m_eAI_Next = EMonsterAI::Turn;
-		}
-		else if (60.f < fTurnAngle)
-		{
-			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 2.5f, vCur_Next_Dir);
-			return m_eAI_Next = EMonsterAI::Turn;
-		}
-		else if (40.f < fTurnAngle)
-		{
-			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 2.f, vCur_Next_Dir);
-			return m_eAI_Next = EMonsterAI::Turn;
-		}
-		else if (20.f < fTurnAngle)
-		{
-			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta* 1.5f, vCur_Next_Dir);
-			return m_eAI_Next = EMonsterAI::Turn;
-		}
-		else if (10.f < fTurnAngle)
-		{
-			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta, vCur_Next_Dir);
-			m_pMovementCom->Go_Dir_NoUp(TimeDelta, vCur_Next_Dir, m_pNaviCom);
-			return m_eAI_Next = EMonsterAI::Move_Target;
-		}
-		else if (5.f < fTurnAngle)
+		if (3.f > fTurnAngle)
 		{
 			_vector vLook = vCur_Next_Dir;
 			_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
@@ -349,33 +409,15 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 			m_pMovementCom->Set_State(EState::Right, vRight * m_pMovementCom->Get_Scale(EState::Right));
 			m_pMovementCom->Set_State(EState::Up, vUp * m_pMovementCom->Get_Scale(EState::Up));
 			m_pMovementCom->Set_State(EState::Look, vLook * m_pMovementCom->Get_Scale(EState::Look));
+
+			vCellPos = XMVectorSetY(vCellPos, XMVectorGetY(vMyPos));
+			m_pMovementCom->Go_Dir(TimeDelta, vCellPos, m_pNaviCom);
 		}
 
-		m_pMovementCom->Go_Dir_NoUp(TimeDelta, vCur_Next_Dir, m_pNaviCom);
+		else
+			m_pMovementCom->RotateToLookDir_Tick(TimeDelta, vDir);
 	}
-
-
-
-
-	CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Tower");
-
-	if (nullptr == pLayer)
-		return m_eAI_Next = EMonsterAI::Idle;
-
-	list<CGameObject*> listObject = pLayer->Get_GameObject_List();
-
-	for (auto& iter : listObject)
-	{
-
-
-
-
-
-	}
-
-
-
-
+#pragma endregion
 
 	return m_eAI_Next = EMonsterAI::Idle;
 }
@@ -457,6 +499,8 @@ HRESULT CMonster::Ready_Component(void * pArg)
 		vPos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_R[0]);
 		break;
 	}
+	m_pNaviCom->SetUp_NavigationIndex(vPos);
+	vPos = m_pNaviCom->Get_CellY(m_pNaviCom->Get_CellIndex(), vPos);
 	m_pMovementCom->Set_State(EState::Position, vPos);
 
 
@@ -472,8 +516,6 @@ HRESULT CMonster::Ready_Component(void * pArg)
 	XMStoreFloat4(&HP_Bar.UI_Desc.Movement_Desc.vPos, vPos);
 
 	m_pMeterBar_Hp = CMasking_MeterBar_3D::Create(m_pDevice, m_pDevice_Context, &HP_Bar);
-
-	//m_pNaviCom->Get_CellOption(m_pMovementCom->Get_State(EState::Position));
 
 	m_fDetectDis = Data.fDetectDis;
 	m_fAttackDis = Data.fAttackDis;
@@ -529,3 +571,37 @@ void CMonster::Free()
 
 	__super::Free();
 }
+
+//else if (60.f < fTurnAngle)
+//{
+//	m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 2.5f, vCur_Next_Dir);
+//	return m_eAI_Next = EMonsterAI::Turn;
+//}
+//else if (40.f < fTurnAngle)
+//{
+//	m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 2.f, vCur_Next_Dir);
+//	return m_eAI_Next = EMonsterAI::Turn;
+//}
+//else if (20.f < fTurnAngle)
+//{
+//	m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta* 1.5f, vCur_Next_Dir);
+//	return m_eAI_Next = EMonsterAI::Turn;
+//}
+//else if (10.f < fTurnAngle)
+//{
+//	m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta, vCur_Next_Dir);
+//	m_pMovementCom->Go_Dir_NoUp(TimeDelta, vCur_Next_Dir, m_pNaviCom);
+//	return m_eAI_Next = EMonsterAI::Move_Target;
+//}
+//else if (5.f < fTurnAngle)
+//{
+//	_vector vLook = vCur_Next_Dir;
+//	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+//	_vector vRight = XMVector3Cross(vUp, vCur_Next_Dir);
+//
+//	m_pMovementCom->Set_State(EState::Right, vRight * m_pMovementCom->Get_Scale(EState::Right));
+//	m_pMovementCom->Set_State(EState::Up, vUp * m_pMovementCom->Get_Scale(EState::Up));
+//	m_pMovementCom->Set_State(EState::Look, vLook * m_pMovementCom->Get_Scale(EState::Look));
+//}
+//
+//m_pMovementCom->Go_Dir_NoUp(TimeDelta, vCur_Next_Dir, m_pNaviCom);

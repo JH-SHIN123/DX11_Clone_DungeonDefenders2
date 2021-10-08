@@ -87,7 +87,7 @@ void CMovement::Go_Straight(_float TimeDelta, CNavigation* pNavigation, _bool Is
 			vLook = vDir;
 
 		if (false == IsJump)
-			vPosition += XMVectorSetY(vPosition, fCellY);
+			vPosition = XMVectorSetY(vPosition, fCellY);
 	}
 
 	vPosition += vLook * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
@@ -110,7 +110,7 @@ void CMovement::Go_Backward(_float TimeDelta, CNavigation* pNavigation, _bool Is
 			vLook = vDir;
 
 		if (false == IsJump)
-			vPosition += XMVectorSetY(vPosition, fCellY);
+			vPosition = XMVectorSetY(vPosition, fCellY);
 	}
 
 	vPosition -= vLook * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
@@ -118,45 +118,90 @@ void CMovement::Go_Backward(_float TimeDelta, CNavigation* pNavigation, _bool Is
 	__super::Set_State(EState::Position, vPosition);
 }
 
-void CMovement::Go_Right(_float TimeDelta)
+void CMovement::Go_Right(_float TimeDelta, CNavigation* pNavigation, _bool IsJump)
 {
 	_vector vPosition	= __super::Get_State(EState::Position);
 	_vector vRight		= __super::Get_State(EState::Right);
 
 	vRight = XMVector4Normalize(vRight);
+
+	if (nullptr != pNavigation)
+	{
+		_float fCellY = 0.f;
+		_vector vDir = XMVectorZero();
+		if (false == pNavigation->IsMove(vPosition, vRight, &fCellY, &vDir))
+			vRight = vDir;
+
+		if (false == IsJump)
+			vPosition = XMVectorSetY(vPosition, fCellY);
+	}
 
 	vPosition += vRight * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
 
 	__super::Set_State(EState::Position, vPosition);
 }
 
-void CMovement::Go_Left(_float TimeDelta)
+void CMovement::Go_Left(_float TimeDelta, CNavigation* pNavigation, _bool IsJump)
 {
 	_vector vPosition	= __super::Get_State(EState::Position);
 	_vector vRight		= __super::Get_State(EState::Right);
 
 	vRight = XMVector4Normalize(vRight);
 
+	if (nullptr != pNavigation)
+	{
+		_float fCellY = 0.f;
+		_vector vDir = XMVectorZero();
+		if (false == pNavigation->IsMove(vPosition, vRight, &fCellY, &vDir))
+			vRight = vDir;
+
+		if (false == IsJump)
+			vPosition = XMVectorSetY(vPosition, fCellY);
+	}
+
 	vPosition -= vRight * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
 
 	__super::Set_State(EState::Position, vPosition);
 }
 
-void CMovement::Go_Dir_Vector(_float TimeDelta, _fvector vDir)
+void CMovement::Go_Dir_Vector(_float TimeDelta, _fvector vDir, CNavigation* pNavigation, _bool IsJump)
 {
 	_vector vPosition = __super::Get_State(EState::Position);
+	_vector vMoveDir = vDir;
 
-	vPosition += vDir * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
+	if (nullptr != pNavigation)
+	{
+		_float fCellY = 0.f;
+		_vector vDirr = XMVectorZero();
+		if (false == pNavigation->IsMove(vPosition, vMoveDir, &fCellY, &vDirr))
+			vMoveDir = vDirr;
+
+		if (false == IsJump)
+			vPosition = XMVectorSetY(vPosition, fCellY);
+	}
+
+	vPosition += vMoveDir * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
 
 	__super::Set_State(EState::Position, vPosition);
 }
 
-void CMovement::Go_Dir(_float TimeDelta, _fvector vTargetPos)
+void CMovement::Go_Dir(_float TimeDelta, _fvector vTargetPos, CNavigation* pNavigation, _bool IsJump)
 {
 	_vector vPosition	= __super::Get_State(EState::Position);
 	_vector vDir		= vTargetPos - vPosition;
 
 	vDir = XMVector4Normalize(vDir);
+
+	if (nullptr != pNavigation)
+	{
+		_float fCellY = 0.f;
+		_vector vNewDir = XMVectorZero();
+		if (false == pNavigation->IsMove(vPosition, vDir, &fCellY, &vNewDir))
+			vDir = vNewDir;
+
+		if (false == IsJump)
+			vPosition = XMVectorSetY(vPosition, fCellY);
+	}
 
 	vPosition += vDir * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
 
@@ -219,7 +264,16 @@ void CMovement::Go_Dir_NoUp(_float TimeDelta, _fvector vDir, CNavigation * pNavi
 {
 	_vector vPosition = __super::Get_State(EState::Position);
 
-	vPosition += XMVectorSetY(XMVector3Normalize(vDir), 0.f) * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
+	_vector vMoveDir = vDir;
+	if (nullptr != pNavigation)
+	{
+		_float fCellY = 0.f;
+		_vector vNewDir = XMVectorZero();
+		if (false == pNavigation->IsMove(vPosition, vMoveDir, &fCellY, &vNewDir))
+			vMoveDir = vNewDir;
+	}
+
+	vPosition += XMVectorSetY(XMVector3Normalize(vMoveDir), 0.f) * TimeDelta * m_MoveStateDesc.fSpeedPerSec;
 
 	__super::Set_State(EState::Position, vPosition);
 }
@@ -255,6 +309,18 @@ void CMovement::RotateToTargetOnLand_Tick(_float TimeDelta, _fvector vTargetPos)
 
 	_float fRightScala	= XMVectorGetX(XMVector3Dot(vDir, vRight));
 	_float fLeftScala	= XMVectorGetX(XMVector3Dot(vDir, vLeft));
+
+	fRightScala > fLeftScala ? RotationY_CW(TimeDelta) : RotationY_CCW(TimeDelta);
+}
+
+void CMovement::RotateToLookDir_Tick(_float TimeDelta, _fvector vTargetDir)
+{
+	_vector vPosition = __super::Get_State(EState::Position);
+	_vector vRight = XMVector3Normalize(__super::Get_State(EState::Right));
+	_vector vLeft = XMVector3Normalize(XMVector3Dot(__super::Get_State(EState::Look), __super::Get_State(EState::Up)));
+
+	_float fRightScala = XMVectorGetX(XMVector3Dot(vTargetDir, vRight));
+	_float fLeftScala = XMVectorGetX(XMVector3Dot(vTargetDir, vLeft));
 
 	fRightScala > fLeftScala ? RotationY_CW(TimeDelta) : RotationY_CCW(TimeDelta);
 }

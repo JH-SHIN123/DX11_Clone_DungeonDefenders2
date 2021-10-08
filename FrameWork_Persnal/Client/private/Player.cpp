@@ -99,11 +99,11 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 	m_pLightningTower->Update_Anim(TimeDelta);
 
 
-	_int iIndex = m_pNaviCom->Get_CellIndex(m_pMovementCom->Get_State(EState::Position));
-	_tchar szTitle[MAX_PATH] = L"";
-	wsprintf(szTitle, L"%d", iIndex);
-
-	SetWindowText(g_hWnd, szTitle);
+// 	_int iIndex = m_pNaviCom->Get_CellIndex(m_pMovementCom->Get_State(EState::Position));
+// 	_tchar szTitle[MAX_PATH] = L"";
+// 	wsprintf(szTitle, L"%d", iIndex);
+// 
+// 	SetWindowText(g_hWnd, szTitle);
 
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);

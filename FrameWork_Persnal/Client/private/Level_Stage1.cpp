@@ -82,9 +82,9 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
 	MonData.eLevel = ELevel::Stage1;
 	MonData.fDetectDis = 15.f;
-	MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(20.f);
-	MonData.Movement_Desc.fSpeedPerSec = 15.f;
-	MonData.eMovePath = EMonster_MovePath::West_R;
+	MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
+	MonData.Movement_Desc.fSpeedPerSec = 10.f;
+	MonData.eMovePath = EMonster_MovePath::West_L;
 	MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 	MonData.Stat_Desc.iHp_Max = 10000;
 	MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
@@ -136,6 +136,77 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1,				L"Layer_Monster", ELevel::Stage1);
 	CCollide_Manager::GetInstance()->Collide_Check_BrainWash(L"Layer_Monster", ELevel::Stage1,			L"Layer_Bullet_BrainWash", ELevel::Stage1);
 
+
+
+
+	if (GET_KEY_INPUT(DIK_H))
+	{
+		MONSTER_DESC MonData;
+		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
+		MonData.eLevel = ELevel::Stage1;
+		MonData.fDetectDis = 15.f;
+		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
+		MonData.Movement_Desc.fSpeedPerSec = 10.f;
+		MonData.eMovePath = EMonster_MovePath::West_L;
+		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+		MonData.Stat_Desc.iHp_Max = 10000;
+		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
+		MonData.Stat_Desc.iExp = 15;
+
+		//for(int i = 0; i < 20; ++i)
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
+	}
+	if (GET_KEY_INPUT(DIK_J))
+	{
+		MONSTER_DESC MonData;
+		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
+		MonData.eLevel = ELevel::Stage1;
+		MonData.fDetectDis = 15.f;
+		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
+		MonData.Movement_Desc.fSpeedPerSec = 10.f;
+		MonData.eMovePath = EMonster_MovePath::West_R;
+		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+		MonData.Stat_Desc.iHp_Max = 10000;
+		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
+		MonData.Stat_Desc.iExp = 15;
+
+		//for(int i = 0; i < 20; ++i)
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
+	}
+	if (GET_KEY_INPUT(DIK_K))
+	{
+		MONSTER_DESC MonData;
+		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
+		MonData.eLevel = ELevel::Stage1;
+		MonData.fDetectDis = 15.f;
+		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
+		MonData.Movement_Desc.fSpeedPerSec = 10.f;
+		MonData.eMovePath = EMonster_MovePath::North_L;
+		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+		MonData.Stat_Desc.iHp_Max = 10000;
+		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
+		MonData.Stat_Desc.iExp = 15;
+
+		//for(int i = 0; i < 20; ++i)
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
+	}
+	if (GET_KEY_INPUT(DIK_L))
+	{
+		MONSTER_DESC MonData;
+		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
+		MonData.eLevel = ELevel::Stage1;
+		MonData.fDetectDis = 15.f;
+		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
+		MonData.Movement_Desc.fSpeedPerSec = 10.f;
+		MonData.eMovePath = EMonster_MovePath::North_R;
+		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+		MonData.Stat_Desc.iHp_Max = 10000;
+		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
+		MonData.Stat_Desc.iExp = 15;
+
+		//for(int i = 0; i < 20; ++i)
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
+	}
 
 	return 0;
 }
@@ -265,7 +336,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
 
 	GAMEOBJ_DESC Data;
-	Data.Movement_Desc.vPos = { 0.f, 0.f, 0.f, 1.f };
+	Data.Movement_Desc.vPos = { 0.f, 2.f, 0.f, 1.f };
 	Data.Movement_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
 	Data.Movement_Desc.fSpeedPerSec = 20.f;
 

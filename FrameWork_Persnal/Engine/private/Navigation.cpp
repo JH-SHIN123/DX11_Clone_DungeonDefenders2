@@ -115,6 +115,26 @@ HRESULT CNavigation::NativeConstruct(void * pArg)
 	return S_OK;
 }
 
+void CNavigation::SetUp_NavigationIndex(_fvector vPos)
+{
+	for (auto& iter : m_pCells)
+	{
+		_int iCellIndex = -1;
+		iCellIndex = iter->Check_CellIndex(vPos);
+
+		if (0 <= iCellIndex)
+		{
+			m_NavigationDesc.iCurrentIndex = iCellIndex;
+			return;
+		}
+	}
+}
+
+_fvector CNavigation::Get_CellY(_int iCellIndex, _fvector vPos)
+{
+	return m_pCells[iCellIndex]->Get_CellPos_Y(vPos);
+}
+
 _bool CNavigation::IsMove(_fvector vOriginalPos, _fvector vDirection, _float* Cell_Y, _vector* vOutSlidingDir)
 {
 	_vector			vGoalPos = vOriginalPos + vDirection;

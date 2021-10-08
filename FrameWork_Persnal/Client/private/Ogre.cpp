@@ -161,7 +161,7 @@ HRESULT COgre::Render()
 #ifdef _DEBUG
 	if(nullptr != m_pColliderCom_Attack)
 		m_pColliderCom_Attack->Render_Collider();
-
+	
 	m_pColliderCom_Hurt->Render_Collider();
 
 #endif // _DEBUG

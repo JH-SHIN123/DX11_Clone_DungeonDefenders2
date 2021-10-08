@@ -26,6 +26,7 @@ public:
 	virtual ~CCell() = default;
 
 public:
+	_fvector Get_CellPos_Y(_fvector vPos);
 	_fvector Get_Point(POINT ePoint) const { return XMLoadFloat3(&m_vPoints[ePoint]); }
 	_uint Get_Index() const { return m_iIndex; }
 	_uint Get_CellOption() const { return m_iCellOption; }

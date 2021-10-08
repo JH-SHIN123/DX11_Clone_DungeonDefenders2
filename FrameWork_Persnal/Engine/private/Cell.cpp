@@ -10,6 +10,20 @@ CCell::CCell(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	Safe_AddRef(m_pDevice_Context);
 }
 
+_fvector CCell::Get_CellPos_Y(_fvector vPos)
+{
+	_vector vTri_A, vTri_B, vTri_C;
+	vTri_A = XMLoadFloat3(&m_vPoints[0]);
+	vTri_B = XMLoadFloat3(&m_vPoints[1]);
+	vTri_C = XMLoadFloat3(&m_vPoints[2]);
+	_vector vOut = XMPlaneFromPoints(vTri_A, vTri_B, vTri_C);
+	_float fY = -(XMVectorGetX(vOut) * XMVectorGetX(vPos) + XMVectorGetZ(vOut) * XMVectorGetZ(vPos) + XMVectorGetW(vOut)) / XMVectorGetY(vOut);
+
+	vOut = vPos;
+	vOut = XMVectorSetY(vOut, fY);
+	return vOut;
+}
+
 _uint CCell::Check_CellOptoin(_fvector vPos)
 {
 	_bool IsIn = true;
@@ -195,6 +209,7 @@ _fvector CCell::Get_CellCenter()
 	_vector vCenterPos = XMVectorZero();
 
 	vCenterPos = XMVectorSetX(vCenterPos, (m_vPoints[0].x + m_vPoints[1].x + m_vPoints[2].x) / 3.f);
+	//vCenterPos = XMVectorSetY(vCenterPos, (m_vPoints[0].y + m_vPoints[1].y + m_vPoints[2].y) / 3.f);
 	vCenterPos = XMVectorSetZ(vCenterPos, (m_vPoints[0].z + m_vPoints[1].z + m_vPoints[2].z) / 3.f);
 	vCenterPos = XMVectorSetW(vCenterPos, 1.f);
 

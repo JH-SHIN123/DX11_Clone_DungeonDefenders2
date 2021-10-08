@@ -100,6 +100,7 @@ private: //Path_Index
 	const _int m_iWest_R[7]		= { 93,	53,	 50,  44,  25,	12,	 0 };
 
 	_int m_iMoveCount = 0;
+	_bool m_IsChaseTarget = false;
 	EMonster_MovePath m_eMovePath = EMonster_MovePath::End;
 
 
