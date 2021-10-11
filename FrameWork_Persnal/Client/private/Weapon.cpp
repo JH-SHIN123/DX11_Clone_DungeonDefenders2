@@ -98,7 +98,7 @@ void CWeapon::Set_OffSetPosition(_fmatrix TransMatrix)
 	XMStoreFloat4x4(&m_OffSetMatrix, TransMatrix);
 }
 
-void CWeapon::Create_Bullet()
+void CWeapon::Create_Bullet(_fvector vDir)
 {
 	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
 	vMyPos += XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * -8.f;
@@ -107,9 +107,9 @@ void CWeapon::Create_Bullet()
 	lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
 	Data.MoveState_Desc.fRotatePerSec = 50.f;
 
-	_vector vDir = XMVector3Normalize(/*vTargetPos - vMyPos*/ XMVector3Normalize(m_pMovementCom->Get_State(EState::Look) * -1.f));
+	_vector vvDir = XMVector3Normalize(/*vTargetPos - vMyPos*/ vDir);
 
-	XMStoreFloat3(&Data.vDir, vDir);
+	XMStoreFloat3(&Data.vDir, vvDir);
 	XMStoreFloat4(&Data.MoveState_Desc.vPos, vMyPos);
 	Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 	Data.MoveState_Desc.fSpeedPerSec = 40.f;

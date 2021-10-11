@@ -4,14 +4,12 @@
 
 CNavigation::CNavigation(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CComponent(pDevice, pDevice_Context)
-	, m_pModelLoader(CModelLoader::Create())
 {
 }
 
 CNavigation::CNavigation(const CNavigation & rhs)
 	: CComponent(rhs)
 	, m_pCells(rhs.m_pCells)
-	, m_pModelLoader(rhs.m_pModelLoader)
 {
 	for (auto& pCell : m_pCells)
 		Safe_AddRef(pCell);
@@ -375,6 +373,4 @@ void CNavigation::Free()
 		Safe_Release(pCell);
 
 	m_pCells.clear();
-
-	//Safe_Release(m_pModelLoader);
 }

@@ -279,9 +279,6 @@
     <ClInclude Include="..\public\Camera_Free.h">
       <Filter>04.Camera\00.Camera_Free</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Camera_Manager.h">
-      <Filter>04.Camera</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Player.h">
       <Filter>02.GameObject\03.Player</Filter>
     </ClInclude>
@@ -484,9 +481,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Camera_Free.cpp">
       <Filter>04.Camera\00.Camera_Free</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Camera_Manager.cpp">
-      <Filter>04.Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Player.cpp">
       <Filter>02.GameObject\03.Player</Filter>

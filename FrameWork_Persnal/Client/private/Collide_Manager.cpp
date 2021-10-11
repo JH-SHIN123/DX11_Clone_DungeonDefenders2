@@ -51,26 +51,21 @@ _bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectLayer, ELevel eD
 			if (true == pDstCol_Hit->Intersect_Collider(pSrcCol_Attack))
 			{
 				// 맞았어!
-				CStatus* pDstStat = (CStatus*)Dst->Get_Component(L"Com_Status");
-				if (nullptr == pDstStat)
-					continue;
+				if (false == pSrcCol_Attack->Get_NotCollide())
+				{
+					CStatus* pDstStat = (CStatus*)Dst->Get_Component(L"Com_Status");
+					if (nullptr == pDstStat)
+						continue;
 
-				ATTACK_DESC Data;
-				Data.eDamageType = pSrcCol_Attack->Get_DamageType();
-				Data.iDamage = pSrcCol_Attack->Get_Damage();
-				Data.fHitTime = pSrcCol_Attack->Get_HitTime();
-				pDstStat->Set_Damage(Data);
-
-				//pDstCol_Hit->
-				// 데미지 계산은 스탯이 하지만 데미지의 정보는 콜라이더가 가지는 형식이다.
-
-
-				//return true;
+					ATTACK_DESC Data;
+					Data.eDamageType = pSrcCol_Attack->Get_DamageType();
+					Data.iDamage = pSrcCol_Attack->Get_Damage();
+					Data.fHitTime = pSrcCol_Attack->Get_HitTime();
+					pDstStat->Set_Damage(Data);
+				}
 			}
 		}
 	}
-
-
 	return false;
 }
 

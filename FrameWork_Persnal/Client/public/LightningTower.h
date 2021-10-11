@@ -46,8 +46,6 @@ private:
 	const _float	m_fAttEndTime = 1.f;
 
 private:
-	CModel*			m_pModelCom_LightingBall = nullptr;
-	CMovement*		m_pMovmentCom_LightingBall = nullptr;
 	CCollider*		m_pCollider_Hit = nullptr;
 
 public:

@@ -73,25 +73,34 @@ _int CLightningTower::Late_Tick(_float TimeDelta)
 		{
 			m_fAttCharging += TimeDelta;
 
-			if (3.f <= m_fAttCharging)
+			if (5.f <= m_fAttCharging)
 			{
 				m_fAttCharging = 0.f;
 
 				_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
 				vMyPos += XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * 8.f;
 
-				_vector vDir = XMVector3Normalize(vTargetPos - vMyPos);
+				_vector vDir = vTargetPos;
 
 				BULLET_DESC Data;
 				lstrcpy(Data.szModelName, L"Component_Mesh_LightningTower_Bullet");
-				Data.MoveState_Desc.fRotatePerSec = 50.f;
+				Data.MoveState_Desc.fRotatePerSec = 10.f;
 				XMStoreFloat3(&Data.vDir, vDir);
 				XMStoreFloat4(&Data.MoveState_Desc.vPos, vMyPos);
 				Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
-				Data.MoveState_Desc.fSpeedPerSec = 20.f;
+				Data.MoveState_Desc.fSpeedPerSec = 7.f;
 				Data.fLifeTime = 10.f;
+				
+				Data.Attack_Collide_Desc.IsCenter = true;
+				Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
+				Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Shock;
+				Data.Attack_Collide_Desc.Attack_Desc.iDamage = 10;
 
-				GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
+				LIGHTNING_BULLET_DESC Dat;
+				Dat.Bullet_Desc = Data;
+				Dat.iBoundCount = 0;
+
+				GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet", (_uint)ELevel::Stage1, L"Layer_Bullet", &Dat);
 			}
 
 
@@ -197,8 +206,6 @@ CGameObject * CLightningTower::Clone_GameObject(void * pArg)
 
 void CLightningTower::Free()
 {
-	Safe_Release(m_pModelCom_LightingBall);
-	Safe_Release(m_pMovmentCom_LightingBall);
 	Safe_Release(m_pCollider_Hit);
 
 	__super::Free();

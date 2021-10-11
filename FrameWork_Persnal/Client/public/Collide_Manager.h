@@ -18,7 +18,6 @@ public:
 	void Collide_Check_BrainWash(const _tchar* szDstObjectLayer, ELevel eDstObjectLevel, const _tchar* szSrcObjectLayer, ELevel eSrcObjectLevel);
 
 
-
 public:
 	virtual void Free() override;
 };

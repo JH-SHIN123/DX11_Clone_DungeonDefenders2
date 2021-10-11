@@ -159,6 +159,8 @@ private: // Skill
 	_float	m_fHealTime = 0.f;
 	_int	m_iHealSize = 0;
 
+
+
 private:
 	HRESULT	Ready_Component(void* pArg);
 

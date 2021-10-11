@@ -19,50 +19,56 @@ HRESULT CLightningTower_Bullet::NativeConstruct_Prototype()
 
 HRESULT CLightningTower_Bullet::NativeConstruct(void * pArg)
 {
-	__super::NativeConstruct(pArg);
+	LIGHTNING_BULLET_DESC Data;
+	memcpy(&Data, pArg, sizeof(LIGHTNING_BULLET_DESC));
 
-	//_vector vScale = XMVectorSet(0.05f, 0.05f, 0.05f, 0.f);
-	//m_pMovementCom->Set_Scale_LinearRotate(vScale);
+	//m_iBoundCount = Data.iBoundCount;
 
-	m_vecEffectMesh.resize(m_iBoundCount);
+	__super::NativeConstruct(&Data.Bullet_Desc);
+
+	//m_vecEffectMesh.resize(m_iBoundCount);
 
 	Set_Pivot(XMVectorSet(0.05f, 0.05f, 0.05f, 0.f));
 
+	Target_Check(0.f);
 
-	Ready_Component(pArg);
+	Ready_Component(&Data.Bullet_Desc);
 
 	return S_OK;
 }
 
 _int CLightningTower_Bullet::Tick(_float TimeDelta)
 {
-	__super::Tick(TimeDelta);
+	_int iReturn = 0;
+	if (iReturn = __super::Tick(TimeDelta))
+	{
+		return iReturn;
+	}
+	if (true == m_pColliderCom_Attack->Get_IsCollide())
+		return OBJECT_DEAD;
 
 	Spawn_Check(TimeDelta);
 
-	for (auto& iter : m_vecEffectMesh)
-	{
-		if (nullptr != iter)
-		{
-			iter->Late_Tick(TimeDelta);
-			iter->Set_Rotate(m_pMovementCom->Get_WorldMatrix());
-			iter->Set_Position(m_pMovementCom->Get_State(EState::Position));
-			iter->Tick(TimeDelta);
-		}
-	}
-	
+	//for (auto& iter : m_vecEffectMesh)
+	//{
+	//	if (nullptr != iter)
+	//	{
+	//		iter->Late_Tick(TimeDelta);
+	//		iter->Set_Rotate(m_pMovementCom->Get_WorldMatrix());
+	//		iter->Set_Position(m_pMovementCom->Get_State(EState::Position));
+	//		iter->Tick(TimeDelta);
+	//	}
+	//}
+
+
+	Move_Check(TimeDelta);
+	m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 
 	return _int();
 }
 
 _int CLightningTower_Bullet::Late_Tick(_float TimeDelta)
 {
-	for (auto& iter : m_vecEffectMesh)
-	{
-		if(nullptr != iter)
-			iter->Late_Tick(TimeDelta);
-	}
-	
 
 
 	return __super::Late_Tick(TimeDelta);
@@ -70,7 +76,51 @@ _int CLightningTower_Bullet::Late_Tick(_float TimeDelta)
 
 HRESULT CLightningTower_Bullet::Render()
 {
-	__super::Render();
+	//__super::Render();
+
+#ifdef _DEBUG
+	if (nullptr != m_pColliderCom_Attack)
+		m_pColliderCom_Attack->Render_Collider();
+#endif // _DEBUG
+
+
+	if (nullptr == m_pModelCom)
+		return S_OK;
+
+	m_pModelCom->Bind_VIBuffer();
+
+	m_pModelCom->Set_Variable("g_PivotMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_PivotMatrix)), sizeof(_matrix));
+	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
+	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
+
+	LIGHT_DESC*		LightDesc = GET_GAMEINSTANCE->Get_LightDesc(0);
+
+	m_pModelCom->Set_Variable("vLightPosition", &LightDesc->vPosition, sizeof(_float3));
+	m_pModelCom->Set_Variable("fRange", &LightDesc->fRadius, sizeof(_float));
+
+	m_pModelCom->Set_Variable("vLightDiffuse", &LightDesc->vDiffuse, sizeof(_float4));
+	m_pModelCom->Set_Variable("vLightAmbient", &LightDesc->vAmbient, sizeof(_float4));
+	m_pModelCom->Set_Variable("vLightSpecular", &LightDesc->vSpecular, sizeof(_float4));
+
+	m_pModelCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
+
+	_uint iNumMaterials = m_pModelCom->Get_NumMaterials();
+
+
+	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
+
+	for (_uint i = 0; i < iNumMaterials; ++i)
+	{
+		if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_NORMALS)))
+		//	return E_FAIL;
+		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_SPECULAR)))
+		//	return E_FAIL;
+
+		m_pModelCom->Render_Model(i, 1);
+	}
+	
 
 	return S_OK;
 }
@@ -78,8 +128,6 @@ HRESULT CLightningTower_Bullet::Render()
 HRESULT CLightningTower_Bullet::Ready_Component(void * pArg)
 {
 	HRESULT hr = S_OK;
-
-
 
 	if (S_OK != hr)
 		MSG_BOX("CLightningTower_Bullet::Ready_Component Filed!");
@@ -89,56 +137,122 @@ HRESULT CLightningTower_Bullet::Ready_Component(void * pArg)
 
 void CLightningTower_Bullet::Spawn_Check(_float TimeDelta)
 {
-	m_fScaleTime += TimeDelta;
-	_float3 vScale;
-	vScale.x = TimeDelta * 0.05f;
+	//m_fScaleTime += TimeDelta;
+	//_float3 vScale;
+	//vScale.x = TimeDelta * 0.05f;
 
-	if (vScale.x >= m_vScale_SizeUp.x)
-		m_IsMoveable = true;
+	//if (vScale.x >= m_vScale_SizeUp.x)
+	//	m_IsMoveable = true;
 
-	if (nullptr == m_vecEffectMesh[0] && 0.25f <= m_fScaleTime)
-	{
-		Create_Effect();
-	}
+	//if (nullptr == m_vecEffectMesh[0] && 0.25f <= m_fScaleTime)
+	//{
+	//	Create_Effect();
+	//}
 
-	if (false == m_IsMoveable)
-	{
-		vScale.y = TimeDelta * 0.05f;
-		vScale.z = TimeDelta * 0.05f;
+	//if (false == m_IsMoveable)
+	//{
+	//	vScale.y = TimeDelta * 0.05f;
+	//	vScale.z = TimeDelta * 0.05f;
 
-		Set_Pivot(XMVectorSet(vScale.x, vScale.y, vScale.z, 0.f));
-	}
+	//	Set_Pivot(XMVectorSet(vScale.x, vScale.y, vScale.z, 0.f));
+	//}
 
-	else
-	{
-		m_pMovementCom->Go_Up(-TimeDelta);
-	}
+	//else
+	//{
+	//	m_pMovementCom->Go_Up(-TimeDelta);
+	//}
 
 
 }
 
 void CLightningTower_Bullet::Create_Effect()
 {
-	EFFECT_DESC Data;
-	Data.eEffectType = EEffectType::Mesh;
-	Data.eResourceLevel = ELevel::Stage1;
-	Data.iShaderPass = 2;
-	XMStoreFloat4(&Data.Move_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
-	Data.Move_Desc.vScale = { 0.03f,  0.03f , 0.03f, 0.f };
-	_vector vAxis = XMVectorSet(1.f, 0.f, 0.f, 0.f);
-	
-	lstrcpy(Data.szResourceName, L"Component_Mesh_LightningTower_Bullet_Effect_1");
-	m_vecEffectMesh[0] = (CLightningTower_Bullet_Effect*)GET_GAMEINSTANCE->Add_Create_Clone((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet_Effect", (_uint)ELevel::Stage1, &Data);
-	
-	lstrcpy(Data.szResourceName, L"Component_Mesh_LightningTower_Bullet_Effect_2");
-	m_vecEffectMesh[1] = (CLightningTower_Bullet_Effect*)GET_GAMEINSTANCE->Add_Create_Clone((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet_Effect", (_uint)ELevel::Stage1, &Data);
-	m_vecEffectMesh[1]->Set_Rotate_Axis(vAxis, XMConvertToDegrees(70.f));
+	//EFFECT_DESC Data;
+	//Data.eEffectType = EEffectType::Mesh;
+	//Data.eResourceLevel = ELevel::Stage1;
+	//Data.iShaderPass = 2;
+	//XMStoreFloat4(&Data.Move_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
+	//Data.Move_Desc.vScale = { 0.03f,  0.03f , 0.03f, 0.f };
+	//_vector vAxis = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+	//
+	//lstrcpy(Data.szResourceName, L"Component_Mesh_LightningTower_Bullet_Effect_1");
+	//m_vecEffectMesh[0] = (CLightningTower_Bullet_Effect*)GET_GAMEINSTANCE->Add_Create_Clone((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet_Effect", (_uint)ELevel::Stage1, &Data);
+	//
+	//lstrcpy(Data.szResourceName, L"Component_Mesh_LightningTower_Bullet_Effect_2");
+	//m_vecEffectMesh[1] = (CLightningTower_Bullet_Effect*)GET_GAMEINSTANCE->Add_Create_Clone((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet_Effect", (_uint)ELevel::Stage1, &Data);
+	//m_vecEffectMesh[1]->Set_Rotate_Axis(vAxis, XMConvertToDegrees(70.f));
+	//
+	//vAxis = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+	//lstrcpy(Data.szResourceName, L"Component_Mesh_LightningTower_Bullet_Effect_3");
+	//m_vecEffectMesh[2] = (CLightningTower_Bullet_Effect*)GET_GAMEINSTANCE->Add_Create_Clone((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet_Effect", (_uint)ELevel::Stage1, &Data);
+	//m_vecEffectMesh[2]->Set_Rotate_Axis(vAxis, XMConvertToDegrees(90.f));
 
-	vAxis = XMVectorSet(1.f, 0.f, 0.f, 0.f);
-	lstrcpy(Data.szResourceName, L"Component_Mesh_LightningTower_Bullet_Effect_3");
-	m_vecEffectMesh[2] = (CLightningTower_Bullet_Effect*)GET_GAMEINSTANCE->Add_Create_Clone((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet_Effect", (_uint)ELevel::Stage1, &Data);
-	m_vecEffectMesh[2]->Set_Rotate_Axis(vAxis, XMConvertToDegrees(90.f));
+}
 
+void CLightningTower_Bullet::Target_Check(_float TimeDelta)
+{
+
+	CLayer* pDstLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Monster");
+	if (nullptr == pDstLayer)
+	{
+		m_IsCopyMonster = false;
+		return;
+	}
+
+	list<CGameObject*> pTarget = pDstLayer->Get_GameObject_List();
+
+	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
+	vector<SORT_DESC> vecPos;
+
+	SORT_DESC Sort_Data;
+	vecPos.reserve(pTarget.size());
+
+	for (auto& iter : pTarget)
+	{
+		_vector vPos = static_cast<CMovement*>(iter->Get_Component(L"Com_Movement"))->Get_State(EState::Position);
+		_float fDis = XMVectorGetX(XMVector3Length(vPos - vMyPos));
+
+
+		XMStoreFloat3(&Sort_Data.vPos, vPos);
+		Sort_Data.fDis = fDis;
+		Sort_Data.pTarget = iter;
+
+		vecPos.push_back(Sort_Data);
+	}
+
+	auto& iter = vecPos.begin();
+	sort(vecPos.begin(), vecPos.end(), [](SORT_DESC &a, SORT_DESC &b) -> _bool { return a.fDis < b.fDis; });
+
+	for (_int i = 0; i < 3; ++i)
+	{
+		if (i < vecPos.size() && nullptr != vecPos[i].pTarget)
+		{
+			m_vTargetPos[i] = vecPos[i].vPos;
+			m_vTargetPos[i].y += 7.f;
+		}
+	}
+
+	m_IsCopyMonster = true;
+}
+
+void CLightningTower_Bullet::Move_Check(_float TimeDelta)
+{
+	_vector vTargetPos = XMVectorZero();
+
+	if (false == m_IsCopyMonster)
+		vTargetPos = m_pMovementCom->Get_State(EState::Position);
+
+	else
+	{
+		vTargetPos = XMLoadFloat3(&m_vTargetPos[m_iBoundCount]);
+		vTargetPos - m_pMovementCom->Get_State(EState::Position);
+		XMStoreFloat3(&m_vGoDir, vTargetPos - m_pMovementCom->Get_State(EState::Position));
+	}
+
+	_float fDis = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vGoDir)));
+
+
+	m_pMovementCom->Go_Dir_Vector(TimeDelta, XMLoadFloat3(&m_vGoDir));
 }
 
 CLightningTower_Bullet * CLightningTower_Bullet::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -165,8 +279,13 @@ CGameObject * CLightningTower_Bullet::Clone_GameObject(void * pArg)
 
 void CLightningTower_Bullet::Free()
 {
-	Safe_Release_Vector(m_vecEffectMesh);
+	//Safe_Release_Vector(m_vecEffectMesh);
 
+	//if (true == m_IsCopyMonster)
+	//{
+	//	for (_int i = 0; i < 3; ++i)
+	//		Safe_Release(m_pMonsterList[i]);
+	//}
 
 	__super::Free();
 }

@@ -56,7 +56,7 @@ _int CCamera_Target::Late_Tick(_float TimeDelta)
 
 
 	if(false == CData_Manager::GetInstance()->Get_Tick_Stop())
-		TargetRotate_Check((_uint)ELevel::Stage1, L"Layer_Player", L"Com_Movement");
+		TargetRotate_Check((_uint)ELevel::Stage1, L"Layer_Player", L"Com_Movement", TimeDelta);
 	return _int();
 }
 

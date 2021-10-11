@@ -57,8 +57,6 @@ private:
 private:
 	HRESULT Ready_CellNeighbor();
 
-private:
-	class CModelLoader* m_pModelLoader = nullptr;
 	const aiScene*			m_pScene = nullptr;
 	Assimp::Importer		m_Importer;
 

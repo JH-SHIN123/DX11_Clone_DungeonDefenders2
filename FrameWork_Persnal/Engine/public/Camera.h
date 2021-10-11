@@ -59,11 +59,13 @@ public:
 
 public: // Tick
 	void	Target_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag);
-	void	TargetRotate_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag);
+	void	TargetRotate_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag, _float TimeDelta);
 	void	TargetRotate_Check(CTransform* pTransform);
 
 public:
 	void Cam_Shake(_float3 vPower, _float ShakeTime = 0.5f);
+	void Cam_Shake_At(_float3 vPower, _float ShakeTime = 0.5f);
+	void Cam_Add_Dis(_float fAddDis, _float DisTime = 1.f);
 
 protected:
 	void	View_Check(_float TimeDelata);
@@ -101,7 +103,12 @@ protected:
 
 	_float3	m_vShakePower = {1.f, 1.f, 1.f};
 	_float	m_fShakeTime = 0.f;
-
+	_float3	m_vShake_At_Power = { 1.f, 1.f, 1.f };
+	_float	m_fShake_At_Time = 0.f;
+	_float	m_fAddCameraDis = 0.f;
+	_float	m_fAddCameraDis_Time = 0.f;
+	_float	m_fAddCameraDis_Time_Max = 0.f;
+	_bool	m_IsOutCameraDis = false;
 protected:
 	ECameraViewMode			m_eCameraMode_Now = ECameraViewMode::ThirdPerson;
 	ECameraViewMode			m_eCameraMode_Next = ECameraViewMode::ThirdPerson;

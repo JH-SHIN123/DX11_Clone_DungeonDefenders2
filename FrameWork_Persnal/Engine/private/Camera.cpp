@@ -127,39 +127,10 @@ void CCamera::Target_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* C
 
 	_vector vTargetPos = pTarget->Get_State(EState::Position);
 
-	_vector vRight = XMVector4Normalize(pTarget->Get_State(EState::Right));
-	_vector vUp = XMVector4Normalize(pTarget->Get_State(EState::Up));
-	_vector vLook = XMVector4Normalize(pTarget->Get_State(EState::Look));
 
-	if (0 >= m_fShakeTime)
-	{
-		_vector vMyPos = vTargetPos + (vRight * (m_CameraDesc.vTargetAxis.x));
-		vMyPos = vTargetPos + (vUp * m_CameraDesc.vTargetAxis.y);
-		vMyPos = vTargetPos + (vLook * m_CameraDesc.vTargetAxis.z);
-		m_pMovementCom->Set_State(EState::Position, vMyPos);
-	}
-
-	else
-	{
-		_uint Shake = (_uint)m_fShakeTime % 2;
-
-		if (0 < Shake)
-			Shake *= -1;
-
-		_vector vMyPos = vTargetPos + (vRight * (m_CameraDesc.vTargetAxis.x + m_vShakePower.x * Shake));
-		vMyPos = vTargetPos + (vUp * (m_CameraDesc.vTargetAxis.y + m_vShakePower.y * Shake));
-
-		Shake = (_uint)m_fShakeTime % 2;
-
-		if (0 < Shake)
-			Shake *= -1;
-
-		vMyPos = vTargetPos + (vLook * (m_CameraDesc.vTargetAxis.z + m_vShakePower.z *Shake));
-		m_pMovementCom->Set_State(EState::Position, vMyPos);
-	}
 }
 
-void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _tchar * ComponentTag)
+void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _tchar * ComponentTag, _float TimeDelta)
 {
 	CMovement* pTarget = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject(iLevel, LayerTag))->Get_Component(ComponentTag));
 
@@ -169,10 +140,56 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 		return;
 	}
 
+	_float fDis = m_CameraDesc.fDis;
+	_vector vTargetAxis = XMLoadFloat3(&m_CameraDesc.vTargetAxis);
+	if (0.f != m_fAddCameraDis_Time_Max)
+	{
+		if (false == m_IsOutCameraDis)
+		{
+			m_fAddCameraDis_Time += TimeDelta;
+			vTargetAxis += XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * m_fAddCameraDis * m_fAddCameraDis_Time;
+			vTargetAxis += -XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * m_fAddCameraDis * m_fAddCameraDis_Time * 1.5f;
+
+			if (m_fAddCameraDis_Time >= m_fAddCameraDis_Time_Max)
+				m_IsOutCameraDis = true;
+		}
+		else
+		{
+			m_fAddCameraDis_Time -= TimeDelta;
+			vTargetAxis += XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * m_fAddCameraDis * m_fAddCameraDis_Time;
+			vTargetAxis += -XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * m_fAddCameraDis * m_fAddCameraDis_Time * 1.5f;
+
+			if (0 >= m_fAddCameraDis_Time)
+				m_fAddCameraDis_Time_Max = 0.f;
+		}
+	}
+
 	_vector vTargetPos = pTarget->Get_State(EState::Position);
 
-	_vector vTargetAxis = XMLoadFloat3(&m_CameraDesc.vTargetAxis);
-	_vector vMyPos = vTargetPos + XMVector3Normalize(vTargetAxis) * m_CameraDesc.fDis;
+	_vector vMyPos = vTargetPos + XMVector3Normalize(vTargetAxis) * fDis;
+	
+	if (0 <= m_fShakeTime)
+	{
+		m_fShakeTime -= TimeDelta;
+
+		_vector vRight = XMVector3Normalize(m_pMovementCom->Get_State(EState::Right));
+		_vector vUp = XMVector3Normalize(m_pMovementCom->Get_State(EState::Up));
+		_vector vLook = XMVector3Normalize(m_pMovementCom->Get_State(EState::Look));
+
+
+		_int Shake = (rand()) % 2;
+		if (Shake == 0)
+			Shake = -1;
+		vMyPos += (vRight * (m_vShakePower.x * Shake));
+		Shake = (rand()) % 2;
+		if (Shake == 0)
+			Shake = -1;
+		vMyPos += (vUp * (m_vShakePower.y * Shake));
+		Shake = (rand()) % 2;
+		if (Shake == 0)
+			Shake = -1;
+		vMyPos += (vLook * (m_CameraDesc.vTargetAxis.z + m_vShakePower.z * Shake));
+	}
 
 	m_pMovementCom->Set_State(EState::Position, vMyPos);
 
@@ -194,12 +211,35 @@ void CCamera::TargetRotate_Check(_uint iLevel, const _tchar * LayerTag, const _t
 
 	}
 
+	if (0 <= m_fShake_At_Time)
+	{
+		m_fShake_At_Time -= TimeDelta;
+
+		_vector vRight = XMVector3Normalize(m_pMovementCom->Get_State(EState::Right));
+		_vector vUp = XMVector3Normalize(m_pMovementCom->Get_State(EState::Up));
+		_vector vLook = XMVector3Normalize(m_pMovementCom->Get_State(EState::Look));
+
+
+		_int Shake = (rand()) % 2;
+		if (Shake == 0)
+			Shake = -1;
+		vAt += (vRight * (m_vShake_At_Power.x * Shake));
+		Shake = (rand()) % 2;
+		if (Shake == 0)
+			Shake = -1;
+		vAt += (vUp * (m_vShake_At_Power.y * Shake));
+		Shake = (rand()) % 2;
+		if (Shake == 0)
+			Shake = -1;
+		vAt += (vLook * (m_CameraDesc.vTargetAxis.z + m_vShake_At_Power.z * Shake));
+	}
 
 	XMStoreFloat3(&m_CameraDesc.vAt, vAt);
 }
 
 void CCamera::TargetRotate_Check(CTransform* pTransform)
 {
+	// Â¦Åü
 	_vector vTargetPos = pTransform->Get_State(EState::Position);
 
 	_vector vTargetAxis = XMLoadFloat3(&m_CameraDesc.vTargetAxis);
@@ -224,6 +264,21 @@ void CCamera::Cam_Shake(_float3 vPower, _float ShakeTime)
 	m_fShakeTime = ShakeTime;
 
 	m_vShakePower = vPower;
+}
+
+void CCamera::Cam_Shake_At(_float3 vPower, _float ShakeTime)
+{
+	m_fShake_At_Time = ShakeTime;
+
+	m_vShake_At_Power = vPower;
+}
+
+void CCamera::Cam_Add_Dis(_float fAddDis, _float DisTime)
+{
+	m_IsOutCameraDis = false;
+	m_fAddCameraDis = fAddDis;
+	m_fAddCameraDis_Time = 0.f;
+	m_fAddCameraDis_Time_Max = DisTime;
 }
 
 void CCamera::View_Check(_float TimeDelata)
@@ -472,6 +527,9 @@ void CCamera::Shake_Check(_float TimeDelta)
 		return;
 
 	m_fShakeTime -= TimeDelta;
+
+
+
 }
 
 void CCamera::SetUp_PipeLine_Matrix()

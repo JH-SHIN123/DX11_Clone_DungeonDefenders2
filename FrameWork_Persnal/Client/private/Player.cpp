@@ -276,7 +276,12 @@ void CPlayer::Key_Check(_float TimeDelta)
 	if (GET_MOUSE_CLICK(MOUSEKEYSTATE::LB))
 	{
 		if (ETowerSpawn::End == m_eTowerSpawn)
+		{
+			m_eAnimationState_Next_Second = EPlayerAnimation::Fire;
+			m_IsSecondAnimation = true;
+			m_pWeapon->Create_Bullet(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)));
 			return;
+		}
 
 		switch (m_eTowerSpawn)
 		{
@@ -356,9 +361,13 @@ void CPlayer::Key_Check(_float TimeDelta)
 		}
 	}
 
-	if (GET_KEY_INPUT(DIK_2))
+	if (GET_KEY_INPUT(DIK_2)) //Cam_Add_Dis
 	{
 		CPlayerSkill* pSkill = static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"));
+		//static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Cam_Shake(_float3(0.2f,0.2f,0.2f), 0.5f);
+		//static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Cam_Shake_At(_float3(0.2f, 0.2f, 0.2f), 0.5f);
+		static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Cam_Add_Dis(7.f, 0.8f);
+
 		if (true == pSkill->Get_IsCoolDown(1))
 		{
 			pSkill->Set_Skill_CoolDown(1, 5.f);
@@ -408,11 +417,11 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 #pragma endregion
 
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+	if (GET_MOUSE_CLICK(MOUSEKEYSTATE::LB))
 	{
-		m_eAnimationState_Next_Second = EPlayerAnimation::Fire;
-		m_IsSecondAnimation = true;
-		m_pWeapon->Create_Bullet();
+		//m_eAnimationState_Next_Second = EPlayerAnimation::Fire;
+		//m_IsSecondAnimation = true;
+		//m_pWeapon->Create_Bullet();
 	}
 
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)

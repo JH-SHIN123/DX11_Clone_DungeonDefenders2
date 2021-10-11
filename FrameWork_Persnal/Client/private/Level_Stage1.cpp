@@ -106,9 +106,9 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 
 	// ¸ÂÀ»³ð, ¶§¸±³ð
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Monster", ELevel::Stage1,			L"Layer_Bullet", ELevel::Stage1);
-	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1,				L"Layer_Monster", ELevel::Stage1);
-	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Tower", ELevel::Stage1,				L"Layer_Monster", ELevel::Stage1);
-	CCollide_Manager::GetInstance()->Collide_Check_BrainWash(L"Layer_Monster", ELevel::Stage1,	L"Layer_Bullet_BrainWash", ELevel::Stage1);
+	//CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1,				L"Layer_Monster", ELevel::Stage1);
+	//CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Tower", ELevel::Stage1,				L"Layer_Monster", ELevel::Stage1);
+	//CCollide_Manager::GetInstance()->Collide_Check_BrainWash(L"Layer_Monster", ELevel::Stage1,	L"Layer_Bullet_BrainWash", ELevel::Stage1);
 
 
 
