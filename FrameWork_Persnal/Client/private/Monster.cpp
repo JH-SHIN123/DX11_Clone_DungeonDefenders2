@@ -41,8 +41,6 @@ _int CMonster::Tick(_float TimeDelta)
 		m_pMeterBar_Hp->Tick(TimeDelta);
 	}
 
-
-
 	return _int();
 }
 
@@ -53,8 +51,6 @@ _int CMonster::Late_Tick(_float TimeDelta)
 		m_pMeterBar_Hp->Set_Count((_float)m_pStatusCom->Get_Hp(), (_float)m_pStatusCom->Get_HpMax());
 		m_pMeterBar_Hp->Late_Tick(TimeDelta);
 	}
-
-
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
@@ -119,9 +115,31 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 	if (EMonsterAI::Attack == m_eAI_Next && IsContinueAnimation)
 		return EMonsterAI::Attack;	
 
-#pragma region Player
 	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
 	_vector vMyPos_Cell = XMVectorSetY(vMyPos, 0.f);
+
+#pragma region Core
+	// 무조건 때림
+	_vector vCorePos = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_CrystalCore"))->Get_Component(L"Com_Movement"))->Get_State(EState::Position);
+	_float fCoreDis = XMVectorGetX(XMVector3Length(vCorePos - vMyPos));
+
+	if (m_fAttackDis > fCoreDis)
+	{
+		_vector vDir = XMVector3Normalize(vCorePos - vMyPos);
+		_vector vLook = vDir;
+		_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+		_vector vRight = XMVector3Cross(vUp, vDir);
+
+		m_pMovementCom->Set_State(EState::Right, vRight * m_vScale.x);
+		m_pMovementCom->Set_State(EState::Up, vUp *m_vScale.y);
+		m_pMovementCom->Set_State(EState::Look, vLook * m_vScale.z);
+
+		return EMonsterAI::Attack;
+	}
+#pragma endregion
+
+
+#pragma region Player
 
 	CMovement* pTarget_Player = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
 	if (nullptr == pTarget_Player)
@@ -178,15 +196,16 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 			_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 			_vector vRight = XMVector3Cross(vUp, vLook);
 
-			m_pMovementCom->Set_State(EState::Right, vRight * m_pMovementCom->Get_Scale(EState::Right));
-			m_pMovementCom->Set_State(EState::Up, vUp * m_pMovementCom->Get_Scale(EState::Up));
-			m_pMovementCom->Set_State(EState::Look, vLook * m_pMovementCom->Get_Scale(EState::Look));
+			m_pMovementCom->Set_State(EState::Right, vRight * m_vScale.x);
+			m_pMovementCom->Set_State(EState::Up, vUp *m_vScale.y);
+			m_pMovementCom->Set_State(EState::Look, vLook * m_vScale.z);
 
 			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos, m_pNaviCom);
 			return m_eAI_Next = EMonsterAI::Move_Target;
 		}
 	}
 #pragma endregion
+
 
 #pragma region Tower
 
@@ -226,9 +245,9 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 				_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 				_vector vRight = XMVector3Cross(vUp, vDir);
 
-				m_pMovementCom->Set_State(EState::Right, vRight * m_pMovementCom->Get_Scale(EState::Right));
-				m_pMovementCom->Set_State(EState::Up, vUp * m_pMovementCom->Get_Scale(EState::Up));
-				m_pMovementCom->Set_State(EState::Look, vLook * m_pMovementCom->Get_Scale(EState::Look));
+				m_pMovementCom->Set_State(EState::Right, vRight * m_vScale.x);
+				m_pMovementCom->Set_State(EState::Up, vUp *m_vScale.y);
+				m_pMovementCom->Set_State(EState::Look, vLook * m_vScale.z);
 				//m_pMovementCom->Go_Dir(TimeDelta, vDir, m_pNaviCom);
 			}
 
@@ -243,6 +262,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 	}
 
 #pragma endregion
+
 
 #pragma region Navigation
 	// 너 갈길 가라
@@ -422,9 +442,9 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 			_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 			_vector vRight = XMVector3Cross(vUp, vCur_Next_Dir);
 
-			m_pMovementCom->Set_State(EState::Right, vRight * m_pMovementCom->Get_Scale(EState::Right));
-			m_pMovementCom->Set_State(EState::Up, vUp * m_pMovementCom->Get_Scale(EState::Up));
-			m_pMovementCom->Set_State(EState::Look, vLook * m_pMovementCom->Get_Scale(EState::Look));
+			m_pMovementCom->Set_State(EState::Right, vRight * m_vScale.x);
+			m_pMovementCom->Set_State(EState::Up, vUp *m_vScale.y);
+			m_pMovementCom->Set_State(EState::Look, vLook * m_vScale.z);
 
 			vCellPos = XMVectorSetY(vCellPos, XMVectorGetY(vMyPos));
 			m_pMovementCom->Go_Dir(TimeDelta, vCellPos, m_pNaviCom);
@@ -535,6 +555,10 @@ HRESULT CMonster::Ready_Component(void * pArg)
 
 	m_fDetectDis = Data.fDetectDis;
 	m_fAttackDis = Data.fAttackDis;
+
+	m_vScale.x = Data.Movement_Desc.vScale.x;
+	m_vScale.y = Data.Movement_Desc.vScale.y;
+	m_vScale.z = Data.Movement_Desc.vScale.z;
 
 	if (S_OK != hr)
 		MSG_BOX("CMonster::Ready_Component Failed");

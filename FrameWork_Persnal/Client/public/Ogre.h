@@ -44,7 +44,6 @@ private:
 	_float		Anim_Changer(EOgreAnim eAnim);
 	void		AI_Check();
 
-
 private:
 	EOgreAnim	m_eAnim_Cur = EOgreAnim::End;
 	EOgreAnim	m_eAnim_Next = EOgreAnim::Idle;

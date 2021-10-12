@@ -229,6 +229,12 @@
     <Filter Include="02.GameObject\02.Stage\Navi">
       <UniqueIdentifier>{196f849a-c28f-4281-8354-4d76b631e9b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\10.Monster_Gate">
+      <UniqueIdentifier>{25f18a48-585d-44dc-82f1-cd3eb38f7111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.UI, HUD\00.2D\07.GameOver">
+      <UniqueIdentifier>{0cedeba1-85f4-4ae8-aa84-f8602869057b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -447,6 +453,9 @@
     <ClInclude Include="..\public\TestNavi.h">
       <Filter>02.GameObject\02.Stage\Navi</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Monster_Gate.h">
+      <Filter>02.GameObject\10.Monster_Gate</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -643,6 +652,9 @@
     </ClCompile>
     <ClCompile Include="..\private\TestNavi.cpp">
       <Filter>02.GameObject\02.Stage\Navi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Monster_Gate.cpp">
+      <Filter>02.GameObject\10.Monster_Gate</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

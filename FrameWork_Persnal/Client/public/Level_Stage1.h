@@ -24,14 +24,19 @@ public:
 private:
 	HRESULT	Ready_Light();
 	HRESULT Ready_Layer_Terrain(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_Monster_Gate(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_UI(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Camera_Free(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_CrystalCore(const _tchar* pLayerTag);
 
 
 private:
 	_bool m_IsChange = false;
 	ELevel 	m_eNextLevel = ELevel::End;
+
+private:
+	_bool m_IsKey = false;
 
 
 public:

@@ -33,6 +33,8 @@
 #include "Skill_BrainWash.h"
 #include "Skill_BrainWash_Effect.h"
 #include "TestNavi.h"
+#include "Monster_Gate.h"
+#include "CrystalCore.h"
 
 USING(Engine)
 
@@ -182,8 +184,6 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Goblin"), CGoblin::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Ogre"), COgre::Create(m_pDevice, m_pDevice_Context));
 
-
-
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Boom"), CBoom::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_ManaBomb"), CSkill_ManaBomb::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_Meteor"), CSkill_Meteor::Create(m_pDevice, m_pDevice_Context));
@@ -193,17 +193,19 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_BrainWash"), CSkill_BrainWash::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Skill_BrainWash_Effect"), CSkill_BrainWash_Effect::Create(m_pDevice, m_pDevice_Context));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), CMonster_Gate::Create(m_pDevice, m_pDevice_Context));
 
-	//hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Level_1_TestNavi"),
-	//	CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Navi.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
-	//hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Terrain_TestNavi"), CTestNavi::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_CrystalCore"), CCrystalCore::Create(m_pDevice, m_pDevice_Context));
+
+
+
+
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_MeshLevel_1_Navi"), CNavigation::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Navi.fbx"));
 
-
-	// Model
-	//hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Level_1"),
-	//	CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Magus.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+	 //Model
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Level_1"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Magus.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Mage"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Mage/", "Mage.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
@@ -254,6 +256,17 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Skill_BrainWash"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Skill/BrainWash/", "Skill_BrainWash.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Monster_Gate_Left"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Monster_Gate/", "Monster_Gate_Left.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Monster_Gate_Right"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Monster_Gate/", "Monster_Gate_Right.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_CrystalCore"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/CrystalCore/", "CrystalCore.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_CrystalCore_Ring_Up"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/CrystalCore/", "CrystalCore_Ring_Up.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_CrystalCore_Ring_Down"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/CrystalCore/", "CrystalCore_Ring_Down.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
 	if (hr != S_OK)
 		MSG_BOX("LoadingForStage Fail");

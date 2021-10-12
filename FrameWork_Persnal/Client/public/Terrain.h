@@ -39,7 +39,9 @@ private:
 
 private:
 	CVIBuffer_Terrain*		m_pVIBufferCom = nullptr;
-
+	_float3 vPivot = { 0.f,0.f,0.f };
+	_bool	bNo[3];
+	_bool m_IsFirst = true;
 private:
 	HRESULT	Ready_Component();
 

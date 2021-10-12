@@ -41,6 +41,7 @@ private:
 public:
 	_bool Tick_Phase();
 	void Set_NowPhase(EPhaseState eNowPhase);
+	EPhaseState Get_NowPhase() const { return m_eNowPhase; }
 
 private:
 	EPhaseState	m_eNowPhase = EPhaseState::End;

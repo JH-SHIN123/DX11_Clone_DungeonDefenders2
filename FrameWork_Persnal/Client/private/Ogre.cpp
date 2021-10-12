@@ -46,6 +46,8 @@ _int COgre::Tick(_float TimeDelta)
 			if (true == m_pModelCom->Get_IsFinishedAnimaion())
 				return OBJECT_DEAD;
 		}
+		else
+			m_eAnim_Next = EOgreAnim::Death;
 	}
 
 	_vector vTargetPos;
@@ -73,6 +75,7 @@ _int COgre::Tick(_float TimeDelta)
 			m_eAnim_Next = EOgreAnim::Hurt;
 			break;
 		default:
+			m_IsHurt = false;
 			break;
 		}
 	}
@@ -124,7 +127,6 @@ _int COgre::Tick(_float TimeDelta)
 		}
 	}
 
-	//m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 	m_pColliderCom_Hurt->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 
 	m_pStatusCom->Tick(TimeDelta);
@@ -143,7 +145,6 @@ _int COgre::Late_Tick(_float TimeDelta)
 		if (true == m_pModelCom->Get_IsFinishedAnimaion())
 			return OBJECT_DEAD;
 	}
-
 
 	return __super::Late_Tick(TimeDelta);
 }
@@ -170,7 +171,6 @@ void COgre::Anim_Check(_float TimeDelta)
 	if (nullptr == m_pModelCom)
 		return;
 
-
 	if (true == m_pModelCom->Get_IsFinishedAnimaion())
 	{
 		if (EOgreAnim::Hurt == m_eAnim_Next)
@@ -189,14 +189,11 @@ void COgre::Anim_Check(_float TimeDelta)
 
 	m_pModelCom->Update_CombindTransformationMatrix();
 
-
-
 	_matrix Matrix = m_pMovementCom->Get_WorldMatrix();
 	Matrix.r[3] += XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * 7.f;
 	m_pColliderCom_Attack->Update_Collider(Matrix);
 
 	m_eAnim_Cur = m_eAnim_Next;
-
 }
 
 void COgre::Attack_Check()
@@ -243,21 +240,12 @@ HRESULT COgre::Ready_Component(void * pArg)
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pColliderCom_Hurt, &Data);
 
-
 	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
 	Data.vScale = { 4.f, 4.f, 4.f };
 
 	Data.Attack_Desc.eDamageType = EDamageType::Direct;
 	Data.Attack_Desc.iDamage = 100;
 	CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data);
-
-	//COLLIDER_DESC Data;
-	//ZeroMemory(&Data, sizeof(COLLIDER_DESC));
-	//Data.vScale = { 100.f, 100.f, 100.f };
-	//
-	//Data.Attack_Desc.eDamageType = EDamageType::Direct;
-	//Data.Attack_Desc.iDamage = 100;
-	//CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data);
 
 	return S_OK;
 }

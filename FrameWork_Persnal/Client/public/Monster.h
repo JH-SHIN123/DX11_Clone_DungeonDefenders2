@@ -84,6 +84,8 @@ private:
 
 	_float	m_fBrainWashTime = 0.f;
 
+private: // 스케일 값 보존용
+	_float3 m_vScale = { 0.f,0.f,0.f };
 
 private:
 	EMonsterAI		m_eAI_Cur	= EMonsterAI::End;

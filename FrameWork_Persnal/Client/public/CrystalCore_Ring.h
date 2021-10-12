@@ -3,7 +3,7 @@
 #ifndef __CRYSTALCORE_RING_H__
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Player.h"
 
 BEGIN(Client)
 class CCrystalCore_Ring final :	public CGameObject

@@ -82,6 +82,9 @@ public:
 public:
 	_bool	Get_Skill_Using(_int iSkillIndex);
 
+public:
+	void Set_Mission_Failed(_bool IsFailed) { m_IsMissionFailed = IsFailed; }
+
 //public:
 //	void Set_Casting_BrainWash_MaxTime(const _float& fTime) { m_fBrainWash_Time_Max = fTime; }
 
@@ -159,7 +162,8 @@ private: // Skill
 	_float	m_fHealTime = 0.f;
 	_int	m_iHealSize = 0;
 
-
+private:
+	_bool m_IsMissionFailed = false;
 
 private:
 	HRESULT	Ready_Component(void* pArg);

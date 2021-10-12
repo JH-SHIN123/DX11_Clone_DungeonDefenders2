@@ -29,7 +29,6 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain"))))
 		return E_FAIL;
 
-
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
 		return E_FAIL;
 
@@ -37,6 +36,12 @@ HRESULT CLevel_Stage1::NativeConstruct()
 		return E_FAIL;
 	
 	if (FAILED(Ready_Layer_Player(L"Layer_Player")))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Monster_Gate(L"Layer_Gate")))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_CrystalCore(L"Layer_CrystalCore")))
 		return E_FAIL;
 		
 	MONSTER_DESC MonData;
@@ -98,17 +103,35 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 		CData_Manager::GetInstance()->Set_Tick_Stop(true);
 	}
 
+	
 	if (GET_KEY_INPUT(DIK_F3))
-		CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Build);
+	{
+		if (false == m_IsKey)
+		{
+			CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Build);
+			m_IsKey = true;
+		}
+	}
+	else
+		m_IsKey = false;
 
 	if (GET_KEY_INPUT(DIK_F4))
-		CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Combat);
+	{
+		if (false == m_IsKey)
+		{
+			CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Combat);
+			m_IsKey = true;
+		}
+	}
+	else
+		m_IsKey = false;
+
 
 	// ¸ÂÀ»³ð, ¶§¸±³ð
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Monster", ELevel::Stage1,			L"Layer_Bullet", ELevel::Stage1);
-	//CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1,				L"Layer_Monster", ELevel::Stage1);
-	//CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Tower", ELevel::Stage1,				L"Layer_Monster", ELevel::Stage1);
-	//CCollide_Manager::GetInstance()->Collide_Check_BrainWash(L"Layer_Monster", ELevel::Stage1,	L"Layer_Bullet_BrainWash", ELevel::Stage1);
+	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
+	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Tower", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
+	CCollide_Manager::GetInstance()->Collide_Check_BrainWash(L"Layer_Monster", ELevel::Stage1, L"Layer_Bullet_BrainWash", ELevel::Stage1);
 
 
 
@@ -237,9 +260,46 @@ HRESULT CLevel_Stage1::Ready_Layer_Terrain(const _tchar * pLayerTag)
 {
 	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
 
-	//pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Terrain"), (_uint)ELevel::Stage1, pLayerTag);
+	pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Terrain"), (_uint)ELevel::Stage1, pLayerTag);
 
 	//pGameInstance->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Terrain_TestNavi"), (_uint)ELevel::Stage1, L"Layer_Terrain_Navi");
+
+	return S_OK;
+}
+
+HRESULT CLevel_Stage1::Ready_Layer_Monster_Gate(const _tchar * pLayerTag)
+{
+	MOVESTATE_DESC Data;
+	Data.vScale = { 1.25f, 1.f, 1.f, 0.f };
+
+	// ºÏÁÂ
+	Data.vPos = { -238.f,-32.f,-40.5f,1.f };
+	Data.vRotateLook = { -1.f,0.f,0.f,0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, pLayerTag, &Data);
+
+	Data.vPos = { -238.f, -32.f, 39.5f, 1.f };
+	Data.vRotateLook = { -1.f,0.f,0.f,0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, pLayerTag, &Data);
+
+	Data.vScale = { 1.f,1.f,1.f,0.f };
+
+	// ¼­ÁÂ
+	Data.vPos = { 31.5f,-31.5f,-228.5f,1.f };
+	Data.vRotateLook = { 0.f,0.f,-1.f,0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, pLayerTag, &Data);
+
+	Data.vPos = { -19.5f,-31.5f,-228.5f,1.f };
+	Data.vRotateLook = { 0.f,0.f,-1.f,0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, pLayerTag, &Data);
+
+	// µ¿ÁÂ
+	Data.vPos = { 30.f,-31.5f,228.5f,1.f };
+	Data.vRotateLook = { 0.f,0.f,1.f,0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, pLayerTag, &Data);
+
+	Data.vPos = { 30.f,-31.5f,228.5f,1.f };
+	Data.vRotateLook = { 0.f,0.f,1.f,0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, pLayerTag, &Data);
 
 	return S_OK;
 }
@@ -326,6 +386,30 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
 	lstrcpy(Data.szModelName, L"Component_Mesh_Mage");
 
 	pGameInstance->Add_GameObject((_uint)ELevel::Static, TEXT("Prototype_Player"), (_uint)ELevel::Stage1, pLayerTag, &Data);
+
+	return S_OK;
+}
+
+HRESULT CLevel_Stage1::Ready_Layer_CrystalCore(const _tchar * pLayerTag)
+{
+	GAMEOBJ_DESC Data;
+	Data.Movement_Desc.vPos = { 0.f, 0.f, 0.f, 1.f };
+	Data.Movement_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
+	Data.Movement_Desc.fRotatePerSec = 0.5f;
+
+	Data.Status_Desc.fAttSpeed = 2.f;
+	Data.Status_Desc.fCritical = 10.f;
+	Data.Status_Desc.iAtt_Basic = 50;
+	Data.Status_Desc.iExp = 0;
+	Data.Status_Desc.iExp_Max = 100;
+	Data.Status_Desc.iHp_Max = 5000;
+	Data.Status_Desc.iLevel = 1;
+
+	
+
+	lstrcpy(Data.szModelName, L"Component_Mesh_CrystalCore");
+
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_CrystalCore"), (_uint)ELevel::Stage1, pLayerTag, &Data);
 
 	return S_OK;
 }

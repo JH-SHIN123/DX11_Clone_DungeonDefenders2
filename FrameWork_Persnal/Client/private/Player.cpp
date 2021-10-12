@@ -46,6 +46,23 @@ HRESULT CPlayer::NativeConstruct(void * pArg)
 
 _int CPlayer::Tick(_float TimeDelta)
 {
+	if (true == m_IsMissionFailed)
+	{
+		if (EPlayerAnimation::Lose == m_eAnimationState_Next)
+		{
+			if (true == m_pModelCom->Get_IsFinishedAnimaion())
+			{
+
+
+
+				return OBJECT_DEAD;
+			}
+		}
+
+		m_eAnimationState_Next = EPlayerAnimation::Lose;
+	}
+
+
 	__super::Tick(TimeDelta);
 
 	SpecialAnimation_Check(TimeDelta);

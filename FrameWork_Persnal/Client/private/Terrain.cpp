@@ -19,13 +19,12 @@ HRESULT CTerrain::NativeConstruct_Prototype()
 {
 	CGameObject::NativeConstruct_Prototype();
 
-	/*
 	
-		_matrix			PivotMatrix = XMMatrixScaling(0.05f, 0.05f, 0.05f) *
-		XMMatrixRotationX(XMConvertToRadians(90.0f)) *
-		XMMatrixRotationY(XMConvertToRadians(90.0f));
+	
+	//_matrix			PivotMatrix = XMMatrixScaling(0.05f, 0.05f, 0.05f) *
+	//XMMatrixRotationX(XMConvertToRadians(90.0f)) *
+	//XMMatrixRotationY(XMConvertToRadians(90.0f));
 
-	*/
 
 	return S_OK;
 }
@@ -37,12 +36,64 @@ HRESULT CTerrain::NativeConstruct(void * pArg)
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
+	Set_Pivot_Rotate_Radian(XMVectorSet(0.f, 0.f, 90.f, 0.f));
+
 	return S_OK;
 }
 
 _int CTerrain::Tick(_float TimeDelta)
 {
+	//if(true == m_IsFirst)
+	//	Set_Pivot_Rotate_Radian(XMVectorSet(90.f, 270.f, 90.f, 0.f));
+	//m_IsFirst = false;
+
+	//if (GET_KEY_INPUT(DIK_NUMPAD0))
+	//{
+	//	if (bNo[0] == false)
+	//	{
+	//		_int i = 0;
+	//		vPivot.x += 90.f;
+	//		Set_Pivot_Rotate_Radian_New(XMVectorSet(vPivot.x, vPivot.y, vPivot.z, 0.f));
+	//		bNo[0] = true;
+	//	}
+	//}
+	//else
+	//	bNo[0] = false;
+	//
+	//if (GET_KEY_INPUT(DIK_NUMPAD1))
+	//{
+	//	if (bNo[1] == false)
+	//	{
+	//		vPivot.y += 90.f;
+	//		Set_Pivot_Rotate_Radian_New(XMVectorSet(vPivot.x, vPivot.y, vPivot.z, 0.f));
+	//		bNo[1] = true;
+	//	}
+	//}
+	//else
+	//	bNo[1] = false;
+	//
+	//if (GET_KEY_INPUT(DIK_NUMPAD2))
+	//{
+	//	if (bNo[2] == false)
+	//	{
+	//		vPivot.z += 90.f;
+	//		Set_Pivot_Rotate_Radian_New(XMVectorSet(vPivot.x, vPivot.y, vPivot.z, 0.f));
+	//		bNo[2] = true;
+	//	}
+	//}
+	//else
+	//	bNo[2] = false;
+	//
+	//if (GET_KEY_INPUT(DIK_NUMPAD3))
+	//{
+	//	vPivot.x = 0.f;
+	//	vPivot.y = 0.f;
+	//	vPivot.z = 0.f;
+	//	Set_Pivot_Rotate_Radian_New(XMVectorSet(vPivot.x, vPivot.y, vPivot.z, 0.f));
+	//}
+
 	return _int();
+
 }
 
 _int CTerrain::Late_Tick(_float TimeDelta)
@@ -50,7 +101,7 @@ _int CTerrain::Late_Tick(_float TimeDelta)
 	if (nullptr == m_pRendererCom)
 		return -1;
 
-	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Priority, this);
 }
 
 HRESULT CTerrain::Render()

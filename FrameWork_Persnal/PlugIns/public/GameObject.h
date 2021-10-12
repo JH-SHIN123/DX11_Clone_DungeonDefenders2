@@ -27,7 +27,7 @@ public:
 	void	Set_Pivot(_fvector vScale);
 	void	Set_Pivot_Rotate(_fvector RotateXYZW);
 	void	Set_Pivot_Rotate_Radian(_fvector RadianXYZW);
-
+	void	Set_Pivot_Rotate_Radian_New(_fvector RadianXYZW);
 
 	void	Set_IsDelete_This(_bool IsDeleteThis) { m_IsDelete_This = IsDeleteThis; }
 	_bool	Get_IsDelete_This() const { return m_IsDelete_This; }
