@@ -42,8 +42,12 @@ _int CMonster_Gate::Late_Tick(_float TimeDelta)
 {
 	Phase_Check();
 	Anim_Check(TimeDelta);
+	PhaseMonster_Info_Check();
 
-	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
+	if(EPhaseState::Build == m_ePhase_Next)
+		m_pPhaseMonster_Info->Late_Tick(TimeDelta);
+
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Priority, this);
 }
 
 HRESULT CMonster_Gate::Render()
@@ -126,6 +130,14 @@ HRESULT CMonster_Gate::Ready_Component(void * pArg)
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Mesh_Monster_Gate_Left"), TEXT("Com_Mesh_Door_Left"), (CComponent**)&m_pModelCom_Left);
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Mesh_Monster_Gate_Right"), TEXT("Com_Mesh_Door_Right"), (CComponent**)&m_pModelCom_Right);
+
+	UI3D_DESC UI_Desc;
+	UI_Desc.eLevel = ELevel::Stage1;
+	UI_Desc.Movement_Desc.vPos = Data.vPos;
+	UI_Desc.Movement_Desc.vScale = { 64.f, 64.f, 0.f, 0.f };
+	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_PhaseMonster_Info");
+
+	m_pPhaseMonster_Info = CPhaseMonster_Info::Create(m_pDevice, m_pDevice_Context, &UI_Desc);
 
 	
 	if (hr != S_OK)
@@ -229,6 +241,19 @@ void CMonster_Gate::Phase_Check()
 	}
 }
 
+void CMonster_Gate::PhaseMonster_Info_Check()
+{
+	_vector vPos = m_pMovementCom->Get_State(EState::Position) - XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * 3.f;
+
+	m_pPhaseMonster_Info->Set_Pos(vPos);
+	
+}
+
+void CMonster_Gate::Set_PhaseMonster_Info(const PHASEINFO_DESC & PhaseMonster_Info)
+{
+	m_pPhaseMonster_Info->Set_PhaseInfo(PhaseMonster_Info);
+}
+
 CMonster_Gate * CMonster_Gate::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 {
 	CMonster_Gate* pInstance = new CMonster_Gate(pDevice, pDevice_Context);
@@ -257,5 +282,8 @@ void CMonster_Gate::Free()
 	Safe_Release(m_pModelCom_Right);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pMovementCom);
+
+	Safe_Release(m_pPhaseMonster_Info);
+
 	__super::Free();
 }

@@ -235,6 +235,9 @@
     <Filter Include="03.UI, HUD\00.2D\07.GameOver">
       <UniqueIdentifier>{0cedeba1-85f4-4ae8-aa84-f8602869057b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.UI, HUD\02.3D\A1.PhaseMonster_Info">
+      <UniqueIdentifier>{12b5264d-346c-4ffd-83e8-ea8898959f56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -456,6 +459,9 @@
     <ClInclude Include="..\public\Monster_Gate.h">
       <Filter>02.GameObject\10.Monster_Gate</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PhaseMonster_Info.h">
+      <Filter>03.UI, HUD\02.3D\A1.PhaseMonster_Info</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -655,6 +661,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Monster_Gate.cpp">
       <Filter>02.GameObject\10.Monster_Gate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PhaseMonster_Info.cpp">
+      <Filter>03.UI, HUD\02.3D\A1.PhaseMonster_Info</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

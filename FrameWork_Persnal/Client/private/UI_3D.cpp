@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\UI_3D.h"
+#include "PhaseMonster_Info.h"
 
 CUI_3D::CUI_3D(ID3D11Device * pDevice, ID3D11DeviceContext * pDeviceContext)
 	: CGameObject(pDevice, pDeviceContext)
@@ -87,6 +88,18 @@ void CUI_3D::BillBoarding()
 	m_pMovementCom->Set_State(EState::Right, vNewRight * m_pMovementCom->Get_Scale(EState::Right));
 	m_pMovementCom->Set_State(EState::Look, vNewLook * m_pMovementCom->Get_Scale(EState::Look));
 	m_pMovementCom->Set_State(EState::Up, vNewUp * m_pMovementCom->Get_Scale(EState::Up));
+}
+
+void CUI_3D::BillBoarding_Perfect()
+{
+	_vector vNewRight	= XMVector3Normalize(GET_CAMERA_RIGHT);
+	_vector vNewLook	= XMVector3Normalize(GET_CAMERA_UP);
+	_vector vNewUp		= XMVector3Normalize(GET_CAMERA_LOOK);
+
+	m_pMovementCom->Set_State(EState::Right, vNewRight * m_pMovementCom->Get_Scale(EState::Right));
+	m_pMovementCom->Set_State(EState::Look, vNewLook * m_pMovementCom->Get_Scale(EState::Look));
+	m_pMovementCom->Set_State(EState::Up, vNewUp * m_pMovementCom->Get_Scale(EState::Up));
+
 }
 
 void CUI_3D::Free()

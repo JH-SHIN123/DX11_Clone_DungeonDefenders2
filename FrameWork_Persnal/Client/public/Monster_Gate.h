@@ -5,6 +5,7 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 #include "PhaseInfo.h"
+#include "PhaseMonster_Info.h"
 
 enum class EMonster_Gate_Anim
 {
@@ -31,18 +32,21 @@ public:
 	virtual _int	Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
+public: // PHASEINFO_DESC
+	void PhaseMonster_Info_Check();
+	void Set_PhaseMonster_Info(const PHASEINFO_DESC& PhaseMonster_Info);
+
 private:
 	HRESULT	Ready_Component(void* pArg);
 	void Anim_Check(_float TimeDelta);
 	void Phase_Check();
-
-
+	
 protected:
 	CModel*				m_pModelCom_Left	= nullptr;
 	CModel*				m_pModelCom_Right	= nullptr;
 	CRenderer*			m_pRendererCom		= nullptr;
 	CMovement*			m_pMovementCom		= nullptr;
-
+	
 private:
 	_bool m_IsAnimated = true;
 	_bool m_IsAnimated_Once = true;
@@ -53,6 +57,10 @@ private:
 	EPhaseState			m_ePhase_Next	= EPhaseState::End;
 	EMonster_Gate_Anim	m_eAnim_Cur		= EMonster_Gate_Anim::End;
 	EMonster_Gate_Anim	m_eAnim_Next	= EMonster_Gate_Anim::Closing;
+
+private:
+	CPhaseMonster_Info* m_pPhaseMonster_Info = nullptr;
+
 
 public:
 	static CMonster_Gate* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

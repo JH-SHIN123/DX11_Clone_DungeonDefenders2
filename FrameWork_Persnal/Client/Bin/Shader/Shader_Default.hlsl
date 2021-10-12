@@ -91,6 +91,22 @@ VS_OUT VS_MAIN_UI(VS_IN In)
 	return Out;
 }
 
+VS_OUT VS_MAIN_UI_2(VS_IN In)
+{
+	VS_OUT			Out = (VS_OUT)0;
+	matrix		matWV, matWVP;
+
+	matWV = mul(WorldMatrix, ViewMatrix);
+	matWVP = mul(matWV, ProjMatrix);
+
+	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+	//Out.vPosition.z = 0.f;
+	//Out.vPosition.w = 140.f;
+	Out.vTexUV = In.vTexUV; // ≈ÿΩ∫√≥ UV
+
+	return Out;
+}
+
 VS_OUT VS_MAIN_UI_REVERCE(VS_IN In)
 {
 	VS_OUT			Out = (VS_OUT)0;
@@ -687,6 +703,15 @@ technique11		DefaultTechnique
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE2_UV_TIME();
 		PixelShader = compile ps_5_0 PS_MASKING_UV_RATIO_COLOR();
+	}
+
+	pass EveryTime_Draw //20
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_Always, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI_2();
+		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 };
 

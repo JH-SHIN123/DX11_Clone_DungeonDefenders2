@@ -38,6 +38,7 @@ HRESULT CRenderer::Add_GameObjectToRenderer(ERenderGroup eGroup, CGameObject * p
 HRESULT CRenderer::Draw_Renderer()
 {
 	Render_Priority();
+	Render_Priority_Second();
 	Render_NoneAlpha();
 	Render_Alpha();
 	Render_UI();
@@ -67,6 +68,25 @@ HRESULT CRenderer::Render_Priority()
 	}
 
 	m_pRenderObjects[(_uint)ERenderGroup::Priority].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Priority_Second()
+{
+	HRESULT hr = S_OK;
+	for (auto& iter : m_pRenderObjects[(_uint)ERenderGroup::Priority_Second])
+	{
+		if (nullptr != iter)
+			hr = iter->Render();
+
+		Safe_Release(iter);
+
+		if (FAILED(hr))
+			return E_FAIL;
+	}
+
+	m_pRenderObjects[(_uint)ERenderGroup::Priority_Second].clear();
 
 	return S_OK;
 }

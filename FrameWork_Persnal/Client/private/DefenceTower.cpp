@@ -214,7 +214,7 @@ HRESULT CDefenceTower::Ready_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &m_TowerDesc.MoveState_Desc);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Status"), (CComponent**)&m_pStatusCom, &m_TowerDesc.Stat_Desc);
 	
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Texture_TowerRange"), TEXT("Com_Textures"), (CComponent**)&m_pTexturesCom);
+	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_TowerRange"), TEXT("Com_Textures"), (CComponent**)&m_pTexturesCom);
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, m_TowerDesc.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
 
 	XMStoreFloat3(&m_vFirstLook_Dir, m_pMovementCom->Get_State(EState::Look));

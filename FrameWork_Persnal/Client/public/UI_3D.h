@@ -37,6 +37,7 @@ public:
 protected:
 	HRESULT SetUp_Default_Component(void* pArg);
 	void	BillBoarding();
+	void	BillBoarding_Perfect();
 
 protected:
 	CRenderer*				m_pRendererCom		= nullptr;

@@ -88,6 +88,12 @@ DepthStencilState DepthStecil_NotZWrite
 	DepthFunc = less;
 };
 
+DepthStencilState DepthStecil_Always
+{
+	DepthEnable = false;
+	DepthWriteMask = zero;
+	DepthFunc = less;
+};
 
 /*		D3D11_RENDER_TARGET_BLEND_DESC
 BOOL BlendEnable;							=	ºí·»µå À¯¹«

@@ -215,6 +215,7 @@
     <ClInclude Include="..\public\MyText.h" />
     <ClInclude Include="..\public\Ogre.h" />
     <ClInclude Include="..\public\PauseMenu.h" />
+    <ClInclude Include="..\public\PhaseMonster_Info.h" />
     <ClInclude Include="..\public\Phase_Panel.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\PlayerSkill.h" />
@@ -285,6 +286,7 @@
     <ClCompile Include="..\private\MyText.cpp" />
     <ClCompile Include="..\private\Ogre.cpp" />
     <ClCompile Include="..\private\PauseMenu.cpp" />
+    <ClCompile Include="..\private\PhaseMonster_Info.cpp" />
     <ClCompile Include="..\private\Phase_Panel.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\PlayerSkill.cpp" />
