@@ -50,9 +50,16 @@ _int CSkill_Meteor::Tick(_float TimeDelta)
 			m_IsFall = true;
 	}
 
-	if (1) // ºÎ‹HÇû´Ù¸é
+	_float fCellY = 999.f;
+	_vector vPos = m_pMovementCom->Get_State(EState::Position);
+	m_pNaviCom->Get_Collision(&fCellY, vPos);
+
+	_float fMyY = vPos.m128_f32[1];
+
+	if (fCellY + 1.5f >= fMyY)
 	{
-		//Æã
+		Create_Explosion();
+		return OBJECT_DEAD;
 	}
 
 	return 0;
@@ -83,7 +90,7 @@ HRESULT CSkill_Meteor::Ready_Component(void * pArg)
 {
 	HRESULT hr = S_OK;
 
-
+	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_MeshLevel_1_Navi"), TEXT("Com_Navi"), (CComponent**)&m_pNaviCom);
 
 	if (S_OK != hr)
 		MSG_BOX("CSkill_Meteor::Ready_Component");

@@ -50,7 +50,6 @@ _int CPlayerSkill::Late_Tick(_float TimeDelta)
 	if (nullptr == m_pRendererCom)
 		return UPDATE_ERROR;
 
-
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::UI, this);
 }
 

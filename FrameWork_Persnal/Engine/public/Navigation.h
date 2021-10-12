@@ -39,6 +39,8 @@ public:
 	_fvector Check_NeighborCell_Center(const _int& iCellIndex, _bool IsGreater = true);
 	_vector Get_CellCenter_Pos(const _int& iCellIndex);
 
+	_bool Get_Collision(_float* fCellY, _fvector vPos);
+
 #ifdef _DEBUG
 public:
 	HRESULT Render_Navigation();

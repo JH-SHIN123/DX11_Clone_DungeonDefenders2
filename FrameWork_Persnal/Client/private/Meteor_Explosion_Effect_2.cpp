@@ -20,7 +20,7 @@ HRESULT CMeteor_Explosion_Effect_2::NativeConstruct(void* pArg)
 {
 	__super::NativeConstruct(pArg);
 
-	Set_Pivot(XMVectorSet(0.05f, 0.05f, 0.05f, 0.f));
+	Set_Pivot(XMVectorSet(0.1f, 0.1f, 0.1f, 0.f));
 	Set_Pivot_Rotate_Radian(XMVectorSet(90.f, 0.f, 0.f, 0.f));
 
 

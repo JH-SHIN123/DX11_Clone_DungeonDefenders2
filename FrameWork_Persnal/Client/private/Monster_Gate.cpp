@@ -30,7 +30,6 @@ HRESULT CMonster_Gate::NativeConstruct(void * pArg)
 	Set_Pivot(XMVectorSet(0.05f, 0.05f, 0.05f, 0.f));
 	Set_Pivot_Rotate(XMVectorSet(0.f, 0.f, 0.f, 0.f));
 
-
 	return S_OK;
 }
 
@@ -43,7 +42,6 @@ _int CMonster_Gate::Late_Tick(_float TimeDelta)
 {
 	Phase_Check();
 	Anim_Check(TimeDelta);
-
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }

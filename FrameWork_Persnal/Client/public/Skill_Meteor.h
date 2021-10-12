@@ -29,6 +29,9 @@ private:
 	_bool	m_IsFall = false;
 	_float	m_fCastTime = 0.5f;
 
+private:
+	CNavigation* m_pNaviCom = nullptr;
+
 public:
 	static CSkill_Meteor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

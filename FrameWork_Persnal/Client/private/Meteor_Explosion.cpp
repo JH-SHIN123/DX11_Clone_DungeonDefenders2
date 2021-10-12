@@ -25,6 +25,8 @@ HRESULT CMeteor_Explosion::NativeConstruct(void * pArg)
 	Set_Pivot(XMVectorSet(0.025f, 0.025f, 0.025f, 0.f));
 	Set_Pivot_Rotate_Radian(XMVectorSet(90.f, 0.f, 0.f, 0.f));
 
+	Create_FirePillar();
+
 	return S_OK;
 }
 
@@ -131,7 +133,7 @@ void CMeteor_Explosion::Create_FirePillar()
 	lstrcpy(Data.szModelName, L"Component_Mesh_Skill_Meteor_Explosion_Effect");
 	XMStoreFloat4(&Data.MoveState_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
 	Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
-
+	Data.MoveState_Desc.vRotateLook = { 0.f, 0.f, 1.f, 0.f };
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Skill_Meteor_Explosion_Effect"), (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
 
 }

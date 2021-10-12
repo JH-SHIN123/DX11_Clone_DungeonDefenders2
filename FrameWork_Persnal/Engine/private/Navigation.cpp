@@ -264,6 +264,22 @@ _vector CNavigation::Get_CellCenter_Pos(const _int& iCellIndex)
 	return m_pCells[iCellIndex]->Get_CellCenter();
 }
 
+_bool CNavigation::Get_Collision(_float * fCellY, _fvector vPos)
+{
+	_vector vNoYPos = XMVectorSetY(vPos, 0.f);
+
+	_int iIndex = Get_CellIndex(vNoYPos);
+
+	if (-1 == iIndex)
+		return false;
+
+	vNoYPos = m_pCells[iIndex]->Get_CellPos_Y(vNoYPos);
+
+	*fCellY = vNoYPos.m128_f32[1];
+
+	return true;
+}
+
 _bool CNavigation::IsChanged_CellOption(_fvector vPos)
 {
 	for (auto& iter : m_pCells)

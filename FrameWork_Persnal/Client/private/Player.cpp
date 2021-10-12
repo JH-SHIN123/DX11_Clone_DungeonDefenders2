@@ -964,6 +964,7 @@ void CPlayer::Skill_Meteor()
 			XMStoreFloat3(&Data.vDir, vDir);
 			Data.MoveState_Desc.fSpeedPerSec = 30.f;
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+			Data.MoveState_Desc.vRotateLook = { vDir.m128_f32[0], vDir.m128_f32[1] , vDir.m128_f32[2] , 0.f };
 
 			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Shock;
 			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
