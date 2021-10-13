@@ -54,6 +54,7 @@ _bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectLayer, ELevel eD
 				if (false == pSrcCol_Attack->Get_NotCollide())
 				{
 					CStatus* pDstStat = (CStatus*)Dst->Get_Component(L"Com_Status");
+
 					if (nullptr == pDstStat || 0 >= pDstStat->Get_Hp())
 						continue;
 

@@ -41,8 +41,6 @@ _int CGoblin::Tick(_float TimeDelta)
 
 	if (0 >= m_pStatusCom->Get_Hp())
 	{
-		m_IsAttack = false;
-		m_IsDead = true;
 		if (EGoblinAnim::Death == m_eAnim_Next)
 		{
 			if (true == m_pModelCom->Get_IsFinishedAnimaion())
@@ -55,10 +53,6 @@ _int CGoblin::Tick(_float TimeDelta)
 			m_eAnim_Next = EGoblinAnim::Death;
 	}
 
-	_matrix Matrix = m_pMovementCom->Get_WorldMatrix();
-	m_pColliderCom_Hurt->Update_Collider(Matrix);
-	m_pStatusCom->Tick(TimeDelta);
-
 	_vector vTargetPos;
 
 	if (true == m_pModelCom->Get_IsFinishedAnimaion())
@@ -68,7 +62,7 @@ _int CGoblin::Tick(_float TimeDelta)
 			m_IsHurt = false;
 			m_eAnim_Next = EGoblinAnim::Idle;
 		}
-
+		m_IsHurt = false;
 	}
 
 	if (true == m_pColliderCom_Hurt->Get_IsCollide() || true == m_IsHurt)
@@ -80,13 +74,11 @@ _int CGoblin::Tick(_float TimeDelta)
 
 		switch (m_pStatusCom->Get_DamageType())
 		{
-		case Engine::EDamageType::Direct:
-			m_IsHurt = false;
-			break;
 		case Engine::EDamageType::Shock:
-			m_eAnim_Next = EGoblinAnim::Shock;
+			m_eAnim_Next = EGoblinAnim::Hurt;
 			break;
 		default:
+			m_IsHurt = false;
 			break;
 		}
 	}
@@ -94,82 +86,51 @@ _int CGoblin::Tick(_float TimeDelta)
 	{
 		switch (__super::AI_Check(TimeDelta, &vTargetPos, m_IsAttack ||m_IsHurt ))
 		{
-			case Client::EMonsterAI::Idle:
-				m_IsAttack = false;
-				m_iAttackCount = 0;
-				m_eAnim_Next = EGoblinAnim::Idle;
+		case Client::EMonsterAI::Idle:
+			m_IsAttack = false;
+			m_iAttackCount = 0;
+			m_eAnim_Next = EGoblinAnim::Idle;
+			break;
+		case Client::EMonsterAI::Attack:
+			m_IsAttack = true;
+			break;
+			//case Client::EMonsterAI::Hurt:
+			//	break;
+		case Client::EMonsterAI::Dead:
+			m_eAnim_Next = EGoblinAnim::Death;
+			break;
+		case Client::EMonsterAI::Shock:
+			m_eAnim_Next = EGoblinAnim::Hurt;
+			break;
+		case Client::EMonsterAI::Move_Cell:
+			if (true == m_IsAttack)
 				break;
-			case Client::EMonsterAI::Attack:
-				m_IsAttack = true;
+			m_IsAttack = false;
+			m_iAttackCount = 0;
+			m_eAnim_Next = EGoblinAnim::Move_Forward;
+			break;
+		case Client::EMonsterAI::Move_Target:
+			if (true == m_IsAttack)
 				break;
-			case Client::EMonsterAI::Hurt:
-
+			m_IsAttack = false;
+			m_iAttackCount = 0;
+			m_eAnim_Next = EGoblinAnim::Move_Forward;
+			break;
+		case Client::EMonsterAI::Turn:
+			if (true == m_IsAttack)
 				break;
-			case Client::EMonsterAI::Dead:
-				m_eAnim_Next = EGoblinAnim::Death;
-				break;
-			case Client::EMonsterAI::Shock:
-				m_eAnim_Next = EGoblinAnim::Hurt;
-				break;
-			case Client::EMonsterAI::Move_Cell:
-				if (true == m_IsAttack)
-					break;
-				m_IsAttack = false;
-				m_iAttackCount = 0;
-				m_eAnim_Next = EGoblinAnim::Move_Forward;
-				break;
-			case Client::EMonsterAI::Move_Target:
-				if (true == m_IsAttack)
-					break;
-				m_IsAttack = false;
-				m_iAttackCount = 0;
-				m_eAnim_Next = EGoblinAnim::Move_Forward;
-				break;
-			case Client::EMonsterAI::Turn:
-				if (true == m_IsAttack)
-					break;
-				m_IsAttack = false;
-				m_iAttackCount = 0;
-				m_eAnim_Next = EGoblinAnim::Turn_Left;
-				break;
-			default:
-				break;
-			}
+			m_IsAttack = false;
+			m_iAttackCount = 0;
+			m_eAnim_Next = EGoblinAnim::Turn_Left;
+			break;
+		default:
+			break;
 		}
-
-
-	if (true == m_IsAttack)
-	{
-		if(0 == m_iAttackCount)
-			m_eAnim_Next = EGoblinAnim::Attack_1;
-
-		if (m_iAttackCount % 2 == 0)
-			m_eAnim_Next = EGoblinAnim::Attack_1;
-		else
-			m_eAnim_Next = EGoblinAnim::Attack_2;
-
-		if (true == m_pModelCom->Get_IsFinishedAnimaion())
-		{
-			// ÀÌ°Å »ìÂ¦ ²÷±â³ß;
-
-			++m_iAttackCount;
-		}
-
-
 	}
 
-
-
-
-
-
-
-
-	m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
-	m_pColliderCom_Hurt->Update_Collider(m_pMovementCom->Get_State(EState::Position));
+	m_pColliderCom_Hurt->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 
 	m_pStatusCom->Tick(TimeDelta);
-
 
 	__super::Tick(TimeDelta);
 
@@ -202,7 +163,6 @@ HRESULT CGoblin::Render()
 #ifdef _DEBUG
 	m_pColliderCom_Attack->Render_Collider();
 	m_pColliderCom_Hurt->Render_Collider();
-
 #endif // _DEBUG
 
 
@@ -214,7 +174,6 @@ void CGoblin::Anim_Check(_float TimeDelta)
 	if (nullptr == m_pModelCom)
 		return;
 
-
 	if (true == m_pModelCom->Get_IsFinishedAnimaion())
 	{
 		if (EGoblinAnim::Hurt == m_eAnim_Next)
@@ -222,6 +181,7 @@ void CGoblin::Anim_Check(_float TimeDelta)
 			m_IsHurt = false;
 			m_eAnim_Next = EGoblinAnim::Idle;
 		}
+		m_IsAttack = false;
 	}
 
 	if (m_eAnim_Cur != m_eAnim_Next)
@@ -244,24 +204,17 @@ void CGoblin::Attack_Check()
 
 	if (true == m_IsAttack)
 	{
-		//if (false == m_IsSecondAttack && true == IsFinished)
-		//{
-		//	m_eAnim_Next = EGoblinAnim::Attack_1;
-		//	return;
-		//}
-
-		if (EGoblinAnim::Attack_1 == m_eAnim_Next && true == IsFinished)
-		{
-			m_IsSecondAttack = true;
-			m_eAnim_Next = EGoblinAnim::Attack_2;
-			return;
-		}
-
-		if (EGoblinAnim::Attack_2 == m_eAnim_Next && true == IsFinished)
-		{
-			m_IsSecondAttack = false;
+		if (0 == m_iAttackCount)
 			m_eAnim_Next = EGoblinAnim::Attack_1;
-			return;
+
+		if (m_iAttackCount % 2 == 0)
+			m_eAnim_Next = EGoblinAnim::Attack_1;
+		else
+			m_eAnim_Next = EGoblinAnim::Attack_2;
+
+		if (true == m_pModelCom->Get_IsFinishedAnimaion())
+		{
+			++m_iAttackCount;
 		}
 
 		if (EGoblinAnim::Attack_1 == m_eAnim_Next && 19 == (_uint)m_pModelCom->Get_AnimTime())

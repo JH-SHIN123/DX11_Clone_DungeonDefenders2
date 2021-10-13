@@ -51,9 +51,7 @@ _int COgre::Tick(_float TimeDelta)
 			}
 		}
 		else
-			m_eAnim_Next = EOgreAnim::Death;
-
-		
+			m_eAnim_Next = EOgreAnim::Death;		
 	}
 
 	_vector vTargetPos;
@@ -98,9 +96,8 @@ _int COgre::Tick(_float TimeDelta)
 		case Client::EMonsterAI::Attack:
 			m_IsAttack = true;
 			break;
-		case Client::EMonsterAI::Hurt:
-
-			break;
+			//case Client::EMonsterAI::Hurt:
+			//	break;
 		case Client::EMonsterAI::Dead:
 			m_eAnim_Next = EOgreAnim::Death;
 			break;
@@ -169,11 +166,8 @@ HRESULT COgre::Render()
 
 
 #ifdef _DEBUG
-	if(nullptr != m_pColliderCom_Attack)
-		m_pColliderCom_Attack->Render_Collider();
-	
+	m_pColliderCom_Attack->Render_Collider();	
 	m_pColliderCom_Hurt->Render_Collider();
-
 #endif // _DEBUG
 
 
@@ -226,8 +220,6 @@ void COgre::Attack_Check()
 
 		if (true == m_pModelCom->Get_IsFinishedAnimaion())
 		{
-			// ÀÌ°Å »ìÂ¦ ²÷±â³ß;
-
 			++m_iAttackCount;
 		}
 
