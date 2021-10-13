@@ -77,6 +77,7 @@ protected:
 	CRenderer*				m_pRendererCom	= nullptr;
 	CMovement*				m_pMovementCom	= nullptr;
 	CNavigation*			m_pNaviCom		= nullptr;
+	_bool					m_IsDead = false;
 
 private:
 	_bool	m_IsBrainWashed				= false;
@@ -92,8 +93,6 @@ private:
 	EMonsterAI		m_eAI_Next	= EMonsterAI::Idle;
 	_float			m_fDetectDis = 0.f;
 	_float			m_fAttackDis = 0.f;
-	_bool			m_IsDead = false;
-
 
 private: //Path_Index
 	const _int m_iNorth_L[7]	= { 83,	81,	 77,  73,  100,	17,	 0 };

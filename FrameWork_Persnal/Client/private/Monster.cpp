@@ -448,10 +448,15 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 
 			vCellPos = XMVectorSetY(vCellPos, XMVectorGetY(vMyPos));
 			m_pMovementCom->Go_Dir(TimeDelta, vCellPos, m_pNaviCom);
+
+			return m_eAI_Next = EMonsterAI::Move_Target;
 		}
 
 		else // 이함수가 이상하게 반복되면 몬스터의 X스케일이 점점 작아짐 ㅋㅋㅋㅋㅋㅋ
+		{
 			m_pMovementCom->RotateToLookDir_Tick(TimeDelta, vDir);
+			return m_eAI_Next = EMonsterAI::Move_Target;
+		}
 	}
 #pragma endregion
 

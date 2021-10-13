@@ -41,6 +41,8 @@ _int CGoblin::Tick(_float TimeDelta)
 
 	if (0 >= m_pStatusCom->Get_Hp())
 	{
+		m_IsAttack = false;
+		m_IsDead = true;
 		if (EGoblinAnim::Death == m_eAnim_Next)
 		{
 			if (true == m_pModelCom->Get_IsFinishedAnimaion())
@@ -185,6 +187,8 @@ _int CGoblin::Late_Tick(_float TimeDelta)
 			CData_Manager::GetInstance()->Add_MonsterCount();
 			return OBJECT_DEAD;
 		}
+		else
+			m_eAnim_Next = EGoblinAnim::Death;
 	}
 
 	return __super::Late_Tick(TimeDelta);

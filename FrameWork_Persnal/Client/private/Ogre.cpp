@@ -52,6 +52,8 @@ _int COgre::Tick(_float TimeDelta)
 		}
 		else
 			m_eAnim_Next = EOgreAnim::Death;
+
+		
 	}
 
 	_vector vTargetPos;
@@ -146,11 +148,16 @@ _int COgre::Late_Tick(_float TimeDelta)
 
 	if (0 >= m_pStatusCom->Get_Hp())
 	{
-		if (true == m_pModelCom->Get_IsFinishedAnimaion())
+		if (EOgreAnim::Death == m_eAnim_Next)
 		{
-			CData_Manager::GetInstance()->Add_MonsterCount();
-			return OBJECT_DEAD;
+			if (true == m_pModelCom->Get_IsFinishedAnimaion())
+			{
+				CData_Manager::GetInstance()->Add_MonsterCount();
+				return OBJECT_DEAD;
+			}
 		}
+		else
+			m_eAnim_Next = EOgreAnim::Death;
 	}
 
 	return __super::Late_Tick(TimeDelta);

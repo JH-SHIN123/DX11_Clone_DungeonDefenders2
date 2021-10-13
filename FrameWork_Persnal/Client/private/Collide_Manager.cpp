@@ -54,7 +54,7 @@ _bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectLayer, ELevel eD
 				if (false == pSrcCol_Attack->Get_NotCollide())
 				{
 					CStatus* pDstStat = (CStatus*)Dst->Get_Component(L"Com_Status");
-					if (nullptr == pDstStat)
+					if (nullptr == pDstStat || 0 >= pDstStat->Get_Hp())
 						continue;
 
 					ATTACK_DESC Data;
@@ -62,6 +62,8 @@ _bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectLayer, ELevel eD
 					Data.iDamage = pSrcCol_Attack->Get_Damage();
 					Data.fHitTime = pSrcCol_Attack->Get_HitTime();
 					pDstStat->Set_Damage(Data);
+
+					return true;
 				}
 			}
 		}
