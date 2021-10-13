@@ -159,12 +159,14 @@ void CCrystalCore::Button_Dis_Check()
 		_float fDis = XMVectorGetX(XMVector3Length(vPos - vTargetPos));
 		if (fDis <= 25.f)
 		{
-			//vPos -= XMVector3Normalize(GET_CAMERA_LOOK) * 20.f;
 			vPos += XMVectorSet(0.f,1.f,0.f,0.f) * 7.f;
-
 			m_pOrtho3D_Text->Set_Pos(vPos);
-
 			m_pOrtho3D_Text->Late_Tick(0.f);
+
+			if (GET_KEY_INPUT(DIK_E))
+			{
+				CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Combat);
+			}
 		}
 	}
 }

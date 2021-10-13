@@ -35,17 +35,6 @@ HRESULT CMonster_Gate::NativeConstruct(void * pArg)
 
 _int CMonster_Gate::Tick(_float TimeDelta)
 {
-	PHASEINFO_DESC Phase;
-	Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
-	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
-	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
-	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 5;
-	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
-	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
-
-	Set_PhaseMonster_Info(Phase);
 
 	return _int();
 }
@@ -55,6 +44,8 @@ _int CMonster_Gate::Late_Tick(_float TimeDelta)
 	Phase_Check();
 	Anim_Check(TimeDelta);
 	PhaseMonster_Info_Check();
+
+	Spawn_Monster_Check(TimeDelta);
 
 	if(EPhaseState::Build == m_ePhase_Next)
 		m_pPhaseMonster_Info->Late_Tick(TimeDelta);
@@ -123,8 +114,6 @@ HRESULT CMonster_Gate::Render()
 			return E_FAIL;
 
 		m_pModelCom_Right->Render_Model(i, 0);
-
-
 	}
 
 	return S_OK;
@@ -132,24 +121,26 @@ HRESULT CMonster_Gate::Render()
 
 HRESULT CMonster_Gate::Ready_Component(void * pArg)
 {
-	MOVESTATE_DESC Data;
-	memcpy(&Data, pArg, sizeof(MOVESTATE_DESC));
+	GATE_DESC Data;
+	memcpy(&Data, pArg, sizeof(GATE_DESC));
 
 	HRESULT  hr = S_OK;
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom);
-	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &Data);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &Data.MoveDesc);
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Mesh_Monster_Gate_Left"), TEXT("Com_Mesh_Door_Left"), (CComponent**)&m_pModelCom_Left);
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Mesh_Monster_Gate_Right"), TEXT("Com_Mesh_Door_Right"), (CComponent**)&m_pModelCom_Right);
 
 	UI3D_DESC UI_Desc;
 	UI_Desc.eLevel = ELevel::Stage1;
-	UI_Desc.Movement_Desc.vPos = Data.vPos;
+	UI_Desc.Movement_Desc.vPos = Data.MoveDesc.vPos;
 	UI_Desc.Movement_Desc.vScale = { 160.f, 160.f, 0.f, 0.f };
 	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_PhaseMonster_Info");
 
 	m_pPhaseMonster_Info = CPhaseMonster_Info::Create(m_pDevice, m_pDevice_Context, &UI_Desc);
+
+	m_ePath = Data.StartPath;
 	
 	if (hr != S_OK)
 		MSG_BOX("CMonster_Gate::Ready_Component");
@@ -252,6 +243,81 @@ void CMonster_Gate::Phase_Check()
 	}
 }
 
+void CMonster_Gate::Spawn_Monster_Check(_float TimeDelta)
+{
+	if (EPhaseState::Combat != m_ePhase_Next && EPhaseState::Boss != m_ePhase_Next)
+	{
+		m_iSpawnCount = 0;
+		return;
+	}
+
+	// 웨이브 시작!
+	m_fSpawnTime += TimeDelta;
+	if (m_fSpawnTime >= m_fSpawnTime_Max)
+	{
+		// 시간 됬다
+
+		if (m_iSpawnCount < m_SpawnMonster.iMonsterCount[(_uint)m_eSpawnList])
+		{
+			m_fSpawnTime = 0.f;
+
+			Spawn_Monster();
+		}
+
+		m_eSpawnList = EMonster_List((_uint)m_eSpawnList + 1);
+
+		if (EMonster_List::End <= m_eSpawnList)
+		{
+			m_eSpawnList = EMonster_List(0);
+			++m_iSpawnCount;
+		}
+	}
+}
+
+void CMonster_Gate::Spawn_Monster()
+{
+	_tchar szPrototypeName[MAX_PATH] = L"";
+	tagMonsterDesc MonData;
+
+	MonData.eLevel = ELevel::Stage1;
+	MonData.eMovePath = m_ePath;
+	MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+	MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
+	MonData.Movement_Desc.fSpeedPerSec = 10.f;
+
+	switch (m_eSpawnList)
+	{
+	case EMonster_List::Goblin:
+		MonData.fAttackDis = 8.f;
+		MonData.fDetectDis = 15.f;
+		MonData.Stat_Desc.iExp = 15;
+		MonData.Stat_Desc.iHp_Max = 300;
+		lstrcpy(MonData.szModelName, L"Component_Mesh_Goblin");
+		lstrcpy(szPrototypeName, L"Prototype_Goblin");
+		break;
+	case EMonster_List::Ogre:
+		MonData.fAttackDis = 10.f;
+		MonData.fDetectDis = 15.f;
+		MonData.Stat_Desc.iExp = 53;
+		MonData.Stat_Desc.iHp_Max = 700;
+		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
+		lstrcpy(szPrototypeName, L"Prototype_Ogre");
+		break;
+	case EMonster_List::Kamikaze:
+		break;
+	case EMonster_List::Boss:
+		break;
+	default:
+		m_eSpawnList = EMonster_List(0);
+		break;
+	}
+
+	MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
+
+	GET_GAMEINSTANCE->Add_GameObject((_uint)MonData.eLevel, szPrototypeName, (_uint)MonData.eLevel, L"Layer_Monster", &MonData);
+
+}
+
 void CMonster_Gate::PhaseMonster_Info_Check()
 {
 	_vector vPos = m_pMovementCom->Get_State(EState::Position) - XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * 3.f;
@@ -263,6 +329,7 @@ void CMonster_Gate::PhaseMonster_Info_Check()
 void CMonster_Gate::Set_PhaseMonster_Info(const PHASEINFO_DESC & PhaseMonster_Info)
 {
 	m_pPhaseMonster_Info->Set_PhaseInfo(PhaseMonster_Info);
+	m_SpawnMonster = PhaseMonster_Info;
 }
 
 CMonster_Gate * CMonster_Gate::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

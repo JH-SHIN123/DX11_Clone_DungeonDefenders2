@@ -7,9 +7,10 @@
 #include "Data_Manager.h"
 #include "Player.h"
 #include "DefenceTower.h"
-#include "Monster.h"
 #include "Collide_Manager.h"
 #include "Level_Loading.h"
+#include "Monster.h"
+#include "Monster_Gate.h"
 
 CLevel_Stage1::CLevel_Stage1(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CLevel(pDevice, pDevice_Context)
@@ -19,6 +20,8 @@ CLevel_Stage1::CLevel_Stage1(ID3D11Device * pDevice, ID3D11DeviceContext * pDevi
 
 HRESULT CLevel_Stage1::NativeConstruct()
 {
+	CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Build);
+
 	CLevel::NativeConstruct();
 
 	GET_GAMEINSTANCE->Clear_This_Level((_uint)ELevel::Loading);
@@ -57,6 +60,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	//MonData.Stat_Desc.iExp = 15;
 	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Goblin", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
 	//
+	
 	lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
 	MonData.eLevel = ELevel::Stage1;
 	MonData.fDetectDis = 15.f;
@@ -64,17 +68,39 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	MonData.Movement_Desc.fSpeedPerSec = 10.f;
 	MonData.eMovePath = EMonster_MovePath::West_L;
 	MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
-	MonData.Stat_Desc.iHp_Max = 10000;
+	MonData.Stat_Desc.iHp_Max = 700;
 	MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
 	MonData.Stat_Desc.iExp = 15;
-
-	//for(int i = 0; i < 20; ++i)
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);	
 
 
-
-
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, L"Prototype_Fade", (_uint)ELevel::Stage1, L"Layer_Fade");
+
+	PHASEINFO_DESC Phase;
+	Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 1;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
+
+	m_pMonsterGate[(_uint)EMonster_MovePath::North_L]->Set_PhaseMonster_Info(Phase);
+	//m_pMonsterGate[(_uint)EMonster_MovePath::North_R]->Set_PhaseMonster_Info(Phase);
+
+	Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 1;
+	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
+
+	m_pMonsterGate[(_uint)EMonster_MovePath::West_L]->Set_PhaseMonster_Info(Phase);
+	//m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase);
+
 
 	return S_OK;
 }
@@ -103,37 +129,11 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 		CData_Manager::GetInstance()->Set_Tick_Stop(true);
 	}
 
-	
-	if (GET_KEY_INPUT(DIK_F3))
-	{
-		if (false == m_IsKey)
-		{
-			CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Build);
-			m_IsKey = true;
-		}
-	}
-	else
-		m_IsKey = false;
-
-	if (GET_KEY_INPUT(DIK_F4))
-	{
-		if (false == m_IsKey)
-		{
-			CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Combat);
-			m_IsKey = true;
-		}
-	}
-	else
-		m_IsKey = false;
-
-
 	// ¸ÂÀ»³ð, ¶§¸±³ð
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Monster", ELevel::Stage1,			L"Layer_Bullet", ELevel::Stage1);
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Tower", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
 	CCollide_Manager::GetInstance()->Collide_Check_BrainWash(L"Layer_Monster", ELevel::Stage1, L"Layer_Bullet_BrainWash", ELevel::Stage1);
-
-
 
 
 	if (GET_KEY_INPUT(DIK_H))
@@ -269,37 +269,51 @@ HRESULT CLevel_Stage1::Ready_Layer_Terrain(const _tchar * pLayerTag)
 
 HRESULT CLevel_Stage1::Ready_Layer_Monster_Gate(const _tchar * pLayerTag)
 {
-	MOVESTATE_DESC Data;
-	Data.vScale = { 1.25f, 1.f, 1.f, 0.f };
+	GATE_DESC Data;
+	Data.MoveDesc.vScale = { 1.25f, 1.f, 1.f, 0.f };
 
 	// ºÏÁÂ
-	Data.vPos = { -238.f,-32.f,-40.5f,1.f };
-	Data.vRotateLook = { -1.f,0.f,0.f,0.f };
-	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, pLayerTag, &Data);
+	Data.StartPath = EMonster_MovePath::North_L;
+	Data.MoveDesc.vPos = { -238.f,-32.f,-40.5f,1.f };
+	Data.MoveDesc.vRotateLook = { -1.f,0.f,0.f,0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, L"Layer_Gate_NL", &Data);
 
-	Data.vPos = { -238.f, -32.f, 39.5f, 1.f };
-	Data.vRotateLook = { -1.f,0.f,0.f,0.f };
-	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, pLayerTag, &Data);
+	Data.StartPath = EMonster_MovePath::North_R;
+	Data.MoveDesc.vPos = { -238.f, -32.f, 39.5f, 1.f };
+	Data.MoveDesc.vRotateLook = { -1.f,0.f,0.f,0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, L"Layer_Gate_NR", &Data);
 
-	Data.vScale = { 1.f,1.f,1.f,0.f };
+	Data.MoveDesc.vScale = { 1.f,1.f,1.f,0.f };
 
 	// ¼­ÁÂ
-	Data.vPos = { 31.5f,-31.5f,-228.5f,1.f };
-	Data.vRotateLook = { 0.f,0.f,-1.f,0.f };
-	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, pLayerTag, &Data);
+	Data.StartPath = EMonster_MovePath::West_L;
+	Data.MoveDesc.vPos = { 31.5f,-31.5f,-228.5f,1.f };
+	Data.MoveDesc.vRotateLook = { 0.f,0.f,-1.f,0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, L"Layer_Gate_WL", &Data);
 
-	Data.vPos = { -19.5f,-31.5f,-228.5f,1.f };
-	Data.vRotateLook = { 0.f,0.f,-1.f,0.f };
-	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, pLayerTag, &Data);
+	Data.StartPath = EMonster_MovePath::West_R;
+	Data.MoveDesc.vPos = { -19.5f,-31.5f,-228.5f,1.f };
+	Data.MoveDesc.vRotateLook = { 0.f,0.f,-1.f,0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, L"Layer_Gate_WR", &Data);
 
 	// µ¿ÁÂ
-	Data.vPos = { 30.f,-31.5f,228.5f,1.f };
-	Data.vRotateLook = { 0.f,0.f,1.f,0.f };
-	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, pLayerTag, &Data);
+	Data.MoveDesc.vPos = { 30.f,-31.5f,228.5f,1.f };
+	Data.MoveDesc.vRotateLook = { 0.f,0.f,1.f,0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, L"Layer_Gate_EL", &Data);
 
-	Data.vPos = { 30.f,-31.5f,228.5f,1.f };
-	Data.vRotateLook = { 0.f,0.f,1.f,0.f };
-	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, pLayerTag, &Data);
+	Data.MoveDesc.vPos = { 30.f,-31.5f,228.5f,1.f };
+	Data.MoveDesc.vRotateLook = { 0.f,0.f,1.f,0.f };
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, L"Layer_Gate_ER", &Data);
+
+
+
+	m_pMonsterGate[(_uint)EMonster_MovePath::North_L] = (CMonster_Gate*)GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, TEXT("Layer_Gate_NL"));
+	m_pMonsterGate[(_uint)EMonster_MovePath::North_R] = (CMonster_Gate*)GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, TEXT("Layer_Gate_NR"));
+
+	m_pMonsterGate[(_uint)EMonster_MovePath::West_L] = (CMonster_Gate*)GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, TEXT("Layer_Gate_WL"));
+	m_pMonsterGate[(_uint)EMonster_MovePath::West_R] = (CMonster_Gate*)GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, TEXT("Layer_Gate_WR"));
+
+
 
 	return S_OK;
 }
@@ -414,6 +428,15 @@ HRESULT CLevel_Stage1::Ready_Layer_CrystalCore(const _tchar * pLayerTag)
 	return S_OK;
 }
 
+void CLevel_Stage1::Make_Monster_Phase_1()
+{
+}
+
+void CLevel_Stage1::Phase_Check()
+{
+
+}
+
 void CLevel_Stage1::Scene_Change(ELevel eLevel)
 {
 	m_IsChange = true;
@@ -436,4 +459,11 @@ CLevel_Stage1 * CLevel_Stage1::Create(ID3D11Device * pDevice, ID3D11DeviceContex
 void CLevel_Stage1::Free()
 {
 	CLevel::Free();
+
+	//Safe_Release(m_pMonsterGate[(_uint)EMonster_MovePath::North_R]);
+	//Safe_Release(m_pMonsterGate[(_uint)EMonster_MovePath::North_L]);
+	//Safe_Release(m_pMonsterGate[(_uint)EMonster_MovePath::West_L]);	
+	//Safe_Release(m_pMonsterGate[(_uint)EMonster_MovePath::West_R]);	
+	//Safe_Release();
+	//Safe_Release();
 }

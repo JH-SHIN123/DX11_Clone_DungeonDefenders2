@@ -6,7 +6,9 @@
 #include "GameObject.h"
 #include "PhaseInfo.h"
 #include "PhaseMonster_Info.h"
+#include "Monster.h"
 
+BEGIN(Client)
 enum class EMonster_Gate_Anim
 {
 	Closed = 0,
@@ -17,6 +19,12 @@ enum class EMonster_Gate_Anim
 	End_Anim = 71,
 	End = -1		
 };
+
+typedef struct tagMonsterGate_Desc
+{
+	MOVESTATE_DESC		MoveDesc;
+	EMonster_MovePath	StartPath;
+}GATE_DESC;
 
 class CMonster_Gate final :	public CGameObject
 {
@@ -40,7 +48,11 @@ private:
 	HRESULT	Ready_Component(void* pArg);
 	void Anim_Check(_float TimeDelta);
 	void Phase_Check();
-	
+
+private:
+	void Spawn_Monster_Check(_float TimeDelta);
+	void Spawn_Monster();
+
 protected:
 	CModel*				m_pModelCom_Left	= nullptr;
 	CModel*				m_pModelCom_Right	= nullptr;
@@ -61,6 +73,16 @@ private:
 private:
 	CPhaseMonster_Info* m_pPhaseMonster_Info = nullptr;
 
+private: // Monster_Wave
+	const _float	m_fSpawnTime_Max = 3.f;
+	_float			m_fSpawnTime = 0.f;
+
+	EMonster_List	m_eSpawnList = EMonster_List::Goblin;
+	_int			m_iSpawnCount = 0;
+	PHASEINFO_DESC	m_SpawnMonster;
+
+private:
+	EMonster_MovePath m_ePath = EMonster_MovePath::End;
 
 public:
 	static CMonster_Gate* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
@@ -68,5 +90,6 @@ public:
 	virtual void Free() override;
 };
 
+END
 #define __MONSTER_GATE_H__
 #endif // !__MONSTER_GATE_H__

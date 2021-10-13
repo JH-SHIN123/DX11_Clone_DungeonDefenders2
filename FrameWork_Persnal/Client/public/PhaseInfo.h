@@ -64,7 +64,7 @@ private:
 	_int			m_iEnemyCount = 50;
 	_int			m_iEnemyCount_Max = 100;
 	_float			m_fMeter_Ratio = 0.f;
-
+	_int			m_iNowPhase = 0;
 
 private:
 	_float2		m_vInterval;

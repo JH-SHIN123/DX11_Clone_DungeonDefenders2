@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\PhaseInfo.h"
+#include "Data_Manager.h"
 
 CPhaseInfo::CPhaseInfo(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CUI_2D(pDevice, pDevice_Context)
@@ -32,17 +33,6 @@ _int CPhaseInfo::Tick(_float TimeDelta)
 	m_fBarAlphaTime += TimeDelta;
 	if (m_fBarAlphaTime >= 3.f)
 		m_fBarAlphaTime = 0.f;
-
-
-	if (GetAsyncKeyState('E') & 0x8000)
-	{
-		m_ePhaseState = EPhaseState::Combat;
-	}
-
-	if (GetAsyncKeyState('R') & 0x8000)
-	{
-		m_ePhaseState = EPhaseState::Build;
-	}
 
 	Phase_Check(TimeDelta);
 
@@ -77,25 +67,32 @@ HRESULT CPhaseInfo::Render()
 
 void CPhaseInfo::Phase_Check(_float TimeDelta)
 {
+	m_ePhaseState = CData_Manager::GetInstance()->Get_NowPhase();
+	
 	switch (m_ePhaseState)
 	{
 	case Client::EPhaseState::Clear:
 		Phase_Check_Clear(TimeDelta);
+		m_iNowPhase = 0;
 		break;
 	case Client::EPhaseState::Build:
 		Phase_Check_Build(TimeDelta);
+		m_iNowPhase = 0;
 		break;
 	case Client::EPhaseState::Combat:
 		Phase_Check_Combat(TimeDelta);
 		Enemy_Check();
+		m_iNowPhase = 1;
 		break;
 	case Client::EPhaseState::Boss:
 		Phase_Check_Boss(TimeDelta);
 		Enemy_Check();
+		m_iNowPhase = 1;
 		break;
 	default:
 		break;
 	}
+	
 	_vector vMeterPos = m_pMovementCom_Enemy->Get_State(EState::Position);
 }
 
@@ -166,7 +163,7 @@ void CPhaseInfo::Text_Render()
 
 	// Phase
 	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_Text[1]->Get_WorldMatrix()), sizeof(_matrix));
-	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_Text[1]->Get_ShaderResourceView(1));
+	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_Text[1]->Get_ShaderResourceView(m_iNowPhase));
 	m_pBufferRectCom->Render(1);
 
 	// DefenseUnits

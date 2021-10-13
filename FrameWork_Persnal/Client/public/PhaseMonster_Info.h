@@ -5,12 +5,12 @@
 #include "UI_3D.h"
 
 enum class EMonster_List
-{ Goblin, Ogre, Kamikaze, Boss, End };
+{ Goblin = 0, Ogre, Kamikaze, Boss, End };
 
 typedef struct tagPhaseMonster_Info_Desc
 {
 	_bool IsAddMonster[(_int)(EMonster_List::End)];
-	_int iMonsterCount[4] = { 0, 0, 0, 0 };
+	_int iMonsterCount[(_int)(EMonster_List::End)] = { 0, 0, 0, 0 };
 
 }PHASEINFO_DESC;
 
@@ -34,7 +34,6 @@ public:
 public:
 	void Set_PhaseInfo(const PHASEINFO_DESC& PhaseInfo_Desc);
 
-private:
 	void Monster_Check();
 
 private:
