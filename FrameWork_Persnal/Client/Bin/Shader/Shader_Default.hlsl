@@ -100,8 +100,8 @@ VS_OUT VS_MAIN_UI_2(VS_IN In)
 	matWVP = mul(matWV, ProjMatrix);
 
 	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
-	//Out.vPosition.z = 0.f;
-	//Out.vPosition.w = 140.f;
+	//Out.vPosition.z *= 10.f;
+	//Out.vPosition.w *= 10.f;
 	Out.vTexUV = In.vTexUV; // ≈ÿΩ∫√≥ UV
 
 	return Out;

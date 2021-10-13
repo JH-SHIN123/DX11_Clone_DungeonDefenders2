@@ -35,6 +35,18 @@ HRESULT CMonster_Gate::NativeConstruct(void * pArg)
 
 _int CMonster_Gate::Tick(_float TimeDelta)
 {
+	PHASEINFO_DESC Phase;
+	Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 5;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
+
+	Set_PhaseMonster_Info(Phase);
+
 	return _int();
 }
 
@@ -134,11 +146,10 @@ HRESULT CMonster_Gate::Ready_Component(void * pArg)
 	UI3D_DESC UI_Desc;
 	UI_Desc.eLevel = ELevel::Stage1;
 	UI_Desc.Movement_Desc.vPos = Data.vPos;
-	UI_Desc.Movement_Desc.vScale = { 64.f, 64.f, 0.f, 0.f };
+	UI_Desc.Movement_Desc.vScale = { 160.f, 160.f, 0.f, 0.f };
 	lstrcpy(UI_Desc.szTextureName, L"Component_Texture_PhaseMonster_Info");
 
 	m_pPhaseMonster_Info = CPhaseMonster_Info::Create(m_pDevice, m_pDevice_Context, &UI_Desc);
-
 	
 	if (hr != S_OK)
 		MSG_BOX("CMonster_Gate::Ready_Component");

@@ -20,6 +20,9 @@ HRESULT CPhaseMonster_Info::NativeConstruct(void * pArg)
 {
 	__super::NativeConstruct(pArg);
 
+	Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_MonsterIcon"), L"せせ", (CComponent**)&m_pTextureCom_Icon);
+	Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_MonsterIcon_Num"), L"せせせせ", (CComponent**)&m_pTextureCom_Num);
+
 	return S_OK;
 }
 
@@ -30,10 +33,18 @@ _int CPhaseMonster_Info::Tick(_float TimeDelta)
 
 _int CPhaseMonster_Info::Late_Tick(_float TimeDelta)
 {
-	__super::BillBoarding();
+	//__super::BillBoarding();
 
+	_vector vCamLook = XMVector3Normalize(GET_CAMERA_LOOK);
+	_vector vCamPos = GET_CAMERA_POSITION + vCamLook * 5.f;
 
-	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Priority_Second, this);
+	_float fCamDis_OffSet = XMVectorGetX(XMVector3Length(vCamPos - m_pMovementCom->Get_State(EState::Position)));
+	_float fCamDis_Original = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+
+	if (fCamDis_OffSet < fCamDis_Original)
+		return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Priority_Second, this);
+
+	return 0;
 }
 
 HRESULT CPhaseMonster_Info::Render()
@@ -41,30 +52,57 @@ HRESULT CPhaseMonster_Info::Render()
 	if (nullptr == m_pBufferRectCom)
 		return E_FAIL;
 
-	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
-	m_pBufferRectCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
-	m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
-	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(m_iSpawnMonster_Value));
+	_matrix  Matrix_VP = GET_VIEW_SPACE * GET_PROJ_SPACE;
+	_vector vPos = m_pMovementCom->Get_State(EState::Position);
+
+	vPos = XMVector3TransformCoord(vPos, Matrix_VP);
+	vPos.m128_f32[0] += 1.f;
+	vPos.m128_f32[1] += 1.f;
+
+	vPos.m128_f32[0] = (g_iWinCX * vPos.m128_f32[0]) / 2.f;
+	vPos.m128_f32[1] = (g_iWinCY * (2.f - vPos.m128_f32[1])) / 2.f;
+
+	vPos.m128_f32[0] = vPos.m128_f32[0] - (g_iWinCX / 2.f);
+	vPos.m128_f32[1] = -vPos.m128_f32[1] + (g_iWinCY / 2.f);
+	vPos.m128_f32[2] = 0.f;
+	vPos.m128_f32[3] = 1.f;
+
+	_matrix WorldMatrix = m_pMovementCom->Get_WorldMatrix();
+	WorldMatrix.r[3] = vPos;
+
+	_int iValue = m_iSpawnMonster_Value - 1;
+	if (iValue == -1)
+		iValue = 0;
+
+	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(WorldMatrix), sizeof(_matrix));
+	m_pBufferRectCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
+	m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
+	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(iValue));
 	m_pBufferRectCom->Render(20);
 
-	//for (_int i = 0; i < m_iSpawnMonster_Value; ++i)
-	//{
-	//	_vector vPos = XMLoadFloat3(&m_vPos[i]);
-	//	vPos = XMVectorSetW(vPos, 1.f);
-	//	_vector vRight = XMVector3Normalize(m_pMovementCom->Get_State(EState::Right)) * m_vScale[i].x;
-	//	_vector vUp = XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * m_vScale[i].y;
-	//	_vector vLook = XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * m_vScale[i].z;
-	//
-	//	_matrix WorldMatrix = XMMatrixIdentity();
-	//	WorldMatrix.r[0] = vRight;
-	//	WorldMatrix.r[1] = vUp;
-	//	WorldMatrix.r[2] = vLook;
-	//	WorldMatrix.r[3] = vPos;
-	//
-	//	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(WorldMatrix), sizeof(_matrix));
-	//	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(m_iMonsterIcon[i]));
-	//	m_pBufferRectCom->Render(1);
-	//}
+	(WorldMatrix.r[0]).m128_f32[0] = 32.f;
+	(WorldMatrix.r[1]).m128_f32[1] = 32.f;
+	(WorldMatrix.r[3]).m128_f32[0] -= 32.f;
+	(WorldMatrix.r[3]).m128_f32[1] += 36.f;
+
+	for (_int i = 0; i < m_iSpawnMonster_Value; ++i)
+	{
+
+		m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(WorldMatrix), sizeof(_matrix));
+		m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_Icon->Get_ShaderResourceView(m_iMonsterIcon[i]));
+		m_pBufferRectCom->Render(20);
+
+		_matrix NumMatrix = WorldMatrix;
+		(NumMatrix.r[0]).m128_f32[0] = 28.f;
+		(NumMatrix.r[1]).m128_f32[1] = 28.f;
+		(NumMatrix.r[3]).m128_f32[0] += 50.f;
+		m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(NumMatrix), sizeof(_matrix));
+		m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_Num->Get_ShaderResourceView(m_iMonsterCount[i]));
+		m_pBufferRectCom->Render(20);
+
+		(WorldMatrix.r[3]).m128_f32[1] -= 33.f;
+	}
+
 	return S_OK;
 }
 
@@ -85,6 +123,8 @@ void CPhaseMonster_Info::Set_PhaseInfo(const PHASEINFO_DESC & PhaseInfo_Desc)
 
 		m_iMonsterIcon[i] = 0;
 	}
+
+	Monster_Check();
 }
 
 void CPhaseMonster_Info::Monster_Check()
@@ -95,6 +135,7 @@ void CPhaseMonster_Info::Monster_Check()
 		if (true == m_Monster_Info.IsAddMonster[iMonster])
 		{
 			m_iMonsterIcon[iMonster] = iMonster;
+			m_iMonsterCount[iMonster] = m_Monster_Info.iMonsterCount[i];
 		}
 		else
 			--i;

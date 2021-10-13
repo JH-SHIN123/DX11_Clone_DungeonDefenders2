@@ -107,6 +107,8 @@ void CHpMp::Render_Hp()
 {
 	_float2 fTextureUV = { m_fTime , 0.f };
 
+	_matrix Mat = m_pMovementCom->Get_WorldMatrix() *  GET_INDENTITY_MATRIX * GET_ORTHO_SPACE;
+
 	// Back
 	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));

@@ -43,6 +43,10 @@ private:
 	_float3			m_vScale[(_int)EMonster_List::End]; // 이미지 크기
 	_float3			m_vPos[(_int)EMonster_List::End];	// 렌더 할 이미지 위치
 	_int			m_iMonsterIcon[(_int)EMonster_List::End];
+	_int			m_iMonsterCount[(_int)EMonster_List::End];
+
+	CTextures*		m_pTextureCom_Icon = nullptr;
+	CTextures*		m_pTextureCom_Num = nullptr;
 
 	//_float3			m_vStartPos_Icon;
 	//_float3			m_vOffSetPos_Icon;

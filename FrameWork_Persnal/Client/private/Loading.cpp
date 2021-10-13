@@ -159,6 +159,14 @@ HRESULT CLoading::LoadingForStage()
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_PhaseMonster_Info")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/Tab_Menu/%d.tga"), 4));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_MonsterIcon")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Textures/MonsterIcon/%d.tga"), 4));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_MonsterIcon_Num")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/MonsterIcon/Num/%d.png"), 11));
+
+
+
+
 	// GameObject
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Terrain"), CTerrain::Create(m_pDevice, m_pDevice_Context));
 
