@@ -24,12 +24,17 @@ private:
 	HRESULT	Ready_Component(void* pArg);
 
 private:
+	void Button_Dis_Check();
+
+private:
 	CModel*				m_pModelCom			= nullptr;
 	CStatus*			m_pStatusCom		= nullptr;
 	CRenderer*			m_pRendererCom		= nullptr;
 	CMovement*			m_pMovementCom		= nullptr;
-	CTextures*			m_pTexturesCom		= nullptr;
 	CCollider*			m_pColliderCom_Hit	= nullptr;
+
+private: // Activate Button
+	class COrtho3D*		m_pOrtho3D_Text = nullptr;
 
 private:
 	class CCrystalCore_Ring*		m_pRing_Up = nullptr;

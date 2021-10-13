@@ -238,6 +238,9 @@
     <Filter Include="03.UI, HUD\02.3D\A1.PhaseMonster_Info">
       <UniqueIdentifier>{12b5264d-346c-4ffd-83e8-ea8898959f56}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.UI, HUD\02.3D\A2.Ortho3D">
+      <UniqueIdentifier>{96c07d0e-2e9a-4440-9a9e-dd86f06c67c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -462,6 +465,9 @@
     <ClInclude Include="..\public\PhaseMonster_Info.h">
       <Filter>03.UI, HUD\02.3D\A1.PhaseMonster_Info</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Ortho3D.h">
+      <Filter>03.UI, HUD\02.3D\A2.Ortho3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -664,6 +670,9 @@
     </ClCompile>
     <ClCompile Include="..\private\PhaseMonster_Info.cpp">
       <Filter>03.UI, HUD\02.3D\A1.PhaseMonster_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Ortho3D.cpp">
+      <Filter>03.UI, HUD\02.3D\A2.Ortho3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -21,7 +21,7 @@ HRESULT CPhaseMonster_Info::NativeConstruct(void * pArg)
 	__super::NativeConstruct(pArg);
 
 	Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_MonsterIcon"), L"せせ", (CComponent**)&m_pTextureCom_Icon);
-	Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_MonsterIcon_Num"), L"せせせせ", (CComponent**)&m_pTextureCom_Num);
+	Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_MonsterIcon_Num"), L"せせせ", (CComponent**)&m_pTextureCom_Num);
 
 	return S_OK;
 }
@@ -93,8 +93,8 @@ HRESULT CPhaseMonster_Info::Render()
 		m_pBufferRectCom->Render(20);
 
 		_matrix NumMatrix = WorldMatrix;
-		(NumMatrix.r[0]).m128_f32[0] = 28.f;
-		(NumMatrix.r[1]).m128_f32[1] = 28.f;
+		(NumMatrix.r[0]).m128_f32[0] = 26.f;
+		(NumMatrix.r[1]).m128_f32[1] = 26.f;
 		(NumMatrix.r[3]).m128_f32[0] += 50.f;
 		m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(NumMatrix), sizeof(_matrix));
 		m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_Num->Get_ShaderResourceView(m_iMonsterCount[i]));
@@ -162,5 +162,8 @@ CGameObject * CPhaseMonster_Info::Clone_GameObject(void * pArg)
 
 void CPhaseMonster_Info::Free()
 {
+	Safe_Release(m_pTextureCom_Icon);
+	Safe_Release(m_pTextureCom_Num);
+
 	__super::Free();
 }

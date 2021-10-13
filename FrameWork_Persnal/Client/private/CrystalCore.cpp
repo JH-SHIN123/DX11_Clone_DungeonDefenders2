@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\public\CrystalCore.h"
 #include "CrystalCore_Ring.h"
+#include "Ortho3D.h"
+#include "Data_Manager.h"
 
 CCrystalCore::CCrystalCore(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -53,7 +55,9 @@ _int CCrystalCore::Tick(_float TimeDelta)
 
 _int CCrystalCore::Late_Tick(_float TimeDelta)
 {
-	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
+	Button_Dis_Check();
+
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Priority, this);
 }
 
 HRESULT CCrystalCore::Render()
@@ -65,8 +69,10 @@ HRESULT CCrystalCore::Render()
 
 	m_pModelCom->Bind_VIBuffer();
 
+	_matrix WorldMatrix = m_pMovementCom->Get_WorldMatrix();
+
 	m_pModelCom->Set_Variable("g_PivotMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_PivotMatrix)), sizeof(_matrix));
-	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
+	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(WorldMatrix), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
 
@@ -111,8 +117,6 @@ HRESULT CCrystalCore::Ready_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &Data.Movement_Desc);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Status"), (CComponent**)&m_pStatusCom, &Data.Status_Desc);
-
-	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_ActivateCrystal"), TEXT("Com_Textures"), (CComponent**)&m_pTexturesCom);
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Mesh_CrystalCore"), TEXT("Com_Model"), (CComponent**)&m_pModelCom);
 
 	COLLIDER_DESC		ColliderDesc;
@@ -130,11 +134,39 @@ HRESULT CCrystalCore::Ready_Component(void * pArg)
 	lstrcpy(Data.szModelName, L"Component_Mesh_CrystalCore_Ring_Down");
 	m_pRing_Down	= CCrystalCore_Ring::Create(m_pDevice, m_pDevice_Context, &Data);
 
+	UI3D_DESC UIData;
+	UIData.eLevel = ELevel::Stage1;
+	UIData.Movement_Desc.vPos = Data.Movement_Desc.vPos;
+	UIData.Movement_Desc.vPos.y += 7.f;
+	UIData.Movement_Desc.vScale = { 512.f, 64.f, 0.f, 0.f };
+	lstrcpy(UIData.szTextureName, L"Component_Texture_ActivateCrystal");
+	m_pOrtho3D_Text = COrtho3D::Create(m_pDevice, m_pDevice_Context, &UIData);
+
 
 	if (S_OK != hr)
 		MSG_BOX("CCrystalCore::Ready_Component Failed");
 
 	return hr;
+}
+
+void CCrystalCore::Button_Dis_Check()
+{
+	if (EPhaseState::Build == CData_Manager::GetInstance()->Get_NowPhase())
+	{
+		_vector vPos = m_pMovementCom->Get_State(EState::Position);
+		_vector vTargetPos = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"))->Get_State(EState::Position);
+	
+		_float fDis = XMVectorGetX(XMVector3Length(vPos - vTargetPos));
+		if (fDis <= 25.f)
+		{
+			//vPos -= XMVector3Normalize(GET_CAMERA_LOOK) * 20.f;
+			vPos += XMVectorSet(0.f,1.f,0.f,0.f) * 7.f;
+
+			m_pOrtho3D_Text->Set_Pos(vPos);
+
+			m_pOrtho3D_Text->Late_Tick(0.f);
+		}
+	}
 }
 
 CCrystalCore * CCrystalCore::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -170,6 +202,7 @@ void CCrystalCore::Free()
 	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pMovementCom);
-	Safe_Release(m_pTexturesCom);
 	Safe_Release(m_pColliderCom_Hit);
+
+	Safe_Release(m_pOrtho3D_Text);
 }
