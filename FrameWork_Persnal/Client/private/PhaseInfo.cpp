@@ -35,7 +35,7 @@ _int CPhaseInfo::Tick(_float TimeDelta)
 		m_fBarAlphaTime = 0.f;
 
 	Phase_Check(TimeDelta);
-
+	Enemy_Check();
 
 	return _int();
 }
@@ -129,8 +129,11 @@ void CPhaseInfo::Phase_Check_Boss(_float TimeDelta)
 
 void CPhaseInfo::Enemy_Check()
 {
-	// 게임인스턴스에서 몬스터 현재개수, 최대 개수 받아옴
-	// Hp했던것 처럼 비율 만들면 됨!!!!!!!!@!!!!!@!@!@!@!@!@!@!@!@$@#%ㅋ^7ㅕ
+	if (EPhaseState::Combat != m_ePhaseState &&
+		EPhaseState::Boss != m_ePhaseState) return;
+
+	m_iEnemyCount_Max = CData_Manager::GetInstance()->Get_MonsterCount_Max();
+	m_iEnemyCount = CData_Manager::GetInstance()->Get_MonsterCount();	
 
 	m_fMeter_Ratio = (1.f - ((_float)m_iEnemyCount / m_iEnemyCount_Max));
 }

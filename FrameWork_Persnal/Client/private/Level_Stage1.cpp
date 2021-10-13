@@ -71,7 +71,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	MonData.Stat_Desc.iHp_Max = 700;
 	MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
 	MonData.Stat_Desc.iExp = 15;
-	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);	
+	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);	
 
 
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, L"Prototype_Fade", (_uint)ELevel::Stage1, L"Layer_Fade");
@@ -101,6 +101,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_L]->Set_PhaseMonster_Info(Phase);
 	//m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase);
 
+	CData_Manager::GetInstance()->Set_MonsterCount_Max(6);
 
 	return S_OK;
 }
@@ -135,75 +136,54 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Tower", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
 	CCollide_Manager::GetInstance()->Collide_Check_BrainWash(L"Layer_Monster", ELevel::Stage1, L"Layer_Bullet_BrainWash", ELevel::Stage1);
 
-
-	if (GET_KEY_INPUT(DIK_H))
+	if (EPhaseState::Combat == CData_Manager::GetInstance()->Get_NowPhase())
 	{
-		MONSTER_DESC MonData;
-		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
-		MonData.eLevel = ELevel::Stage1;
-		MonData.fDetectDis = 15.f;
-		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
-		MonData.Movement_Desc.fSpeedPerSec = 10.f;
-		MonData.eMovePath = EMonster_MovePath::West_L;
-		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
-		MonData.Stat_Desc.iHp_Max = 10000;
-		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
-		MonData.Stat_Desc.iExp = 15;
-
-		//for(int i = 0; i < 20; ++i)
-		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
+		if (true == CData_Manager::GetInstance()->Is_PhaseClear())
+		{
+			CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Build);
+			++m_iWaveCount;
+		}
 	}
-	if (GET_KEY_INPUT(DIK_J))
+
+	switch (m_iWaveCount)
 	{
-		MONSTER_DESC MonData;
-		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
-		MonData.eLevel = ELevel::Stage1;
-		MonData.fDetectDis = 15.f;
-		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
-		MonData.Movement_Desc.fSpeedPerSec = 10.f;
-		MonData.eMovePath = EMonster_MovePath::West_R;
-		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
-		MonData.Stat_Desc.iHp_Max = 10000;
-		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
-		MonData.Stat_Desc.iExp = 15;
-
-		//for(int i = 0; i < 20; ++i)
-		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
-	}
-	if (GET_KEY_INPUT(DIK_K))
+	case 0:
+		break;
+	case 1:
 	{
-		MONSTER_DESC MonData;
-		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
-		MonData.eLevel = ELevel::Stage1;
-		MonData.fDetectDis = 15.f;
-		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
-		MonData.Movement_Desc.fSpeedPerSec = 10.f;
-		MonData.eMovePath = EMonster_MovePath::North_L;
-		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
-		MonData.Stat_Desc.iHp_Max = 10000;
-		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
-		MonData.Stat_Desc.iExp = 15;
+		PHASEINFO_DESC Phase;
+		Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
+		Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
+		Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
+		Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
+		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
+		Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
+		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
+		Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 
-		//for(int i = 0; i < 20; ++i)
-		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
-	}
-	if (GET_KEY_INPUT(DIK_L))
-	{
-		MONSTER_DESC MonData;
-		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
-		MonData.eLevel = ELevel::Stage1;
-		MonData.fDetectDis = 15.f;
-		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
-		MonData.Movement_Desc.fSpeedPerSec = 10.f;
-		MonData.eMovePath = EMonster_MovePath::North_R;
-		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
-		MonData.Stat_Desc.iHp_Max = 10000;
-		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
-		MonData.Stat_Desc.iExp = 15;
+		m_pMonsterGate[(_uint)EMonster_MovePath::North_L]->Set_PhaseMonster_Info(Phase);
+		//m_pMonsterGate[(_uint)EMonster_MovePath::North_R]->Set_PhaseMonster_Info(Phase);
 
-		//for(int i = 0; i < 20; ++i)
-		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
+		Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
+		Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
+		Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
+		Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
+		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 1;
+		Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 1;
+		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
+		Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
+
+		m_pMonsterGate[(_uint)EMonster_MovePath::West_L]->Set_PhaseMonster_Info(Phase);
+		//m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase);
+
+		CData_Manager::GetInstance()->Set_MonsterCount_Max(6);
 	}
+		break;
+	default:
+		break;
+	}
+	
+	Cheet_Monster_Spawn();
 
 	return 0;
 }
@@ -434,6 +414,86 @@ void CLevel_Stage1::Make_Monster_Phase_1()
 
 void CLevel_Stage1::Phase_Check()
 {
+
+}
+
+void CLevel_Stage1::Cheet_Monster_Spawn()
+{
+
+#ifdef _DEBUG
+
+	if (GET_KEY_INPUT(DIK_H))
+	{
+		MONSTER_DESC MonData;
+		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
+		MonData.eLevel = ELevel::Stage1;
+		MonData.fDetectDis = 15.f;
+		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
+		MonData.Movement_Desc.fSpeedPerSec = 10.f;
+		MonData.eMovePath = EMonster_MovePath::West_L;
+		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+		MonData.Stat_Desc.iHp_Max = 10000;
+		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
+		MonData.Stat_Desc.iExp = 15;
+
+		//for(int i = 0; i < 20; ++i)
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
+	}
+	if (GET_KEY_INPUT(DIK_J))
+	{
+		MONSTER_DESC MonData;
+		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
+		MonData.eLevel = ELevel::Stage1;
+		MonData.fDetectDis = 15.f;
+		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
+		MonData.Movement_Desc.fSpeedPerSec = 10.f;
+		MonData.eMovePath = EMonster_MovePath::West_R;
+		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+		MonData.Stat_Desc.iHp_Max = 10000;
+		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
+		MonData.Stat_Desc.iExp = 15;
+
+		//for(int i = 0; i < 20; ++i)
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
+	}
+	if (GET_KEY_INPUT(DIK_K))
+	{
+		MONSTER_DESC MonData;
+		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
+		MonData.eLevel = ELevel::Stage1;
+		MonData.fDetectDis = 15.f;
+		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
+		MonData.Movement_Desc.fSpeedPerSec = 10.f;
+		MonData.eMovePath = EMonster_MovePath::North_L;
+		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+		MonData.Stat_Desc.iHp_Max = 10000;
+		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
+		MonData.Stat_Desc.iExp = 15;
+
+		//for(int i = 0; i < 20; ++i)
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
+	}
+	if (GET_KEY_INPUT(DIK_L))
+	{
+		MONSTER_DESC MonData;
+		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
+		MonData.eLevel = ELevel::Stage1;
+		MonData.fDetectDis = 15.f;
+		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
+		MonData.Movement_Desc.fSpeedPerSec = 10.f;
+		MonData.eMovePath = EMonster_MovePath::North_R;
+		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+		MonData.Stat_Desc.iHp_Max = 10000;
+		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
+		MonData.Stat_Desc.iExp = 15;
+
+		//for(int i = 0; i < 20; ++i)
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
+	}
+
+#endif // _DEBUG
+
+
 
 }
 

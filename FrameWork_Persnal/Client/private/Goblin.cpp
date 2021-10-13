@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Goblin.h"
+#include "Data_Manager.h"
 
 CGoblin::CGoblin(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CMonster(pDevice, pDevice_Context)
@@ -43,7 +44,10 @@ _int CGoblin::Tick(_float TimeDelta)
 		if (EGoblinAnim::Death == m_eAnim_Next)
 		{
 			if (true == m_pModelCom->Get_IsFinishedAnimaion())
+			{
+				CData_Manager::GetInstance()->Add_MonsterCount();
 				return OBJECT_DEAD;
+			}
 		}
 		else
 			m_eAnim_Next = EGoblinAnim::Death;
@@ -177,7 +181,10 @@ _int CGoblin::Late_Tick(_float TimeDelta)
 	if (0 >= m_pStatusCom->Get_Hp())
 	{
 		if (true == m_pModelCom->Get_IsFinishedAnimaion())
+		{
+			CData_Manager::GetInstance()->Add_MonsterCount();
 			return OBJECT_DEAD;
+		}
 	}
 
 	return __super::Late_Tick(TimeDelta);

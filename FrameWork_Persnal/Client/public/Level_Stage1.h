@@ -34,6 +34,7 @@ private:
 private:
 	void Make_Monster_Phase_1();
 	void Phase_Check();
+	void Cheet_Monster_Spawn();
 
 private:
 	_int m_iCombatPhase_CountMax = 5;
@@ -48,7 +49,7 @@ private:
 private:
 	class CMonster_Gate* m_pMonsterGate[6] = { nullptr };
 	_int m_iWaveCount = 0;
-	EPhaseState m_ePhase = EPhaseState::End;
+	//EPhaseState m_ePhase = EPhaseState::End;
 
 public:
 	static CLevel_Stage1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
