@@ -85,6 +85,14 @@ void CCollider::Set_Scale_Tick(_float3 vScale, _float TimeDelta)
 	m_ColliderDesc.vScale.z += vScale.z * TimeDelta;
 }
 
+void CCollider::Set_Scale_Tick_Linear(_float3 vScale, _float TimeDelta)
+{
+	m_ColliderDesc.vScale.x += (vScale.x - m_ColliderDesc.vScale.x) * TimeDelta;
+	m_ColliderDesc.vScale.y += (vScale.y - m_ColliderDesc.vScale.y) * TimeDelta;
+	m_ColliderDesc.vScale.z += (vScale.z - m_ColliderDesc.vScale.z) * TimeDelta;
+
+}
+
 _int CCollider::Update_Collider(_fmatrix WorldMatrix)
 {
 	_matrix		TransformMatrix = WorldMatrix;

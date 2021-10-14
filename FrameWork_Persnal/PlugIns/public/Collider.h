@@ -45,6 +45,7 @@ public:
 	void Set_IsCollide(_bool IsCollide) { m_IsCollision = IsCollide; }
 	void Set_Scale(_float3 vScale) { m_ColliderDesc.vScale = vScale; }
 	void Set_Scale_Tick(_float3 vScale, _float TimeDelta);
+	void Set_Scale_Tick_Linear(_float3 vScale, _float TimeDelta);
 
 
 public: //Collision On/Off

@@ -36,6 +36,10 @@
 #include "Monster_Gate.h"
 #include "CrystalCore.h"
 #include "Boss_Djinn.h"
+#include "Boss_EnergyBall.h"
+#include "Boss_Boom.h"
+#include "Boss_TrapBall.h"
+#include "Boss_RepeatBall.h"
 
 USING(Engine)
 
@@ -211,7 +215,10 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_CrystalCore"), CCrystalCore::Create(m_pDevice, m_pDevice_Context));
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Boss_Djinn"), CBoss_Djinn::Create(m_pDevice, m_pDevice_Context));
-
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Boss_EnergyBall"), CBoss_EnergyBall::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Boss_Boom"), CBoss_Boom::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Boss_TrapBall"), CBoss_TrapBall::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Boss_RepeatBall"), CBoss_RepeatBall::Create(m_pDevice, m_pDevice_Context));
 
 
 

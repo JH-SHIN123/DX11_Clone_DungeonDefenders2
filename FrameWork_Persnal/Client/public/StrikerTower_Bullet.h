@@ -3,6 +3,8 @@
 #ifndef __STRIKERTOWER_BULLET_H__
 
 #include "Bullet.h"
+
+BEGIN(Client)
 class CStrikerTower_Bullet final : public CBullet
 {
 private:
@@ -20,13 +22,12 @@ public:
 private:
 	HRESULT			Ready_Component(void* pArg);
 
-
-
 public:
 	static CStrikerTower_Bullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;
 	virtual void Free() override;
 };
 
+END
 #define __STRIKERTOWER_BULLET_H__
 #endif // !__STRIKERTOWER_BULLET_H__

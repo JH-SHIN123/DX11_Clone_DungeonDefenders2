@@ -2,6 +2,7 @@
 #include "..\public\Boss_Djinn.h"
 #include "Data_Manager.h"
 #include "Masking_MeterBar_3D.h"
+#include "Bullet.h"
 
 CBoss_Djinn::CBoss_Djinn(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CMonster(pDevice, pDevice_Context)
@@ -31,13 +32,15 @@ HRESULT CBoss_Djinn::NativeConstruct(void * pArg)
 
 	Set_Pivot(XMVectorSet(0.05f, 0.05f, 0.05f, 0.f));
 
+	SetUp_GemColor();
+
 	return S_OK;
 }
 
 _int CBoss_Djinn::Tick(_float TimeDelta)
 {
 	m_pColliderCom_Attack->Set_NotCollide(true);
-	Attack_Check();
+	Attack_Check(TimeDelta);
 
 	if (0 >= m_pStatusCom->Get_Hp())
 	{
@@ -136,8 +139,6 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 	_matrix Matrix = m_pMovementCom->Get_WorldMatrix();
 	m_pColliderCom_Hurt->Update_Collider(Matrix);
 
-
-
 	m_pStatusCom->Tick(TimeDelta);
 
 	__super::Tick(TimeDelta);
@@ -162,6 +163,8 @@ _int CBoss_Djinn::Late_Tick(_float TimeDelta)
 		else
 			m_eAnim_Next = EDjinnAnim::Death;
 	}
+
+	GemColor_Check(TimeDelta);
 
 	return __super::Late_Tick(TimeDelta);
 }
@@ -245,10 +248,10 @@ void CBoss_Djinn::Anim_Check(_float TimeDelta)
 
 	m_eAnim_Cur = m_eAnim_Next;
 
-	SetUp_GemColor();
+
 }
 
-void CBoss_Djinn::Attack_Check()
+void CBoss_Djinn::Attack_Check(_float TimeDelta)
 {
 	_bool IsFinished = m_pModelCom->Get_IsFinishedAnimaion();
 
@@ -266,10 +269,10 @@ void CBoss_Djinn::Attack_Check()
 			Attack_WideRange();
 			break;
 		case Client::EDjinn_Attack::TrapBall:
-			Attack_TrapBall();
+			Attack_TrapBall(TimeDelta);
 			break;
 		case Client::EDjinn_Attack::RepeatBall:
-			Attack_RepeatBall();
+			Attack_RepeatBall(TimeDelta);
 			break;
 		default:
 			m_eAttack_Value = EDjinn_Attack::End;
@@ -406,11 +409,26 @@ void CBoss_Djinn::AI_Check()
 
 void CBoss_Djinn::SetUp_GemColor()
 {
-	m_vGemColor[(_uint)EDjinn_Attack::Attack]		= { 1.0f, 1.0f, 1.0f, 1.f };
+	m_vGemColor[(_uint)EDjinn_Attack::Attack]		= { 1.3f, 1.3f, 1.3f, 1.f };
 	m_vGemColor[(_uint)EDjinn_Attack::EnergyBall]	= { 2.0f, 1.8f, 0.0f, 1.f };
-	m_vGemColor[(_uint)EDjinn_Attack::WideRange]	= { 1.5f, 0.2f, 0.2f, 0.f };
-	m_vGemColor[(_uint)EDjinn_Attack::TrapBall]		= { 0.8f, 2.0f, 0.8f, 0.f };
-	m_vGemColor[(_uint)EDjinn_Attack::RepeatBall]	= { 0.8f, 0.0f, 1.7f ,0.f };
+	m_vGemColor[(_uint)EDjinn_Attack::WideRange]	= { 1.5f, 0.2f, 0.2f, 1.f };
+	m_vGemColor[(_uint)EDjinn_Attack::TrapBall]		= { 0.8f, 2.0f, 0.8f, 1.f };
+	m_vGemColor[(_uint)EDjinn_Attack::RepeatBall]	= { 0.8f, 0.0f, 1.7f ,1.f };
+
+	m_vGemColor_Now = m_vGemColor[(_uint)EDjinn_Attack::Attack];
+}
+
+void CBoss_Djinn::GemColor_Check(_float TimeDelta)
+{
+	_vector vGemColor_Now = XMLoadFloat4(&m_vGemColor_Now);
+	_vector vGemColor = XMLoadFloat4(&m_vGemColor[(_uint)m_eAttack_Value]);
+
+	_vector vTerm = vGemColor - vGemColor_Now;
+	vGemColor_Now += vTerm * (TimeDelta * 2.f);
+
+	vGemColor_Now.m128_f32[3] = 1.f;
+
+	XMStoreFloat4(&m_vGemColor_Now, vGemColor_Now);
 }
 
 void CBoss_Djinn::Attack_Default()
@@ -455,8 +473,48 @@ void CBoss_Djinn::Attack_EnergyBall()
 		break;
 	case 1:
 	{
+		_matrix OffSet = XMMatrixTranslation(65.f, 100.f, 0.f);
+		_matrix BoneMatrix = OffSet * m_pModelCom->Get_BoneMatrix("HandL");
+		_matrix WorldMatrix = m_pMovementCom->Get_WorldMatrix();
+		WorldMatrix.r[3] += BoneMatrix.r[3] * 0.05f;
+
+		CMovement* pTarget_Player = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
+
+		_vector vLeftHand = WorldMatrix.r[3];
+		_vector vTargetPos = pTarget_Player->Get_State(EState::Position);
+		vTargetPos.m128_f32[1] += 3.f;
+		_vector vDir = XMVector3Normalize(vTargetPos - m_pMovementCom->Get_State(EState::Position));
+
+		BULLET_DESC Data;
+		lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
+		Data.MoveState_Desc.fRotatePerSec = 50.f;
+
+		XMStoreFloat3(&Data.vDir, vDir);
+		XMStoreFloat4(&Data.MoveState_Desc.vPos, vLeftHand);
+		Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+		Data.MoveState_Desc.fSpeedPerSec = 40.f;
+		Data.fLifeTime = 10.f;
+
+		Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
+		Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+		Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+		Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
+		//Data.Attack_Collide_Desc.vPosition = { 0.f, 50.f, 0.f };
+		Data.Attack_Collide_Desc.IsCenter = true;
+
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Boss_EnergyBall", (_uint)ELevel::Stage1, L"Layer_Bullet_Monster", &Data);
 		
+		m_eAnim_Next = EDjinnAnim::Spell_2_Stop;
+
+		++m_iAttackCount;
 	}
+		break;
+
+	case 2:
+
+		if (true == IsFinished)
+			++m_iAttackCount;
+
 		break;
 	default:
 		m_iAttackCount = 0;
@@ -474,6 +532,45 @@ void CBoss_Djinn::Attack_WideRange()
 	switch (m_iAttackCount)
 	{
 	case 0:
+		m_eAnim_Next = EDjinnAnim::Spell_1_Start;
+
+		if (true == IsFinished)
+			++m_iAttackCount;
+
+		break;
+
+	case 1:
+		{
+		m_eAnim_Next = EDjinnAnim::Spell_1_Stop;
+
+		BULLET_DESC Data;
+		lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
+		Data.MoveState_Desc.fRotatePerSec = 50.f;
+
+		XMStoreFloat4(&Data.MoveState_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
+		Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+		Data.MoveState_Desc.fSpeedPerSec = 40.f;
+		Data.fLifeTime = 10.f;
+
+		Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
+		Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+		Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+		Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
+		//Data.Attack_Collide_Desc.vPosition = { 0.f, 50.f, 0.f };
+		Data.Attack_Collide_Desc.IsCenter = true;
+
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Boss_Boom", (_uint)ELevel::Stage1, L"Layer_Bullet_Monster", &Data);
+
+		++m_iAttackCount;
+		}
+		break;
+
+	case 2:
+
+
+		if (true == IsFinished)
+			++m_iAttackCount;
+
 		break;
 	default:
 		m_iAttackCount = 0;
@@ -483,7 +580,7 @@ void CBoss_Djinn::Attack_WideRange()
 	}
 }
 
-void CBoss_Djinn::Attack_TrapBall()
+void CBoss_Djinn::Attack_TrapBall(_float TimeDelta)
 {
 	_bool IsFinished = m_pModelCom->Get_IsFinishedAnimaion();
 	_uint iAnimTime = (_uint)m_pModelCom->Get_AnimTime();
@@ -491,7 +588,56 @@ void CBoss_Djinn::Attack_TrapBall()
 	switch (m_iAttackCount)
 	{
 	case 0:
+		m_eAnim_Next = EDjinnAnim::Spell_2_Start;
+		m_fTime_TrapBall = 0.f;
+
+		if (true == IsFinished)
+			++m_iAttackCount;
+
 		break;
+
+	case 1:
+		m_eAnim_Next = EDjinnAnim::Spell_2_Loop;
+		m_fTime_TrapBall += TimeDelta;
+
+		if (m_fTime_TrapBall_Max <= m_fTime_TrapBall)
+		{
+			BULLET_DESC Data;
+			lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
+			Data.MoveState_Desc.fRotatePerSec = 50.f;
+
+			XMStoreFloat4(&Data.MoveState_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
+			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+			Data.MoveState_Desc.fSpeedPerSec = 40.f;
+			Data.fLifeTime = 10.f;
+
+			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
+			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+			Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+			Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
+			//Data.Attack_Collide_Desc.vPosition = { 0.f, 50.f, 0.f };
+			Data.Attack_Collide_Desc.IsCenter = true;
+
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Boss_TrapBall", (_uint)ELevel::Stage1, L"Layer_Bullet_Monster", &Data);
+
+			m_fTime_TrapBall = 0.f;
+			++m_iAttackCount;
+		}
+
+		break;
+
+	case 2:
+		m_eAnim_Next = EDjinnAnim::Spell_2_Stop;
+		++m_iAttackCount;
+		break;
+
+	case 3:
+
+		if (true == IsFinished)
+			++m_iAttackCount;
+
+		break;
+
 	default:
 		m_iAttackCount = 0;
 		m_IsAttack = false;
@@ -500,15 +646,145 @@ void CBoss_Djinn::Attack_TrapBall()
 	}
 }
 
-void CBoss_Djinn::Attack_RepeatBall()
+void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 {
 	_bool IsFinished = m_pModelCom->Get_IsFinishedAnimaion();
 	_uint iAnimTime = (_uint)m_pModelCom->Get_AnimTime();
 
+	_matrix OffSet = XMMatrixTranslation(65.f, 100.f, 0.f);
+	_matrix BoneMatrix = OffSet * m_pModelCom->Get_BoneMatrix("HandL");
+	_matrix WorldMatrix = m_pMovementCom->Get_WorldMatrix();
+	WorldMatrix.r[3] += BoneMatrix.r[3] * 0.05f;
+
+	CMovement* pTarget_Player = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
+
+	_vector vLeftHand = WorldMatrix.r[3];
+	_vector vTargetPos = pTarget_Player->Get_State(EState::Position);
+	vTargetPos.m128_f32[1] += 3.f;
+	_vector vDir = XMVector3Normalize(vTargetPos - m_pMovementCom->Get_State(EState::Position));
+
+	BULLET_DESC Data;
+	lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
+	Data.MoveState_Desc.fRotatePerSec = 50.f;
+
+
 	switch (m_iAttackCount)
 	{
 	case 0:
+		m_eAnim_Next = EDjinnAnim::Spell_1_Enter_Alt;
+		++m_iAttackCount;
 		break;
+
+	case 1:
+		if (true == IsFinished)
+			++m_iAttackCount;
+		break;
+
+	case 2:
+		m_eAnim_Next = EDjinnAnim::Spell_1_Loop_Alt;
+		m_fTime_RepeatBall += TimeDelta;
+
+		if (m_fTime_RepeatBall_Max <= m_fTime_RepeatBall)
+		{
+			XMStoreFloat3(&Data.vDir, vDir);
+			XMStoreFloat4(&Data.MoveState_Desc.vPos, vLeftHand);
+			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+			Data.MoveState_Desc.fSpeedPerSec = 40.f;
+			Data.fLifeTime = 10.f;
+
+			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
+			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+			Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+			Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
+			Data.Attack_Collide_Desc.IsCenter = true;
+
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Boss_RepeatBall", (_uint)ELevel::Stage1, L"Layer_Bullet_Monster", &Data);
+
+			m_fTime_RepeatBall = 0.f;
+			++m_iAttackCount;
+		}
+		break;
+
+	case 3:
+		m_fTime_RepeatBall += TimeDelta;
+
+		if (m_fTime_RepeatBall_Max <= m_fTime_RepeatBall)
+		{
+			XMStoreFloat3(&Data.vDir, vDir);
+			XMStoreFloat4(&Data.MoveState_Desc.vPos, vLeftHand);
+			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+			Data.MoveState_Desc.fSpeedPerSec = 40.f;
+			Data.fLifeTime = 10.f;
+
+			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
+			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+			Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+			Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
+			Data.Attack_Collide_Desc.IsCenter = true;
+
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Boss_RepeatBall", (_uint)ELevel::Stage1, L"Layer_Bullet_Monster", &Data);
+
+			m_fTime_RepeatBall = 0.f;
+			++m_iAttackCount;
+		}
+		break;
+
+	case 4:
+		m_fTime_RepeatBall += TimeDelta;
+
+		if (m_fTime_RepeatBall_Max <= m_fTime_RepeatBall)
+		{
+			XMStoreFloat3(&Data.vDir, vDir);
+			XMStoreFloat4(&Data.MoveState_Desc.vPos, vLeftHand);
+			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+			Data.MoveState_Desc.fSpeedPerSec = 40.f;
+			Data.fLifeTime = 10.f;
+
+			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
+			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+			Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+			Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
+			Data.Attack_Collide_Desc.IsCenter = true;
+
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Boss_RepeatBall", (_uint)ELevel::Stage1, L"Layer_Bullet_Monster", &Data);
+
+			m_fTime_RepeatBall = 0.f;
+			++m_iAttackCount;
+		}
+		break;
+
+	case 5:
+		m_fTime_RepeatBall += TimeDelta;
+
+		if (m_fTime_RepeatBall_Max <= m_fTime_RepeatBall)
+		{
+			XMStoreFloat3(&Data.vDir, vDir);
+			XMStoreFloat4(&Data.MoveState_Desc.vPos, vLeftHand);
+			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+			Data.MoveState_Desc.fSpeedPerSec = 40.f;
+			Data.fLifeTime = 10.f;
+
+			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
+			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+			Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+			Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
+			Data.Attack_Collide_Desc.IsCenter = true;
+
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Boss_RepeatBall", (_uint)ELevel::Stage1, L"Layer_Bullet_Monster", &Data);
+
+			m_fTime_RepeatBall = 0.f;
+			++m_iAttackCount;
+		}
+		break;
+	case 6:
+		m_eAnim_Next = EDjinnAnim::Spell_1_Stop;
+		++m_iAttackCount;
+		break;
+	case 7:
+		if (true == IsFinished)
+			++m_iAttackCount;
+		break;
+
 	default:
 		m_iAttackCount = 0;
 		m_IsAttack = false;

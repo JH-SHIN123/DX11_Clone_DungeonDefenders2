@@ -244,6 +244,18 @@
     <Filter Include="02.GameObject\05.Monster\02.Boss_Djinn">
       <UniqueIdentifier>{cb291185-0315-4e1c-abd4-235192ab77c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\07.Bullet\10.Boss_EnergyBall">
+      <UniqueIdentifier>{e3486e49-cde4-4ba9-9c37-16d27563a669}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet\11.Boss_Boom">
+      <UniqueIdentifier>{35313ff8-bd9b-461c-a500-3613964687b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet\12.Boss_TrapBall">
+      <UniqueIdentifier>{4f7e5913-8b59-45d6-806b-8bc8839a93a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet\13.Boss_RepeatBall">
+      <UniqueIdentifier>{4c07c21e-f5c0-4e06-b7e5-6ac855b78923}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -474,6 +486,18 @@
     <ClInclude Include="..\public\Boss_Djinn.h">
       <Filter>02.GameObject\05.Monster\02.Boss_Djinn</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Boss_EnergyBall.h">
+      <Filter>02.GameObject\07.Bullet\10.Boss_EnergyBall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_Boom.h">
+      <Filter>02.GameObject\07.Bullet\11.Boss_Boom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_TrapBall.h">
+      <Filter>02.GameObject\07.Bullet\12.Boss_TrapBall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_RepeatBall.h">
+      <Filter>02.GameObject\07.Bullet\13.Boss_RepeatBall</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -682,6 +706,18 @@
     </ClCompile>
     <ClCompile Include="..\private\Boss_Djinn.cpp">
       <Filter>02.GameObject\05.Monster\02.Boss_Djinn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_EnergyBall.cpp">
+      <Filter>02.GameObject\07.Bullet\10.Boss_EnergyBall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_Boom.cpp">
+      <Filter>02.GameObject\07.Bullet\11.Boss_Boom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_TrapBall.cpp">
+      <Filter>02.GameObject\07.Bullet\12.Boss_TrapBall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_RepeatBall.cpp">
+      <Filter>02.GameObject\07.Bullet\13.Boss_RepeatBall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

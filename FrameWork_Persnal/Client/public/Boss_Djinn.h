@@ -62,7 +62,7 @@ public:
 
 public:
 	void Anim_Check(_float TimeDelta);
-	void Attack_Check();
+	void Attack_Check(_float TimeDelta);
 
 private:
 	HRESULT		Ready_Component(void* pArg);
@@ -71,13 +71,14 @@ private:
 
 private:
 	void SetUp_GemColor();
+	void GemColor_Check(_float TimeDelta);
 
 private:
 	void Attack_Default();
 	void Attack_EnergyBall();
 	void Attack_WideRange();
-	void Attack_TrapBall();
-	void Attack_RepeatBall();
+	void Attack_TrapBall(_float TimeDelta);
+	void Attack_RepeatBall(_float TimeDelta);
 
 private:
 	_int	m_iAttackCount = 0;
@@ -99,6 +100,11 @@ private:
 	_float4			m_vGemColor[(_uint)EDjinn_Attack::End];
 	_float4			m_vGemColor_Now;
 	_float			m_fColorChange_Time = 0.f;
+
+	_float			m_fTime_TrapBall = 0.f;
+	const _float	m_fTime_TrapBall_Max = 2.f;
+	_float			m_fTime_RepeatBall = 0.f;
+	const _float	m_fTime_RepeatBall_Max = 1.5f;
 
 private:
 	//_float4x4 m_RevercePivot

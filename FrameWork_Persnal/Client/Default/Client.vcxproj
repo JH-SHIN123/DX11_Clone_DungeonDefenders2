@@ -172,7 +172,11 @@
     <ClInclude Include="..\public\BackGround_Logo.h" />
     <ClInclude Include="..\public\BlockadeTower.h" />
     <ClInclude Include="..\public\Boom.h" />
+    <ClInclude Include="..\public\Boss_Boom.h" />
     <ClInclude Include="..\public\Boss_Djinn.h" />
+    <ClInclude Include="..\public\Boss_EnergyBall.h" />
+    <ClInclude Include="..\public\Boss_RepeatBall.h" />
+    <ClInclude Include="..\public\Boss_TrapBall.h" />
     <ClInclude Include="..\public\Bullet.h" />
     <ClInclude Include="..\public\Calculator.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
@@ -249,7 +253,11 @@
     <ClCompile Include="..\private\BackGround_Logo.cpp" />
     <ClCompile Include="..\private\BlockadeTower.cpp" />
     <ClCompile Include="..\private\Boom.cpp" />
+    <ClCompile Include="..\private\Boss_Boom.cpp" />
     <ClCompile Include="..\private\Boss_Djinn.cpp" />
+    <ClCompile Include="..\private\Boss_EnergyBall.cpp" />
+    <ClCompile Include="..\private\Boss_RepeatBall.cpp" />
+    <ClCompile Include="..\private\Boss_TrapBall.cpp" />
     <ClCompile Include="..\private\Bullet.cpp" />
     <ClCompile Include="..\private\Calculator.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
