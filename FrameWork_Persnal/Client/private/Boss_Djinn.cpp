@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Boss_Djinn.h"
 #include "Data_Manager.h"
+#include "Masking_MeterBar_3D.h"
 
 CBoss_Djinn::CBoss_Djinn(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CMonster(pDevice, pDevice_Context)
@@ -26,7 +27,7 @@ HRESULT CBoss_Djinn::NativeConstruct(void * pArg)
 
 	m_pModelCom->Set_AnimationIndex(0);
 
-	m_pModelCom->Set_AnimationIndex_Start(0.f, 40.f);
+	m_pModelCom->Set_AnimationIndex_Start(0.f, 58.f);
 
 	Set_Pivot(XMVectorSet(0.05f, 0.05f, 0.05f, 0.f));
 
@@ -92,9 +93,9 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 			break;
 		case Client::EMonsterAI::Attack:
 		{
-			if(EDjinn_Attack::End == m_eAttack_Value)
+			if (EDjinn_Attack::End == m_eAttack_Value)
 				m_eAttack_Value = (EDjinn_Attack)(rand() % (_uint)EDjinn_Attack::End);
-
+		
 			m_IsAttack = true;
 			break;
 		}
@@ -132,7 +133,10 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 		}
 	}
 
-	m_pColliderCom_Hurt->Update_Collider(m_pMovementCom->Get_WorldMatrix());
+	_matrix Matrix = m_pMovementCom->Get_WorldMatrix();
+	m_pColliderCom_Hurt->Update_Collider(Matrix);
+
+
 
 	m_pStatusCom->Tick(TimeDelta);
 
@@ -205,6 +209,7 @@ HRESULT CBoss_Djinn::Render()
 #ifdef _DEBUG
 	m_pColliderCom_Attack->Render_Collider();
 	m_pColliderCom_Hurt->Render_Collider();
+	m_pColliderCom_LeftHand->Render_Collider();
 #endif // _DEBUG
 
 	return S_OK;
@@ -222,9 +227,21 @@ void CBoss_Djinn::Anim_Check(_float TimeDelta)
 
 	m_pModelCom->Update_CombindTransformationMatrix();
 
-	_matrix Matrix = m_pMovementCom->Get_WorldMatrix();
-	Matrix.r[3] += XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * 7.f;
-	m_pColliderCom_Attack->Update_Collider(Matrix);
+	_matrix OffSet = XMMatrixTranslation(-100.f, 100.f, 0.f);
+	_matrix BoneMatrix = OffSet * m_pModelCom->Get_BoneMatrix("joint24");
+	_matrix WorldMatrix = m_pMovementCom->Get_WorldMatrix();
+	WorldMatrix.r[3] += BoneMatrix.r[3] * 0.05f;
+	m_pColliderCom_Attack->Update_Collider(WorldMatrix);
+
+
+
+	// ¿Þ¼Õ
+	OffSet = XMMatrixTranslation(65.f, 100.f, 0.f);
+	BoneMatrix = OffSet * m_pModelCom->Get_BoneMatrix("HandL");
+	WorldMatrix = m_pMovementCom->Get_WorldMatrix();
+	WorldMatrix.r[3] += BoneMatrix.r[3] * 0.05f;
+
+	m_pColliderCom_LeftHand->Update_Collider(WorldMatrix);
 
 	m_eAnim_Cur = m_eAnim_Next;
 
@@ -274,16 +291,18 @@ HRESULT CBoss_Djinn::Ready_Component(void * pArg)
 
 	COLLIDER_DESC Data;
 	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
-	Data.vScale = { 7.f, 7.f, 7.f };
-
+	Data.vScale = { 4.f, 4.f, 4.f };
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pColliderCom_Hurt, &Data);
 
 	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
 	Data.vScale = { 4.f, 4.f, 4.f };
-
+	
 	Data.Attack_Desc.eDamageType = EDamageType::Direct;
 	Data.Attack_Desc.iDamage = 100;
+	Data.IsCenter = true;
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data);
+
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack_LeftHand"), (CComponent**)&m_pColliderCom_LeftHand, &Data);
 
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_Boss_Djinn_Sepcualr"), TEXT("¹»¹ÙÂ¥»þ"), (CComponent**)&m_pTextureCom_Specular);
@@ -428,6 +447,16 @@ void CBoss_Djinn::Attack_EnergyBall()
 	switch (m_iAttackCount)
 	{
 	case 0:
+		m_eAnim_Next = EDjinnAnim::Spell_2_Start;
+		
+		if (true == IsFinished)
+			++m_iAttackCount;
+
+		break;
+	case 1:
+	{
+		
+	}
 		break;
 	default:
 		m_iAttackCount = 0;
@@ -515,6 +544,8 @@ void CBoss_Djinn::Free()
 	Safe_Release(m_pColliderCom_Hurt);
 	Safe_Release(m_pColliderCom_Attack);
 	Safe_Release(m_pTextureCom_Specular);
+
+	Safe_Release(m_pColliderCom_LeftHand);
 
 	__super::Free();
 }

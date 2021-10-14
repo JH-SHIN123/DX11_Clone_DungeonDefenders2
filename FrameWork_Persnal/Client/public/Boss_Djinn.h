@@ -87,17 +87,21 @@ private:
 	_bool					m_IsHurt = false;
 	CCollider*				m_pColliderCom_Hurt = nullptr;
 	CCollider*				m_pColliderCom_Attack = nullptr;
+	CCollider*				m_pColliderCom_LeftHand = nullptr;
 
 private:
 	CTextures*				m_pTextureCom_Specular = nullptr;
 
 private:
 	EDjinnAnim		m_eAnim_Cur			= EDjinnAnim::End;
-	EDjinnAnim		m_eAnim_Next		= EDjinnAnim::Idle;
+	EDjinnAnim		m_eAnim_Next		= EDjinnAnim::Attack_1;
 	EDjinn_Attack	m_eAttack_Value		= EDjinn_Attack::Attack;
 	_float4			m_vGemColor[(_uint)EDjinn_Attack::End];
 	_float4			m_vGemColor_Now;
 	_float			m_fColorChange_Time = 0.f;
+
+private:
+	//_float4x4 m_RevercePivot
 
 public:
 	static CBoss_Djinn* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
