@@ -47,6 +47,7 @@ public:
 
 	HRESULT Set_Variable(const char* pConstanceName, void* pData, _int iByteSize);
 	HRESULT Set_ShaderResourceView(const char * pConstanceName, _uint iMaterialIndex, aiTextureType eMaterialType, _uint iTextureIndex = 0);
+	HRESULT Set_ShaderResourceView_Direct(const char * pConstanceName, ID3D11ShaderResourceView * pResourceView);
 
 	HRESULT SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC * pInputElementDesc, _uint iNumElement, const _tchar * pShaderFilePath, const char * pTechniqueName);
 	HRESULT SetUp_Animation(const aiScene* pScene);

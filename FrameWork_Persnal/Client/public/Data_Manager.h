@@ -42,12 +42,14 @@ public:
 	_bool Tick_Phase();
 	void Set_NowPhase(EPhaseState eNowPhase);
 	void Set_MonsterCount_Max(const _int& iMonsterCount_Max) { m_iMonsterCount_Max = iMonsterCount_Max; }
+	void Set_BossDead(_bool IsDead = true) { m_IsBossDead = IsDead; }
 	void Add_MonsterCount(_int iAddCount = 1) { m_iMonsterCount += iAddCount; }
 
 	void Reset_MonsterCount() { m_iMonsterCount = 0, m_iMonsterCount_Max = 0; }
 
 	const _int Get_MonsterCount_Max() { return m_iMonsterCount_Max; }
 	const _int Get_MonsterCount() { return m_iMonsterCount; }
+	_bool Is_BossDead() { return m_IsBossDead; }
 	EPhaseState Get_NowPhase() const { return m_eNowPhase; }
 
 	_bool Is_PhaseClear() {	return m_iMonsterCount >= m_iMonsterCount_Max; }
@@ -57,6 +59,7 @@ private:
 	_float		m_fPhaseCheck_Timer = 0.f;
 	_uint		m_iMonsterCount_Max = 0;
 	_uint		m_iMonsterCount = 0;
+	_bool		m_IsBossDead = false;
 #pragma endregion
 
 

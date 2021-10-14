@@ -1,0 +1,111 @@
+#pragma once
+
+#ifndef __BOSS_DJINN_H__
+
+#include "Monster.h"
+
+BEGIN(Client)
+
+enum class EDjinnAnim
+{
+	Attack_1 = 0,
+	Charge = 59,
+	Coughing = 118,
+	Death = 158,
+	Hurt = 248,
+	Idle = 266,
+	Interrupt = 325,
+	Move_Backward = 345,
+	Move_Forward = 404,
+	Move_Left = 463,
+	Move_Right = 522,
+	Move_Up = 581,
+	Shock = 640,
+	Spell_1_Enter = 669,
+	Spell_1_Enter_Alt = 716,
+	Spell_1_Loop = 764,
+	Spell_1_Loop_Alt = 786,
+	Spell_1_Start = 847,
+	Spell_1_Stop = 895,
+	Spell_2_Loop = 932,
+	Spell_2_Start = 956,
+	Spell_2_Stop = 971,
+	Turn_Left = 987,
+	Turn_Right = 1046,
+	End_Anim = 1105,
+	End = -1
+};
+
+enum class EDjinn_Attack
+{
+	Attack,
+	EnergyBall,
+	WideRange,
+	TrapBall,
+	RepeatBall,
+	End
+};
+
+class CBoss_Djinn final : public CMonster
+{
+private:
+	explicit CBoss_Djinn(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
+	explicit CBoss_Djinn(const CBoss_Djinn& rhs);
+	virtual ~CBoss_Djinn() = default;
+
+public:
+	virtual HRESULT NativeConstruct_Prototype() override;
+	virtual HRESULT NativeConstruct(void* pArg) override;
+	virtual _int	Tick(_float TimeDelta) override;
+	virtual _int	Late_Tick(_float TimeDelta) override;
+	virtual HRESULT Render() override;
+
+public:
+	void Anim_Check(_float TimeDelta);
+	void Attack_Check();
+
+private:
+	HRESULT		Ready_Component(void* pArg);
+	_float		Anim_Changer(EDjinnAnim eAnim);
+	void		AI_Check();
+
+private:
+	void SetUp_GemColor();
+
+private:
+	void Attack_Default();
+	void Attack_EnergyBall();
+	void Attack_WideRange();
+	void Attack_TrapBall();
+	void Attack_RepeatBall();
+
+private:
+	_int	m_iAttackCount = 0;
+	_bool	m_IsAttack = false;
+
+private:
+	_bool					m_IsHurt = false;
+	CCollider*				m_pColliderCom_Hurt = nullptr;
+	CCollider*				m_pColliderCom_Attack = nullptr;
+
+private:
+	CTextures*				m_pTextureCom_Specular = nullptr;
+
+private:
+	EDjinnAnim		m_eAnim_Cur			= EDjinnAnim::End;
+	EDjinnAnim		m_eAnim_Next		= EDjinnAnim::Idle;
+	EDjinn_Attack	m_eAttack_Value		= EDjinn_Attack::Attack;
+	_float4			m_vGemColor[(_uint)EDjinn_Attack::End];
+	_float4			m_vGemColor_Now;
+	_float			m_fColorChange_Time = 0.f;
+
+public:
+	static CBoss_Djinn* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
+	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;
+	virtual void Free() override;
+};
+
+END
+#define __BOSS_DJINN_H__
+#endif //!__BOSS_DJINN_H__
+

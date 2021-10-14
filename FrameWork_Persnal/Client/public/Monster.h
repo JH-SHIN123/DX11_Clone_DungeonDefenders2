@@ -67,7 +67,7 @@ protected:
 private:
 	HRESULT	Ready_Component(void* pArg);
 
-private:
+protected:
 	CMasking_MeterBar_3D*	m_pMeterBar_Hp	= nullptr;
 	_float3 m_vHpBar_OffSet_Position;
 

@@ -241,6 +241,9 @@
     <Filter Include="03.UI, HUD\02.3D\A2.Ortho3D">
       <UniqueIdentifier>{96c07d0e-2e9a-4440-9a9e-dd86f06c67c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\02.Boss_Djinn">
+      <UniqueIdentifier>{cb291185-0315-4e1c-abd4-235192ab77c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -468,6 +471,9 @@
     <ClInclude Include="..\public\Ortho3D.h">
       <Filter>03.UI, HUD\02.3D\A2.Ortho3D</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Boss_Djinn.h">
+      <Filter>02.GameObject\05.Monster\02.Boss_Djinn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -673,6 +679,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Ortho3D.cpp">
       <Filter>03.UI, HUD\02.3D\A2.Ortho3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_Djinn.cpp">
+      <Filter>02.GameObject\05.Monster\02.Boss_Djinn</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

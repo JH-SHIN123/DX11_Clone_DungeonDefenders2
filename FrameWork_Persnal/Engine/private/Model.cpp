@@ -356,6 +356,18 @@ HRESULT CModel::Set_ShaderResourceView(const char * pConstanceName, _uint iMater
 	return pVariable->SetResource(pShaderResourceView);
 }
 
+HRESULT CModel::Set_ShaderResourceView_Direct(const char * pConstanceName, ID3D11ShaderResourceView * pResourceView)
+{
+	if (nullptr == m_pEffect)
+		return E_FAIL;
+
+	ID3DX11EffectShaderResourceVariable*	pVariable = m_pEffect->GetVariableByName(pConstanceName)->AsShaderResource();
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	return pVariable->SetResource(pResourceView);
+}
+
 HRESULT CModel::SetUp_InputLayOuts(D3D11_INPUT_ELEMENT_DESC* pInputElementDesc, _uint iNumElement, const _tchar* pShaderFilePath, const char* pTechniqueName)
 {
 	_uint		iFlag = 0;

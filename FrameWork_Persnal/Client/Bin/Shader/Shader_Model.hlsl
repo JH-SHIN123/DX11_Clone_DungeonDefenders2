@@ -1,7 +1,6 @@
 
 #include "Shader_Defines.hpp"
 
-float4 g_vColor;
 
 struct BONEMATRICES
 {
@@ -30,11 +29,13 @@ cbuffer MtrlDesc
 	float4		vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 };
 
+texture2D		g_MaskingTexture;
 texture2D		g_DiffuseTexture;
 texture2D		g_AmbientTexture;
 texture2D		g_SpecularTexture;
 float3			g_RGBColor;
 matrix			g_PivotMatrix;
+float4			g_vColor;
 
 sampler DiffuseSampler = sampler_state
 {
@@ -193,6 +194,27 @@ PS_OUT PS_MAIN_COLOR(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_MASKING_COLOR(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	vector		vMtrlDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	vector		vMtrlDiffuse_Double = g_MaskingTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	if (0 != vMtrlDiffuse_Double.r)
+	{
+		vMtrlDiffuse.r *= g_vColor.r;
+		vMtrlDiffuse.g *= g_vColor.g;
+		vMtrlDiffuse.b *= g_vColor.b;
+		vMtrlDiffuse.a *= g_vColor.a;
+	}
+
+	Out.vColor = (vLightDiffuse * vMtrlDiffuse) * (In.vShade + (vLightAmbient * vMtrlAmbient))
+		+ (vLightSpecular * vMtrlSpecular) * In.vSpecular;
+
+	return Out;
+}
+
 PS_OUT PS_ONLY_RED(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
@@ -297,5 +319,14 @@ technique11		DefaultTechnique
 		SetBlendState(BlendState_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL_TERRAIN();
 		PixelShader = compile ps_5_0 PS_MAIN_COLOR();
+	}
+
+	pass Light_Directional__Masking_Color // 6
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_Default, 0);
+		SetBlendState(BlendState_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL();
+		PixelShader = compile ps_5_0 PS_MAIN_MASKING_COLOR();
 	}
 };

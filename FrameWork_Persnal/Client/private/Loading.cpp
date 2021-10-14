@@ -15,8 +15,8 @@
 #include "Camera_Free.h"
 #include "PauseMenu.h"
 #include "Phase_Panel.h"
-#include "StatusMenu.h"
 #include "BlockadeTower.h"
+#include "StatusMenu.h"
 #include "StrikerTower.h"
 #include "StrikerTower_Bullet.h"
 #include "LightningTower.h"
@@ -35,6 +35,7 @@
 #include "TestNavi.h"
 #include "Monster_Gate.h"
 #include "CrystalCore.h"
+#include "Boss_Djinn.h"
 
 USING(Engine)
 
@@ -164,6 +165,8 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_MonsterIcon_Num")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/MonsterIcon/Num/%d.png"), 11));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Boss_Djinn_Sepcualr")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Mesh/Monster/Boss/Djinn_Spec.tga")));
 
 
 
@@ -207,6 +210,7 @@ HRESULT CLoading::LoadingForStage()
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_CrystalCore"), CCrystalCore::Create(m_pDevice, m_pDevice_Context));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Boss_Djinn"), CBoss_Djinn::Create(m_pDevice, m_pDevice_Context));
 
 
 
@@ -277,6 +281,9 @@ HRESULT CLoading::LoadingForStage()
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/CrystalCore/", "CrystalCore_Ring_Up.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_CrystalCore_Ring_Down"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/CrystalCore/", "CrystalCore_Ring_Down.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Boss_Djinn"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Monster/Boss/", "Boss_Djinn.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
 	if (hr != S_OK)
 		MSG_BOX("LoadingForStage Fail");
