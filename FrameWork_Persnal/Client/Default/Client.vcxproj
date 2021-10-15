@@ -175,6 +175,7 @@
     <ClInclude Include="..\public\Boss_Boom.h" />
     <ClInclude Include="..\public\Boss_Djinn.h" />
     <ClInclude Include="..\public\Boss_EnergyBall.h" />
+    <ClInclude Include="..\public\Boss_Hand.h" />
     <ClInclude Include="..\public\Boss_RepeatBall.h" />
     <ClInclude Include="..\public\Boss_TrapBall.h" />
     <ClInclude Include="..\public\Bullet.h" />
@@ -256,6 +257,7 @@
     <ClCompile Include="..\private\Boss_Boom.cpp" />
     <ClCompile Include="..\private\Boss_Djinn.cpp" />
     <ClCompile Include="..\private\Boss_EnergyBall.cpp" />
+    <ClCompile Include="..\private\Boss_Hand.cpp" />
     <ClCompile Include="..\private\Boss_RepeatBall.cpp" />
     <ClCompile Include="..\private\Boss_TrapBall.cpp" />
     <ClCompile Include="..\private\Bullet.cpp" />

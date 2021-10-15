@@ -19,8 +19,12 @@ public:
 	virtual _int	Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void Set_WorldMatrix(_fmatrix matWorld) { m_pMovementCom->Set_WorldMatrix(matWorld); }
+
 private:
 	HRESULT			Ready_Component(void* pArg);
+
 
 public:
 	static CStrikerTower_Bullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

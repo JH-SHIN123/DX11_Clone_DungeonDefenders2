@@ -20,7 +20,7 @@ CMainApp::CMainApp()
 
 HRESULT CMainApp::Ready_MainApp()
 {
-	SetWindowText(g_hWnd, TEXT("Dungeon Defendus"));
+	//SetWindowText(g_hWnd, TEXT("Dungeon Defendus"));
 
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;

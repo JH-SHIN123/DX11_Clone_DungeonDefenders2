@@ -139,8 +139,6 @@ HRESULT CLoading::LoadingForStage()
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
-	//SetWindowText(g_hWnd, TEXT("TMXPDLWL로딩 시작"));
-
 	HRESULT hr = S_OK;
 
 	// 앵간하면 GameObject가 Component를 가지는 구조가 되니까 Component를 먼저 생성하는게 깔끔함

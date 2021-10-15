@@ -460,13 +460,12 @@ void CLevel_Stage1::Cheet_Monster_Spawn()
 		MonData.fDetectDis = 15.f;
 		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
 		MonData.Movement_Desc.fSpeedPerSec = 10.f;
-		MonData.eMovePath = EMonster_MovePath::West_R;
 		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 		MonData.Stat_Desc.iHp_Max = 10000;
 		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
 		MonData.Stat_Desc.iExp = 15;
 
-		//for(int i = 0; i < 20; ++i)
+		MonData.eMovePath = EMonster_MovePath::West_R;
 		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
 	}
 	if (GET_KEY_INPUT(DIK_K))
@@ -477,13 +476,12 @@ void CLevel_Stage1::Cheet_Monster_Spawn()
 		MonData.fDetectDis = 15.f;
 		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
 		MonData.Movement_Desc.fSpeedPerSec = 10.f;
-		MonData.eMovePath = EMonster_MovePath::North_L;
 		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 		MonData.Stat_Desc.iHp_Max = 10000;
 		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
 		MonData.Stat_Desc.iExp = 15;
 
-		//for(int i = 0; i < 20; ++i)
+		MonData.eMovePath = EMonster_MovePath::North_L;
 		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
 	}
 	if (GET_KEY_INPUT(DIK_L))
@@ -494,16 +492,33 @@ void CLevel_Stage1::Cheet_Monster_Spawn()
 		MonData.fDetectDis = 15.f;
 		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
 		MonData.Movement_Desc.fSpeedPerSec = 10.f;
-		MonData.eMovePath = EMonster_MovePath::North_R;
 		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 		MonData.Stat_Desc.iHp_Max = 10000;
 		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
 		MonData.Stat_Desc.iExp = 15;
 
-		//for(int i = 0; i < 20; ++i)
+		MonData.eMovePath = EMonster_MovePath::North_R;
 		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
-	}
 
+
+	}
+	if (GET_KEY_INPUT(DIK_SEMICOLON))
+	{
+		MONSTER_DESC MonData;
+
+		lstrcpy(MonData.szModelName, L"Component_Mesh_Boss_Djinn");
+		MonData.eLevel = ELevel::Stage1;
+		MonData.fDetectDis = 15.f;
+		MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
+		MonData.Movement_Desc.fSpeedPerSec = 10.f;
+		MonData.eMovePath = EMonster_MovePath::West_L;
+		MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+		MonData.Stat_Desc.iHp_Max = 700;
+		MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
+		MonData.Stat_Desc.iExp = 15;
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Boss_Djinn", (_uint)ELevel::Stage1, L"Layer_Boss", &MonData);
+
+	}
 #endif // _DEBUG
 
 

@@ -256,6 +256,9 @@
     <Filter Include="02.GameObject\07.Bullet\13.Boss_RepeatBall">
       <UniqueIdentifier>{4c07c21e-f5c0-4e06-b7e5-6ac855b78923}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\02.Boss_Djinn\Boss_Hand">
+      <UniqueIdentifier>{c4057b70-0730-4bfe-bb0a-025609938bb8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -498,6 +501,9 @@
     <ClInclude Include="..\public\Boss_RepeatBall.h">
       <Filter>02.GameObject\07.Bullet\13.Boss_RepeatBall</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Boss_Hand.h">
+      <Filter>02.GameObject\05.Monster\02.Boss_Djinn\Boss_Hand</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -718,6 +724,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Boss_RepeatBall.cpp">
       <Filter>02.GameObject\07.Bullet\13.Boss_RepeatBall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_Hand.cpp">
+      <Filter>02.GameObject\05.Monster\02.Boss_Djinn\Boss_Hand</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

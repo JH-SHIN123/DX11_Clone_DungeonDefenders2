@@ -28,11 +28,6 @@ _bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectLayer, ELevel eD
 	list<CGameObject*> Dst_Object = pDstLayer->Get_GameObject_List();
 	list<CGameObject*> Src_Object = pSrcLayer->Get_GameObject_List();
 
-	_tchar szTitle[MAX_PATH] = L"";
-	wsprintf(szTitle, L"%d", Dst_Object.size());
-
-	SetWindowText(g_hWnd, szTitle);
-
 
 	for (auto& Src : Src_Object) // Com_Collide_Attack
 	{
