@@ -17,7 +17,7 @@ public:
 	virtual HRESULT NativeConstruct(void* pArg) override;
 	virtual HRESULT Render(_uint iPassIndex);
 public:
-	void Update_Instance(_double TimeDelta);
+	void Update_Instance(_float TimeDelta);
 
 private:
 	D3D11_BUFFER_DESC			m_InstanceBufferDesc;

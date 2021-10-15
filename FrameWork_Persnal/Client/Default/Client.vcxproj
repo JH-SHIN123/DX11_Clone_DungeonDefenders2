@@ -194,6 +194,7 @@
     <ClInclude Include="..\public\Data_Manager.h" />
     <ClInclude Include="..\public\DefenceTower.h" />
     <ClInclude Include="..\public\Effect.h" />
+    <ClInclude Include="..\public\Effect_Sprites.h" />
     <ClInclude Include="..\public\Fade.h" />
     <ClInclude Include="..\public\Goblin.h" />
     <ClInclude Include="..\public\HpMp.h" />
@@ -274,6 +275,7 @@
     <ClCompile Include="..\private\Data_Manager.cpp" />
     <ClCompile Include="..\private\DefenceTower.cpp" />
     <ClCompile Include="..\private\Effect.cpp" />
+    <ClCompile Include="..\private\Effect_Sprites.cpp" />
     <ClCompile Include="..\private\Fade.cpp" />
     <ClCompile Include="..\private\Goblin.cpp" />
     <ClCompile Include="..\private\HpMp.cpp" />

@@ -57,10 +57,12 @@ public:
 	_int Physics_Tick(_float TimeDelta);
 
 public: // Getter
+	MOVESTATE_DESC Get_Movestate_Desc() { return m_MoveStateDesc; }
 
 public:	// Setter
 	void Set_SpeedPerSec(_float fSpeedPerSec) { m_MoveStateDesc.fSpeedPerSec = fSpeedPerSec; }
 	void Set_Scale_Tick(_float TimeDelta, _fvector vScale, _bool IsScaleUp);
+	void Set_Movestate_Desc(const MOVESTATE_DESC& MoveDesc) { m_MoveStateDesc = MoveDesc; }
 
 public: // Move
 	void Go_Straight(_float TimeDelta, class CNavigation* pNavigation = nullptr, _bool IsJump = false);

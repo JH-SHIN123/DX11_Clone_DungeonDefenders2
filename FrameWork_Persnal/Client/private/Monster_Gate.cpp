@@ -304,8 +304,20 @@ void CMonster_Gate::Spawn_Monster()
 		lstrcpy(szPrototypeName, L"Prototype_Ogre");
 		break;
 	case EMonster_List::Kamikaze:
+		MonData.fAttackDis = 10.f;
+		MonData.fDetectDis = 15.f;
+		MonData.Stat_Desc.iExp = 20;
+		MonData.Stat_Desc.iHp_Max = 700;
+		lstrcpy(MonData.szModelName, L"Component_Mesh_Kobold");
+		lstrcpy(szPrototypeName, L"Prototype_Kobold");
 		break;
 	case EMonster_List::Boss:
+		MonData.fAttackDis = 10.f;
+		MonData.fDetectDis = 15.f;
+		MonData.Stat_Desc.iExp = 999;
+		MonData.Stat_Desc.iHp_Max = 700;
+		lstrcpy(MonData.szModelName, L"Component_Mesh_Boss_Djinn");
+		lstrcpy(szPrototypeName, L"Prototype_Boss_Djinn");
 		break;
 	default:
 		m_eSpawnList = EMonster_List(0);

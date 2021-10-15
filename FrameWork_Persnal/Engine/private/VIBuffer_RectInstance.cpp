@@ -76,10 +76,10 @@ HRESULT CVIBuffer_RectInstance::NativeConstruct_Prototype(const _tchar* pShaderF
 
 	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
-		pInstanceVertices[i].vRight = _float4(1.0f, 0.0f, 0.f, 0.f);
-		pInstanceVertices[i].vUp = _float4(0.0f, 1.0f, 0.f, 0.f);
-		pInstanceVertices[i].vLook = _float4(0.0f, 0.0f, 1.f, 0.f);
-		pInstanceVertices[i].vPosition = _float4(rand() % 15, 0.0f, 0.f, 1.f);
+		pInstanceVertices[i].vRight = _float4(1.0f, 0.f, 0.f, 0.f);
+		pInstanceVertices[i].vUp = _float4(0.f, 1.0f, 0.f, 0.f);
+		pInstanceVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
+		pInstanceVertices[i].vPosition = _float4(0.f, 0.f, 0.f, 1.f);
 	}
 
 	if (FAILED(CVIBuffer::SetUp_VertexSubResourceData(pInstanceVertices)))
@@ -155,7 +155,7 @@ HRESULT CVIBuffer_RectInstance::Render(_uint iPassIndex)
 	return S_OK;
 }
 
-void CVIBuffer_RectInstance::Update_Instance(_double TimeDelta)
+void CVIBuffer_RectInstance::Update_Instance(_float TimeDelta)
 {
 	D3D11_MAPPED_SUBRESOURCE		MappedSubResource;
 

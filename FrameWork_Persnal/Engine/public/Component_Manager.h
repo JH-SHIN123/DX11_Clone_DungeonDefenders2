@@ -16,6 +16,8 @@
 #include "VIBuffer_Font.h"
 #include "Textures_Extend.h"
 #include "VIBuffer_Terrain.h"
+#include "VIBuffer_RectInstance.h"
+#include "VIBuffer_PointInstance.h"
 
 class CComponent_Manager final : public CBase
 {

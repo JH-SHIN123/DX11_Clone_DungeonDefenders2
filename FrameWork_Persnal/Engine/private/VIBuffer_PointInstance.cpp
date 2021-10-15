@@ -57,7 +57,7 @@ HRESULT CVIBuffer_PointInstance::NativeConstruct_Prototype(const _tchar* pShader
 		m_pInstanceVtx[i].vRight = _float4(1.0f, 0.0f, 0.f, 0.f);
 		m_pInstanceVtx[i].vUp = _float4(0.0f, 1.0f, 0.f, 0.f);
 		m_pInstanceVtx[i].vLook = _float4(0.0f, 0.0f, 1.f, 0.f);
-		m_pInstanceVtx[i].vPosition = _float4(rand() % 15, 0.0f, 0.f, 1.f);
+		m_pInstanceVtx[i].vPosition = _float4(0.f, 0.f, 0.f, 1.f);
 	}
 
 	if (FAILED(SetUp_VertexSubResourceData(m_pInstanceVtx)))
@@ -115,7 +115,7 @@ HRESULT CVIBuffer_PointInstance::Render(_uint iPassIndex)
 	return S_OK;
 }
 
-void CVIBuffer_PointInstance::Update_Instance(_double TimeDelta)
+void CVIBuffer_PointInstance::Update_Instance(_float TimeDelta)
 {
 	D3D11_MAPPED_SUBRESOURCE		MappedSubResource;
 

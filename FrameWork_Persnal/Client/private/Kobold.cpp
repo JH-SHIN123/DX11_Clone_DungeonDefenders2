@@ -197,7 +197,7 @@ void CKobold::Anim_Check(_float TimeDelta)
 void CKobold::Attack_Check()
 {
 	_bool IsFinished = m_pModelCom->Get_IsFinishedAnimaion();
-	_int iAnimTime = m_pModelCom->Get_AnimTime();
+	_int iAnimTime = (_int)m_pModelCom->Get_AnimTime();
 	if (true == m_IsAttack && false == m_IsFuseOn)
 	{
 		m_eAnim_Next = EKoboldAnim::LightFuse;
@@ -206,6 +206,14 @@ void CKobold::Attack_Check()
 		{
 			m_IsFuseOn = true;
 			m_IsAttack = false;
+			MOVESTATE_DESC Data = m_pMovementCom->Get_Movestate_Desc();
+
+			_float fSpeed = Data.fSpeedPerSec;
+			fSpeed *= 1.3f;
+
+			Data.fSpeedPerSec = fSpeed;
+
+			m_pMovementCom->Set_Movestate_Desc(Data);
 		}
 	}
 
