@@ -297,6 +297,16 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Kobold"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Monster/Kobold/", "Kobold.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
+
+	// Effect
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Ring_Purple")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Ring_Purple/DarkPriestsRobes_%d.png"), 72));
+
+
+
+
+
+
 	if (hr != S_OK)
 		MSG_BOX("LoadingForStage Fail");
 

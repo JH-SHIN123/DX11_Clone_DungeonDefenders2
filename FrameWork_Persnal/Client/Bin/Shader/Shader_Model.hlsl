@@ -273,6 +273,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_Default, 0);
 		SetBlendState(BlendState_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
@@ -282,6 +283,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_Default, 0);
 		SetBlendState(BlendState_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL_TERRAIN();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
@@ -291,6 +293,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_Default, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_EFFECT_NOLIGHT();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ONLY_RED();
 	}
 
@@ -300,6 +303,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_Default, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_EFFECT_NOLIGHT();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ONLY_GREEN();
 	}
 
@@ -309,6 +313,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_Default, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_EFFECT_NOLIGHT();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ONLY_BLUE();
 	}
 
@@ -318,6 +323,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_Default, 0);
 		SetBlendState(BlendState_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL_TERRAIN();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_COLOR();
 	}
 
@@ -327,6 +333,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_Default, 0);
 		SetBlendState(BlendState_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_MASKING_COLOR();
 	}
 };

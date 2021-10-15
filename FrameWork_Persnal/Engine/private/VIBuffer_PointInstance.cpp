@@ -115,6 +115,13 @@ HRESULT CVIBuffer_PointInstance::Render(_uint iPassIndex)
 	return S_OK;
 }
 
+const _uint CVIBuffer_PointInstance::Get_InstanceBuffer(VTXMATRIX * pOutInstanceBuffer)
+{
+	memcpy(pOutInstanceBuffer, m_pInstanceVtx, sizeof(VTXMATRIX) * m_iNumInstance);
+
+	return m_iNumInstance;
+}
+
 void CVIBuffer_PointInstance::Update_Instance(_float TimeDelta)
 {
 	D3D11_MAPPED_SUBRESOURCE		MappedSubResource;
@@ -122,11 +129,7 @@ void CVIBuffer_PointInstance::Update_Instance(_float TimeDelta)
 	m_pDevice_Context->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedSubResource);
 
 	for (_uint i = 0; i < m_iNumInstance; ++i)
-	{
-		m_pInstanceVtx[i].vPosition.y += 0.1f * TimeDelta;
-
 		*((VTXMATRIX*)MappedSubResource.pData + i) = m_pInstanceVtx[i];
-	}
 
 	m_pDevice_Context->Unmap(m_pVBInstance, 0);
 

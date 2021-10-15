@@ -345,6 +345,7 @@
   <ItemGroup>
     <FxCompile Include="..\Bin\Shader\Shader_Default.hlsl" />
     <FxCompile Include="..\Bin\Shader\Shader_Model.hlsl" />
+    <FxCompile Include="..\Bin\Shader\Shader_Point.hlsl" />
     <FxCompile Include="..\Bin\Shader\Shader_Terrain.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

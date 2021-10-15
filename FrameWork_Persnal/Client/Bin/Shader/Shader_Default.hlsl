@@ -511,6 +511,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_Default, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
@@ -521,6 +522,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
@@ -531,6 +533,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI_REVERCE();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
@@ -541,6 +544,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_BLUE();
 	}
 
@@ -551,6 +555,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE_UV_TIME();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_REDMASKING();
 	}
 
@@ -561,6 +566,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ALPHATIME();
 	}
 
@@ -571,6 +577,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_TIME();
 	}
 
@@ -581,6 +588,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_TIMEDARK();
 	}
 
@@ -591,6 +599,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ALPHALOW();
 	}
 
@@ -601,6 +610,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI_REVERCE();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ALPHALOW();
 	}
 
@@ -611,6 +621,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE_UV_TIME();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_BLUEMASKING();
 	}
 
@@ -621,6 +632,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE_UV_TIME();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ALPHAMIDDLE();
 	}
 
@@ -631,6 +643,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE2_UV_TIME();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MASKING_UV_RATIO();
 	}
 
@@ -641,6 +654,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE2();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MASKING_DEFAULT();
 	}
 
@@ -651,6 +665,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_TEX_ALPHA();
 	}
 
@@ -661,6 +676,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE2_UV_TIME();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MASKING_UV_RATIO_GREEN();
 	}
 
@@ -671,6 +687,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ALPHA_COLOR_R();
 	}
 
@@ -681,6 +698,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ALPHA_COLOR_G();
 	}
 
@@ -691,6 +709,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ALPHA_COLOR_B();
 	}
 
@@ -702,6 +721,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE2_UV_TIME();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MASKING_UV_RATIO_COLOR();
 	}
 
@@ -711,6 +731,7 @@ technique11		DefaultTechnique
 		SetDepthStencilState(DepthStecil_Always, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_UI_2();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 };
