@@ -91,6 +91,18 @@ void CCollider::Set_Scale_Tick_Linear(_float3 vScale, _float TimeDelta)
 	m_ColliderDesc.vScale.y += (vScale.y - m_ColliderDesc.vScale.y) * TimeDelta;
 	m_ColliderDesc.vScale.z += (vScale.z - m_ColliderDesc.vScale.z) * TimeDelta;
 
+	switch (m_eColliderType)
+	{
+	case ECollideType::AABB:
+		m_pAABB = new BoundingBox(m_ColliderDesc.vPosition, m_ColliderDesc.vScale);
+		break;
+	case ECollideType::OBB:
+		m_pOBB = new BoundingOrientedBox(m_ColliderDesc.vPosition, m_ColliderDesc.vScale, _float4(1.f, 0.f, 0.f, 0.f));
+		break;
+	case ECollideType::SPHERE:
+		m_pSphere = new BoundingSphere(m_ColliderDesc.vPosition, m_ColliderDesc.vScale.x);
+		break;
+	}
 }
 
 _int CCollider::Update_Collider(_fmatrix WorldMatrix)

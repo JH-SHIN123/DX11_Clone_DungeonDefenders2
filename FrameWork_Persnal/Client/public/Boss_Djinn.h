@@ -107,6 +107,10 @@ private:
 	const _float	m_fTime_RepeatBall_Max = 1.5f;
 
 	class CStrikerTower_Bullet* m_pTestHand = nullptr;
+	_float4x4 m_RightHand_Matrix;
+	_float4x4 m_LeftHand_Matrix;
+
+	_float fTimeTest[4] = {0.f,0.f,0.f,0.f};
 
 private:
 	//_float4x4 m_RevercePivot

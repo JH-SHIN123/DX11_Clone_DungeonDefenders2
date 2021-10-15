@@ -104,7 +104,7 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 		{
 			if (EDjinn_Attack::End == m_eAttack_Value)
 			{
-				m_eAttack_Value = EDjinn_Attack::RepeatBall;//(EDjinn_Attack)(rand() % (_uint)EDjinn_Attack::End);
+				m_eAttack_Value = EDjinn_Attack::RepeatBall;// (EDjinn_Attack)(rand() % (_uint)EDjinn_Attack::End);
 				m_iAttackCount = 0;
 			}
 
@@ -249,8 +249,12 @@ void CBoss_Djinn::Anim_Check(_float TimeDelta)
 	_matrix BoneMatrix = XMMatrixMultiply(XMMatrixTranslation(-7.f, 10.f, -0.f), m_pModelCom->Get_BoneMatrix("joint24"));
 	_matrix WorldMatrix = m_pMovementCom->Get_WorldMatrix();
 	WorldMatrix = XMMatrixMultiply(BoneMatrix, WorldMatrix);
+	WorldMatrix.r[0] = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+	WorldMatrix.r[1] = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	WorldMatrix.r[2] = XMVectorSet(0.f, 0.f, 1.f, 0.f);
 
 	m_pColliderCom_Attack->Update_Collider(WorldMatrix);
+	XMStoreFloat4x4(&m_RightHand_Matrix, WorldMatrix);
 
 
 
@@ -259,9 +263,15 @@ void CBoss_Djinn::Anim_Check(_float TimeDelta)
 	BoneMatrix = XMMatrixMultiply(XMMatrixTranslation(7.f, 10.f, -0.f), m_pModelCom->Get_BoneMatrix("HandL"));
 	WorldMatrix = m_pMovementCom->Get_WorldMatrix();
 	WorldMatrix = XMMatrixMultiply(BoneMatrix, WorldMatrix);
+	WorldMatrix.r[0] = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+	WorldMatrix.r[1] = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	WorldMatrix.r[2] = XMVectorSet(0.f, 0.f, 1.f, 0.f);
 
 	m_pColliderCom_LeftHand->Update_Collider(WorldMatrix);
 	m_pTestHand->Set_WorldMatrix(WorldMatrix);
+	m_pColliderCom_Attack->Update_Collider(WorldMatrix);
+	XMStoreFloat4x4(&m_LeftHand_Matrix, WorldMatrix);
+
 
 
 	m_eAnim_Cur = m_eAnim_Next;
@@ -463,7 +473,7 @@ void CBoss_Djinn::GemColor_Check(_float TimeDelta)
 	_vector vGemColor = XMLoadFloat4(&m_vGemColor[(_uint)m_eAttack_Value]);
 
 	_vector vTerm = vGemColor - vGemColor_Now;
-	vGemColor_Now += vTerm * (TimeDelta * 2.f);
+	vGemColor_Now += vTerm * (TimeDelta * 5.f);
 
 	vGemColor_Now.m128_f32[3] = 1.f;
 
@@ -516,16 +526,11 @@ void CBoss_Djinn::Attack_EnergyBall()
 		break;
 	case 2:
 	{
-		_matrix OffSet = XMMatrixTranslation(65.f, 100.f, 0.f);
-		_matrix BoneMatrix = OffSet * m_pModelCom->Get_BoneMatrix("HandL");
-		_matrix WorldMatrix = m_pMovementCom->Get_WorldMatrix();
-		WorldMatrix.r[3] += BoneMatrix.r[3] * 0.05f;
-
 		CMovement* pTarget_Player = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
 
-		_vector vLeftHand = WorldMatrix.r[3];
+		_vector vLeftHand = (XMLoadFloat4x4(&m_LeftHand_Matrix)).r[3];
 		_vector vTargetPos = pTarget_Player->Get_State(EState::Position);
-		vTargetPos.m128_f32[1] += 3.f;
+		vTargetPos.m128_f32[1] += 1.f;
 		_vector vDir = XMVector3Normalize(vTargetPos - m_pMovementCom->Get_State(EState::Position));
 
 		BULLET_DESC Data;
@@ -536,7 +541,7 @@ void CBoss_Djinn::Attack_EnergyBall()
 		XMStoreFloat4(&Data.MoveState_Desc.vPos, vLeftHand);
 		Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 		Data.MoveState_Desc.fSpeedPerSec = 40.f;
-		Data.fLifeTime = 10.f;
+		Data.fLifeTime = 5.f;
 
 		Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
 		Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
@@ -584,7 +589,7 @@ void CBoss_Djinn::Attack_WideRange()
 			break;
 	case 1:
 	{
-		if (893 == iAnimTime && EDjinnAnim::Spell_1_Start == m_eAnim_Next)
+		if (890 == iAnimTime && EDjinnAnim::Spell_1_Start == m_eAnim_Next)
 		{
 			m_eAnim_Next = EDjinnAnim::Spell_1_Stop;
 			++m_iAttackCount;
@@ -610,7 +615,7 @@ void CBoss_Djinn::Attack_WideRange()
 			XMStoreFloat4(&Data.MoveState_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 			Data.MoveState_Desc.fSpeedPerSec = 40.f;
-			Data.fLifeTime = 10.f;
+			Data.fLifeTime = 0.75f;
 
 			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
 			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
@@ -676,20 +681,21 @@ void CBoss_Djinn::Attack_TrapBall(_float TimeDelta)
 
 		if (m_fTime_TrapBall_Max <= m_fTime_TrapBall)
 		{
+			CMovement* pTarget_Player = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
+
 			BULLET_DESC Data;
 			lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
 			Data.MoveState_Desc.fRotatePerSec = 50.f;
 
-			XMStoreFloat4(&Data.MoveState_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
+			XMStoreFloat4(&Data.MoveState_Desc.vPos, pTarget_Player->Get_State(EState::Position));
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 			Data.MoveState_Desc.fSpeedPerSec = 40.f;
-			Data.fLifeTime = 10.f;
+			Data.fLifeTime = 2.f;
 
 			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
 			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
 			Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
 			Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
-			//Data.Attack_Collide_Desc.vPosition = { 0.f, 50.f, 0.f };
 			Data.Attack_Collide_Desc.IsCenter = true;
 
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Boss_TrapBall", (_uint)ELevel::Stage1, L"Layer_Bullet_Monster", &Data);
@@ -725,22 +731,24 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 	_bool IsFinished = m_pModelCom->Get_IsFinishedAnimaion();
 	_uint iAnimTime = (_uint)m_pModelCom->Get_AnimTime();
 
-	_matrix OffSet = XMMatrixTranslation(65.f, 100.f, 0.f);
-	_matrix BoneMatrix = OffSet * m_pModelCom->Get_BoneMatrix("HandL");
-	_matrix WorldMatrix = m_pMovementCom->Get_WorldMatrix();
-	WorldMatrix.r[3] += BoneMatrix.r[3] * 0.05f;
-
 	CMovement* pTarget_Player = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
 
-	_vector vLeftHand = WorldMatrix.r[3];
+	_vector vLeftHand = (XMLoadFloat4x4(&m_LeftHand_Matrix)).r[3];
+	_vector vRightHand = (XMLoadFloat4x4(&m_RightHand_Matrix)).r[3];
+
 	_vector vTargetPos = pTarget_Player->Get_State(EState::Position);
-	vTargetPos.m128_f32[1] += 3.f;
-	_vector vDir = XMVector3Normalize(vTargetPos - m_pMovementCom->Get_State(EState::Position));
+	vTargetPos.m128_f32[1] += 2.f;
+	_vector vDir = vTargetPos;//XMVector3Normalize(vTargetPos);
 
 	BULLET_DESC Data;
 	lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
 	Data.MoveState_Desc.fRotatePerSec = 50.f;
 
+	for (_int i = 0; i < 4; ++i)
+	{
+		if (i <= m_iAttackCount)
+			fTimeTest[i] += TimeDelta;
+	}
 
 	switch (m_iAttackCount)
 	{
@@ -761,13 +769,13 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 		m_eAnim_Next = EDjinnAnim::Spell_1_Loop_Alt;
 		m_fTime_RepeatBall += TimeDelta;
 
-		if (m_fTime_RepeatBall_Max <= m_fTime_RepeatBall)
+		if (793 == iAnimTime)
 		{
 			XMStoreFloat3(&Data.vDir, vDir);
-			XMStoreFloat4(&Data.MoveState_Desc.vPos, vLeftHand);
+			XMStoreFloat4(&Data.MoveState_Desc.vPos, vRightHand);
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 			Data.MoveState_Desc.fSpeedPerSec = 40.f;
-			Data.fLifeTime = 10.f;
+			Data.fLifeTime = 6.9586134f;
 
 			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
 			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
@@ -785,13 +793,13 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 	case 3:
 		m_fTime_RepeatBall += TimeDelta;
 
-		if (m_fTime_RepeatBall_Max <= m_fTime_RepeatBall)
+		if (822 == iAnimTime)
 		{
 			XMStoreFloat3(&Data.vDir, vDir);
 			XMStoreFloat4(&Data.MoveState_Desc.vPos, vLeftHand);
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 			Data.MoveState_Desc.fSpeedPerSec = 40.f;
-			Data.fLifeTime = 10.f;
+			Data.fLifeTime = 6.9419365f;
 
 			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
 			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
@@ -809,13 +817,13 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 	case 4:
 		m_fTime_RepeatBall += TimeDelta;
 
-		if (m_fTime_RepeatBall_Max <= m_fTime_RepeatBall)
+		if (793 == iAnimTime)
 		{
 			XMStoreFloat3(&Data.vDir, vDir);
-			XMStoreFloat4(&Data.MoveState_Desc.vPos, vLeftHand);
+			XMStoreFloat4(&Data.MoveState_Desc.vPos, vRightHand);
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 			Data.MoveState_Desc.fSpeedPerSec = 40.f;
-			Data.fLifeTime = 10.f;
+			Data.fLifeTime = 5.3081026f;
 
 			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
 			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
@@ -833,13 +841,13 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 	case 5:
 		m_fTime_RepeatBall += TimeDelta;
 
-		if (m_fTime_RepeatBall_Max <= m_fTime_RepeatBall)
+		if (822 == iAnimTime)
 		{
 			XMStoreFloat3(&Data.vDir, vDir);
 			XMStoreFloat4(&Data.MoveState_Desc.vPos, vLeftHand);
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 			Data.MoveState_Desc.fSpeedPerSec = 40.f;
-			Data.fLifeTime = 10.f;
+			Data.fLifeTime = 4.8579593f;
 
 			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
 			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
@@ -853,12 +861,19 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 			++m_iAttackCount;
 		}
 		break;
+
 	case 6:
+
+		if (840 == iAnimTime)
+			++m_iAttackCount;
+
+		break;
+	case 7:
 		m_eAnim_Next = EDjinnAnim::Spell_1_Stop;
 		++m_iAttackCount;
 		break;
-	case 7:
-		if (929 == iAnimTime)
+	case 8:
+		if (927 == iAnimTime)
 			++m_iAttackCount;
 		break;
 
@@ -899,6 +914,7 @@ void CBoss_Djinn::Free()
 	Safe_Release(m_pTextureCom_Specular);
 
 	Safe_Release(m_pColliderCom_LeftHand);
+	Safe_Release(m_pTestHand);
 
 	__super::Free();
 }

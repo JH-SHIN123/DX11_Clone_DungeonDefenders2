@@ -34,8 +34,8 @@ _int CBoss_TrapBall::Tick(_float TimeDelta)
 		return iReturn;
 
 
-	_vector vDir = XMLoadFloat3(&m_vGoDir);
-	m_pMovementCom->Go_Dir_Vector(TimeDelta, vDir);
+	//_vector vDir = XMLoadFloat3(&m_vGoDir);
+	//m_pMovementCom->Go_Dir_Vector(TimeDelta, vDir);
 
 
 	if (nullptr != m_pColliderCom_Attack)

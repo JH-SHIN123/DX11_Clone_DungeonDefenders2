@@ -34,8 +34,10 @@ _int CBoss_RepeatBall::Tick(_float TimeDelta)
 		return iReturn;
 
 
-	_vector vDir = XMLoadFloat3(&m_vGoDir);
-	m_pMovementCom->Go_Dir_Vector(TimeDelta, vDir);
+	_vector vDir = (XMLoadFloat3(&m_vGoDir) - m_pMovementCom->Get_State(EState::Position));
+	vDir = XMVectorSetW(vDir, 0.f);
+	vDir *= 0.25f;
+	m_pMovementCom->Go_Dir(TimeDelta, vDir);
 
 
 	if (nullptr != m_pColliderCom_Attack)

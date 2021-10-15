@@ -34,10 +34,12 @@ _int CBoss_Boom::Tick(_float TimeDelta)
 		return iReturn;
 
 
+
+
 	//_vector vDir = XMLoadFloat3(&m_vGoDir);
 	//m_pMovementCom->Go_Dir_Vector(TimeDelta, vDir);
 
-	m_pColliderCom_Attack->Set_Scale_Tick_Linear(_float3(7.f, 7.f, 7.f), TimeDelta);
+	m_pColliderCom_Attack->Set_Scale_Tick_Linear(_float3(30.f, 30.f, 30.f), TimeDelta * 5.f);
 
 	if (nullptr != m_pColliderCom_Attack)
 	{
