@@ -259,6 +259,12 @@
     <Filter Include="02.GameObject\05.Monster\02.Boss_Djinn\Boss_Hand">
       <UniqueIdentifier>{c4057b70-0730-4bfe-bb0a-025609938bb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\05.Monster\03.Kobold">
+      <UniqueIdentifier>{957c6d77-2b33-4f77-a6a7-9c93718afb15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\07.Bullet\14.Kobold_Boom">
+      <UniqueIdentifier>{c42a9201-0187-4059-9ae7-9aaa910d6435}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -504,6 +510,12 @@
     <ClInclude Include="..\public\Boss_Hand.h">
       <Filter>02.GameObject\05.Monster\02.Boss_Djinn\Boss_Hand</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Kobold_Boom.h">
+      <Filter>02.GameObject\07.Bullet\14.Kobold_Boom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Kobold.h">
+      <Filter>02.GameObject\05.Monster\03.Kobold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -727,6 +739,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Boss_Hand.cpp">
       <Filter>02.GameObject\05.Monster\02.Boss_Djinn\Boss_Hand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Kobold_Boom.cpp">
+      <Filter>02.GameObject\07.Bullet\14.Kobold_Boom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Kobold.cpp">
+      <Filter>02.GameObject\05.Monster\03.Kobold</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

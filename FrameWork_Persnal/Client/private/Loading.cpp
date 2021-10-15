@@ -40,6 +40,8 @@
 #include "Boss_Boom.h"
 #include "Boss_TrapBall.h"
 #include "Boss_RepeatBall.h"
+#include "Kobold.h"
+#include "Kobold_Boom.h"
 
 USING(Engine)
 
@@ -218,6 +220,8 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Boss_TrapBall"), CBoss_TrapBall::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Boss_RepeatBall"), CBoss_RepeatBall::Create(m_pDevice, m_pDevice_Context));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Kobold"), CKobold::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Kobold_Boom"), CKobold_Boom::Create(m_pDevice, m_pDevice_Context));
 
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_MeshLevel_1_Navi"), CNavigation::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Navi.fbx"));

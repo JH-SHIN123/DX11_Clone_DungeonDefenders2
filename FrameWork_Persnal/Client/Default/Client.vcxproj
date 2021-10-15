@@ -197,6 +197,8 @@
     <ClInclude Include="..\public\Fade.h" />
     <ClInclude Include="..\public\Goblin.h" />
     <ClInclude Include="..\public\HpMp.h" />
+    <ClInclude Include="..\public\Kobold.h" />
+    <ClInclude Include="..\public\Kobold_Boom.h" />
     <ClInclude Include="..\public\Level_Loading.h" />
     <ClInclude Include="..\public\Level_Logo.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
@@ -275,6 +277,8 @@
     <ClCompile Include="..\private\Fade.cpp" />
     <ClCompile Include="..\private\Goblin.cpp" />
     <ClCompile Include="..\private\HpMp.cpp" />
+    <ClCompile Include="..\private\Kobold.cpp" />
+    <ClCompile Include="..\private\Kobold_Boom.cpp" />
     <ClCompile Include="..\private\Level_Loading.cpp" />
     <ClCompile Include="..\private\Level_Logo.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />

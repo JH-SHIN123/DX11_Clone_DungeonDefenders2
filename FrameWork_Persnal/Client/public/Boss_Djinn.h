@@ -125,3 +125,33 @@ END
 #define __BOSS_DJINN_H__
 #endif //!__BOSS_DJINN_H__
 
+/*
+
+에너지볼 HandL - 노란색
+2.f, 1.8f, 0.f
+Spell_2_Start
+Spell_2_Stop
+
+일반 공격 Joint24 - 회색
+1.f, 1.f, 1.f
+Attack_1
+
+광역 공격 - 붉은색
+1.5f, 0.2f, 0.2f
+Spell_1_Start
+Spell_1_Stop
+
+설치형 에너지볼(지연 폭발) HandL - 초록색
+0.8f, 2.f, 0.8f
+Spell_2_Start
+Spell_2_Loop
+Spell_2_Stop
+
+연속 에너지볼 - 보라색
+0.8f, 0.f, 1.7f
+Spell_1_Enter_Alt
+Spell_1_Loop_Alt
+Spell_1_Stop
+
+
+*/
