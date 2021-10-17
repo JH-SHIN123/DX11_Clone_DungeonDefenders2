@@ -79,22 +79,22 @@ protected:
 	CNavigation*			m_pNaviCom		= nullptr;
 	_bool					m_IsDead = false;
 
-private:
+protected:
 	_bool	m_IsBrainWashed				= false;
 	_bool	m_IsBrainWashed_Complete = false;
 
 	_float	m_fBrainWashTime = 0.f;
 
-private: // 스케일 값 보존용
+protected: // 스케일 값 보존용
 	_float3 m_vScale = { 0.f,0.f,0.f };
 
-private:
+protected:
 	EMonsterAI		m_eAI_Cur	= EMonsterAI::End;
 	EMonsterAI		m_eAI_Next	= EMonsterAI::Idle;
 	_float			m_fDetectDis = 0.f;
 	_float			m_fAttackDis = 0.f;
 
-private: //Path_Index
+protected: //Path_Index
 	const _int m_iNorth_L[7]	= { 83,	81,	 77,  73,  100,	17,	 0 };
 	const _int m_iNorth_R[7]	= { 99,	119, 116, 107, 100,	17,	 0 };
 	const _int m_iWest_L[7]		= { 87,	85,	 36,  31,  24,	12,	 0 };
@@ -104,6 +104,9 @@ private: //Path_Index
 	_bool m_IsChaseTarget = false;
 	_bool m_IsTowerAttack = false;
 	EMonster_MovePath m_eMovePath = EMonster_MovePath::End;
+
+protected:
+	_bool	m_IsKobold = false;
 
 
 public:

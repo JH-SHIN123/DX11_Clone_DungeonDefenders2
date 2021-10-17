@@ -161,9 +161,9 @@ HRESULT CMainApp::Ready_Component_PrototypeForStatic()
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Prototype_Animate_Effect"), CAnimate_Effect::Create(m_pDevice, m_pDevice_Context))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_VIBuffer_PointInstance")
-		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/ShaderFiles/Shader_Point.hlsl"), "DefaultTechnique", 10))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_VIBuffer_PointInstance")
+	//	, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/ShaderFiles/Shader_Point.hlsl"), "DefaultTechnique", 10))))
+	//	return E_FAIL;
 
 
 	return S_OK;

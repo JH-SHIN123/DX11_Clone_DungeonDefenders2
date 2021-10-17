@@ -57,6 +57,7 @@ public: // Setter
 	void Set_Damage_Dot(const ATTACK_DESC& pDamage);
 
 	void Set_Hp(_int iHp);
+	void Set_Stat(const STATUS_DESC& Status) { m_Status_Desc = Status; }
 
 public: // Add
 	void Add_Exp(_int iExp) { m_Status_Desc.iExp += iExp; }

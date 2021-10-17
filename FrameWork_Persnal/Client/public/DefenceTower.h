@@ -57,6 +57,13 @@ public: // Getter
 	void Get_TowerDesc(TOWER_DESC* pOutTowerDesc);
 
 public:
+	void Upgrade_Tower();
+	void Healing_Tower();
+
+protected:
+	void Healing_Check(_float TimeDelta);
+
+public:
 	void Set_TowerPos(_fvector vPosition);
 	void Set_TowerRotation(_fvector vRotation);
 	void Set_TowerRangeAngle(_float fRangeAngle_Max, _float fRangeAngle_Min) { m_fTowerRangeMax = fRangeAngle_Max, m_fTowerRangeMin = fRangeAngle_Min; }
@@ -92,7 +99,10 @@ private:
 	_bool			m_IsEnemyCheck = true;
 	_bool			m_IsSpawn = true;
 
-
+private:
+	_float m_fHealTime = 0.f;
+	const _float m_fHealTime_Max = 2.f;
+	_bool m_IsHealTic = false;
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

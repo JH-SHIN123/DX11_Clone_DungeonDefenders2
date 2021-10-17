@@ -131,6 +131,9 @@ _int CCollider::Update_Collider(_fmatrix WorldMatrix)
 		m_pSphere->Transform(*m_pSphere, TransformMatrix);
 		break;
 	}
+
+	m_IsPicked = false;
+
 	return _int();
 }
 
@@ -278,6 +281,12 @@ _bool CCollider::Intersect_Collider(CCollider* pCollide)
 	pCollide->m_IsCollision = m_IsCollision;
 
 	return m_IsCollision;
+}
+
+_bool CCollider::Ray_Intersect(_fvector vPos, _fvector vDir, _float* pDis)
+{
+	m_IsPicked = m_pSphere->Intersects(vPos, vDir, *pDis);
+	return m_IsPicked;
 }
 
 _matrix CCollider::Remove_Scale(_matrix Transform)

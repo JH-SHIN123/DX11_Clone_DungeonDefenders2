@@ -242,12 +242,12 @@ HRESULT COgre::Ready_Component(void * pArg)
 
 	COLLIDER_DESC Data;
 	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
-	Data.vScale = { 7.f, 7.f, 7.f };
+	Data.vScale = { 4.f, 4.f, 4.f };
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pColliderCom_Hurt, &Data);
 
 	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
-	Data.vScale = { 4.f, 4.f, 4.f };
+	Data.vScale = { 3.f, 3.f, 3.f };
 
 	Data.Attack_Desc.eDamageType = EDamageType::Direct;
 	Data.Attack_Desc.iDamage = 100;

@@ -299,7 +299,7 @@ void CMonster_Gate::Spawn_Monster()
 		MonData.fAttackDis = 10.f;
 		MonData.fDetectDis = 15.f;
 		MonData.Stat_Desc.iExp = 53;
-		MonData.Stat_Desc.iHp_Max = 700;
+		MonData.Stat_Desc.iHp_Max = 500;
 		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
 		lstrcpy(szPrototypeName, L"Prototype_Ogre");
 		break;
@@ -307,7 +307,7 @@ void CMonster_Gate::Spawn_Monster()
 		MonData.fAttackDis = 10.f;
 		MonData.fDetectDis = 15.f;
 		MonData.Stat_Desc.iExp = 20;
-		MonData.Stat_Desc.iHp_Max = 700;
+		MonData.Stat_Desc.iHp_Max = 200;
 		lstrcpy(MonData.szModelName, L"Component_Mesh_Kobold");
 		lstrcpy(szPrototypeName, L"Prototype_Kobold");
 		break;
@@ -315,7 +315,7 @@ void CMonster_Gate::Spawn_Monster()
 		MonData.fAttackDis = 10.f;
 		MonData.fDetectDis = 15.f;
 		MonData.Stat_Desc.iExp = 999;
-		MonData.Stat_Desc.iHp_Max = 700;
+		MonData.Stat_Desc.iHp_Max = 1200;
 		lstrcpy(MonData.szModelName, L"Component_Mesh_Boss_Djinn");
 		lstrcpy(szPrototypeName, L"Prototype_Boss_Djinn");
 		break;

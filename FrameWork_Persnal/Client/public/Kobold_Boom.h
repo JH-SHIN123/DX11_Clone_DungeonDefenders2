@@ -25,6 +25,9 @@ public:
 private:
 	HRESULT			Ready_Component(void* pArg);
 
+private:
+	_bool m_IsBoom = false;
+
 
 public:
 	static CKobold_Boom* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

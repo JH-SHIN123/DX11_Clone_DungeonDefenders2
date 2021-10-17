@@ -58,6 +58,7 @@ public:
 	_int Update_Collider(_fvector vPosition);
 	HRESULT Render_Collider();
 	_bool	Intersect_Collider(CCollider* pCollide);
+	_bool	Ray_Intersect(_fvector vPos, _fvector vDir, _float* pDis);
 
 private:
 	ECollideType			m_eColliderType = ECollideType::End;
@@ -70,6 +71,7 @@ private:
 
 private:
 	_bool		m_IsNotCollide = false;
+	_bool		m_IsPicked = false;
 
 
 private:

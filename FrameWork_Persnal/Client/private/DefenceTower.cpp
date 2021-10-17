@@ -189,6 +189,42 @@ void CDefenceTower::Get_TowerDesc(TOWER_DESC * pOutTowerDesc)
 
 }
 
+void CDefenceTower::Upgrade_Tower()
+{
+	STATUS_DESC Stat = m_pStatusCom->Get_Stat();
+
+	_float fHp_Max = (_float)Stat.iHp_Max;
+	fHp_Max *= 1.5f;
+	Stat.iHp_Max = (_int)fHp_Max;
+
+	fHp_Max = (_float)Stat.iHp;
+	fHp_Max *= 1.5f;
+	Stat.iHp = (_int)fHp_Max;
+
+	Stat.iAtt_Basic += 20;
+
+	m_pStatusCom->Set_Stat(Stat);
+}
+
+void CDefenceTower::Healing_Tower()
+{
+	m_fHealTime = 1.5f;
+}
+
+void CDefenceTower::Healing_Check(_float TimeDelta)
+{
+	m_fHealTime -= TimeDelta;
+
+	STATUS_DESC Stat = m_pStatusCom->Get_Stat();
+
+	_float fHp_Max = (_float)Stat.iHp_Max * 0.01f;
+	_float fHp = (_float)Stat.iHp;
+
+	
+
+	m_pStatusCom->Set_Stat(Stat);
+}
+
 void CDefenceTower::Set_TowerPos(_fvector vPosition)
 {
 	//if (ETowerState::Pick != m_eTowerState_Next)

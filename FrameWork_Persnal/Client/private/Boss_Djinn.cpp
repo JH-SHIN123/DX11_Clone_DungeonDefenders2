@@ -146,6 +146,7 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 	}
 
 	_matrix Matrix = m_pMovementCom->Get_WorldMatrix();
+	(Matrix.r[3]).m128_f32[1] += 5.f;
 	m_pColliderCom_Hurt->Update_Collider(Matrix);
 
 	m_pStatusCom->Tick(TimeDelta);
@@ -269,7 +270,6 @@ void CBoss_Djinn::Anim_Check(_float TimeDelta)
 
 	m_pColliderCom_LeftHand->Update_Collider(WorldMatrix);
 	m_pTestHand->Set_WorldMatrix(WorldMatrix);
-	m_pColliderCom_Attack->Update_Collider(WorldMatrix);
 	XMStoreFloat4x4(&m_LeftHand_Matrix, WorldMatrix);
 
 
@@ -322,15 +322,17 @@ HRESULT CBoss_Djinn::Ready_Component(void * pArg)
 
 	COLLIDER_DESC Data;
 	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
-	Data.vScale = { 4.f, 4.f, 4.f };
+	Data.vScale = { 6.f, 6.f, 6.f };
+	Data.IsCenter = false;
+
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pColliderCom_Hurt, &Data);
 
 	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
 	Data.vScale = { 4.f, 4.f, 4.f };
 
+	Data.IsCenter = true;
 	Data.Attack_Desc.eDamageType = EDamageType::Direct;
 	Data.Attack_Desc.iDamage = 100;
-	Data.IsCenter = true;
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data);
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack_LeftHand"), (CComponent**)&m_pColliderCom_LeftHand, &Data);

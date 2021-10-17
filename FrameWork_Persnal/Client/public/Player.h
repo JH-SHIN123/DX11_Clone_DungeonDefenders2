@@ -91,7 +91,6 @@ public:
 private: // Tick
 	void	Key_Check(_float TimeDelta);
 	void	Turn_Check(_float TimeDelta);
-	void	Idle_Check();
 	void	Skill_Check(_float TimeDelta);
 
 private:
@@ -108,6 +107,10 @@ private:
 	void Skill_Meteor();
 	void Skill_BrainWash();
 	void Skill_Healing(_float TimeDelta);
+
+private:
+	void Tower_Upgrade();
+	void Tower_Healing();
 
 private:
 	void SpecialAnimation_Check(_float TimeDelta);
@@ -129,6 +132,11 @@ private:
 	_bool			m_IsAttack = false;
 	_float			m_fChargeSkill = 0.f;
 	_bool			m_IsCharging = false;
+
+private:
+	_bool m_IsTowerUpgrade = false;
+	_bool m_IsTowerHealing = false;
+	_bool m_IsTowerClicked = false;
 
 private: // Tower
 	class CBlockadeTower*		m_pBlockadeTower			= nullptr;

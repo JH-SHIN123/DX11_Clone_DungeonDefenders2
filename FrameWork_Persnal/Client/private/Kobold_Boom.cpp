@@ -33,7 +33,10 @@ _int CKobold_Boom::Tick(_float TimeDelta)
 	if (iReturn = __super::Tick(TimeDelta))
 		return iReturn;
 
-	m_pColliderCom_Attack->Set_Scale_Tick_Linear(_float3(30.f, 30.f, 30.f), TimeDelta * 5.f);
+	if (true == m_IsBoom)
+		return OBJECT_DEAD;
+
+	m_pColliderCom_Attack->Set_Scale_Tick_Linear(_float3(10.f, 10.f, 10.f), TimeDelta * 5.f);
 
 	if (nullptr != m_pColliderCom_Attack)
 	{
@@ -42,6 +45,8 @@ _int CKobold_Boom::Tick(_float TimeDelta)
 
 		m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 	}
+
+	m_IsBoom = true;
 
 	return iReturn;
 }

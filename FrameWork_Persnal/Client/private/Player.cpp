@@ -75,6 +75,7 @@ _int CPlayer::Tick(_float TimeDelta)
 
 	Tower_Pick();
 
+
 	m_pBlockadeTower ->Tick(TimeDelta);
 	m_pStrikerTower  ->Tick(TimeDelta);
 	m_pLightningTower->Tick(TimeDelta);
@@ -198,6 +199,8 @@ void CPlayer::Key_Check(_float TimeDelta)
 		
 	_long dwMouseMove = 0;
 
+	m_IsTowerClicked = false;
+
 	if (dwMouseMove = GET_MOUSE_X)
 	{
 		switch (m_eTowerSpawn)
@@ -244,10 +247,16 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	if (GET_KEY_INPUT(DIK_6))
 	{
+		static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_CameraView_Mode(ECameraViewMode::TopView);
+
+		m_IsTowerUpgrade = true;
 	}
 
 	if (GET_KEY_INPUT(DIK_7))
 	{
+		static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_CameraView_Mode(ECameraViewMode::TopView);
+
+		m_IsTowerHealing = true;
 	}
 
 	if (GET_KEY_INPUT(DIK_8))
@@ -285,6 +294,8 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	if (GET_MOUSE_CLICK(MOUSEKEYSTATE::LB))
 	{
+		m_IsTowerClicked = true;
+
 		if (ETowerSpawn::End == m_eTowerSpawn)
 		{
 			m_eAnimationState_Next_Second = EPlayerAnimation::Fire;
@@ -449,96 +460,6 @@ void CPlayer::Turn_Check(_float TimeDelta)
 
 }
 
-void CPlayer::Idle_Check()
-{
-	// 키입력 한번으로 동작을 계속 수행해야 하는 놈들
-
-	_bool IsCurState = false;
-	if (m_pModelCom->Get_IsFinishedAnimaion())
-	{
-		// ex. 공격이 끝났다? -> Idle
-		switch (m_eAnimationState_Cur)
-		{
-		case Client::EPlayerAnimation::CallOut:
-			break;
-		case Client::EPlayerAnimation::ChargeMax:
-			break;
-		case Client::EPlayerAnimation::ChargeMax_KnockBack:
-			break;
-		case Client::EPlayerAnimation::ChargeMin:
-			break;
-		case Client::EPlayerAnimation::ChargeMin_KnockBack:
-			break;
-		case Client::EPlayerAnimation::Death:
-			break;
-		case Client::EPlayerAnimation::Detonate:
-			break;
-		case Client::EPlayerAnimation::Fire:
-			IsCurState = true;
-			break;
-		case Client::EPlayerAnimation::FireMaxPower:
-			break;
-		case Client::EPlayerAnimation::Heal:
-			break;
-		case Client::EPlayerAnimation::Hurt:
-			break;
-		case Client::EPlayerAnimation::Idle_lowHp:
-			break;
-		case Client::EPlayerAnimation::Jump:
-			break;
-		case Client::EPlayerAnimation::Jump_Falling:
-			break;
-		case Client::EPlayerAnimation::KnockBack:
-			break;
-		case Client::EPlayerAnimation::LevelUp:
-			break;
-		case Client::EPlayerAnimation::Lose:
-			break;
-		case Client::EPlayerAnimation::ManaBomb:
-			break;
-		case Client::EPlayerAnimation::PickupItem:
-			break;
-		case Client::EPlayerAnimation::Repair:
-			break;
-		case Client::EPlayerAnimation::Spawn:
-			break;
-		case Client::EPlayerAnimation::Summon:
-			break;
-		case Client::EPlayerAnimation::Summon_Place:
-			break;
-		case Client::EPlayerAnimation::Summon_Start:
-			break;
-		case Client::EPlayerAnimation::Summon_Stop:
-			break;
-		case Client::EPlayerAnimation::Upgrade:
-			break;
-		case Client::EPlayerAnimation::Wave_Start:
-			break;
-		case Client::EPlayerAnimation::Win:
-			break;
-		case Client::EPlayerAnimation::WinWave:
-			break;
-		case Client::EPlayerAnimation::EndKey:
-			break;
-
-		case Client::EPlayerAnimation::Idle:
-		case Client::EPlayerAnimation::Move_Backward:
-		case Client::EPlayerAnimation::Move_Left:
-		case Client::EPlayerAnimation::Move_Right:
-		case Client::EPlayerAnimation::RunForward:
-		case Client::EPlayerAnimation::Turn_Left:
-		default:
-			IsCurState = false;
-			break;
-		}
-
-		//if (true == IsCurState)
-		//	m_eAnimationState_Next = m_eAnimationState_Cur;
-		m_eAnimationState_Next = EPlayerAnimation::Idle;
-	}
-	
-}
-
 void CPlayer::Skill_Check(_float TimeDelta)
 {
 	Skill_ManaBomb();
@@ -650,6 +571,18 @@ void CPlayer::Tower_Pick()
 		for (_int i = 0; i < RENDER_END; ++i)
 			m_IsRenderTower[i] = false;
 		break;
+	}
+
+	if (true == m_IsTowerUpgrade)
+	{
+		Tower_Upgrade();
+		return;
+	}
+
+	if (true == m_IsTowerHealing)
+	{
+		Tower_Healing();
+		return;
 	}
 }
 
@@ -1071,6 +1004,71 @@ void CPlayer::Skill_Healing(_float TimeDelta)
 	}
 	//else
 	//	m_fHealTime = 0.f;
+}
+
+void CPlayer::Tower_Upgrade()
+{
+	_vector vMouseWorldPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	_vector vMouseWorldDir = XMVectorZero();
+	CCursor_Manager::GetInstance()->Get_MousePos_WorldSpace(&vMouseWorldPos, &vMouseWorldDir, m_tTowerPickPoint);
+
+	// vMouseWorldDir
+	CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Tower");
+
+	if (nullptr == pLayer)
+		return;
+
+	list<CGameObject*> Tower_Object = pLayer->Get_GameObject_List();
+
+	_float fDis = 0.f;
+	for (auto& pTower : Tower_Object) // Com_Collide_Attack
+	{
+		CCollider* pTowerCol = (CCollider*)pTower->Get_Component(L"Com_Collide_Hit");
+		
+		if (true == pTowerCol->Ray_Intersect(vMouseWorldPos, vMouseWorldDir, &fDis))
+		{
+			if (true == m_IsTowerClicked)
+			{
+				m_eAnimationState_Next = EPlayerAnimation::Summon;
+
+				static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_CameraView_Mode(ECameraViewMode::TopToTPS);
+				static_cast<CDefenceTower*>(pTower)->Upgrade_Tower();
+
+				m_IsTowerUpgrade = false;
+			}
+		}
+	}
+}
+
+void CPlayer::Tower_Healing()
+{
+	_vector vMouseWorldPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	_vector vMouseWorldDir = XMVectorZero();
+	CCursor_Manager::GetInstance()->Get_MousePos_WorldSpace(&vMouseWorldPos, &vMouseWorldDir, m_tTowerPickPoint);
+
+	// vMouseWorldDir
+	CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Tower");
+
+	if (nullptr == pLayer)
+		return;
+
+	list<CGameObject*> Tower_Object = pLayer->Get_GameObject_List();
+
+	_float fDis = 0.f;
+	for (auto& pTower : Tower_Object) // Com_Collide_Attack
+	{
+		CCollider* pTowerCol = (CCollider*)pTower->Get_Component(L"Com_Collide_Hit");
+
+		if (true == pTowerCol->Ray_Intersect(vMouseWorldPos, vMouseWorldDir, &fDis))
+		{
+			if (true == m_IsTowerClicked)
+			{
+				m_eAnimationState_Next = EPlayerAnimation::Summon;
+
+				//static_cast<CDefenceTower*>(pTower)->Upgrade_Tower();
+			}
+		}
+	}
 }
 
 void CPlayer::SpecialAnimation_Check(_float TimeDelta)

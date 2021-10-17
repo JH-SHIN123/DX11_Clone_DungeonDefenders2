@@ -41,6 +41,12 @@ public:
 	void Anim_Check(_float TimeDelta);
 	void Attack_Check();
 
+	EMonsterAI AI_Check_Kobold(_float TimeDelta, _vector* pTargetPos, _bool IsContinueAnimation);
+
+
+private:
+	void Explosion();
+
 private:
 	HRESULT		Ready_Component(void* pArg);
 	_float		Anim_Changer(EKoboldAnim eAnim);
@@ -59,6 +65,7 @@ private:
 	CCollider*				m_pColliderCom_Attack = nullptr;
 	CCollider*				m_pColliderCom_Hurt = nullptr;
 	_bool					m_IsHurt = false;
+	_bool					m_IsExplosion = false;
 
 public:
 	static CKobold* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

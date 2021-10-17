@@ -271,6 +271,9 @@
     <Filter Include="02.GameObject\08.Effect\Effect_Sprites">
       <UniqueIdentifier>{31122d70-d1d7-4534-90b6-c746bdc54bd4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\07.Bullet\NewFilter1">
+      <UniqueIdentifier>{72aa87d3-209d-41f0-909d-4763ea599e5f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
