@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\DefenceTower.h"
+#include "Masking_MeterBar_3D.h"
 
 CDefenceTower::CDefenceTower(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -21,7 +22,7 @@ HRESULT CDefenceTower::NativeConstruct(void * pArg)
 	__super::NativeConstruct(pArg);
 
 	Ready_Component(pArg);
-
+	m_eTowerState_Next = ETowerState::Idle;
 	return S_OK;
 }
 
@@ -29,6 +30,8 @@ _int CDefenceTower::Tick(_float TimeDelta)
 {
 	if (0 >= m_pStatusCom->Get_Hp())
 		return OBJECT_DEAD;
+
+	m_pHpBar->Tick(TimeDelta);
 
 	return _int();
 }
@@ -38,6 +41,10 @@ _int CDefenceTower::Late_Tick(_float TimeDelta)
 	if(ETowerState::Pick == m_eTowerState_Next ||
 		ETowerState::Rotate == m_eTowerState_Next)
 		return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Alpha, this);
+
+	m_pHpBar->Set_Count((_float)m_pStatusCom->Get_Hp(), (_float)m_pStatusCom->Get_HpMax());
+
+	HpBar_Render_Check(TimeDelta);
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
@@ -214,6 +221,22 @@ void CDefenceTower::Healing_Tower()
 	m_fHealTime_Total = 0.f;
 }
 
+void CDefenceTower::HpBar_Render_Check(_float TimeDelta)
+{
+	_vector vPlayerPos = static_cast<CMovement*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player")->Get_Component(L"Com_Movement"))->Get_State(EState::Position);
+	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
+
+	_float fDis = XMVectorGetX(XMVector3Length(vPlayerPos - vMyPos));
+
+	if (fDis <= 15.f)
+	{
+		vMyPos.m128_f32[1] += 2.f;
+		m_pHpBar->Set_Position(vMyPos);
+		m_pHpBar->Late_Tick(TimeDelta);
+	}
+
+}
+
 void CDefenceTower::Healing_Check(_float TimeDelta)
 {
 	if (false == m_IsHealTic)
@@ -228,8 +251,8 @@ void CDefenceTower::Healing_Check(_float TimeDelta)
 
 		STATUS_DESC Stat = m_pStatusCom->Get_Stat();
 
-		_float fHp_Max = (_float)Stat.iHp_Max * 0.01f;
-		_float fHp = (_float)Stat.iHp;
+		_float fHp_Max	= (_float)Stat.iHp_Max * 0.01f;
+		_float fHp		= (_float)Stat.iHp;
 
 		fHp += fHp_Max;
 
@@ -280,6 +303,23 @@ HRESULT CDefenceTower::Ready_Component(void * pArg)
 	m_fTowerRangeMin -= m_fTowerRangeCenter;
 
 
+	MASK_METERBAR_DESC_3D HP_Bar;
+	HP_Bar.eFillMode = EMeterBar_FillMode::ZeroToFull;
+	HP_Bar.eFrame_Render = ECastingBar_Frame_Render::Second;
+	HP_Bar.HasFrameBar = true;
+	HP_Bar.fCount = 100.f;
+	HP_Bar.fCount_Max = 100.f;
+	HP_Bar.UI_Desc.eLevel = ELevel::Static;
+	HP_Bar.UI_Desc.Movement_Desc.vScale = { 4.f, 1.f, 0.1f, 0.f };
+	lstrcpy(HP_Bar.UI_Desc.szTextureName, L"Component_Texture_ExpBar");
+	XMStoreFloat4(&HP_Bar.UI_Desc.Movement_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
+
+	m_pHpBar = CMasking_MeterBar_3D::Create(m_pDevice, m_pDevice_Context, &HP_Bar);
+
+	m_pHpBar->Set_ShaderPass(21);
+	m_pHpBar->Set_ShaderPass_Frame(20);
+
+	//m_pHpBar->Set_Color({ 0.5f, 1.f, 2.f });
 
 	if (S_OK != hr)
 		MSG_BOX("");
@@ -296,6 +336,7 @@ void CDefenceTower::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pHpBar);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pRendererCom);

@@ -44,6 +44,8 @@ public: // Setter
 	void Set_Count(_float fCount, _float fCount_Max);
 	void Set_Position(_fvector vPos) { m_pMovementCom->Set_State(EState::Position, vPos); }
 	void Set_ShaderPass(_uint iPass) { m_MeterBar_Desc.iMaskShaderPass = iPass; }
+	void Set_ShaderPass_Frame(_uint iPass) { m_MeterBar_Desc.iUIFramePass = iPass; }
+	void Set_Color(_float3 vColor) { m_vColor = vColor; }
 
 public:
 	void Render_Frame_First(_uint MaskShaderPass, _uint UIFramePass);
@@ -57,6 +59,7 @@ private: // 텍스처는 기본 세개: 프레임, 꾸물꾸물, 마스킹
 	_float	m_fRatio = 0.f;
 	_float	m_fTime = 0.f;
 	MASK_METERBAR_DESC_3D m_MeterBar_Desc;
+	_float3 m_vColor = { 1.f,1.f,1.f };
 
 public:
 	static CMasking_MeterBar_3D* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, void * pArg);

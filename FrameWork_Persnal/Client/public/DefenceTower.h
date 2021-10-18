@@ -61,6 +61,9 @@ public:
 	void Healing_Tower();
 
 protected:
+	void HpBar_Render_Check(_float TimeDelta);
+
+protected:
 	void Healing_Check(_float TimeDelta);
 
 public:
@@ -79,6 +82,7 @@ protected:
 	CMovement*		m_pMovementCom	= nullptr;
 	CRenderer*		m_pRendererCom	= nullptr;
 	CTextures*		m_pTexturesCom	= nullptr;	// 타워 반경
+	class CMasking_MeterBar_3D* m_pHpBar = nullptr;
 
 private: 
 	ETowerState		m_eTowerState_Cur	= ETowerState::End;

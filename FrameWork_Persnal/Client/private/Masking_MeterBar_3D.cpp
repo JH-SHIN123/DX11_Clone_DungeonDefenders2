@@ -66,6 +66,7 @@ HRESULT CMasking_MeterBar_3D::Render()
 	m_pBufferRectCom->Set_Variable("g_Textrue_UV", &m_fRatio, sizeof(_float2));
 	m_pBufferRectCom->Set_ShaderResourceView("g_MaskTexture", m_pTextureCom->Get_ShaderResourceView(0));
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(1));
+
 	m_pBufferRectCom->Render(m_MeterBar_Desc.iMaskShaderPass);
 
 	if (m_MeterBar_Desc.HasFrameBar)
@@ -85,9 +86,6 @@ void CMasking_MeterBar_3D::Set_Count(_float fCount, _float fCount_Max)
 {
 	m_MeterBar_Desc.fCount = fCount;
 	m_MeterBar_Desc.fCount_Max = fCount_Max;
-
-
-
 }
 
 void CMasking_MeterBar_3D::Render_Frame_First(_uint MaskShaderPass, _uint UIFramePass)
