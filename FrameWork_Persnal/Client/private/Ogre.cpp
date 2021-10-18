@@ -96,8 +96,10 @@ _int COgre::Tick(_float TimeDelta)
 		case Client::EMonsterAI::Attack:
 			m_IsAttack = true;
 			break;
-			//case Client::EMonsterAI::Hurt:
-			//	break;
+		case Client::EMonsterAI::Cough:
+			m_IsAttack = false;
+			m_eAnim_Next = EOgreAnim::Cough;
+			break;
 		case Client::EMonsterAI::Dead:
 			m_eAnim_Next = EOgreAnim::Death;
 			break;

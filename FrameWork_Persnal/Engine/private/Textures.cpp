@@ -102,7 +102,10 @@ CTextures * CTextures::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDev
 
 	if (FAILED(pInstance->NativeConstruct_Prototype(eType, pTextureFilePath, iNumTextures)))
 	{
-		MSG_BOX("Failed to Creating Instance (CTextures) ");
+#ifdef _DEBUG
+		//MSG_BOX("Failed to Creating Instance (CTextures) ");
+#endif // _DEBUG
+
 		Safe_Release(pInstance);
 	}
 

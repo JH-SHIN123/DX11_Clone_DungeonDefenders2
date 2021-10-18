@@ -20,6 +20,7 @@ public:
 	_bool Get_IsFinishedAnimaion();
 	_bool Get_IsFinishedAnimaion_Second();
 	_float Get_AnimTime(_uint iAniIndex = 0.f);
+	_float Get_AnimTime_Second(_uint iAniIndex = 0.f);
 	_fmatrix	Get_BoneMatrix(const char* szBoneName);
 
 public:

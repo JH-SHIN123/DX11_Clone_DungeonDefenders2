@@ -11,7 +11,7 @@ class CMasking_MeterBar_3D;
 
 enum class EMonsterAI
 {
-	Idle, Attack, Hurt, Dead, Shock, Move_Cell, Move_Target, Turn, End
+	Idle, Attack, Hurt, Dead, Shock,Cough, Move_Cell, Move_Target, Turn, End
 };
 
 enum class EMonster_MovePath
@@ -54,6 +54,7 @@ public:
 public:
 	void Set_IsBrainWash(_bool IsBrainWash);
 	void Set_IsBrainWash_Complete(_bool IsBrainWash);
+	void Set_Poison(_bool IsPoison);
 
 
 protected:
@@ -108,6 +109,12 @@ protected: //Path_Index
 protected:
 	_bool	m_IsKobold = false;
 
+protected:
+	_bool	m_IsPoison = false;
+	_float	m_fPoisonTime = 0.f;
+	const _float	m_fPoisonTick = 0.125f;
+	_float			m_fCoughTime = 0.f;
+	_float			m_fCoughTick = 5.f;
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

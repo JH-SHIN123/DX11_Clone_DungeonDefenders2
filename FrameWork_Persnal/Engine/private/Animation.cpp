@@ -57,7 +57,7 @@ void CAnimation::Set_AnimationIndex_Start_Second(_float fAnimationStart, _float 
 	m_fStartTime_Second = fAnimationStart;
 	m_fStartTime_Term_Second = fAnimationStart_Term;
 	m_fCurrentTime_Second = fAnimationStart;
-	m_fLastTime_Second = fAnimationStart + fAnimationStart_Term;
+	m_fLastTime_Second = fAnimationStart + fAnimationStart_Term - 1.f;
 	m_fAnimationLerpTime_Second = 0.f;
 }
 

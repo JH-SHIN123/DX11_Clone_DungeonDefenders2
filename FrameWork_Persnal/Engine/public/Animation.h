@@ -25,6 +25,7 @@ public:
 	_bool Get_IsEnd() { return m_IsEnd; }
 	_bool Get_IsEnd_Second() { return m_IsEnd_Second; }
 	_float Get_AnimTime() { return m_fCurrentTime; }
+	_float Get_AnimTime_Second() { return m_fCurrentTime_Second; }
 
 public:
 	void Set_LastTime(_float fLastTime);

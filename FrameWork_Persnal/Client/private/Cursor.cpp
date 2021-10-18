@@ -34,6 +34,11 @@ _int CCursor::Tick(_float TimeDelta)
 	//	SetCursorPos(pt.x, pt.y);
 	//}
 
+	fRotateTime += TimeDelta * 10.f;
+	if (fRotateTime >= 360.f)
+		fRotateTime = 0.f;
+
+	m_pTransformCom_TPSAim->Set_RotateAxis_MyRadian(XMVectorSet(0.f, 0.f, 1.f, 0.f), XMConvertToRadians(fRotateTime));
 
 	return _int();
 }

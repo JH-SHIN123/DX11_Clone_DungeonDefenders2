@@ -95,8 +95,9 @@ _int CKobold::Tick(_float TimeDelta)
 		case Client::EMonsterAI::Attack:
 			m_IsAttack = true;
 			break;
-			//case Client::EMonsterAI::Hurt:
-			//	break;
+		case Client::EMonsterAI::Cough:
+			m_eAnim_Next = EKoboldAnim::Cough;
+			break;
 		case Client::EMonsterAI::Dead:
 			m_eAnim_Next = EKoboldAnim::Death;
 			break;
@@ -245,6 +246,17 @@ EMonsterAI CKobold::AI_Check_Kobold(_float TimeDelta, _vector * pTargetPos, _boo
 	// 피없음 뒤지고
 	if (0 >= m_pStatusCom->Get_Hp())
 		return EMonsterAI::Dead;
+
+	if (true == m_IsPoison)
+	{
+		m_fCoughTime += TimeDelta;
+
+		if (m_fCoughTick <= m_fCoughTime)
+		{
+			m_fCoughTime = 0.f;
+			return EMonsterAI::Cough;
+		}
+	}
 
 	// 세뇌중이면 이거
 	if (true == m_IsBrainWashed)

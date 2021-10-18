@@ -102,7 +102,7 @@ private: // LateTick
 	_float	Animation_Term(EPlayerAnimation eNextAnimation);
 
 private: 
-	//void Skill_ManaBomb
+	void Skill_AttackBuff(_float TimeDelta);
 	void Skill_ManaBomb();
 	void Skill_Meteor();
 	void Skill_BrainWash();
@@ -157,6 +157,7 @@ private:
 	_bool					m_IsSecondAnimation = false;
 
 private: // Skill
+	_bool	m_IsCast_AttackBuff		= false;
 	_bool	m_IsCast_PowerUp		= false;
 	_bool	m_IsCast_ManaBomb		= false;
 	_bool	m_IsCast_Meteor			= false;
@@ -169,9 +170,13 @@ private: // Skill
 
 	_float	m_fHealTime = 0.f;
 	_int	m_iHealSize = 0;
+	_float	m_fAttBuff_Time = 0.f;
 
 private:
 	_bool m_IsMissionFailed = false;
+	_bool m_IsMove = false;
+	_bool m_IsSet_SecondAnim = false;
+	_int	m_iAtt = 0;
 
 private:
 	HRESULT	Ready_Component(void* pArg);

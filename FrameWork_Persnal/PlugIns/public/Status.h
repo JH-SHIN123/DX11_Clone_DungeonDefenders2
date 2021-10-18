@@ -57,6 +57,7 @@ public: // Setter
 	void Set_Damage_Dot(const ATTACK_DESC& pDamage);
 
 	void Set_Hp(_int iHp);
+	void Set_AttBasic(_int iAtt) { m_Status_Desc.iAtt_Basic = iAtt; }
 	void Set_Stat(const STATUS_DESC& Status) { m_Status_Desc = Status; }
 
 public: // Add

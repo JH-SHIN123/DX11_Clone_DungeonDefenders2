@@ -84,6 +84,11 @@ _float CModel::Get_AnimTime(_uint iAniIndex)
 	return m_Animations[iAniIndex]->Get_AnimTime();
 }
 
+_float CModel::Get_AnimTime_Second(_uint iAniIndex)
+{
+	return  m_Animations[iAniIndex]->Get_AnimTime_Second();
+}
+
 _fmatrix CModel::Get_BoneMatrix(const char * szBoneName)
 {
 	CHierarchyNode* pNode = Find_HierarchyNode(szBoneName);

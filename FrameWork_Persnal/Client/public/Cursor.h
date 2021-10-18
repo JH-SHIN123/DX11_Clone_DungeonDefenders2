@@ -51,6 +51,10 @@ private:
 	CTransform*				m_pTransformCom_TPSAim	= nullptr;
 
 private:
+	_float fRotateTime = 0.f;
+
+
+private:
 	POINT			m_tMouse;
 	_int			m_iShowCount	= 0;
 	_bool			m_IsShowCursor;

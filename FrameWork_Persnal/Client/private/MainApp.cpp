@@ -63,6 +63,8 @@ _int CMainApp::Update_MainApp(_double TimeDelta)
 {
 	if (nullptr == m_pGameInstance)
 		return -1;
+
+	m_TimeAcc += (_float)TimeDelta;
 	// Tick함수 내에서 매 프레임마다 갱신해야 하는 것들이 전부 들어가 있다.
 
 	// 마우스 업뎃
@@ -77,6 +79,17 @@ HRESULT CMainApp::Render_MainApp()
 {
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
+
+	++m_iNumDraw;
+
+	if (1.0 <= m_TimeAcc)
+	{
+
+		m_TimeAcc = 0.0;
+		wsprintf(m_szFPS, TEXT("%d - FPS"), m_iNumDraw);
+		SetWindowText(g_hWnd, m_szFPS);
+		m_iNumDraw = 0;
+	}
 
 	// LateUpdate 개념
 	CData_Manager::GetInstance()->TicK_Data();

@@ -38,7 +38,7 @@ public:
 	_fvector Get_State(EState eState) { return m_pMovementCom->Get_State(eState); }
 
 public:
-	void Create_Bullet(_fvector vDir);
+	void Create_Bullet(_fvector vDir, _int iAtt);
 
 private:
 	HRESULT			Ready_Component(void* pArg);

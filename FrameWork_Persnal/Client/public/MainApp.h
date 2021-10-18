@@ -41,6 +41,12 @@ private:
 	HRESULT Ready_Cursor();
 	HRESULT Ready_Loading();
 
+private:
+	_tchar			m_szFPS[MAX_PATH] = TEXT("");
+	_uint			m_iNumDraw = 0;
+	_float			m_TimeAcc = 0.f;
+
+
 public:
 	static CMainApp* Create();
 	virtual void Free() override;

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Weapon.h"
 #include "StrikerTower_Bullet.h"
+#include "Cursor_Manager.h"
 
 CWeapon::CWeapon(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -98,8 +99,12 @@ void CWeapon::Set_OffSetPosition(_fmatrix TransMatrix)
 	XMStoreFloat4x4(&m_OffSetMatrix, TransMatrix);
 }
 
-void CWeapon::Create_Bullet(_fvector vDir)
+void CWeapon::Create_Bullet(_fvector vDir, _int iAtt)
 {
+	_vector vMouseWorldPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	_vector vMouseWorldDir = XMVectorZero();
+	CCursor_Manager::GetInstance()->Get_MousePos_WorldSpace(&vMouseWorldPos, &vMouseWorldDir);
+
 	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
 	vMyPos += XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * -8.f;
 
@@ -107,7 +112,7 @@ void CWeapon::Create_Bullet(_fvector vDir)
 	lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
 	Data.MoveState_Desc.fRotatePerSec = 50.f;
 
-	_vector vvDir = XMVector3Normalize(/*vTargetPos - vMyPos*/ vDir);
+	_vector vvDir = vMouseWorldDir;//XMVector3Normalize(/*vTargetPos - vMyPos*/ vDir);
 
 	XMStoreFloat3(&Data.vDir, vvDir);
 	XMStoreFloat4(&Data.MoveState_Desc.vPos, vMyPos);
@@ -116,7 +121,7 @@ void CWeapon::Create_Bullet(_fvector vDir)
 	Data.fLifeTime = 10.f;
 
 	Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Shock;
-	Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+	Data.Attack_Collide_Desc.Attack_Desc.iDamage = _int(iAtt * 0.8f);
 	Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
 	Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
 	Data.Attack_Collide_Desc.IsCenter = true;

@@ -36,6 +36,8 @@ HRESULT CBoss_Djinn::NativeConstruct(void * pArg)
 
 	SetUp_GemColor();
 
+	m_fCoughTick = 10.f;
+
 	return S_OK;
 }
 

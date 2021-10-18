@@ -60,15 +60,19 @@ public:
 public: // Tick
 	void	Target_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag);
 	void	TargetRotate_Check(_uint iLevel, const _tchar* LayerTag, const _tchar* ComponentTag, _float TimeDelta);
-	void	TargetRotate_Check(CTransform* pTransform);
 
 public:
 	void Cam_Shake(_float3 vPower, _float ShakeTime = 0.5f);
 	void Cam_Shake_At(_float3 vPower, _float ShakeTime = 0.5f);
-	void Cam_Add_Dis(_float fAddDis, _float DisTime = 1.f);
+	void Cam_Add_Dis(_float3 vAddDis, _float DisTime = 1.f);
+	void Cam_Add_At(_float3 vAddDis, _float DisTime = 1.f);
 
 protected:
 	void	View_Check(_float TimeDelata);
+
+protected:
+	void Move_Camera_Dis(_float TimeDelata);
+	void Move_Camera_At(_float TimeDelata);
 
 
 private: //
@@ -105,10 +109,17 @@ protected:
 	_float	m_fShakeTime = 0.f;
 	_float3	m_vShake_At_Power = { 1.f, 1.f, 1.f };
 	_float	m_fShake_At_Time = 0.f;
-	_float	m_fAddCameraDis = 0.f;
+	_float3	m_vAddCameraDis = {1.f,1.f,1.f};
 	_float	m_fAddCameraDis_Time = 0.f;
 	_float	m_fAddCameraDis_Time_Max = 0.f;
 	_bool	m_IsOutCameraDis = false;
+
+private:
+	_float3 m_vCamAt_Power = {0.f, 0.f, 0.f};
+	_float	m_fCamAt_Time = 0.f;
+	_float	m_fCamAt_TimeMax = 0.f;
+	_bool	m_IsAddCamAt = false;
+
 protected:
 	ECameraViewMode			m_eCameraMode_Now = ECameraViewMode::ThirdPerson;
 	ECameraViewMode			m_eCameraMode_Next = ECameraViewMode::ThirdPerson;

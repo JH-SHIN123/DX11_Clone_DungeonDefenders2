@@ -67,7 +67,7 @@ _bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectLayer, ELevel eD
 	return false;
 }
 
-void CCollide_Manager::Collide_Check_BrainWash(const _tchar * szDstObjectLayer, ELevel eDstObjectLevel, const _tchar * szSrcObjectLayer, ELevel eSrcObjectLevel)
+void CCollide_Manager::Collide_Check_Poison(const _tchar * szDstObjectLayer, ELevel eDstObjectLevel, const _tchar * szSrcObjectLayer, ELevel eSrcObjectLevel)
 {
 	CLayer* pDstLayer = GET_GAMEINSTANCE->Get_Layer((_uint)eDstObjectLevel, szDstObjectLayer);
 	if (nullptr == pDstLayer)
@@ -96,7 +96,7 @@ void CCollide_Manager::Collide_Check_BrainWash(const _tchar * szDstObjectLayer, 
 
 
 			if (true == pDstCol_Hit->Intersect_Collider(pSrcCol_Attack))
-				static_cast<CMonster*>(Dst)->Set_IsBrainWash(true);
+				static_cast<CMonster*>(Dst)->Set_Poison(true);
 		}
 	}
 
