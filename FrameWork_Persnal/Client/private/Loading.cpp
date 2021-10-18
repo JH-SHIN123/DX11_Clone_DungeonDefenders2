@@ -172,6 +172,12 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Boss_Djinn_Sepcualr")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Mesh/Monster/Boss/Djinn_Spec.tga")));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Number_Red")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Number/Red/%d.png"), 11));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Number_Green")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Number/Green/%d.png"), 11));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Number_Blue")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Number/Blue/%d.png"), 11));
 
 
 	// GameObject

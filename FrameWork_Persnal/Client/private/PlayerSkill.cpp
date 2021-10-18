@@ -126,13 +126,13 @@ HRESULT CPlayerSkill::Ready_Component(void* pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_Skill_8"), (CComponent**)&m_pMovementCom_Skill[8]);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_Skill_9"), (CComponent**)&m_pMovementCom_Skill[9]);
 
-	_vector vPos = XMVectorSet(pData->Movement_Desc.vPos.x, pData->Movement_Desc.vPos.y, 0.f, 1.f);
+	_vector vPos = XMVectorSet(pData->Movement_Desc.vPos.x, pData->Movement_Desc.vPos.y - 67.f, 0.f, 1.f);
 	_vector vIntarval = XMVectorSet(67.3f, 0.f, 0.f, 0.f);
 
 	for (_int i = 0; i < m_iSkillNum; ++i)
 	{
 		if (5 == i)
-			vPos = XMVectorSet(pData->Movement_Desc.vPos.x, pData->Movement_Desc.vPos.y - 67.f, 0.f, 1.f);
+			vPos = XMVectorSet(pData->Movement_Desc.vPos.x, pData->Movement_Desc.vPos.y, 0.f, 1.f);
 
 		m_pMovementCom_Skill[i]->Set_Scale(XMVectorSet(pData->Movement_Desc.vScale.x, pData->Movement_Desc.vScale.y, 0.f, 0.f));
 		m_pMovementCom_Skill[i]->Set_State(EState::Position, vPos);

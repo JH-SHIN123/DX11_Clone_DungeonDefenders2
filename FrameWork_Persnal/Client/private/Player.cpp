@@ -169,7 +169,7 @@ HRESULT CPlayer::Render()
 
 #ifdef _DEBUG
 	m_pColliderCom_Hit->Render_Collider();
-	m_pNaviCom->Render_Navigation();
+	//m_pNaviCom->Render_Navigation();
 #endif
 
 

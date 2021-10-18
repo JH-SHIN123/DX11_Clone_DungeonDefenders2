@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\HpMp.h"
 #include "Player.h"
+#include "Number_Font.h"
 
 CHpMp::CHpMp(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CUI_2D(pDevice, pDevice_Context)
@@ -48,6 +49,10 @@ _int CHpMp::Late_Tick(_float TimeDelta)
 	if (m_fTime > 1.f)
 		m_fTime = 0.f;
 
+
+	m_pHpFont->Late_Tick(TimeDelta);
+	m_pMpFont->Late_Tick(TimeDelta);
+
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::UI, this);
 }
 
@@ -61,6 +66,7 @@ HRESULT CHpMp::Render()
 
 	Render_Hp();
 	Render_Mp();
+	//m_pHpText->Render();
 
 	return S_OK;
 }
@@ -76,30 +82,28 @@ void CHpMp::HpMp_Check(_float TimeDelta)
 	m_fHp		= (_float)pStatus->Get_Hp();
 	m_fHp_Max	= (_float)pStatus->Get_HpMax();
 	m_fMp		= (_float)pStatus->Get_Mp();
-	m_fMp_Max	= (_float)pStatus->Get_MpMax();
+	m_fMp_Max	= (_float)pStatus->Get_MpMax();	
 
 
+	_vector vMaskPos = m_pMovementCom_Mask->Get_State(EState::Position);
+	_float fHpBarMax_Y = XMVectorGetY(m_pMovementCom->Get_State(EState::Position));
+	_float fDamageRatio =(1.f - (m_fHp / m_fHp_Max)) * 100.f;
+	_float fHpBarRatio = m_fHpScale / 100.f;
+	_float fRealHp = fHpBarMax_Y - ( fHpBarRatio * fDamageRatio);
+	vMaskPos = XMVectorSetY(vMaskPos, (fRealHp));
+	m_pMovementCom_Mask->Set_State(EState::Position, vMaskPos);
 	
 
-	if (true) // 맞았다면
-	{
-		_vector vMaskPos = m_pMovementCom_Mask->Get_State(EState::Position);
-		_float fHpBarMax_Y = XMVectorGetY(m_pMovementCom->Get_State(EState::Position));
-		_float fDamageRatio =(1.f - (m_fHp / m_fHp_Max)) * 100.f;
-		_float fHpBarRatio = m_fHpScale / 100.f;
-		_float fRealHp = fHpBarMax_Y - ( fHpBarRatio * fDamageRatio);
-		vMaskPos = XMVectorSetY(vMaskPos, (fRealHp));
-		m_pMovementCom_Mask->Set_State(EState::Position, vMaskPos);
-	}
-
 	// MP
-	_vector vMaskPos = m_pMovementCom_MP_Mask->Get_State(EState::Position);
+	vMaskPos = m_pMovementCom_MP_Mask->Get_State(EState::Position);
 	_float fMpBarMax_Y = XMVectorGetY(m_pMovementCom_MP->Get_State(EState::Position));
-	_float fDamageRatio = (1.f - (m_fMp / m_fMp_Max)) * 100.f;
+	fDamageRatio = (1.f - (m_fMp / m_fMp_Max)) * 100.f;
 	_float fMpBarRatio = m_fHpScale / 100.f;
 	_float fRealMp = fMpBarMax_Y - (fMpBarRatio * fDamageRatio);
 	vMaskPos = XMVectorSetY(vMaskPos, (fRealMp));
 	m_pMovementCom_MP_Mask->Set_State(EState::Position, vMaskPos);
+
+
 
 }
 
@@ -181,6 +185,34 @@ HRESULT CHpMp::Ready_Component(void* pArg)
 	m_pMovementCom_MP_Mask->Set_Scale(XMVectorSet(pData->Movement_Desc.vScale.x, pData->Movement_Desc.vScale.y, 0.f, 0.f));
 	m_pMovementCom_MP_Mask->Set_State(EState::Position, vPosMp);
 
+
+	NUMBERFONT_DESC FontDesc;
+	lstrcpy(FontDesc.UI_Desc.szTextureName, L"Component_Texture_Number_Red");
+	FontDesc.UI_Desc.eLevel = ELevel::Stage1;
+	FontDesc.UI_Desc.Movement_Desc.vScale = { 28.f, 28.f, 0.f, 0.f };
+	FontDesc.UI_Desc.Movement_Desc.vPos = { -601.f, -183.f, 0.f, 1.f };
+	FontDesc.iBufferSize = 4;
+	FontDesc.pNumberBuffer = new _int[FontDesc.iBufferSize];
+	FontDesc.pNumberBuffer[0] = 4;
+	FontDesc.pNumberBuffer[1] = 5;
+	FontDesc.pNumberBuffer[2] = 6;
+	m_pHpFont = CNumber_Font::Create(m_pDevice, m_pDevice_Context);
+	m_pHpFont->NativeConstruct(&FontDesc);
+
+
+	lstrcpy(FontDesc.UI_Desc.szTextureName, L"Component_Texture_Number_Blue");
+	FontDesc.UI_Desc.eLevel = ELevel::Stage1;
+	FontDesc.UI_Desc.Movement_Desc.vScale = { 28.f, 28.f, 0.f, 0.f };
+	FontDesc.UI_Desc.Movement_Desc.vPos = { -501.f, -183.f, 0.f, 1.f };
+	FontDesc.iBufferSize = 4;
+	FontDesc.pNumberBuffer = new _int[FontDesc.iBufferSize];
+	FontDesc.pNumberBuffer[0] = 4;
+	FontDesc.pNumberBuffer[1] = 5;
+	FontDesc.pNumberBuffer[2] = 6;
+	m_pMpFont = CNumber_Font::Create(m_pDevice, m_pDevice_Context);
+	m_pMpFont->NativeConstruct(&FontDesc);
+
+
 	Safe_Delete(pData);
 
 	if (hr != S_OK)
@@ -218,5 +250,7 @@ void CHpMp::Free()
 	Safe_Release(m_pMovementCom_MP);
 	Safe_Release(m_pMovementCom_MP_Mask);
 
+	Safe_Release(m_pHpFont);
+	Safe_Release(m_pMpFont);
 	__super::Free();
 }

@@ -274,6 +274,9 @@
     <Filter Include="03.UI, HUD\02.3D\A3.Ortho_MeterBar_3D">
       <UniqueIdentifier>{c9219a0f-d829-4ec9-a11b-2d139ed717a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.UI, HUD\00.2D\08.Number_Font">
+      <UniqueIdentifier>{e543d21b-28d3-4460-85ae-8f55af3ba355}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -528,6 +531,9 @@
     <ClInclude Include="..\public\Effect_Sprites.h">
       <Filter>02.GameObject\08.Effect\Effect_Sprites</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Number_Font.h">
+      <Filter>03.UI, HUD\00.2D\08.Number_Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -760,6 +766,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Effect_Sprites.cpp">
       <Filter>02.GameObject\08.Effect\Effect_Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Number_Font.cpp">
+      <Filter>03.UI, HUD\00.2D\08.Number_Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -44,8 +44,19 @@ HRESULT CMyText::Render()
 		}
 	}
 
-
 	return S_OK;
+}
+
+void CMyText::Set_Pos(_fvector vPos)
+{
+	m_pMovementCom->Set_State(EState::Position, vPos);
+}
+
+void CMyText::Set_Text(_tchar * pText)
+{
+	lstrcpy(m_Text_Desc.szText, pText);
+
+	Make_Font();
 }
 
 HRESULT CMyText::Ready_Component(void * pArg)
@@ -67,6 +78,8 @@ HRESULT CMyText::Ready_Component(void * pArg)
 
 void CMyText::Make_Font()
 {
+	Safe_Release_Vector(m_pFonts);
+
 	m_pFonts.reserve(lstrlen(m_Text_Desc.szText));
 
 	_vector vPos = m_pMovementCom->Get_State(EState::Position);

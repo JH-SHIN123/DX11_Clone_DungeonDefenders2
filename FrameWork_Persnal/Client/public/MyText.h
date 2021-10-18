@@ -44,6 +44,10 @@ public:
 	virtual _int	Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void Set_Pos(_fvector vPos);
+	void Set_Text(_tchar* pText);
+
 private:
 	CRenderer*				m_pRendererCom = nullptr;
 	CMovement*				m_pMovementCom = nullptr;

@@ -222,6 +222,7 @@
     <ClInclude Include="..\public\MyFont.h" />
     <ClInclude Include="..\public\MyButton_NoText.h" />
     <ClInclude Include="..\public\MyText.h" />
+    <ClInclude Include="..\public\Number_Font.h" />
     <ClInclude Include="..\public\Ogre.h" />
     <ClInclude Include="..\public\Ortho3D.h" />
     <ClInclude Include="..\public\PauseMenu.h" />
@@ -303,6 +304,7 @@
     <ClCompile Include="..\private\MyFont.cpp" />
     <ClCompile Include="..\private\MyButton_NoText.cpp" />
     <ClCompile Include="..\private\MyText.cpp" />
+    <ClCompile Include="..\private\Number_Font.cpp" />
     <ClCompile Include="..\private\Ogre.cpp" />
     <ClCompile Include="..\private\Ortho3D.cpp" />
     <ClCompile Include="..\private\PauseMenu.cpp" />

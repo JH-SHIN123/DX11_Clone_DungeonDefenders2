@@ -34,6 +34,10 @@ private:
 	CMovement*				m_pMovementCom_MP_Mask = nullptr; //mp
 
 private:
+	class CNumber_Font* m_pHpFont = nullptr;
+	class CNumber_Font* m_pMpFont = nullptr;
+
+private:
 	_float		m_fDamage = 10.f;
 	_float2		m_vInterval;
 	_float		m_fTime = 0.f;
