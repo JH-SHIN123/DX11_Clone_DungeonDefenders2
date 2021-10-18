@@ -101,6 +101,7 @@ private:
 
 private:
 	_float m_fHealTime = 0.f;
+	_float m_fHealTime_Total = 0.f;
 	const _float m_fHealTime_Max = 2.f;
 	_bool m_IsHealTic = false;
 

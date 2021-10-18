@@ -208,21 +208,36 @@ void CDefenceTower::Upgrade_Tower()
 
 void CDefenceTower::Healing_Tower()
 {
-	m_fHealTime = 1.5f;
+	m_IsHealTic = true;
+
+	m_fHealTime = 0.f;
+	m_fHealTime_Total = 0.f;
 }
 
 void CDefenceTower::Healing_Check(_float TimeDelta)
 {
-	m_fHealTime -= TimeDelta;
+	if (false == m_IsHealTic)
+		return;
 
-	STATUS_DESC Stat = m_pStatusCom->Get_Stat();
+	m_fHealTime += TimeDelta;
+	m_fHealTime_Total += TimeDelta;
 
-	_float fHp_Max = (_float)Stat.iHp_Max * 0.01f;
-	_float fHp = (_float)Stat.iHp;
+	if (0.125f <= m_fHealTime)
+	{
+		m_fHealTime = 0.f;
 
-	
+		STATUS_DESC Stat = m_pStatusCom->Get_Stat();
 
-	m_pStatusCom->Set_Stat(Stat);
+		_float fHp_Max = (_float)Stat.iHp_Max * 0.01f;
+		_float fHp = (_float)Stat.iHp;
+
+		fHp += fHp_Max;
+
+		m_pStatusCom->Set_Stat(Stat);
+	}
+
+	if (m_fHealTime_Max <= m_fHealTime_Total)
+		m_IsHealTic = false;
 }
 
 void CDefenceTower::Set_TowerPos(_fvector vPosition)
