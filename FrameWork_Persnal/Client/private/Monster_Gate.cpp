@@ -304,8 +304,8 @@ void CMonster_Gate::Spawn_Monster()
 		lstrcpy(szPrototypeName, L"Prototype_Ogre");
 		break;
 	case EMonster_List::Kamikaze:
-		MonData.fAttackDis = 10.f;
-		MonData.fDetectDis = 15.f;
+		MonData.fAttackDis = 40.f;
+		MonData.fDetectDis = 40.f;
 		MonData.Stat_Desc.iExp = 20;
 		MonData.Stat_Desc.iHp_Max = 200;
 		lstrcpy(MonData.szModelName, L"Component_Mesh_Kobold");

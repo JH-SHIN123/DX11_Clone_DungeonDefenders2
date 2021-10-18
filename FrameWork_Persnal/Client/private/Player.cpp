@@ -327,6 +327,9 @@ void CPlayer::Key_Check(_float TimeDelta)
 		m_eTowerSpawn = ETowerSpawn::End;
 		for(_int i = 0; i < RENDER_END; ++i)
 			m_IsRenderTower[i] = false;
+
+		m_IsTowerHealing = false;
+		m_IsTowerUpgrade = false;
 	}
 
 

@@ -24,7 +24,7 @@ private:
 	HRESULT	Ready_Component(void* pArg);
 
 private:
-	void Button_Dis_Check();
+	void Button_Dis_Check(_float TimeDelta);
 
 private:
 	CModel*				m_pModelCom			= nullptr;
@@ -32,6 +32,8 @@ private:
 	CRenderer*			m_pRendererCom		= nullptr;
 	CMovement*			m_pMovementCom		= nullptr;
 	CCollider*			m_pColliderCom_Hit	= nullptr;
+
+	class CMasking_MeterBar_3D* m_pHpBar = nullptr;
 
 private: // Activate Button
 	class COrtho3D*		m_pOrtho3D_Text = nullptr;

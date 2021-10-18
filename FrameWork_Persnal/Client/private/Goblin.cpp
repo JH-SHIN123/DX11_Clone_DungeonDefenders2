@@ -176,6 +176,8 @@ void CGoblin::Anim_Check(_float TimeDelta)
 	if (nullptr == m_pModelCom)
 		return;
 
+	
+
 	if (true == m_pModelCom->Get_IsFinishedAnimaion())
 	{
 		if (EGoblinAnim::Hurt == m_eAnim_Next)

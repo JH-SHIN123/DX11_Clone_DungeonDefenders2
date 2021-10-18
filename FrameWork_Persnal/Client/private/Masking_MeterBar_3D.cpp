@@ -66,6 +66,8 @@ HRESULT CMasking_MeterBar_3D::Render()
 	m_pBufferRectCom->Set_Variable("g_Textrue_UV", &m_fRatio, sizeof(_float2));
 	m_pBufferRectCom->Set_ShaderResourceView("g_MaskTexture", m_pTextureCom->Get_ShaderResourceView(0));
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(1));
+	if (22 == m_MeterBar_Desc.iMaskShaderPass)
+		m_pBufferRectCom->Set_Variable("g_Color", &m_vColor, sizeof(_float3));
 
 	m_pBufferRectCom->Render(m_MeterBar_Desc.iMaskShaderPass);
 

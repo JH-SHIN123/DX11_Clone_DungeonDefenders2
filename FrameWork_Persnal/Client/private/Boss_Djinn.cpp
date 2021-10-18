@@ -38,6 +38,8 @@ HRESULT CBoss_Djinn::NativeConstruct(void * pArg)
 
 	m_fCoughTick = 10.f;
 
+	CData_Manager::GetInstance()->Set_BossPhase(true);
+
 	return S_OK;
 }
 
@@ -56,7 +58,7 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 		{
 			if (true == m_pModelCom->Get_IsFinishedAnimaion())
 			{
-				CData_Manager::GetInstance()->Add_MonsterCount();
+				CData_Manager::GetInstance()->Set_BossPhase(false);
 				return OBJECT_DEAD;
 			}
 		}
@@ -177,6 +179,9 @@ _int CBoss_Djinn::Late_Tick(_float TimeDelta)
 	}
 
 	GemColor_Check(TimeDelta);
+
+	CData_Manager::GetInstance()->Set_BossHP_Max(m_pStatusCom->Get_HpMax());
+	CData_Manager::GetInstance()->Set_BossHP(m_pStatusCom->Get_Hp());
 
 	return __super::Late_Tick(TimeDelta);
 }

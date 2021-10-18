@@ -31,6 +31,7 @@ _int CDefenceTower::Tick(_float TimeDelta)
 	if (0 >= m_pStatusCom->Get_Hp())
 		return OBJECT_DEAD;
 
+
 	m_pHpBar->Tick(TimeDelta);
 
 	return _int();
@@ -316,10 +317,10 @@ HRESULT CDefenceTower::Ready_Component(void * pArg)
 
 	m_pHpBar = CMasking_MeterBar_3D::Create(m_pDevice, m_pDevice_Context, &HP_Bar);
 
-	m_pHpBar->Set_ShaderPass(21);
+	m_pHpBar->Set_ShaderPass(22);
 	m_pHpBar->Set_ShaderPass_Frame(20);
 
-	//m_pHpBar->Set_Color({ 0.5f, 1.f, 2.f });
+	m_pHpBar->Set_Color({ 0.5f, 1.3f, 2.f });
 
 	if (S_OK != hr)
 		MSG_BOX("");

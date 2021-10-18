@@ -136,6 +136,9 @@ void CPhaseInfo::Enemy_Check()
 	m_iEnemyCount = CData_Manager::GetInstance()->Get_MonsterCount();	
 
 	m_fMeter_Ratio = (1.f - ((_float)m_iEnemyCount / m_iEnemyCount_Max));
+
+	if (true == CData_Manager::GetInstance()->Get_BossPhase())
+		m_fMeter_Ratio = (((_float)m_iEnemyCount / m_iEnemyCount_Max));
 }
 
 void CPhaseInfo::Phase_Render()

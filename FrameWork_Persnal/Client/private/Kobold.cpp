@@ -292,134 +292,91 @@ EMonsterAI CKobold::AI_Check_Kobold(_float TimeDelta, _vector * pTargetPos, _boo
 
 #pragma region Player
 
-
-	CMovement* pTarget_Player = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
-	if (nullptr == pTarget_Player)
-		return EMonsterAI::Idle;
-
-	_vector vTargetPos = pTarget_Player->Get_State(EState::Position);
-
-	_float fDis = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
-
-	if (m_fAttackDis > fDis && false == m_IsTowerAttack)
+	if (false == m_IsFuseOn)
 	{
-		// 돌다가 때려
-		if (true == m_IsFuseOn)
-			return m_eAI_Next = EMonsterAI::Move_Target;
-		return m_eAI_Next = EMonsterAI::Attack;
-	}
 
-	if (m_fDetectDis > fDis)
-	{
-		m_IsChaseTarget = true;
-		_vector vDir = XMVector3Normalize(vTargetPos - vMyPos);
-		_float fTurnAngle = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)), vDir))));
+		CMovement* pTarget_Player = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
+		if (nullptr == pTarget_Player)
+			return EMonsterAI::Idle;
 
-		*pTargetPos = vTargetPos;
+		_vector vTargetPos = pTarget_Player->Get_State(EState::Position);
 
-		if (80.f < fTurnAngle)
-		{
-			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 4.f, vTargetPos);
+		_float fDis = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
 
-			return m_eAI_Next = EMonsterAI::Turn;
-		}
-		else if (60.f < fTurnAngle)
+		if (m_fAttackDis > fDis && false == m_IsTowerAttack)
 		{
-			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 3.f, vTargetPos);
-			return m_eAI_Next = EMonsterAI::Turn;
+			// 돌다가 때려
+			if (true == m_IsFuseOn)
+				return m_eAI_Next = EMonsterAI::Move_Target;
+			return m_eAI_Next = EMonsterAI::Attack;
 		}
-		else if (40.f < fTurnAngle)
-		{
-			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta * 2.5f, vTargetPos);
-			return m_eAI_Next = EMonsterAI::Turn;
-		}
-		else if (20.f < fTurnAngle)
-		{
-			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta* 1.75f, vTargetPos);
-			return m_eAI_Next = EMonsterAI::Turn;
-		}
-		else if (10.f < fTurnAngle)
-		{
-			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta, vTargetPos);
-			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos, m_pNaviCom);
-			return m_eAI_Next = EMonsterAI::Move_Target;
-		}
-		else
-		{
-			_vector vLook = vDir;
-			_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-			_vector vRight = XMVector3Cross(vUp, vLook);
 
-			m_pMovementCom->Set_State(EState::Right, vRight * m_vScale.x);
-			m_pMovementCom->Set_State(EState::Up, vUp *m_vScale.y);
-			m_pMovementCom->Set_State(EState::Look, vLook * m_vScale.z);
-
-			m_pMovementCom->Go_Dir(TimeDelta, vTargetPos, m_pNaviCom);
-			return m_eAI_Next = EMonsterAI::Move_Target;
+		if (m_fDetectDis > fDis)
+		{
+			return m_eAI_Next = EMonsterAI::Attack;
 		}
-	}
 #pragma endregion
 
 
 #pragma region Tower
 
-	// 타워 거리 탐색
-	CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Tower");
+		// 타워 거리 탐색
+		CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Tower");
 
-	if (nullptr != pLayer)
-	{
-		list<CGameObject*> listObject = pLayer->Get_GameObject_List();
-
-		_float fTowerDis = m_fAttackDis;
-		for (auto& iter : listObject)
+		if (nullptr != pLayer)
 		{
-			_vector vTowerPos = static_cast<CMovement*>(iter->Get_Component(L"Com_Movement"))->Get_State(EState::Position);
-			_float	fDis = XMVectorGetX(XMVector3Length(vTowerPos - vMyPos));
-			if (fTowerDis > fDis)
+			list<CGameObject*> listObject = pLayer->Get_GameObject_List();
+
+			_float fTowerDis = m_fAttackDis;
+			for (auto& iter : listObject)
 			{
-				// 타워 때릴 준비 완료
-				fTowerDis = fDis;
-				*pTargetPos = vTowerPos;
+				_vector vTowerPos = static_cast<CMovement*>(iter->Get_Component(L"Com_Movement"))->Get_State(EState::Position);
+				_float	fDis = XMVectorGetX(XMVector3Length(vTowerPos - vMyPos));
+				if (fTowerDis > fDis)
+				{
+					// 타워 때릴 준비 완료
+					fTowerDis = fDis;
+					*pTargetPos = vTowerPos;
+					if (true == m_IsFuseOn)
+						return m_eAI_Next = EMonsterAI::Move_Target;
+
+				}
+			}
+
+			if (m_fAttackDis > fTowerDis)
+			{
+				// 내 눈앞에 있는가
+				m_IsTowerAttack = true;
+				m_IsChaseTarget = false;
+				_vector vDir = XMVector3Normalize(*pTargetPos - vMyPos);
+				_float fTurnAngle = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)), vDir))));
+
+				_vector vLookDir = XMVector3Normalize(vDir - m_pMovementCom->Get_State(EState::Look));
+
+				if (3.f > fTurnAngle)
+				{
+					_vector vLook = vDir;
+					_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+					_vector vRight = XMVector3Cross(vUp, vDir);
+
+					m_pMovementCom->Set_State(EState::Right, vRight * m_vScale.x);
+					m_pMovementCom->Set_State(EState::Up, vUp *m_vScale.y);
+					m_pMovementCom->Set_State(EState::Look, vLook * m_vScale.z);
+					//m_pMovementCom->Go_Dir(TimeDelta, vDir, m_pNaviCom);
+				}
+
+				else
+				{
+					m_pMovementCom->RotateToLookDir_Tick(TimeDelta * 2.f, vLookDir);
+
+				}
 				if (true == m_IsFuseOn)
 					return m_eAI_Next = EMonsterAI::Move_Target;
 
+				return EMonsterAI::Attack;
 			}
-		}
-
-		if (m_fAttackDis > fTowerDis)
-		{
-			// 내 눈앞에 있는가
-			m_IsTowerAttack = true;
-			m_IsChaseTarget = false;
-			_vector vDir = XMVector3Normalize(*pTargetPos - vMyPos);
-			_float fTurnAngle = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)), vDir))));
-
-			_vector vLookDir = XMVector3Normalize(vDir - m_pMovementCom->Get_State(EState::Look));
-
-			if (3.f > fTurnAngle)
-			{
-				_vector vLook = vDir;
-				_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-				_vector vRight = XMVector3Cross(vUp, vDir);
-
-				m_pMovementCom->Set_State(EState::Right, vRight * m_vScale.x);
-				m_pMovementCom->Set_State(EState::Up, vUp *m_vScale.y);
-				m_pMovementCom->Set_State(EState::Look, vLook * m_vScale.z);
-				//m_pMovementCom->Go_Dir(TimeDelta, vDir, m_pNaviCom);
-			}
-
-			else
-			{
-				m_pMovementCom->RotateToLookDir_Tick(TimeDelta * 2.f, vLookDir);
-
-			}
-			if (true == m_IsFuseOn)
-				return m_eAI_Next = EMonsterAI::Move_Target;
-
-			return EMonsterAI::Attack;
 		}
 	}
-
 #pragma endregion
 
 

@@ -34,6 +34,8 @@ _int CCursor::Tick(_float TimeDelta)
 	//	SetCursorPos(pt.x, pt.y);
 	//}
 
+
+
 	fRotateTime += TimeDelta * 10.f;
 	if (fRotateTime >= 360.f)
 		fRotateTime = 0.f;

@@ -3,6 +3,7 @@
 #include "CrystalCore_Ring.h"
 #include "Ortho3D.h"
 #include "Data_Manager.h"
+#include "Masking_MeterBar_3D.h"
 
 CCrystalCore::CCrystalCore(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -49,13 +50,14 @@ _int CCrystalCore::Tick(_float TimeDelta)
 	m_pRing_Down->Tick(TimeDelta);
 
 	m_pColliderCom_Hit->Update_Collider(m_pMovementCom->Get_WorldMatrix());
+	m_pHpBar->Tick(TimeDelta);
 
 	return _int();
 }
 
 _int CCrystalCore::Late_Tick(_float TimeDelta)
 {
-	Button_Dis_Check();
+	Button_Dis_Check(TimeDelta);
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Priority, this);
 }
@@ -142,6 +144,24 @@ HRESULT CCrystalCore::Ready_Component(void * pArg)
 	lstrcpy(UIData.szTextureName, L"Component_Texture_ActivateCrystal");
 	m_pOrtho3D_Text = COrtho3D::Create(m_pDevice, m_pDevice_Context, &UIData);
 
+	MASK_METERBAR_DESC_3D HP_Bar;
+	HP_Bar.eFillMode = EMeterBar_FillMode::ZeroToFull;
+	HP_Bar.eFrame_Render = ECastingBar_Frame_Render::Second;
+	HP_Bar.HasFrameBar = true;
+	HP_Bar.fCount = 100.f;
+	HP_Bar.fCount_Max = 100.f;
+	HP_Bar.UI_Desc.eLevel = ELevel::Static;
+	HP_Bar.UI_Desc.Movement_Desc.vScale = { 8.f, 2.f, 0.1f, 0.f };
+	lstrcpy(HP_Bar.UI_Desc.szTextureName, L"Component_Texture_ExpBar");
+	XMStoreFloat4(&HP_Bar.UI_Desc.Movement_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
+
+	m_pHpBar = CMasking_MeterBar_3D::Create(m_pDevice, m_pDevice_Context, &HP_Bar);
+
+	m_pHpBar->Set_ShaderPass(22);
+	m_pHpBar->Set_ShaderPass_Frame(20);
+
+	m_pHpBar->Set_Color({ 3.f, 6.f, 4.f });
+
 
 	if (S_OK != hr)
 		MSG_BOX("CCrystalCore::Ready_Component Failed");
@@ -149,14 +169,15 @@ HRESULT CCrystalCore::Ready_Component(void * pArg)
 	return hr;
 }
 
-void CCrystalCore::Button_Dis_Check()
+void CCrystalCore::Button_Dis_Check(_float TimeDelta)
 {
-	if (EPhaseState::Build == CData_Manager::GetInstance()->Get_NowPhase())
-	{
 		_vector vPos = m_pMovementCom->Get_State(EState::Position);
 		_vector vTargetPos = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"))->Get_State(EState::Position);
 	
 		_float fDis = XMVectorGetX(XMVector3Length(vPos - vTargetPos));
+
+	if (EPhaseState::Build == CData_Manager::GetInstance()->Get_NowPhase())
+	{
 		if (fDis <= 25.f)
 		{
 			vPos += XMVectorSet(0.f,1.f,0.f,0.f) * 7.f;
@@ -169,6 +190,16 @@ void CCrystalCore::Button_Dis_Check()
 			}
 		}
 	}
+
+	if (fDis <= 20.f)
+	{
+		vPos.m128_f32[1] -= 1.5f;
+		m_pHpBar->Set_Position(vPos);
+		m_pHpBar->Late_Tick(TimeDelta);
+	}
+
+	m_pHpBar->Set_Count((_float)m_pStatusCom->Get_Hp(), (_float)m_pStatusCom->Get_HpMax());
+
 }
 
 CCrystalCore * CCrystalCore::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -196,6 +227,8 @@ CGameObject * CCrystalCore::Clone_GameObject(void * pArg)
 void CCrystalCore::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pHpBar);
 
 	Safe_Release(m_pRing_Up);
 	Safe_Release(m_pRing_Down);

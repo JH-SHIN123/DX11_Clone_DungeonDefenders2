@@ -137,6 +137,8 @@ CGameObject * CBullet::Clone_GameObject(void * pArg)
 
 void CBullet::Free()
 {
+	__super::Free();
+
 	Safe_Release(m_pColliderCom_Attack);
 	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pRendererCom);
@@ -144,6 +146,4 @@ void CBullet::Free()
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pBufferRectCom);
 	Safe_Release(m_pTextureCom);
-
-	__super::Free();
 }				 

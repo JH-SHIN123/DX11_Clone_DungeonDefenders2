@@ -44,13 +44,16 @@ public:
 	void Set_MonsterCount_Max(const _int& iMonsterCount_Max) { m_iMonsterCount_Max = iMonsterCount_Max; }
 	void Set_BossDead(_bool IsDead = true) { m_IsBossDead = IsDead; }
 	void Add_MonsterCount(_int iAddCount = 1) { m_iMonsterCount += iAddCount; }
-
+	void Set_BossHP(_int iHp) { m_iMonsterCount = iHp; }
+	void Set_BossHP_Max(_int iHp) { m_iMonsterCount_Max = iHp; }
+	void Set_BossPhase(_bool IsPhase) { m_IsBossPhase = IsPhase; }
 	void Reset_MonsterCount() { m_iMonsterCount = 0, m_iMonsterCount_Max = 0; }
 
 	const _int Get_MonsterCount_Max() { return m_iMonsterCount_Max; }
 	const _int Get_MonsterCount() { return m_iMonsterCount; }
 	_bool Is_BossDead() { return m_IsBossDead; }
 	EPhaseState Get_NowPhase() const { return m_eNowPhase; }
+	_bool Get_BossPhase() { return m_IsBossPhase; }
 
 	_bool Is_PhaseClear() {	return m_iMonsterCount >= m_iMonsterCount_Max; }
 
@@ -60,6 +63,7 @@ private:
 	_uint		m_iMonsterCount_Max = 0;
 	_uint		m_iMonsterCount = 0;
 	_bool		m_IsBossDead = false;
+	_bool		m_IsBossPhase = false;
 #pragma endregion
 
 
