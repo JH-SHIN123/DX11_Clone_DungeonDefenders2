@@ -55,14 +55,14 @@ public:
 	EPhaseState Get_NowPhase() const { return m_eNowPhase; }
 	_bool Get_BossPhase() { return m_IsBossPhase; }
 
-	_bool Is_PhaseClear() {	return m_iMonsterCount >= m_iMonsterCount_Max; }
+	_bool Is_PhaseClear();
 
 private:
 	EPhaseState	m_eNowPhase = EPhaseState::End;
 	_float		m_fPhaseCheck_Timer = 0.f;
 	_uint		m_iMonsterCount_Max = 0;
 	_uint		m_iMonsterCount = 0;
-	_bool		m_IsBossDead = false;
+	_bool		m_IsBossDead = true;
 	_bool		m_IsBossPhase = false;
 #pragma endregion
 

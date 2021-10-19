@@ -254,7 +254,7 @@ HRESULT COgre::Ready_Component(void * pArg)
 	Data.vScale = { 3.f, 3.f, 3.f };
 
 	Data.Attack_Desc.eDamageType = EDamageType::Direct;
-	Data.Attack_Desc.iDamage = 100;
+	Data.Attack_Desc.iDamage = 15;
 	CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data);
 
 	return S_OK;

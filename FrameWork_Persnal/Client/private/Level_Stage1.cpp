@@ -130,7 +130,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 1;
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase);
 
 	CData_Manager::GetInstance()->Set_MonsterCount_Max(6);
@@ -218,6 +218,7 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 		m_pMonsterGate[(_uint)EMonster_MovePath::West_L]->Set_PhaseMonster_Info(Phase);
 		m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase);
 
+		CData_Manager::GetInstance()->Reset_MonsterCount();
 		CData_Manager::GetInstance()->Set_MonsterCount_Max(1);
 	}
 		break;

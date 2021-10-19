@@ -21,6 +21,14 @@ void CData_Manager::Change_Scene(ELevel eNextLevel)
 	m_IsChangeScene = true;
 }
 
+_bool CData_Manager::Is_PhaseClear()
+{
+	if(true == m_IsBossDead)
+		return m_iMonsterCount >= m_iMonsterCount_Max;
+
+	return false;
+}
+
 void CData_Manager::PlayerLevelUp_Check(_int iLevel)
 {
 	if (m_PlayerStatus.iLevel < iLevel)

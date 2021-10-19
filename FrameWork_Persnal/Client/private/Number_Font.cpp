@@ -53,7 +53,7 @@ HRESULT CNumber_Font::Render()
 	for (_int i = 0; i < m_iBufferSize; ++i)
 	{
 		m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(WorldMatrix), sizeof(_matrix));
-		m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(m_pNumberBuffer[i]));
+		m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(m_vecNumberBuffer[i]));
 		m_pBufferRectCom->Render(1);
 
 		WorldMatrix.r[3] += vOffSet;
@@ -62,27 +62,19 @@ HRESULT CNumber_Font::Render()
 	return S_OK;
 }
 
-void CNumber_Font::Set_Number(_int * pNumberBuffer)
-{
-	Safe_Delete_Array(m_pNumberBuffer);
-
-	m_pNumberBuffer = pNumberBuffer;
-}
-
 void CNumber_Font::Set_Number(char pNumber[MAX_PATH])
 {
 	_int iLength = (_int)strlen(pNumber);
 	if (m_iBufferSize != iLength)
 	{
-		Safe_Delete_Array(m_pNumberBuffer);
 		m_iBufferSize = iLength;
-		m_pNumberBuffer = new _int[m_iBufferSize];
+		m_vecNumberBuffer.reserve(m_iBufferSize);
 	}
 
 	for (_int i = 0; i < m_iBufferSize; ++i)
 	{
 		char pNum = pNumber[i];
-		m_pNumberBuffer[i] = _int(pNum - '0');
+			m_vecNumberBuffer[i] = _int(pNum - '0');
 	}
 }
 
@@ -91,8 +83,10 @@ HRESULT CNumber_Font::Ready_Component(NUMBERFONT_DESC* pArg)
 	HRESULT hr = S_OK;
 
 	m_iBufferSize = pArg->iBufferSize;
-	m_pNumberBuffer = pArg->pNumberBuffer;
-	//memcpy(m_pNumberBuffer, pArg->pNumberBuffer, sizeof(_int) * m_iBufferSize);
+	m_vecNumberBuffer.resize(m_iBufferSize);
+
+	for(_int i = 0; i < m_iBufferSize; ++i)
+		m_vecNumberBuffer[i] = pArg->pNumberBuffer[i];
 
 	m_vOffSetPos = { m_pMovementCom->Get_Scale(EState::Right) * 0.5f, 0.f};
 
@@ -127,6 +121,6 @@ CGameObject * CNumber_Font::Clone_GameObject(void * pArg)
 
 void CNumber_Font::Free()
 {
-	Safe_Delete_Array(m_pNumberBuffer);
+	m_vecNumberBuffer.clear();
 	__super::Free();
 }

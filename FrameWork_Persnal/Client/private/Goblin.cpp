@@ -253,7 +253,7 @@ HRESULT CGoblin::Ready_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pColliderCom_Hurt, &Data);
 
 	Data.Attack_Desc.eDamageType = EDamageType::Direct;
-	Data.Attack_Desc.iDamage = 30;
+	Data.Attack_Desc.iDamage = 10;
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data);
 
 
