@@ -21,9 +21,9 @@ struct VS_IN
 {
 	/* 본래 정점버퍼 */
 	float3 vPosition : POSITION;
-	float2 vSize : PSIZE;
 
 	/* 인스턴스 정점버퍼 */
+	float2 vSize : PSIZE;
 	row_major matrix WorldMatrix : WORLD;
 
 };

@@ -18,7 +18,10 @@ public:
 	virtual HRESULT Render(_uint iPassIndex);
 
 public:
-	const _uint Get_InstanceBuffer(VTXMATRIX* pOutInstanceBuffer); // return NumInstance
+	const _uint Get_NumInstance() { return m_iNumInstance; }
+	VTXMATRIX*	Get_InstanceBuffer() { return m_pInstanceVtx; }
+
+public:
 	void Set_InstanceBuffer(VTXMATRIX* pInstanceBuffer) { memcpy(m_pInstanceVtx, pInstanceBuffer, sizeof(VTXMATRIX) * m_iNumInstance); }
 
 public:

@@ -82,35 +82,8 @@
     <Filter Include="03.UI, HUD\01.MainMenu">
       <UniqueIdentifier>{fbd7821e-65fe-4bb7-b403-bfd8924aa28f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Utility">
-      <UniqueIdentifier>{5ae64ff8-9f27-4b0a-a3c4-3a4ba9d72bc5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Utility\00.Stage_Manager">
-      <UniqueIdentifier>{b58efceb-9753-4fa5-9490-0c31d5584e00}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Utility\01.Calculator">
-      <UniqueIdentifier>{9b52f15a-8f7d-4887-afd7-8139266b7cd3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\05.Monster\00.Goblin">
       <UniqueIdentifier>{9828e775-3fea-49b2-87ce-9e5c81c837cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Utility\02.Cursor_Manager">
-      <UniqueIdentifier>{f360a00d-762d-431c-8ba9-a92d56e8ba33}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Utility\02.Cursor_Manager\00.Cursor">
-      <UniqueIdentifier>{101ec7e4-d3e2-4e92-9597-d55c5d9acf1a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Utility\03.Text_Manager">
-      <UniqueIdentifier>{b2a5a428-79b0-4729-90ec-9a2c0f5f3552}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Utility\03.Text_Manager\Text">
-      <UniqueIdentifier>{87944d3a-b839-46f1-a119-56e3a4049bed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Utility\03.Text_Manager\Text\Font">
-      <UniqueIdentifier>{6c356184-25d6-4a59-ab7a-5821a10d25f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Utility\04.Data_Manager">
-      <UniqueIdentifier>{c9eb091c-14b3-44b5-8b95-4231530c4189}</UniqueIdentifier>
     </Filter>
     <Filter Include="03.UI, HUD\00.2D\04.PauseMenu">
       <UniqueIdentifier>{a6b30309-245f-4f28-b789-74b6a29b04c2}</UniqueIdentifier>
@@ -169,17 +142,11 @@
     <Filter Include="02.GameObject\07.Bullet\01.LightningTower_Bullet">
       <UniqueIdentifier>{26754a9a-e0a4-4af0-8a9c-071b4d68d7c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\08.Effect">
-      <UniqueIdentifier>{547f0240-c7f5-4a3d-8064-a5166b464693}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\07.Bullet\02.Skill_ManaBomb">
       <UniqueIdentifier>{252f8a87-83c5-415a-bb47-26611c07bc90}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\07.Bullet\03.Skill_Meteor">
       <UniqueIdentifier>{9ae3990f-e16a-4154-bfc6-02767312e310}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Utility\05.Collide_Manager">
-      <UniqueIdentifier>{c015e515-69a7-4080-80bd-d706ca161490}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\09.Weapon">
       <UniqueIdentifier>{166f40ba-7f77-422d-ad13-ebf1a0799f43}</UniqueIdentifier>
@@ -256,26 +223,71 @@
     <Filter Include="02.GameObject\07.Bullet\14.Kobold_Boom">
       <UniqueIdentifier>{c42a9201-0187-4059-9ae7-9aaa910d6435}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\08.Effect\Old">
-      <UniqueIdentifier>{82734aef-8550-43e3-83ea-2e0f00fda7e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\08.Effect\Old\00.StrikerTower_Effect">
-      <UniqueIdentifier>{7281c425-9464-460e-bb93-67e1bdf67015}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\08.Effect\Old\01.LightningTower_Effect">
-      <UniqueIdentifier>{1cb8b737-54dd-43b8-93f6-36422ab7f71d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\08.Effect\Old\01.LightningTower_Effect\00.LightningTower_Bullet_Effect">
-      <UniqueIdentifier>{f5b2c4fc-a332-4dad-9af9-8e27b720cdc1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\08.Effect\Effect_Sprites">
-      <UniqueIdentifier>{31122d70-d1d7-4534-90b6-c746bdc54bd4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.UI, HUD\02.3D\A3.Ortho_MeterBar_3D">
       <UniqueIdentifier>{c9219a0f-d829-4ec9-a11b-2d139ed717a6}</UniqueIdentifier>
     </Filter>
     <Filter Include="03.UI, HUD\00.2D\08.Number_Font">
       <UniqueIdentifier>{e543d21b-28d3-4460-85ae-8f55af3ba355}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect%28Old%29">
+      <UniqueIdentifier>{547f0240-c7f5-4a3d-8064-a5166b464693}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect%28Old%29\Old">
+      <UniqueIdentifier>{82734aef-8550-43e3-83ea-2e0f00fda7e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect%28Old%29\Old\00.StrikerTower_Effect">
+      <UniqueIdentifier>{7281c425-9464-460e-bb93-67e1bdf67015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect%28Old%29\Old\01.LightningTower_Effect">
+      <UniqueIdentifier>{1cb8b737-54dd-43b8-93f6-36422ab7f71d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect%28Old%29\Old\01.LightningTower_Effect\00.LightningTower_Bullet_Effect">
+      <UniqueIdentifier>{f5b2c4fc-a332-4dad-9af9-8e27b720cdc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility">
+      <UniqueIdentifier>{5ae64ff8-9f27-4b0a-a3c4-3a4ba9d72bc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\00.Stage_Manager">
+      <UniqueIdentifier>{b58efceb-9753-4fa5-9490-0c31d5584e00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\01.Calculator">
+      <UniqueIdentifier>{9b52f15a-8f7d-4887-afd7-8139266b7cd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\02.Cursor_Manager">
+      <UniqueIdentifier>{f360a00d-762d-431c-8ba9-a92d56e8ba33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\02.Cursor_Manager\00.Cursor">
+      <UniqueIdentifier>{101ec7e4-d3e2-4e92-9597-d55c5d9acf1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\03.Text_Manager">
+      <UniqueIdentifier>{b2a5a428-79b0-4729-90ec-9a2c0f5f3552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\03.Text_Manager\Text">
+      <UniqueIdentifier>{87944d3a-b839-46f1-a119-56e3a4049bed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\03.Text_Manager\Text\Font">
+      <UniqueIdentifier>{6c356184-25d6-4a59-ab7a-5821a10d25f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\04.Data_Manager">
+      <UniqueIdentifier>{c9eb091c-14b3-44b5-8b95-4231530c4189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\05.Collide_Manager">
+      <UniqueIdentifier>{c015e515-69a7-4080-80bd-d706ca161490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Effect%28Instanced%29">
+      <UniqueIdentifier>{c43a44a7-97cd-49b4-89b8-1e85acc8b32b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Effect%28Instanced%29\00.Effect_Sprites">
+      <UniqueIdentifier>{31122d70-d1d7-4534-90b6-c746bdc54bd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Effect%28Instanced%29\Point">
+      <UniqueIdentifier>{3b309fff-e318-42fa-83f5-61ad6d9edab9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Effect%28Instanced%29\Rect">
+      <UniqueIdentifier>{8d2df7ef-366f-4a14-b07b-0194ccf0f123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Effect%28Instanced%29\Point\00.Spread">
+      <UniqueIdentifier>{4862821a-4942-495a-b135-81ce09907b8f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -340,7 +352,7 @@
       <Filter>03.UI, HUD\00.2D\02.Hp</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Wave_Manger.h">
-      <Filter>05.Utility\00.Stage_Manager</Filter>
+      <Filter>96.Utility\00.Stage_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MainMenu.h">
       <Filter>03.UI, HUD\01.MainMenu</Filter>
@@ -352,28 +364,28 @@
       <Filter>04.Camera\01.Camera_Target</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Calculator.h">
-      <Filter>05.Utility\01.Calculator</Filter>
+      <Filter>96.Utility\01.Calculator</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Monster.h">
       <Filter>02.GameObject\05.Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Cursor.h">
-      <Filter>05.Utility\02.Cursor_Manager\00.Cursor</Filter>
+      <Filter>96.Utility\02.Cursor_Manager\00.Cursor</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Cursor_Manager.h">
-      <Filter>05.Utility\02.Cursor_Manager</Filter>
+      <Filter>96.Utility\02.Cursor_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Masking_MeterBar.h">
       <Filter>03.UI, HUD\00.2D\A0.Masking_MeterBar%28Time%29</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MyFont.h">
-      <Filter>05.Utility\03.Text_Manager\Text\Font</Filter>
+      <Filter>96.Utility\03.Text_Manager\Text\Font</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MyText.h">
-      <Filter>05.Utility\03.Text_Manager\Text</Filter>
+      <Filter>96.Utility\03.Text_Manager\Text</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Text_Manager.h">
-      <Filter>05.Utility\03.Text_Manager</Filter>
+      <Filter>96.Utility\03.Text_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MyButton.h">
       <Filter>03.UI, HUD\00.2D\A3.MyButton%28Font%29</Filter>
@@ -382,7 +394,7 @@
       <Filter>03.UI, HUD\00.2D\A2.MyButton_NoText</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Data_Manager.h">
-      <Filter>05.Utility\04.Data_Manager</Filter>
+      <Filter>96.Utility\04.Data_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PauseMenu.h">
       <Filter>03.UI, HUD\00.2D\04.PauseMenu</Filter>
@@ -439,7 +451,7 @@
       <Filter>02.GameObject\07.Bullet\01.LightningTower_Bullet</Filter>
     </ClInclude>
     <ClInclude Include="..\public\LightningTower_Bullet_Effect.h">
-      <Filter>02.GameObject\08.Effect\Old\01.LightningTower_Effect\00.LightningTower_Bullet_Effect</Filter>
+      <Filter>02.GameObject\08.Effect%28Old%29\Old\01.LightningTower_Effect\00.LightningTower_Bullet_Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Goblin.h">
       <Filter>02.GameObject\05.Monster\00.Goblin</Filter>
@@ -448,7 +460,7 @@
       <Filter>02.GameObject\07.Bullet\02.Skill_ManaBomb</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Collide_Manager.h">
-      <Filter>05.Utility\05.Collide_Manager</Filter>
+      <Filter>96.Utility\05.Collide_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Skill_Meteor.h">
       <Filter>02.GameObject\07.Bullet\03.Skill_Meteor</Filter>
@@ -526,13 +538,16 @@
       <Filter>02.GameObject\05.Monster\03.Kobold</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Effect.h">
-      <Filter>02.GameObject\08.Effect\Old</Filter>
+      <Filter>02.GameObject\08.Effect%28Old%29\Old</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Effect_Sprites.h">
-      <Filter>02.GameObject\08.Effect\Effect_Sprites</Filter>
+      <Filter>05.Effect%28Instanced%29\00.Effect_Sprites</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Number_Font.h">
       <Filter>03.UI, HUD\00.2D\08.Number_Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Point_Spread.h">
+      <Filter>05.Effect%28Instanced%29\Point\00.Spread</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -579,7 +594,7 @@
       <Filter>03.UI, HUD\00.2D\02.Hp</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Wave_Manger.cpp">
-      <Filter>05.Utility\00.Stage_Manager</Filter>
+      <Filter>96.Utility\00.Stage_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MainMenu.cpp">
       <Filter>03.UI, HUD\01.MainMenu</Filter>
@@ -588,28 +603,28 @@
       <Filter>04.Camera\01.Camera_Target</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Calculator.cpp">
-      <Filter>05.Utility\01.Calculator</Filter>
+      <Filter>96.Utility\01.Calculator</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Monster.cpp">
       <Filter>02.GameObject\05.Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Cursor.cpp">
-      <Filter>05.Utility\02.Cursor_Manager\00.Cursor</Filter>
+      <Filter>96.Utility\02.Cursor_Manager\00.Cursor</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Cursor_Manager.cpp">
-      <Filter>05.Utility\02.Cursor_Manager</Filter>
+      <Filter>96.Utility\02.Cursor_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Masking_MeterBar.cpp">
       <Filter>03.UI, HUD\00.2D\A0.Masking_MeterBar%28Time%29</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MyFont.cpp">
-      <Filter>05.Utility\03.Text_Manager\Text\Font</Filter>
+      <Filter>96.Utility\03.Text_Manager\Text\Font</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MyText.cpp">
-      <Filter>05.Utility\03.Text_Manager\Text</Filter>
+      <Filter>96.Utility\03.Text_Manager\Text</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Text_Manager.cpp">
-      <Filter>05.Utility\03.Text_Manager</Filter>
+      <Filter>96.Utility\03.Text_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MyButton.cpp">
       <Filter>03.UI, HUD\00.2D\A3.MyButton%28Font%29</Filter>
@@ -618,7 +633,7 @@
       <Filter>03.UI, HUD\00.2D\A2.MyButton_NoText</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Data_Manager.cpp">
-      <Filter>05.Utility\04.Data_Manager</Filter>
+      <Filter>96.Utility\04.Data_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PauseMenu.cpp">
       <Filter>03.UI, HUD\00.2D\04.PauseMenu</Filter>
@@ -675,7 +690,7 @@
       <Filter>02.GameObject\07.Bullet\01.LightningTower_Bullet</Filter>
     </ClCompile>
     <ClCompile Include="..\private\LightningTower_Bullet_Effect.cpp">
-      <Filter>02.GameObject\08.Effect\Old\01.LightningTower_Effect\00.LightningTower_Bullet_Effect</Filter>
+      <Filter>02.GameObject\08.Effect%28Old%29\Old\01.LightningTower_Effect\00.LightningTower_Bullet_Effect</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Goblin.cpp">
       <Filter>02.GameObject\05.Monster\00.Goblin</Filter>
@@ -684,7 +699,7 @@
       <Filter>02.GameObject\07.Bullet\02.Skill_ManaBomb</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Collide_Manager.cpp">
-      <Filter>05.Utility\05.Collide_Manager</Filter>
+      <Filter>96.Utility\05.Collide_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Skill_Meteor.cpp">
       <Filter>02.GameObject\07.Bullet\03.Skill_Meteor</Filter>
@@ -762,13 +777,16 @@
       <Filter>02.GameObject\05.Monster\03.Kobold</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Effect.cpp">
-      <Filter>02.GameObject\08.Effect\Old</Filter>
+      <Filter>02.GameObject\08.Effect%28Old%29\Old</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Effect_Sprites.cpp">
-      <Filter>02.GameObject\08.Effect\Effect_Sprites</Filter>
+      <Filter>05.Effect%28Instanced%29\00.Effect_Sprites</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Number_Font.cpp">
       <Filter>03.UI, HUD\00.2D\08.Number_Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Point_Spread.cpp">
+      <Filter>05.Effect%28Instanced%29\Point\00.Spread</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

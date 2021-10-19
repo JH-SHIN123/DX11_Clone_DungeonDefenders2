@@ -32,7 +32,6 @@ HRESULT CVIBuffer_PointInstance::NativeConstruct_Prototype(const _tchar* pShader
 	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
 		pVertices[i].vPosition = _float3(0.0f, 0.0f, 0.f);
-		pVertices[i].vSize = _float2(1.f, 1.f);
 	}
 
 	if (FAILED(CVIBuffer::SetUp_VertexSubResourceData(pVertices)))
@@ -54,6 +53,7 @@ HRESULT CVIBuffer_PointInstance::NativeConstruct_Prototype(const _tchar* pShader
 
 	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
+		m_pInstanceVtx[i].vSize = _float2(1.f, 1.f);
 		m_pInstanceVtx[i].vRight = _float4(1.0f, 0.0f, 0.f, 0.f);
 		m_pInstanceVtx[i].vUp = _float4(0.0f, 1.0f, 0.f, 0.f);
 		m_pInstanceVtx[i].vLook = _float4(0.0f, 0.0f, 1.f, 0.f);
@@ -68,12 +68,12 @@ HRESULT CVIBuffer_PointInstance::NativeConstruct_Prototype(const _tchar* pShader
 
 	D3D11_INPUT_ELEMENT_DESC			ElementDesc[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "PSIZE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 
-		{ "WORLD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0,  D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
+		{ "PSIZE", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 8, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 24, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 40, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 56, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 	};
 
 	if (FAILED(CVIBuffer::SetUp_InputLayOuts(ElementDesc, 6, pShaderFilePath, pTechniqueName)))
@@ -113,13 +113,6 @@ HRESULT CVIBuffer_PointInstance::Render(_uint iPassIndex)
 	m_pDevice_Context->DrawInstanced(1, m_iNumInstance, 0, 0);
 
 	return S_OK;
-}
-
-const _uint CVIBuffer_PointInstance::Get_InstanceBuffer(VTXMATRIX * pOutInstanceBuffer)
-{
-	memcpy(pOutInstanceBuffer, m_pInstanceVtx, sizeof(VTXMATRIX) * m_iNumInstance);
-
-	return m_iNumInstance;
 }
 
 void CVIBuffer_PointInstance::Update_Instance(_float TimeDelta)
