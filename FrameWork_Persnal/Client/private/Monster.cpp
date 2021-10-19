@@ -467,7 +467,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 
 		_vector vDir = XMVector3Normalize(vCur_Next_Dir - m_pMovementCom->Get_State(EState::Look));
 
-		if (5.f > fTurnAngle)
+		if (7.f > fTurnAngle)
 		{
 			_vector vLook = vCur_Next_Dir;
 			_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
@@ -485,7 +485,9 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 
 		else // 이함수가 이상하게 반복되면 몬스터의 X스케일이 점점 작아짐 ㅋㅋㅋㅋㅋㅋ
 		{
-			m_pMovementCom->RotateToLookDir_Tick(TimeDelta, vCur_Next_Dir);
+			m_pMovementCom->Go_Dir(TimeDelta * 0.75f, vCellPos, m_pNaviCom);
+			m_pMovementCom->RotateToTargetOnLand_Tick(TimeDelta, vCellPos);
+			//m_pMovementCom->RotateToLookDir_Tick(TimeDelta, vCur_Next_Dir);
 			return m_eAI_Next = EMonsterAI::Move_Target;
 		}
 	}

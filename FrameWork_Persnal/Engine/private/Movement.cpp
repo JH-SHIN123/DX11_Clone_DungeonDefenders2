@@ -305,7 +305,7 @@ void CMovement::RotateToTargetOnLand_Tick(_float TimeDelta, _fvector vTargetPos)
 	_vector vPosition	= __super::Get_State(EState::Position);
 	_vector vDir		= XMVector3Normalize(vTargetPos - vPosition);
 	_vector vRight		= XMVector3Normalize(__super::Get_State(EState::Right));
-	_vector vLeft		= XMVector3Normalize(XMVector3Dot(__super::Get_State(EState::Look), __super::Get_State(EState::Up)));
+	_vector vLeft		= XMVector3Normalize(XMVector3Cross(__super::Get_State(EState::Look), __super::Get_State(EState::Up)));
 
 	_float fRightScala	= XMVectorGetX(XMVector3Dot(vDir, vRight));
 	_float fLeftScala	= XMVectorGetX(XMVector3Dot(vDir, vLeft));
@@ -317,7 +317,7 @@ void CMovement::RotateToLookDir_Tick(_float TimeDelta, _fvector vTargetDir)
 {
 	_vector vPosition = __super::Get_State(EState::Position);
 	_vector vRight = XMVector3Normalize(__super::Get_State(EState::Right));
-	_vector vLeft = XMVector3Normalize(XMVector3Dot(__super::Get_State(EState::Look), __super::Get_State(EState::Up)));
+	_vector vLeft = XMVector3Normalize(XMVector3Cross(__super::Get_State(EState::Look), __super::Get_State(EState::Up)));
 
 	_float fRightScala = XMVectorGetX(XMVector3Dot(vTargetDir, vRight));
 	_float fLeftScala = XMVectorGetX(XMVector3Dot(vTargetDir, vLeft));

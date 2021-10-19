@@ -146,6 +146,7 @@ void CCollide_Manager::Collide_Push(const _tchar * szDstObjectLayer, ELevel eDst
 				_vector vDir = (vPos_Dst_Col - vPos_Src_Col);
 				_float fDis = XMVectorGetX(XMVector3Length(vDir)) * 0.5f;
 				vDir = XMVector3Normalize(vDir) * 0.1f;
+				vDir = XMVectorSetY(vDir, 0.f);
 				vDir = XMVectorSetW(vDir, 0.f);
 
 				vPos_Dst += vDir;

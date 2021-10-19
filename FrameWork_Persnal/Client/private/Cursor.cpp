@@ -26,13 +26,13 @@ _int CCursor::Tick(_float TimeDelta)
 {
 	Tracking_Mouse();
 
-	//if (EMouseTexture::TPS == m_eMouseTexture)
-	//{
-	//	POINT	pt{ g_iWinCX >> 1, g_iWinCY >> 1 };
-	//
-	//	ClientToScreen(g_hWnd, &pt);
-	//	SetCursorPos(pt.x, pt.y);
-	//}
+	if (EMouseTexture::TPS == m_eMouseTexture)
+	{
+		POINT	pt{ g_iWinCX >> 1, g_iWinCY >> 1 };
+	
+		ClientToScreen(g_hWnd, &pt);
+		SetCursorPos(pt.x, pt.y);
+	}
 
 
 

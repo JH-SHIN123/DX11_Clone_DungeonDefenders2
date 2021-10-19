@@ -68,7 +68,7 @@ void CNumber_Font::Set_Number(char pNumber[MAX_PATH])
 	if (m_iBufferSize != iLength)
 	{
 		m_iBufferSize = iLength;
-		m_vecNumberBuffer.reserve(m_iBufferSize);
+		m_vecNumberBuffer.resize(m_iBufferSize);
 	}
 
 	for (_int i = 0; i < m_iBufferSize; ++i)
@@ -89,6 +89,9 @@ HRESULT CNumber_Font::Ready_Component(NUMBERFONT_DESC* pArg)
 		m_vecNumberBuffer[i] = pArg->pNumberBuffer[i];
 
 	m_vOffSetPos = { m_pMovementCom->Get_Scale(EState::Right) * 0.5f, 0.f};
+
+	Safe_Delete_Array(pArg->pNumberBuffer);
+
 
 	return S_OK;
 }

@@ -223,6 +223,7 @@ HRESULT CHpMp::Ready_Component(void* pArg)
 	FontDesc.UI_Desc.Movement_Desc.vPos = { -601.f, -300.f, 0.f, 1.f };
 	m_pHpMaxFont = CNumber_Font::Create(m_pDevice, m_pDevice_Context);
 	m_pHpMaxFont->NativeConstruct(&FontDesc);
+	Safe_Delete_Array(FontDesc.pNumberBuffer);
 
 
 	lstrcpy(FontDesc.UI_Desc.szTextureName, L"Component_Texture_Number_Blue");
@@ -240,6 +241,7 @@ HRESULT CHpMp::Ready_Component(void* pArg)
 	FontDesc.UI_Desc.Movement_Desc.vPos = { -501.f, -300.f, 0.f, 1.f };
 	m_pMpMaxFont = CNumber_Font::Create(m_pDevice, m_pDevice_Context);
 	m_pMpMaxFont->NativeConstruct(&FontDesc);
+	Safe_Delete_Array(FontDesc.pNumberBuffer);
 
 	m_pHpFont->Set_Pos(XMVectorSet(-607.f, -139.f, 0.f, 1.f));
 	m_pHpMaxFont->Set_Pos(XMVectorSet(-607.f, -287.f, 0.f, 1.f));
