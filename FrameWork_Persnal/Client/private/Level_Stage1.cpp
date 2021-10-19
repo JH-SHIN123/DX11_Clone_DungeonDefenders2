@@ -222,6 +222,7 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 		CData_Manager::GetInstance()->Set_MonsterCount_Max(1);
 		CData_Manager::GetInstance()->Set_BossDead(false);
 		CData_Manager::GetInstance()->Set_BossPhase(true);
+		++m_iWaveCount;
 	}
 		break;
 	default:
