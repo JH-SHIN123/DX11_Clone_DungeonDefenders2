@@ -32,6 +32,8 @@ HRESULT CMonster::NativeConstruct(void * pArg)
 
 _int CMonster::Tick(_float TimeDelta)
 {
+	m_IsPushing = false;
+
 	if (nullptr != m_pMeterBar_Hp)
 	{
 		_vector vMyPos = m_pMovementCom->Get_State(EState::Position) + XMLoadFloat3(&m_vHpBar_OffSet_Position);

@@ -109,6 +109,12 @@ protected: //Path_Index
 protected:
 	_bool	m_IsKobold = false;
 
+public:
+	void Set_Pushing(_bool IsPushing) { m_IsPushing = IsPushing; }
+	_bool Get_Pushing() { return m_IsPushing; }
+protected:
+	_bool m_IsPushing = false;
+
 protected:
 	_bool	m_IsPoison = false;
 	_float	m_fPoisonTime = 0.f;

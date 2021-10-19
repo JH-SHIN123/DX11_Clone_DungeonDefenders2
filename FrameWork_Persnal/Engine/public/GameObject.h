@@ -40,6 +40,12 @@ protected:
 	ID3D11DeviceContext*	m_pDevice_Context = nullptr;
 	_float4x4				m_PivotMatrix;
 
+public:
+	void Set_Pushing(_bool IsPushing) { m_IsPushing = IsPushing; }
+	_bool Get_Pushing() { return m_IsPushing; }
+protected:
+	_bool m_IsPushing = false;
+
 protected:
 	typedef unordered_map<const _tchar*, class CComponent*>	COMPONENTS;
 	COMPONENTS	m_Components;

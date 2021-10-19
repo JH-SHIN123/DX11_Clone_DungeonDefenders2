@@ -84,6 +84,7 @@ public:
 
 public:
 	void Set_Mission_Failed(_bool IsFailed) { m_IsMissionFailed = IsFailed; }
+	void Set_UpdateCollider(_fmatrix WorldMatrix);
 
 //public:
 //	void Set_Casting_BrainWash_MaxTime(const _float& fTime) { m_fBrainWash_Time_Max = fTime; }
@@ -177,6 +178,14 @@ private:
 	_bool m_IsMove = false;
 	_bool m_IsSet_SecondAnim = false;
 	_int	m_iAtt = 0;
+
+private:
+	_float m_fRotateTime = 0.f;
+
+private:
+	void Set_Pushing(_bool IsPushing) { m_IsPushing = IsPushing; }
+	_bool Get_Pushing() { return m_IsPushing; }
+	_bool m_IsPushing = false;
 
 private:
 	HRESULT	Ready_Component(void* pArg);

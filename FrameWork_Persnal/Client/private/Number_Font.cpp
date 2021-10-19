@@ -71,10 +71,11 @@ void CNumber_Font::Set_Number(_int * pNumberBuffer)
 
 void CNumber_Font::Set_Number(char pNumber[MAX_PATH])
 {
-	if (m_iBufferSize != strlen(pNumber) + 1)
+	_int iLength = (_int)strlen(pNumber);
+	if (m_iBufferSize != iLength)
 	{
 		Safe_Delete_Array(m_pNumberBuffer);
-		m_iBufferSize = (_int)strlen(pNumber) + 1;
+		m_iBufferSize = iLength;
 		m_pNumberBuffer = new _int[m_iBufferSize];
 	}
 

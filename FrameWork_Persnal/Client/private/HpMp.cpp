@@ -114,16 +114,17 @@ void CHpMp::HpMp_Check(_float TimeDelta)
 	sprintf(szHp, "%d", pStatus->Get_Hp());
 	m_pHpFont->Set_Number(szHp);
 
-	sprintf(szHp, "%d", pStatus->Get_HpMax());
-	m_pHpMaxFont->Set_Number(szHp);
-
+	char szHpMax[MAX_PATH] = "";
+	sprintf(szHpMax, "%d", pStatus->Get_HpMax());
+	m_pHpMaxFont->Set_Number(szHpMax);
 
 	char szMp[MAX_PATH] = "";
 	sprintf(szMp, "%d", pStatus->Get_Mp());
 	m_pMpFont->Set_Number(szMp);
 
-	sprintf(szMp, "%d", pStatus->Get_MpMax());
-	m_pMpMaxFont->Set_Number(szMp);
+	char szMp_Max[MAX_PATH] = "";
+	sprintf(szMp_Max, "%d", pStatus->Get_MpMax());
+	m_pMpMaxFont->Set_Number(szMp_Max);
 
 }
 
@@ -211,7 +212,7 @@ HRESULT CHpMp::Ready_Component(void* pArg)
 	FontDesc.UI_Desc.eLevel = ELevel::Stage1;
 	FontDesc.UI_Desc.Movement_Desc.vScale = { 28.f, 28.f, 0.f, 0.f };
 	FontDesc.UI_Desc.Movement_Desc.vPos = { -601.f, -183.f, 0.f, 1.f };
-	FontDesc.iBufferSize = 4;
+	FontDesc.iBufferSize = 3;
 	FontDesc.pNumberBuffer = new _int[FontDesc.iBufferSize];
 	FontDesc.pNumberBuffer[0] = 4;
 	FontDesc.pNumberBuffer[1] = 5;
@@ -228,7 +229,7 @@ HRESULT CHpMp::Ready_Component(void* pArg)
 	FontDesc.UI_Desc.eLevel = ELevel::Stage1;
 	FontDesc.UI_Desc.Movement_Desc.vScale = { 28.f, 28.f, 0.f, 0.f };
 	FontDesc.UI_Desc.Movement_Desc.vPos = { -501.f, -183.f, 0.f, 1.f };
-	FontDesc.iBufferSize = 4;
+	FontDesc.iBufferSize = 3;
 	FontDesc.pNumberBuffer = new _int[FontDesc.iBufferSize];
 	FontDesc.pNumberBuffer[0] = 4;
 	FontDesc.pNumberBuffer[1] = 5;

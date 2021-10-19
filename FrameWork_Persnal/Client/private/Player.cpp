@@ -46,6 +46,8 @@ HRESULT CPlayer::NativeConstruct(void * pArg)
 
 _int CPlayer::Tick(_float TimeDelta)
 {
+	m_IsPushing = false;
+
 	m_iAtt = m_pStatusCom->Get_AttBasic();
 
 	if (true == m_IsMissionFailed)
@@ -184,6 +186,11 @@ _bool CPlayer::Get_Skill_Using(_int iSkillIndex)
 	return m_IsSkill_Use[iSkillIndex];
 }
 
+void CPlayer::Set_UpdateCollider(_fmatrix WorldMatrix)
+{
+
+}
+
 void CPlayer::Key_Check(_float TimeDelta)
 {
 	// Break First
@@ -216,10 +223,15 @@ void CPlayer::Key_Check(_float TimeDelta)
 			break;
 		default:
 			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::TPS);
-			m_eAnimationState_Next = EPlayerAnimation::Turn_Left;
+			m_fRotateTime += TimeDelta;
+			if(m_fRotateTime >= 0.2f)
+				m_eAnimationState_Next = EPlayerAnimation::Turn_Left;
 			break;
 		}
 	}
+
+	if (0 == dwMouseMove)
+		m_fRotateTime = 0.f;
 
 	if (dwMouseMove = GET_MOUSE_Y)
 	{
@@ -236,11 +248,10 @@ void CPlayer::Key_Check(_float TimeDelta)
 			break;
 		default:
 			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::TPS);
-			m_eAnimationState_Next = EPlayerAnimation::Turn_Left;
-			break;
 		}
 
 	}
+
 
 #pragma region Tower
 

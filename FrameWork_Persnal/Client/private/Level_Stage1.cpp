@@ -170,6 +170,11 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Monster_Boss", ELevel::Stage1, L"Layer_Bullet_Monster", ELevel::Stage1);
 
+	CCollide_Manager::GetInstance()->Collide_Push(L"Layer_Monster", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
+	CCollide_Manager::GetInstance()->Collide_Push(L"Layer_Player", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
+	//Collide_Push
+
+
 	if (EPhaseState::Combat == CData_Manager::GetInstance()->Get_NowPhase())
 	{
 		if (true == CData_Manager::GetInstance()->Is_PhaseClear())

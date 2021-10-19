@@ -78,6 +78,11 @@ HRESULT CCollider::NativeConstruct(void * pArg)
 	return S_OK;
 }
 
+const _float CCollider::Get_Radius()
+{
+	return m_ColliderDesc.vScale.x;
+}
+
 void CCollider::Set_Scale_Tick(_float3 vScale, _float TimeDelta)
 {
 	m_ColliderDesc.vScale.x += vScale.x * TimeDelta;

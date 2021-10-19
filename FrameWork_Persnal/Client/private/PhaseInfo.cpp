@@ -239,7 +239,7 @@ HRESULT CPhaseInfo::Ready_Component(void * pArg)
 
 
 	NUMBERFONT_DESC FontDesc;
-	lstrcpy(FontDesc.UI_Desc.szTextureName, L"Component_Texture_Number_Red");
+	lstrcpy(FontDesc.UI_Desc.szTextureName, L"Component_Texture_Number_Green");
 	FontDesc.UI_Desc.eLevel = ELevel::Stage1;
 	FontDesc.UI_Desc.Movement_Desc.vScale = { 28.f, 28.f, 0.f, 0.f };
 	FontDesc.UI_Desc.Movement_Desc.vPos = { 525.f, -326.f, 0.f, 1.f };
@@ -287,6 +287,8 @@ void CPhaseInfo::Free()
 
 	Safe_Release(m_pMovementCom_PhaseInfo);
 	Safe_Release(m_pTextureCom_PhaseInfo);
+
+	Safe_Release(m_pNumberFont_Score);
 
 
 	for (_int i = 0; i < 5; ++i)

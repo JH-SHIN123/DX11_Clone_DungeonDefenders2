@@ -40,6 +40,7 @@ public:
 	EDamageType Get_DamageType() const { return m_ColliderDesc.Attack_Desc.eDamageType; }
 	_int Get_Damage() const { return m_ColliderDesc.Attack_Desc.iDamage; }
 	_float Get_HitTime() const { return m_ColliderDesc.Attack_Desc.fHitTime; }
+	const _float Get_Radius();
 
 public:
 	void Set_IsCollide(_bool IsCollide) { m_IsCollision = IsCollide; }

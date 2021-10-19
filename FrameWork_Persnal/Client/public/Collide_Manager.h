@@ -17,6 +17,9 @@ public:
 	_bool Collide_Check(const _tchar* szDstObjectLayer, ELevel eDstObjectLevel, const _tchar* szSrcObjectLayer, ELevel eSrcObjectLevel);
 	void Collide_Check_Poison(const _tchar* szDstObjectLayer, ELevel eDstObjectLevel, const _tchar* szSrcObjectLayer, ELevel eSrcObjectLevel);
 
+	void Collide_Push(const _tchar* szDstObjectLayer, ELevel eDstObjectLevel, const _tchar* szSrcObjectLayer, ELevel eSrcObjectLevel);
+	void Collide_Push_Monster(const _tchar* szDstObjectLayer, ELevel eDstObjectLevel, const _tchar* szSrcObjectLayer, ELevel eSrcObjectLevel);
+
 
 public:
 	virtual void Free() override;
