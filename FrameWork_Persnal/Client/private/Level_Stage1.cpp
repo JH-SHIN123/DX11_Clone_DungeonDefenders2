@@ -94,7 +94,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
 	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
@@ -106,7 +106,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
 	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 1;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 
@@ -118,7 +118,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
 	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 2;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_L]->Set_PhaseMonster_Info(Phase);
@@ -133,7 +133,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase);
 
-	CData_Manager::GetInstance()->Set_MonsterCount_Max(4);
+	CData_Manager::GetInstance()->Set_MonsterCount_Max(6);
 
 	return S_OK;
 }
@@ -168,7 +168,7 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Tower", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
 	CCollide_Manager::GetInstance()->Collide_Check_Poison(L"Layer_Monster", ELevel::Stage1, L"Layer_Bullet_Posion", ELevel::Stage1);
 
-	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Monster_Boss", ELevel::Stage1, L"Layer_Bullet_Monster", ELevel::Stage1);
+	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1, L"Layer_Bullet_Monster", ELevel::Stage1);
 
 	CCollide_Manager::GetInstance()->Collide_Push(L"Layer_Monster", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
 	CCollide_Manager::GetInstance()->Collide_Push(L"Layer_Player", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
@@ -220,6 +220,8 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 
 		CData_Manager::GetInstance()->Reset_MonsterCount();
 		CData_Manager::GetInstance()->Set_MonsterCount_Max(1);
+		CData_Manager::GetInstance()->Set_BossDead(false);
+		CData_Manager::GetInstance()->Set_BossPhase(true);
 	}
 		break;
 	default:

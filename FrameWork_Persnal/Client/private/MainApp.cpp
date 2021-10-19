@@ -21,6 +21,7 @@ CMainApp::CMainApp()
 HRESULT CMainApp::Ready_MainApp()
 {
 	//SetWindowText(g_hWnd, TEXT("Dungeon Defendus"));
+	srand(unsigned(time(NULL)));
 
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
@@ -44,7 +45,7 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(Ready_Cursor()))
 		return E_FAIL;
 
-	if (FAILED(Ready_DefaultLevel(ELevel::Stage1)))
+	if (FAILED(Ready_DefaultLevel(ELevel::Logo)))
 		return E_FAIL;
 
 	CText_Manager::GetInstance()->Ready_Font();
@@ -147,7 +148,6 @@ HRESULT CMainApp::Ready_Component_PrototypeForStatic()
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect_Model")
 		, CVIBuffer_Rect::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Default.hlsl"), "DefaultTechnique"))))
 		return E_FAIL;
-
 
 	/* For. Status */
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Static, TEXT("Component_Status")

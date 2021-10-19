@@ -126,7 +126,7 @@ void CWeapon::Create_Bullet(_fvector vDir, _int iAtt)
 	Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
 	Data.Attack_Collide_Desc.IsCenter = true;
 	
-	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_StrikerTower_Bullet", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Player_Bullet", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
 }
 
 

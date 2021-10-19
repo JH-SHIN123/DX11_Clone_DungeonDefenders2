@@ -289,6 +289,9 @@
     <Filter Include="05.Effect%28Instanced%29\Point\00.Spread">
       <UniqueIdentifier>{4862821a-4942-495a-b135-81ce09907b8f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\07.Bullet\15.Player_Bullet">
+      <UniqueIdentifier>{c40898de-7950-47e0-b186-77faadcc3b50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -549,6 +552,9 @@
     <ClInclude Include="..\public\Point_Spread.h">
       <Filter>05.Effect%28Instanced%29\Point\00.Spread</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Player_Bullet.h">
+      <Filter>02.GameObject\07.Bullet\15.Player_Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -787,6 +793,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Point_Spread.cpp">
       <Filter>05.Effect%28Instanced%29\Point\00.Spread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Player_Bullet.cpp">
+      <Filter>02.GameObject\07.Bullet\15.Player_Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

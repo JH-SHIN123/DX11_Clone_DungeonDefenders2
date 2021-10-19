@@ -230,6 +230,7 @@
     <ClInclude Include="..\public\Phase_Panel.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\PlayerSkill.h" />
+    <ClInclude Include="..\public\Player_Bullet.h" />
     <ClInclude Include="..\public\Point_Spread.h" />
     <ClInclude Include="..\public\Skill_BrainWash.h" />
     <ClInclude Include="..\public\Skill_BrainWash_Effect.h" />
@@ -313,6 +314,7 @@
     <ClCompile Include="..\private\Phase_Panel.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\PlayerSkill.cpp" />
+    <ClCompile Include="..\private\Player_Bullet.cpp" />
     <ClCompile Include="..\private\Point_Spread.cpp" />
     <ClCompile Include="..\private\Skill_BrainWash.cpp" />
     <ClCompile Include="..\private\Skill_BrainWash_Effect.cpp" />

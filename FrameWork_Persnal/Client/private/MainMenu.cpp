@@ -609,7 +609,7 @@ void CMainMenu::Render_Button()
 
 		if (m_IsButtonPick[i] == true)
 		{
-			m_pBufferRectCom->Render(4);
+			m_pBufferRectCom->Render(1);
 			Render_Button_Info(i);
 		}
 

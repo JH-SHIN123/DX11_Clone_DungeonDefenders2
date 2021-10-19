@@ -9,11 +9,14 @@ BEGIN(Client)
 
 typedef struct tagPointSpread_Desc
 {
-	_float3 vDir;
+	_int iShaderPass = 0;
+	_float3 vDir = {0.f,0.f,0.f};
 	_float3 vColor = {1.f, 1.f, 1.f};
-	_float fSpreadDis = 0.f;
-	_float fLifeTime = -1.f;
+	_float fSpreadDis = 5.f;
+	_float fLifeTime = 10.f;
 	_tchar szTextrueName[MAX_PATH] = L"";
+	_tchar szPointInstance_PrototypeName[MAX_PATH] = L"";
+	MOVESTATE_DESC MoveDesc;
 
 }POINT_SPREAD_DESC;
 
@@ -33,10 +36,11 @@ public:
 
 public:
 	HRESULT Ready_Component(void* pArg);
+	void Set_Pos(_fvector vPos);
 
 private:
+	void SetUp_IndexDir(_int iInstanceIndex);
 	void Check_Instance(_float TimeDelta);
-
 
 
 private:
@@ -45,7 +49,9 @@ private:
 	CTextures*					m_pTexturesCom = nullptr;
 	CMovement*					m_pMovementCom = nullptr;
 
-	_float3*					m_pIndexDir = nullptr;
+	_float3*					m_pIndexDir	= nullptr;
+	_int						m_iNumInstance = 0;
+	POINT_SPREAD_DESC			m_PointDesc;
 
 public:
 	static CPoint_Spread* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

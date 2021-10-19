@@ -20,11 +20,11 @@ namespace Client {
 using namespace Client;
 
 #include "Loading.h"
-
 #include "Client_Macro.h"
 #include "Client_Typedef.h"
 #include "Client_Struct.h"
 #include <fstream>
+#include <time.h>
 
 #define __CLIENT_DEFINES_H__
 #endif // !__CLIENT_DEFINES_H__
