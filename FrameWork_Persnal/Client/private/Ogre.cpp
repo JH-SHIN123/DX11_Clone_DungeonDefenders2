@@ -92,6 +92,8 @@ _int COgre::Tick(_float TimeDelta)
 		switch (__super::AI_Check(TimeDelta, &vTargetPos, m_IsAttack || m_IsSpecialAttack || m_IsHurt))
 		{
 		case Client::EMonsterAI::Idle:
+			if (true == m_IsAttack)
+				break;
 			m_IsAttack = false;
 			m_iAttackCount = 0;
 			m_eAnim_Next = EOgreAnim::Idle;

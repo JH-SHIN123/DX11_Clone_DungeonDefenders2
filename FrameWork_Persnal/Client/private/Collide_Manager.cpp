@@ -125,6 +125,9 @@ void CCollide_Manager::Collide_Push(const _tchar * szDstObjectLayer, ELevel eDst
 
 		for (auto& Dst : Dst_Object)
 		{
+			if(Src == Dst)
+				continue;
+
 			CCollider* pDstCol_Hit = (CCollider*)Dst->Get_Component(L"Com_Collide_Hit");
 
 			if (true == Dst->Get_Pushing() || nullptr == pDstCol_Hit)
@@ -145,7 +148,7 @@ void CCollide_Manager::Collide_Push(const _tchar * szDstObjectLayer, ELevel eDst
 
 				_vector vDir = (vPos_Dst_Col - vPos_Src_Col);
 				_float fDis = XMVectorGetX(XMVector3Length(vDir)) * 0.5f;
-				vDir = (XMVector3Normalize(vDir) + XMVector3Normalize(pMovmentCom_Src->Get_State(EState::Look))) * 0.1f;
+				vDir = (XMVector3Normalize(vDir) /*+ XMVector3Normalize(pMovmentCom_Src->Get_State(EState::Look))*/) * 0.1f;
 				vDir = XMVectorSetY(vDir, 0.f);
 				vDir = XMVectorSetW(vDir, 0.f);
 

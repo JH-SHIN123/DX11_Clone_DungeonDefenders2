@@ -138,13 +138,13 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 		}
 	}
 
-	// 세뇌중이면 이거
-	if (true == m_IsBrainWashed)
-		return AI_BrainWashed(TimeDelta, pTargetPos, IsContinueAnimation);
+	_tchar sz[MAX_PATH] = L"";
+	wsprintf(sz, TEXT("%d"), (_int)m_eAI_Next);
+	SetWindowText(g_hWnd, sz);
 
-	// 때린거 마저 때리고
-	if (EMonsterAI::Attack == m_eAI_Next && IsContinueAnimation)
-		return EMonsterAI::Attack;	
+	// 하던거 마저 하고
+	if (/*EMonsterAI::Attack == m_eAI_Next &&*/ IsContinueAnimation)
+		return m_eAI_Next;
 
 	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
 	_vector vMyPos_Cell = XMVectorSetY(vMyPos, 0.f);
