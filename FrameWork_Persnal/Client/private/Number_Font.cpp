@@ -90,8 +90,6 @@ HRESULT CNumber_Font::Ready_Component(NUMBERFONT_DESC* pArg)
 
 	m_vOffSetPos = { m_pMovementCom->Get_Scale(EState::Right) * 0.5f, 0.f};
 
-	Safe_Delete_Array(pArg->pNumberBuffer);
-
 
 	return S_OK;
 }

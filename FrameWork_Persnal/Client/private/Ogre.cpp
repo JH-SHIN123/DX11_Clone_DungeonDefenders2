@@ -37,7 +37,9 @@ HRESULT COgre::NativeConstruct(void * pArg)
 
 _int COgre::Tick(_float TimeDelta)
 {
-	m_pColliderCom_Attack->Set_NotCollide(true);
+	if (0 <= m_pStatusCom->Get_Hp())
+		m_pColliderCom_Attack->Set_NotCollide(true);
+
 	Attack_Check();
 
 	if (0 >= m_pStatusCom->Get_Hp())

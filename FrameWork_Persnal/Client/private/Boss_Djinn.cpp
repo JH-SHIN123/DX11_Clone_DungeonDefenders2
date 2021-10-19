@@ -45,11 +45,9 @@ HRESULT CBoss_Djinn::NativeConstruct(void * pArg)
 
 _int CBoss_Djinn::Tick(_float TimeDelta)
 {
-	_tchar szTitle[MAX_PATH] = L"";
-	wsprintf(szTitle, L"%d", (_uint)m_pModelCom->Get_AnimTime());
-	SetWindowText(g_hWnd, szTitle);
+	if (0 <= m_pStatusCom->Get_Hp())
+		m_pColliderCom_Attack->Set_NotCollide(true);
 
-	m_pColliderCom_Attack->Set_NotCollide(true);
 	Attack_Check(TimeDelta);
 
 	if (0 >= m_pStatusCom->Get_Hp())

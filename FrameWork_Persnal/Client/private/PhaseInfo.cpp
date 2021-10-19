@@ -248,6 +248,7 @@ HRESULT CPhaseInfo::Ready_Component(void * pArg)
 	FontDesc.pNumberBuffer[0] = 0;
 	m_pNumberFont_Score = CNumber_Font::Create(m_pDevice, m_pDevice_Context);
 	m_pNumberFont_Score->NativeConstruct(&FontDesc);
+	Safe_Delete_Array(FontDesc.pNumberBuffer);
 
 	if (hr != S_OK)
 		MSG_BOX("Ready_Component Failed (CPhaseInfo)");

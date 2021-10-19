@@ -225,7 +225,6 @@ HRESULT CHpMp::Ready_Component(void* pArg)
 	m_pHpMaxFont->NativeConstruct(&FontDesc);
 	Safe_Delete_Array(FontDesc.pNumberBuffer);
 
-
 	lstrcpy(FontDesc.UI_Desc.szTextureName, L"Component_Texture_Number_Blue");
 	FontDesc.UI_Desc.eLevel = ELevel::Stage1;
 	FontDesc.UI_Desc.Movement_Desc.vScale = { 28.f, 28.f, 0.f, 0.f };
