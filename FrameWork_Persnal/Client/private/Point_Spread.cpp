@@ -23,10 +23,8 @@ HRESULT CPoint_Spread::NativeConstruct(void * pArg)
 	VTXMATRIX* pInstance = m_pBufferInstanceCom->Get_InstanceBuffer();
 	_uint iNumInstance = m_pBufferInstanceCom->Get_NumInstance();
 
-	_matrix RotateMatrix = XMMatrixRotationRollPitchYaw(XMConvertToRadians(90.f), XMConvertToRadians(45.f), 0.f);
-	_vector vDir = XMVector3Normalize(RotateMatrix.r[2]);
+
 	pInstance[0].vSize = { 10.f, 10.f };
-	pInstance[1].vSize = { 5.f, 5.f };
 
 	m_pBufferInstanceCom->Set_InstanceBuffer(pInstance);
 
@@ -58,6 +56,14 @@ HRESULT CPoint_Spread::Ready_Component(void * pArg)
 		MSG_BOX("CPoint_Spread::Ready_Component Failed");
 
 	return hr;
+}
+
+void CPoint_Spread::Check_Instance(_float TimeDelta)
+{
+	// 0번을 주위로 퍼져나감
+
+
+
 }
 
 CPoint_Spread * CPoint_Spread::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

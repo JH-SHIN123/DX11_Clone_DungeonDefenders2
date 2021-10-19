@@ -12,7 +12,7 @@ typedef struct tagPointSpread_Desc
 	_float3 vDir;
 	_float3 vColor = {1.f, 1.f, 1.f};
 	_float fSpreadDis = 0.f;
-
+	_float fLifeTime = -1.f;
 	_tchar szTextrueName[MAX_PATH] = L"";
 
 }POINT_SPREAD_DESC;
@@ -35,7 +35,7 @@ public:
 	HRESULT Ready_Component(void* pArg);
 
 private:
-
+	void Check_Instance(_float TimeDelta);
 
 
 
@@ -44,6 +44,8 @@ private:
 	CRenderer*					m_pRendererCom = nullptr;
 	CTextures*					m_pTexturesCom = nullptr;
 	CMovement*					m_pMovementCom = nullptr;
+
+	_float3*					m_pIndexDir = nullptr;
 
 public:
 	static CPoint_Spread* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
