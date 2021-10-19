@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\PhaseInfo.h"
 #include "Data_Manager.h"
+#include "Number_Font.h"
 
 CPhaseInfo::CPhaseInfo(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CUI_2D(pDevice, pDevice_Context)
@@ -37,6 +38,11 @@ _int CPhaseInfo::Tick(_float TimeDelta)
 	Phase_Check(TimeDelta);
 	Enemy_Check();
 
+	char szHp[MAX_PATH] = "";
+	sprintf(szHp, "%d", CData_Manager::GetInstance()->Get_Score());
+	m_pNumberFont_Score->Set_Number(szHp);
+
+
 	return _int();
 }
 
@@ -61,6 +67,7 @@ HRESULT CPhaseInfo::Render()
 
 	Phase_Render();
 	Text_Render();
+	m_pNumberFont_Score->Render();
 
 	return S_OK;
 }
@@ -230,6 +237,17 @@ HRESULT CPhaseInfo::Ready_Component(void * pArg)
 	m_pMovementCom_Text[3]->Set_State(EState::Position, XMVectorSet(460.f, -325.f, 0.f, 1.f));
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Texture_PhaseInfo_Text_Score"), TEXT("Com_Texture_Text_Score"), (CComponent**)&m_pTextureCom_Text[3]);
 
+
+	NUMBERFONT_DESC FontDesc;
+	lstrcpy(FontDesc.UI_Desc.szTextureName, L"Component_Texture_Number_Red");
+	FontDesc.UI_Desc.eLevel = ELevel::Stage1;
+	FontDesc.UI_Desc.Movement_Desc.vScale = { 28.f, 28.f, 0.f, 0.f };
+	FontDesc.UI_Desc.Movement_Desc.vPos = { 525.f, -326.f, 0.f, 1.f };
+	FontDesc.iBufferSize = 1;
+	FontDesc.pNumberBuffer = new _int[FontDesc.iBufferSize];
+	FontDesc.pNumberBuffer[0] = 0;
+	m_pNumberFont_Score = CNumber_Font::Create(m_pDevice, m_pDevice_Context);
+	m_pNumberFont_Score->NativeConstruct(&FontDesc);
 
 	if (hr != S_OK)
 		MSG_BOX("Ready_Component Failed (CPhaseInfo)");

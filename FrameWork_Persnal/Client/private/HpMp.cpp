@@ -39,6 +39,9 @@ _int CHpMp::Tick(_float TimeDelta)
 
 	HpMp_Check(TimeDelta);
 
+	_vector vPos = m_pMovementCom->Get_State(EState::Position);
+
+	
 	return _int();
 }
 
@@ -52,6 +55,9 @@ _int CHpMp::Late_Tick(_float TimeDelta)
 
 	m_pHpFont->Late_Tick(TimeDelta);
 	m_pMpFont->Late_Tick(TimeDelta);
+
+	m_pHpMaxFont->Late_Tick(TimeDelta);
+	m_pMpMaxFont->Late_Tick(TimeDelta);
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::UI, this);
 }
@@ -104,6 +110,20 @@ void CHpMp::HpMp_Check(_float TimeDelta)
 	m_pMovementCom_MP_Mask->Set_State(EState::Position, vMaskPos);
 
 
+	char szHp[MAX_PATH] = "";
+	sprintf(szHp, "%d", pStatus->Get_Hp());
+	m_pHpFont->Set_Number(szHp);
+
+	sprintf(szHp, "%d", pStatus->Get_HpMax());
+	m_pHpMaxFont->Set_Number(szHp);
+
+
+	char szMp[MAX_PATH] = "";
+	sprintf(szMp, "%d", pStatus->Get_Mp());
+	m_pMpFont->Set_Number(szMp);
+
+	sprintf(szMp, "%d", pStatus->Get_MpMax());
+	m_pMpMaxFont->Set_Number(szMp);
 
 }
 
@@ -199,6 +219,10 @@ HRESULT CHpMp::Ready_Component(void* pArg)
 	m_pHpFont = CNumber_Font::Create(m_pDevice, m_pDevice_Context);
 	m_pHpFont->NativeConstruct(&FontDesc);
 
+	FontDesc.UI_Desc.Movement_Desc.vPos = { -601.f, -300.f, 0.f, 1.f };
+	m_pHpMaxFont = CNumber_Font::Create(m_pDevice, m_pDevice_Context);
+	m_pHpMaxFont->NativeConstruct(&FontDesc);
+
 
 	lstrcpy(FontDesc.UI_Desc.szTextureName, L"Component_Texture_Number_Blue");
 	FontDesc.UI_Desc.eLevel = ELevel::Stage1;
@@ -211,6 +235,16 @@ HRESULT CHpMp::Ready_Component(void* pArg)
 	FontDesc.pNumberBuffer[2] = 6;
 	m_pMpFont = CNumber_Font::Create(m_pDevice, m_pDevice_Context);
 	m_pMpFont->NativeConstruct(&FontDesc);
+
+	FontDesc.UI_Desc.Movement_Desc.vPos = { -501.f, -300.f, 0.f, 1.f };
+	m_pMpMaxFont = CNumber_Font::Create(m_pDevice, m_pDevice_Context);
+	m_pMpMaxFont->NativeConstruct(&FontDesc);
+
+	m_pHpFont->Set_Pos(XMVectorSet(-607.f, -139.f, 0.f, 1.f));
+	m_pHpMaxFont->Set_Pos(XMVectorSet(-607.f, -287.f, 0.f, 1.f));
+
+	m_pMpFont->Set_Pos(XMVectorSet(-514.f, -139.f, 0.f, 1.f));
+	m_pMpMaxFont->Set_Pos(XMVectorSet(-514.f, -287.f, 0.f, 1.f));
 
 
 	Safe_Delete(pData);
@@ -252,5 +286,8 @@ void CHpMp::Free()
 
 	Safe_Release(m_pHpFont);
 	Safe_Release(m_pMpFont);
+	Safe_Release(m_pHpMaxFont);
+	Safe_Release(m_pMpMaxFont);
+	
 	__super::Free();
 }

@@ -84,7 +84,6 @@ HRESULT CMainApp::Render_MainApp()
 
 	if (1.0 <= m_TimeAcc)
 	{
-
 		m_TimeAcc = 0.0;
 		wsprintf(m_szFPS, TEXT("%d - FPS"), m_iNumDraw);
 		SetWindowText(g_hWnd, m_szFPS);

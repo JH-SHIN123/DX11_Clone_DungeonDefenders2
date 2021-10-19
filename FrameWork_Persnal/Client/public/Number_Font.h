@@ -30,6 +30,7 @@ public:
 public:
 	void Set_Pos(_fvector vPos) { m_pMovementCom->Set_State(EState::Position, vPos); }
 	void Set_Number(_int* pNumberBuffer);
+	void Set_Number(char pNumber[MAX_PATH]);
 
 private:
 	HRESULT	Ready_Component(NUMBERFONT_DESC* pArg);

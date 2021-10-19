@@ -46,6 +46,7 @@ _int CGoblin::Tick(_float TimeDelta)
 			if (true == m_pModelCom->Get_IsFinishedAnimaion())
 			{
 				CData_Manager::GetInstance()->Add_MonsterCount();
+				CData_Manager::GetInstance()->Add_Score(m_pStatusCom->Get_Exp() * 5);
 				return OBJECT_DEAD;
 			}
 		}
@@ -148,6 +149,7 @@ _int CGoblin::Late_Tick(_float TimeDelta)
 		if (true == m_pModelCom->Get_IsFinishedAnimaion())
 		{
 			CData_Manager::GetInstance()->Add_MonsterCount();
+			CData_Manager::GetInstance()->Add_Score(m_pStatusCom->Get_Exp() * 5);
 			return OBJECT_DEAD;
 		}
 		else

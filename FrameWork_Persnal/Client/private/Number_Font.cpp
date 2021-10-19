@@ -69,6 +69,22 @@ void CNumber_Font::Set_Number(_int * pNumberBuffer)
 	m_pNumberBuffer = pNumberBuffer;
 }
 
+void CNumber_Font::Set_Number(char pNumber[MAX_PATH])
+{
+	if (m_iBufferSize != strlen(pNumber) + 1)
+	{
+		Safe_Delete_Array(m_pNumberBuffer);
+		m_iBufferSize = (_int)strlen(pNumber) + 1;
+		m_pNumberBuffer = new _int[m_iBufferSize];
+	}
+
+	for (_int i = 0; i < m_iBufferSize; ++i)
+	{
+		char pNum = pNumber[i];
+		m_pNumberBuffer[i] = _int(pNum - '0');
+	}
+}
+
 HRESULT CNumber_Font::Ready_Component(NUMBERFONT_DESC* pArg)
 {
 	HRESULT hr = S_OK;

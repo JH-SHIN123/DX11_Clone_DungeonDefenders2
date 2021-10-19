@@ -36,6 +36,8 @@ private:
 private:
 	class CNumber_Font* m_pHpFont = nullptr;
 	class CNumber_Font* m_pMpFont = nullptr;
+	class CNumber_Font* m_pHpMaxFont = nullptr;
+	class CNumber_Font* m_pMpMaxFont = nullptr;
 
 private:
 	_float		m_fDamage = 10.f;

@@ -121,7 +121,15 @@ private:
 	RANK_DESC		m_Rank_Desc;
 #pragma endregion
 
+#pragma region Score
+public:
+	void Add_Score(_ulong lScore) { m_longScore += lScore; }
+	void Reset_Score(_ulong lScore) { m_longScore = 0; }
+	const _ulong Get_Score() { return m_longScore; }
 
+private:
+	_ulong	m_longScore = 0;
+#pragma endregion
 
 #pragma region UnTick
 public:
