@@ -50,7 +50,8 @@ private:
 	CMovement*					m_pMovementCom = nullptr;
 
 	_float3*					m_pIndexDir	= nullptr;
-	_int						m_iNumInstance = 0;
+	_int						m_iNumInstance = 0; // 어디 부터 그려
+	_int						m_iInstance_StartIndex; // 그릴 개수
 	POINT_SPREAD_DESC			m_PointDesc;
 
 public:

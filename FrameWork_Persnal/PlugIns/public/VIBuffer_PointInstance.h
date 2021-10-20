@@ -15,7 +15,7 @@ private:
 public:
 	virtual HRESULT NativeConstruct_Prototype(const _tchar* pShaderFilePath, const char* pTechniqueName, _uint iNumInstance); /* 버퍼를 생성한다.*/
 	virtual HRESULT NativeConstruct(void* pArg) override;
-	virtual HRESULT Render(_uint iPassIndex);
+	virtual HRESULT Render(_uint iPassIndex, _int iDrawCount = -1, _int iStartIndex = 0);
 
 public:
 	const _uint Get_NumInstance() { return m_iNumInstance; }

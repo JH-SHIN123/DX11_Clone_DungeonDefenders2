@@ -567,6 +567,9 @@
     <ClInclude Include="..\public\Rect_Spread.h">
       <Filter>05.Effect%28Instanced%29\Rect\00.Spread</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EffectDesc_Manager.h">
+      <Filter>05.Effect%28Instanced%29</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -814,6 +817,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Rect_Spread.cpp">
       <Filter>05.Effect%28Instanced%29\Rect\00.Spread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EffectDesc_Manager.cpp">
+      <Filter>05.Effect%28Instanced%29</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -11,6 +11,7 @@
 #include "Collide_Manager.h"
 #include "LoadingScreen.h"
 #include "Fade.h"
+#include "EffectDesc_Manager.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -327,6 +328,7 @@ void CMainApp::Free()
 
 	Safe_Release(m_pGameInstance);
 
+	CEffectDesc_Manager::DestroyInstance();
 	CCollide_Manager::DestroyInstance();
 	CText_Manager::DestroyInstance();
 	CData_Manager::DestroyInstance();

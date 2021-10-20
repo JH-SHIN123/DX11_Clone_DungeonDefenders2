@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Point_Spread.h"
+#include "EffectDesc_Manager.h"
 
 CPoint_Spread::CPoint_Spread(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -20,13 +21,21 @@ HRESULT CPoint_Spread::NativeConstruct(void * pArg)
 {
 	Ready_Component(pArg);
 
-	SetUp_IndexDir(m_pBufferInstanceCom->Get_NumInstance());
+	SetUp_IndexDir(CEffectDesc_Manager::GetInstance()->Get_PointSpread_DrawCount());
 	
 	VTXMATRIX* pInstance = m_pBufferInstanceCom->Get_InstanceBuffer();
 
-	pInstance[0].vSize = { 4.f, 4.f };
-	pInstance[1].vSize = { 4.f, 4.f };
-	XMStoreFloat4(&pInstance[0].vPosition, m_pMovementCom->Get_State(EState::Position));
+	XMStoreFloat4(&pInstance[m_iInstance_StartIndex].vPosition, m_pMovementCom->Get_State(EState::Position));
+
+	_float fSize = 5.f;
+
+	for (_int i = m_iInstance_StartIndex; i < m_iNumInstance + m_iInstance_StartIndex; ++i)
+	{
+		pInstance[i].vSize.x = fSize;
+		pInstance[i].vSize.y = fSize;
+
+		fSize -= 1.5f;
+	}
 
 	m_pBufferInstanceCom->Set_InstanceBuffer(pInstance);
 
@@ -40,13 +49,13 @@ _int CPoint_Spread::Tick(_float TimeDelta)
 	VTXMATRIX* pInstance = m_pBufferInstanceCom->Get_InstanceBuffer();
 
 
-	XMStoreFloat4(&pInstance[0].vPosition, m_pMovementCom->Get_State(EState::Position));
+	XMStoreFloat4(&pInstance[m_iInstance_StartIndex].vPosition, m_pMovementCom->Get_State(EState::Position));
 
-	for (_int i = 1; i < m_iNumInstance; ++i)
+	for (_int i = m_iInstance_StartIndex; i < m_iNumInstance + m_iInstance_StartIndex; ++i)
 	{
 		_vector vPos = m_pMovementCom->Get_State(EState::Position);
 		_vector vDir = XMLoadFloat3(&m_pIndexDir[i]);
-		//vPos += vDir * 1.5f;
+		//vPos -= vDir * 1.5f;
 
 		XMStoreFloat4(&pInstance[i].vPosition, vPos);
 	}
@@ -77,7 +86,7 @@ HRESULT CPoint_Spread::Render()
 	m_pBufferInstanceCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
 	m_pBufferInstanceCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
 
-	m_pBufferInstanceCom->Render(1);
+	m_pBufferInstanceCom->Render(0, m_iNumInstance, m_iInstance_StartIndex);
 
 	return S_OK;
 }
@@ -107,6 +116,7 @@ void CPoint_Spread::Set_Pos(_fvector vPos)
 
 void CPoint_Spread::SetUp_IndexDir(_int iInstanceIndex)
 {
+	m_iInstance_StartIndex = CEffectDesc_Manager::GetInstance()->Get_PointSpread_StartIndex();
 	m_iNumInstance = iInstanceIndex;
 
 	m_pIndexDir = new _float3[m_iNumInstance];

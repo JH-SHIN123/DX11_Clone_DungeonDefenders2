@@ -83,7 +83,7 @@ HRESULT CPlayer_Bullet::Ready_Component(void * pArg)
 
 	POINT_SPREAD_DESC Point_Desc;
 	lstrcpy(Point_Desc.szTextrueName, L"Component_Texture_Ring_Gray");
-	lstrcpy(Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_12");
+	lstrcpy(Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_15_5");
 	XMStoreFloat4(&Point_Desc.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
 	Point_Desc.MoveDesc.vScale = { 1.f,1.f,0.f,0.f };
 

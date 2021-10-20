@@ -4,6 +4,7 @@
 #include "BackGround_Logo.h"
 #include "MainMenu.h"
 #include "VIBuffer_Terrain.h"
+#include "EffectDesc_Manager.h"
 
 #include "Terrain.h"
 #include "Player.h"
@@ -321,10 +322,10 @@ HRESULT CLoading::LoadingForStage()
 
 #pragma endregion
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_12")
-		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "DefaultTechnique", 2))))
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_15_5")
+		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "DefaultTechnique", 50))))
 		return E_FAIL;
-
+	CEffectDesc_Manager::GetInstance()->Set_PointSpread(50, 5);
 
 
 	if (hr != S_OK)
