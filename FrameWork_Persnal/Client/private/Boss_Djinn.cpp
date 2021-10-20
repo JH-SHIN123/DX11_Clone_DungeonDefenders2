@@ -149,7 +149,7 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 	}
 
 	_matrix Matrix = m_pMovementCom->Get_WorldMatrix();
-	(Matrix.r[3]).m128_f32[1] += 5.f;
+	(Matrix.r[3]).m128_f32[1] += 2.f;
 	m_pColliderCom_Hurt->Update_Collider(Matrix);
 
 	m_pStatusCom->Tick(TimeDelta);
@@ -329,7 +329,7 @@ HRESULT CBoss_Djinn::Ready_Component(void * pArg)
 
 	COLLIDER_DESC Data;
 	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
-	Data.vScale = { 6.f, 6.f, 6.f };
+	Data.vScale = { 7.5f, 7.5f, 7.5f };
 	Data.IsCenter = false;
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pColliderCom_Hurt, &Data);

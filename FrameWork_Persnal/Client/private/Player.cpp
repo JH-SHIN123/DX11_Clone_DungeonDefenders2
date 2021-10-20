@@ -284,6 +284,9 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	if (GET_KEY_INPUT(DIK_8))
 	{
+		if (10 < m_pStatusCom->Get_Mp())
+			return;
+
 		if (ETowerSpawn::End == m_eTowerSpawn)
 		{
 			m_eAnimationState_Next = EPlayerAnimation::Summon_Start;
@@ -295,6 +298,9 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	if (GET_KEY_INPUT(DIK_9))
 	{
+		if (15 < m_pStatusCom->Get_Mp())
+			return;
+
 		if (ETowerSpawn::End == m_eTowerSpawn)
 		{
 			m_eAnimationState_Next = EPlayerAnimation::Summon_Start;
@@ -306,6 +312,9 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	if (GET_KEY_INPUT(DIK_0))
 	{
+		if (25 < m_pStatusCom->Get_Mp())
+			return;
+
 		if (ETowerSpawn::End == m_eTowerSpawn)
 		{
 			m_eAnimationState_Next = EPlayerAnimation::Summon_Start;
@@ -576,24 +585,33 @@ void CPlayer::Tower_Pick()
 			_tchar szPrototypeName[MAX_PATH] = L"";
 			TOWER_DESC Data;
 
+			_int iMp = m_pStatusCom->Get_Mp();
+			_int iMp_Damage = 0;
+
 			if (true == m_IsRenderTower[RENDER_BLOCAKE])
 			{
 				lstrcpy(szPrototypeName, L"Prototype_BlockadeTower");
+				iMp_Damage = 10;
 				m_pBlockadeTower->Get_TowerDesc(&Data);
 			}
 
 			if (true == m_IsRenderTower[RENDER_STRIKER])
 			{
 				lstrcpy(szPrototypeName, L"Prototype_StrikerTower");
+				iMp_Damage = 15;
 				m_pStrikerTower->Get_TowerDesc(&Data);
 			}
 
 			if (true == m_IsRenderTower[RENDER_LIGHTING])
 			{
 				lstrcpy(szPrototypeName, L"Prototype_LightningTower");
+				iMp_Damage = 25;
 				m_pLightningTower->Get_TowerDesc(&Data);
 			}
 
+			iMp -= iMp_Damage;
+			m_pStatusCom->Set_Mp(iMp);
+			
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, szPrototypeName, (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
 		}
 		m_IsTowerSpawning = false;

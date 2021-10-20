@@ -59,6 +59,7 @@ public: // Setter
 	void Set_Hp(_int iHp);
 	void Set_AttBasic(_int iAtt) { m_Status_Desc.iAtt_Basic = iAtt; }
 	void Set_Stat(const STATUS_DESC& Status) { m_Status_Desc = Status; }
+	void Set_Mp(_int iMp) { m_Status_Desc.iMp = iMp; }
 
 public: // Add
 	void Add_Exp(_int iExp) { m_Status_Desc.iExp += iExp; }
