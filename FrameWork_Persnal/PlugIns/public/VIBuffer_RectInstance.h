@@ -16,6 +16,14 @@ public:
 	virtual HRESULT NativeConstruct_Prototype(const _tchar* pShaderFilePath, const char* pTechniqueName, _uint iNumInstance); /* 버퍼를 생성한다.*/
 	virtual HRESULT NativeConstruct(void* pArg) override;
 	virtual HRESULT Render(_uint iPassIndex);
+
+public:
+	const _uint Get_NumInstance() { return m_iNumInstance; }
+	VTXMATRIX*	Get_InstanceBuffer() { return m_pInstanceVertices; }
+
+public:
+	void Set_InstanceBuffer(VTXMATRIX* pInstanceBuffer) { memcpy(m_pInstanceVertices, pInstanceBuffer, sizeof(VTXMATRIX) * m_iNumInstance); }
+
 public:
 	void Update_Instance(_float TimeDelta);
 

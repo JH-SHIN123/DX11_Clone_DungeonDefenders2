@@ -7,6 +7,7 @@ cbuffer CameraDesc
 }
 
 texture2D		g_DiffuseTexture;
+float2			g_vSize;
 
 sampler DiffuseSampler = sampler_state
 {
@@ -23,9 +24,8 @@ struct VS_IN
 	float3 vPosition : POSITION;
 
 	/* 인스턴스 정점버퍼 */
-	float2 vSize : PSIZE;
+	float2 vInstanceSize : PSIZE;
 	row_major matrix WorldMatrix : WORLD;
-
 };
 
 struct VS_OUT
@@ -41,7 +41,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	matrix		matWV, matWVP;
 
 	Out.vPosition = mul(vector(In.vPosition, 1.f), In.WorldMatrix);
-	Out.vSize = In.vSize;
+	Out.vSize = In.vInstanceSize;
 
 	return Out;
 }
@@ -123,16 +123,37 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_ALPHA_RED(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	Out.vColor.a = Out.vColor.r;
+
+	return Out;
+}
+
 technique11		DefaultTechnique
 {
-	pass RectInstance
+	pass PointInstance // 0
 	{
 		SetRasterizerState(Rasterizer_Solid);
-		SetDepthStencilState(DepthStecil_Default, 0);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = compile gs_5_0 GS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+
+	pass PointInstance_ALPHA_RED // 1
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		PixelShader = compile ps_5_0 PS_MAIN_ALPHA_RED();
 	}
 };
 

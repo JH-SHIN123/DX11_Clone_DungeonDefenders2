@@ -233,6 +233,7 @@
     <ClInclude Include="..\public\PlayerSkill.h" />
     <ClInclude Include="..\public\Player_Bullet.h" />
     <ClInclude Include="..\public\Point_Spread.h" />
+    <ClInclude Include="..\public\Rect_Spread.h" />
     <ClInclude Include="..\public\Skill_BrainWash.h" />
     <ClInclude Include="..\public\Skill_BrainWash_Effect.h" />
     <ClInclude Include="..\public\Skill_ManaBomb.h" />
@@ -318,6 +319,7 @@
     <ClCompile Include="..\private\PlayerSkill.cpp" />
     <ClCompile Include="..\private\Player_Bullet.cpp" />
     <ClCompile Include="..\private\Point_Spread.cpp" />
+    <ClCompile Include="..\private\Rect_Spread.cpp" />
     <ClCompile Include="..\private\Skill_BrainWash.cpp" />
     <ClCompile Include="..\private\Skill_BrainWash_Effect.cpp" />
     <ClCompile Include="..\private\Skill_ManaBomb.cpp" />

@@ -295,6 +295,9 @@
     <Filter Include="02.GameObject\11.ManaToken">
       <UniqueIdentifier>{ae9872b0-cd1b-4a04-8671-3f773e877759}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Effect%28Instanced%29\Rect\00.Spread">
+      <UniqueIdentifier>{b8975ef6-a78e-4e57-be7b-c1517807b19b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -561,6 +564,9 @@
     <ClInclude Include="..\public\ManaToken.h">
       <Filter>02.GameObject\11.ManaToken</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Rect_Spread.h">
+      <Filter>05.Effect%28Instanced%29\Rect\00.Spread</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -805,6 +811,9 @@
     </ClCompile>
     <ClCompile Include="..\private\ManaToken.cpp">
       <Filter>02.GameObject\11.ManaToken</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Rect_Spread.cpp">
+      <Filter>05.Effect%28Instanced%29\Rect\00.Spread</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

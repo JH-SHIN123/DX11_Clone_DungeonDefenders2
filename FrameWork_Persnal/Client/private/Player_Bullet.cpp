@@ -47,6 +47,9 @@ _int CPlayer_Bullet::Tick(_float TimeDelta)
 		m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 	}
 
+	m_pPointSpread->Set_Pos(m_pMovementCom->Get_State(EState::Position));
+	m_pPointSpread->Tick(TimeDelta);
+
 	return iReturn;
 }
 
@@ -55,18 +58,19 @@ _int CPlayer_Bullet::Late_Tick(_float TimeDelta)
 	if (true == m_pColliderCom_Attack->Get_IsCollide())
 		return OBJECT_DEAD;
 
-	m_pPointSpread->Set_Pos(m_pMovementCom->Get_State(EState::Position));
+	m_pPointSpread->Late_Tick(TimeDelta);
 
 	return __super::Late_Tick(TimeDelta);
 }
 
 HRESULT CPlayer_Bullet::Render()
 {
-	__super::Render();
+	//__super::Render();
 
+	m_pPointSpread->Render();
 
 #ifdef _DEBUG
-	m_pColliderCom_Attack->Render_Collider();
+//	m_pColliderCom_Attack->Render_Collider();
 #endif // _DEBUG
 
 

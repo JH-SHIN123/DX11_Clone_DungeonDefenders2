@@ -72,17 +72,18 @@ HRESULT CVIBuffer_RectInstance::NativeConstruct_Prototype(const _tchar* pShaderF
 	if (FAILED(CVIBuffer::SetUp_VertexBuffer_Desc(m_iNumInstance, sizeof(VTXMATRIX), D3D11_USAGE_DYNAMIC, D3D11_BIND_VERTEX_BUFFER, D3D11_CPU_ACCESS_WRITE)))
 		return E_FAIL;
 
-	VTXMATRIX*		pInstanceVertices = new VTXMATRIX[m_iNumInstance];
+	VTXMATRIX*		m_pInstanceVertices = new VTXMATRIX[m_iNumInstance];
 
 	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
-		pInstanceVertices[i].vRight = _float4(1.0f, 0.f, 0.f, 0.f);
-		pInstanceVertices[i].vUp = _float4(0.f, 1.0f, 0.f, 0.f);
-		pInstanceVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
-		pInstanceVertices[i].vPosition = _float4(0.f, 0.f, 0.f, 1.f);
+		m_pInstanceVertices[i].vSize = _float2(1.f, 1.f);
+		m_pInstanceVertices[i].vRight = _float4(1.0f, 0.f, 0.f, 0.f);
+		m_pInstanceVertices[i].vUp = _float4(0.f, 1.0f, 0.f, 0.f);
+		m_pInstanceVertices[i].vLook = _float4(0.f, 0.f, 1.f, 0.f);
+		m_pInstanceVertices[i].vPosition = _float4(0.f, 0.f, 0.f, 1.f);
 	}
 
-	if (FAILED(CVIBuffer::SetUp_VertexSubResourceData(pInstanceVertices)))
+	if (FAILED(CVIBuffer::SetUp_VertexSubResourceData(m_pInstanceVertices)))
 		return E_FAIL;
 
 	if (FAILED(m_pDevice->CreateBuffer(&m_VBDesc, &m_VBSubresourceData, &m_pVBInstance)))
@@ -163,7 +164,7 @@ void CVIBuffer_RectInstance::Update_Instance(_float TimeDelta)
 
 	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
-		((VTXMATRIX*)MappedSubResource.pData + i)->vPosition.y += 0.1f * TimeDelta;
+		*((VTXMATRIX*)MappedSubResource.pData + i) = m_pInstanceVertices[i];
 	}
 
 	m_pDevice_Context->Unmap(m_pVBInstance, 0);

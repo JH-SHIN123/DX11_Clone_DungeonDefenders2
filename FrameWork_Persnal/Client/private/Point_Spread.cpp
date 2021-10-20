@@ -25,6 +25,7 @@ HRESULT CPoint_Spread::NativeConstruct(void * pArg)
 	VTXMATRIX* pInstance = m_pBufferInstanceCom->Get_InstanceBuffer();
 
 	pInstance[0].vSize = { 4.f, 4.f };
+	pInstance[1].vSize = { 4.f, 4.f };
 	XMStoreFloat4(&pInstance[0].vPosition, m_pMovementCom->Get_State(EState::Position));
 
 	m_pBufferInstanceCom->Set_InstanceBuffer(pInstance);
@@ -45,7 +46,7 @@ _int CPoint_Spread::Tick(_float TimeDelta)
 	{
 		_vector vPos = m_pMovementCom->Get_State(EState::Position);
 		_vector vDir = XMLoadFloat3(&m_pIndexDir[i]);
-		vPos += vDir * 1.5f;
+		//vPos += vDir * 1.5f;
 
 		XMStoreFloat4(&pInstance[i].vPosition, vPos);
 	}
@@ -53,6 +54,7 @@ _int CPoint_Spread::Tick(_float TimeDelta)
 
 
 	m_pBufferInstanceCom->Set_InstanceBuffer(pInstance);
+	m_pBufferInstanceCom->Update_Instance(TimeDelta);
 	return _int();
 }
 
@@ -61,7 +63,8 @@ _int CPoint_Spread::Late_Tick(_float TimeDelta)
 	if (0 >= m_PointDesc.fLifeTime)
 		return OBJECT_DEAD;
 
-	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::AlphaUI_Scecond, this);
+
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Alpha, this);
 }
 
 HRESULT CPoint_Spread::Render()
@@ -74,7 +77,7 @@ HRESULT CPoint_Spread::Render()
 	m_pBufferInstanceCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
 	m_pBufferInstanceCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
 
-	m_pBufferInstanceCom->Render(0);
+	m_pBufferInstanceCom->Render(1);
 
 	return S_OK;
 }

@@ -322,7 +322,7 @@ HRESULT CLoading::LoadingForStage()
 #pragma endregion
 
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_12")
-		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "DefaultTechnique", 12))))
+		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "DefaultTechnique", 2))))
 		return E_FAIL;
 
 

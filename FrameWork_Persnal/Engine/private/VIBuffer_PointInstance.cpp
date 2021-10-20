@@ -92,10 +92,14 @@ HRESULT CVIBuffer_PointInstance::NativeConstruct(void * pArg)
 	return S_OK;
 }
 
-HRESULT CVIBuffer_PointInstance::Render(_uint iPassIndex)
+HRESULT CVIBuffer_PointInstance::Render(_uint iPassIndex, _int iDrawCount, _int iStartIndex)
 {
 	if (nullptr == m_pDevice_Context)
 		return E_FAIL;
+
+	if (-1 == iDrawCount)
+		iDrawCount = m_iNumInstance;
+
 
 	_uint		iOffset = 0;
 
@@ -110,7 +114,7 @@ HRESULT CVIBuffer_PointInstance::Render(_uint iPassIndex)
 	if (FAILED(m_InputLayouts[iPassIndex].pPass->Apply(0, m_pDevice_Context)))
 		return E_FAIL;
 
-	m_pDevice_Context->DrawInstanced(1, m_iNumInstance, 0, 0);
+	m_pDevice_Context->DrawInstanced(1, iDrawCount, iStartIndex, iStartIndex);
 
 	return S_OK;
 }

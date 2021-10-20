@@ -284,7 +284,7 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	if (GET_KEY_INPUT(DIK_8))
 	{
-		if (10 < m_pStatusCom->Get_Mp())
+		if (10 > m_pStatusCom->Get_Mp())
 			return;
 
 		if (ETowerSpawn::End == m_eTowerSpawn)
@@ -298,7 +298,7 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	if (GET_KEY_INPUT(DIK_9))
 	{
-		if (15 < m_pStatusCom->Get_Mp())
+		if (15 > m_pStatusCom->Get_Mp())
 			return;
 
 		if (ETowerSpawn::End == m_eTowerSpawn)
@@ -312,7 +312,7 @@ void CPlayer::Key_Check(_float TimeDelta)
 
 	if (GET_KEY_INPUT(DIK_0))
 	{
-		if (25 < m_pStatusCom->Get_Mp())
+		if (25 > m_pStatusCom->Get_Mp())
 			return;
 
 		if (ETowerSpawn::End == m_eTowerSpawn)
