@@ -265,6 +265,22 @@ PS_OUT PS_ONLY_BLUE(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_ALPHA_COLOR(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	vector vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	vColor.r *= g_vColor.r;
+	vColor.g *= g_vColor.g;
+	vColor.b *= g_vColor.b;
+	vColor.a *= g_vColor.a;
+
+	Out.vColor = vColor;
+
+	return Out;
+}
+
 technique11		DefaultTechnique
 {
 	pass BoneLight__Directional // 0
@@ -335,5 +351,15 @@ technique11		DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_MASKING_COLOR();
+	}
+
+	pass Light_Directional__AlphaColor // 7
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_Default, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_ALPHA_COLOR();
 	}
 };

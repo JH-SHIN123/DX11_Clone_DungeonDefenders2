@@ -42,6 +42,11 @@ _int CPhaseInfo::Tick(_float TimeDelta)
 	sprintf(szHp, "%d", CData_Manager::GetInstance()->Get_Score());
 	m_pNumberFont_Score->Set_Number(szHp);
 
+	char szKillCount[MAX_PATH] = "";
+	sprintf(szKillCount, "%d", CData_Manager::GetInstance()->Get_KillCount());
+	m_pNumberFont_KillCount->Set_Number(szKillCount);
+
+	m_pNumberFont_KillCount->Set_Pos(XMVectorSet(530.f, 182.f, 0.f, 1.f));
 
 	return _int();
 }
@@ -68,6 +73,7 @@ HRESULT CPhaseInfo::Render()
 	Phase_Render();
 	Text_Render();
 	m_pNumberFont_Score->Render();
+	m_pNumberFont_KillCount->Render();
 
 	return S_OK;
 }
@@ -255,6 +261,31 @@ HRESULT CPhaseInfo::Ready_Component(void * pArg)
 	m_pNumberFont_Score->NativeConstruct(&FontDesc);
 	Safe_Delete_Array(FontDesc.pNumberBuffer);
 
+	ZeroMemory(&FontDesc, sizeof(NUMBERFONT_DESC));
+	lstrcpy(FontDesc.UI_Desc.szTextureName, L"Component_Texture_Number_Green");
+	FontDesc.UI_Desc.eLevel = ELevel::Stage1;
+	FontDesc.UI_Desc.Movement_Desc.vScale = { 28.f, 28.f, 0.f, 0.f };
+	FontDesc.UI_Desc.Movement_Desc.vPos = { 540.f, 155.f, 0.f, 1.f };
+	FontDesc.iBufferSize = 1;
+	FontDesc.pNumberBuffer = new _int[FontDesc.iBufferSize];
+	FontDesc.pNumberBuffer[0] = 0;
+	m_pNumberFont_KillCount = CNumber_Font::Create(m_pDevice, m_pDevice_Context);
+	m_pNumberFont_KillCount->NativeConstruct(&FontDesc);
+	Safe_Delete_Array(FontDesc.pNumberBuffer);
+
+	ZeroMemory(&FontDesc, sizeof(NUMBERFONT_DESC));
+	lstrcpy(FontDesc.UI_Desc.szTextureName, L"Component_Texture_Number_Green");
+	FontDesc.UI_Desc.eLevel = ELevel::Stage1;
+	FontDesc.UI_Desc.Movement_Desc.vScale = { 28.f, 28.f, 0.f, 0.f };
+	FontDesc.UI_Desc.Movement_Desc.vPos = { 540.f, 280.f, 0.f, 1.f };
+	FontDesc.iBufferSize = 1;
+	FontDesc.pNumberBuffer = new _int[FontDesc.iBufferSize];
+	FontDesc.pNumberBuffer[0] = 0;
+	m_pNumberFont_Wave = CNumber_Font::Create(m_pDevice, m_pDevice_Context);
+	m_pNumberFont_Wave->NativeConstruct(&FontDesc);
+	Safe_Delete_Array(FontDesc.pNumberBuffer);
+
+
 	if (hr != S_OK)
 		MSG_BOX("Ready_Component Failed (CPhaseInfo)");
 
@@ -295,7 +326,8 @@ void CPhaseInfo::Free()
 	Safe_Release(m_pTextureCom_PhaseInfo);
 
 	Safe_Release(m_pNumberFont_Score);
-
+	Safe_Release(m_pNumberFont_KillCount);
+	Safe_Release(m_pNumberFont_Wave);
 
 	for (_int i = 0; i < 5; ++i)
 	{

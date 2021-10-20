@@ -55,7 +55,6 @@ private:
 
 	CMovement*				m_pMovementCom_Text[5] = { nullptr }; // Phase, Phase, Defense, Level, Score
 	CTextures*				m_pTextureCom_Text[5] = { nullptr };
-	class CNumber_Font*		m_pNumberFont_Score = nullptr;
 
 private:
 	_float2			m_vKillBar_Pos = _float2(205.f, 320.f);
@@ -65,6 +64,11 @@ private:
 	_int			m_iEnemyCount_Max = 100;
 	_float			m_fMeter_Ratio = 0.f;
 	_int			m_iNowPhase = 0;
+
+private:
+	class CNumber_Font*		m_pNumberFont_Score		= nullptr;
+	class CNumber_Font*		m_pNumberFont_KillCount = nullptr;
+	class CNumber_Font*		m_pNumberFont_Wave		= nullptr;
 
 private:
 	_float2		m_vInterval;

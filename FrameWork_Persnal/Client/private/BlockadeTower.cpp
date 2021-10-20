@@ -29,6 +29,8 @@ HRESULT CBlockadeTower::NativeConstruct(void * pArg)
 
 	Set_Pivot(XMVectorSet(0.035f, 0.035f, 0.035f, 0.f));
 
+	m_eTowerRange = ETowerRange::Half;
+
 	return S_OK;
 }
 

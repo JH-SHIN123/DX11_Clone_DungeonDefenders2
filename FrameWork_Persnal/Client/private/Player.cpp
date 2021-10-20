@@ -41,6 +41,10 @@ HRESULT CPlayer::NativeConstruct(void * pArg)
 	m_pModelCom->Set_AnimationIndex_Start(292.f, 118.f);
 	//Set_Pivot(XMVectorSet(0.25f, 0.25f, 0.25f, 0.f));
 
+	m_pBlockadeTower->Set_TowerState(ETowerState::Pick);
+	m_pStrikerTower->Set_TowerState(ETowerState::Pick);
+	m_pLightningTower->Set_TowerState(ETowerState::Pick);
+
 	return S_OK;
 }
 

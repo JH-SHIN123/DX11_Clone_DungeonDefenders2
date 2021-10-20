@@ -22,7 +22,7 @@ HRESULT CDefenceTower::NativeConstruct(void * pArg)
 	__super::NativeConstruct(pArg);
 
 	Ready_Component(pArg);
-	m_eTowerState_Next = ETowerState::Idle;
+	//m_eTowerState_Next = ETowerState::Idle;
 	return S_OK;
 }
 
@@ -33,14 +33,17 @@ _int CDefenceTower::Tick(_float TimeDelta)
 
 
 	m_pHpBar->Tick(TimeDelta);
+	Spawn_Check(TimeDelta);
+	TowerState_Check();
 
 	return _int();
 }
 
 _int CDefenceTower::Late_Tick(_float TimeDelta)
 {
-	if(ETowerState::Pick == m_eTowerState_Next ||
-		ETowerState::Rotate == m_eTowerState_Next)
+	if (ETowerState::Pick == m_eTowerState_Next ||
+		ETowerState::Rotate == m_eTowerState_Next ||
+		ETowerState::Spawn == m_eTowerState_Next)
 		return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Alpha, this);
 
 	m_pHpBar->Set_Count((_float)m_pStatusCom->Get_Hp(), (_float)m_pStatusCom->Get_HpMax());
@@ -55,12 +58,46 @@ HRESULT CDefenceTower::Render()
 	if (nullptr == m_pModelCom)
 		return S_OK;
 
+	_matrix World = m_pMovementCom->Get_WorldMatrix();
+	_matrix View = XMMatrixTranspose(GET_VIEW_SPACE);
+	_matrix Proj = XMMatrixTranspose(GET_PROJ_SPACE);
+
+	_uint iNumMaterials = m_pModelCom->Get_NumMaterials();
+	_int iShaderPass = 0;
+
+	if (ETowerState::Pick == m_eTowerState_Next || 
+		ETowerState::Rotate == m_eTowerState_Next || 
+		ETowerState::Spawn == m_eTowerState_Next)
+	{
+		iShaderPass = 7;
+
+		m_pModelCom->Set_Variable("g_vColor", &m_vColor, sizeof(_float4));
+
+		if (ETowerState::Pick == m_eTowerState_Next)
+		{
+			_vector vRight = XMVector3Normalize(World.r[0]) * 24.f;
+			_vector vUp = XMVector3Normalize(World.r[2]) * 24.f;
+			_vector vLook = XMVector3Normalize(World.r[1]);
+			_vector vPos = World.r[3];
+
+			World.r[0] = vRight;
+			World.r[1] = vUp;
+			World.r[2] = vLook;
+			World.r[3] = vPos;
+
+			m_pVIBufferCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(World), sizeof(_matrix));
+			m_pVIBufferCom->Set_Variable("ViewMatrix", &View, sizeof(_matrix));
+			m_pVIBufferCom->Set_Variable("ProjMatrix", &Proj, sizeof(_matrix));
+
+			m_pVIBufferCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTexturesCom->Get_ShaderResourceView((_uint)m_eTowerRange));
+			m_pVIBufferCom->Render(14);
+		}
+	}
 	m_pModelCom->Bind_VIBuffer();
 
 	m_pModelCom->Set_Variable("g_PivotMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_PivotMatrix)), sizeof(_matrix));
-	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
-	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
-	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
+	m_pModelCom->Set_Variable("ViewMatrix", &View, sizeof(_matrix));
+	m_pModelCom->Set_Variable("ProjMatrix", &Proj, sizeof(_matrix));
 
 	LIGHT_DESC*		LightDesc = GET_GAMEINSTANCE->Get_LightDesc(0);
 
@@ -73,7 +110,7 @@ HRESULT CDefenceTower::Render()
 
 	m_pModelCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
 
-	_uint iNumMaterials = m_pModelCom->Get_NumMaterials();
+	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 
 	for (_uint i = 0; i < iNumMaterials; ++i)
 	{
@@ -84,7 +121,9 @@ HRESULT CDefenceTower::Render()
 		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_SPECULAR)))
 		//	return E_FAIL;
 
-		m_pModelCom->Render_Model(i, 0);
+
+
+		m_pModelCom->Render_Model(i, iShaderPass);
 	}
 
 	return S_OK;	
@@ -117,7 +156,10 @@ void CDefenceTower::Set_TowerRotatePosition(_fvector vDir)
 
 void CDefenceTower::TowerState_Check()
 {
-	m_eTowerState_Next = ETowerState::Idle;
+	if (m_eTowerState_Cur != m_eTowerState_Next)
+	{
+		m_eTowerState_Cur = m_eTowerState_Next;
+	}
 }
 
 _bool CDefenceTower::Enemy_Check(_float TimeDelta, _vector* vTargetPos)
@@ -264,6 +306,24 @@ void CDefenceTower::Healing_Check(_float TimeDelta)
 		m_IsHealTic = false;
 }
 
+void CDefenceTower::Spawn_Check(_float TimeDelta)
+{
+	if (ETowerState::Spawn != m_eTowerState_Next)
+		return;
+
+	_vector vColor_Now = XMLoadFloat4(&m_vColor);
+	_vector vColor = XMVectorSet(1.f,1.f,1.f,1.f);
+
+	_vector vTerm = vColor - vColor_Now;
+	vColor_Now += vTerm * (TimeDelta * 5.f);
+
+	XMStoreFloat4(&m_vColor, vColor_Now);
+
+	m_fSpawnTime -= TimeDelta;
+	if (0 >= m_fSpawnTime)
+		m_eTowerState_Next = ETowerState::Idle;
+}
+
 void CDefenceTower::Set_TowerPos(_fvector vPosition)
 {
 	//if (ETowerState::Pick != m_eTowerState_Next)
@@ -285,12 +345,14 @@ HRESULT CDefenceTower::Ready_Component(void * pArg)
 
 	memcpy(&m_TowerDesc, pArg, sizeof(TOWER_DESC));
 
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, L"Component_VIBuffer_Rect", TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement"), (CComponent**)&m_pMovementCom, &m_TowerDesc.MoveState_Desc);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Status"), (CComponent**)&m_pStatusCom, &m_TowerDesc.Stat_Desc);
 	
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_TowerRange"), TEXT("Com_Textures"), (CComponent**)&m_pTexturesCom);
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, m_TowerDesc.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
+
 
 	XMStoreFloat3(&m_vFirstLook_Dir, m_pMovementCom->Get_State(EState::Look));
 	m_fSpawnTime_Max	= m_TowerDesc.fSpawnTime_Max;
@@ -342,5 +404,7 @@ void CDefenceTower::Free()
 	Safe_Release(m_pStatusCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pMovementCom);
+
 	Safe_Release(m_pTexturesCom);
+	Safe_Release(m_pVIBufferCom);
 }

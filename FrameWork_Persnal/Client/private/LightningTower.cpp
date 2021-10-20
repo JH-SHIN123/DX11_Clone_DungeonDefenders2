@@ -30,6 +30,9 @@ HRESULT CLightningTower::NativeConstruct(void * pArg)
 
 	Set_Pivot(XMVectorSet(0.04f, 0.04f, 0.04f, 0.f));
 
+	m_eTowerRange = ETowerRange::Pi;
+
+
 	return S_OK;
 }
 

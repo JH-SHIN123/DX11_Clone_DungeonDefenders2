@@ -28,6 +28,9 @@ HRESULT CStrikerTower::NativeConstruct(void * pArg)
 
 	Set_Pivot(XMVectorSet(0.035f, 0.035f, 0.035f, 0.f));
 
+	m_eTowerRange = ETowerRange::Quarter;
+
+
 	return S_OK;
 }
 

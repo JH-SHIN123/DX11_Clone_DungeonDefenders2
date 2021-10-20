@@ -65,6 +65,7 @@ protected:
 
 protected:
 	void Healing_Check(_float TimeDelta);
+	void Spawn_Check(_float TimeDelta);
 
 public:
 	void Set_TowerPos(_fvector vPosition);
@@ -82,17 +83,20 @@ protected:
 	CMovement*		m_pMovementCom	= nullptr;
 	CRenderer*		m_pRendererCom	= nullptr;
 	CTextures*		m_pTexturesCom	= nullptr;	// 타워 반경
+	CVIBuffer_Rect* m_pVIBufferCom	= nullptr;
 	class CMasking_MeterBar_3D* m_pHpBar = nullptr;
 
 private: 
 	ETowerState		m_eTowerState_Cur	= ETowerState::End;
-	ETowerState		m_eTowerState_Next	= ETowerState::Pick;
+	ETowerState		m_eTowerState_Next	= ETowerState::Spawn;
+
+protected:
+	ETowerRange		m_eTowerRange		= ETowerRange::End;
 
 private:
-	_float			m_fSpawnTime		= 0;
-	_float			m_fSpawnTime_Max	= 0;
+	_float			m_fSpawnTime		= 1.5f;
+	_float			m_fSpawnTime_Max	= 0.f;
 	_uint			m_iShaderPass		= 0;
-	ETowerRange		m_eTowerRange		= ETowerRange::End;
 	_bool			m_IsTurnable		= false;
 	_float3			m_vFirstLook_Dir;
 	_float			m_fTowerRangeDis	= 0.f;
@@ -102,6 +106,9 @@ private:
 	TOWER_DESC		m_TowerDesc;
 	_bool			m_IsEnemyCheck = true;
 	_bool			m_IsSpawn = true;
+
+private:
+	_float4 m_vColor = { 0.8f, 3.f, 1.f, 0.6f };
 
 private:
 	_float m_fHealTime = 0.f;
