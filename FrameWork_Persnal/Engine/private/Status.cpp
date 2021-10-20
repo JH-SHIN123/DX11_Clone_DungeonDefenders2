@@ -81,6 +81,13 @@ void CStatus::Set_Hp(_int iHp)
 		m_Status_Desc.iHp = 0;
 }
 
+void CStatus::Add_Mp(_int iMp)
+{
+	m_Status_Desc.iMp += iMp;
+	if (m_Status_Desc.iMp > m_Status_Desc.iMp_Max)
+		m_Status_Desc.iMp = m_Status_Desc.iMp_Max;
+}
+
 void CStatus::Damage_Check(_float TimeDelta)
 {
 	if (0 >= m_Status_Desc.iHp)

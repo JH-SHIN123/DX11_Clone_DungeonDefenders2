@@ -2,6 +2,7 @@
 #include "..\public\Kobold.h"
 #include "Data_Manager.h"
 #include "Kobold_Boom.h"
+#include "ManaToken.h"
 
 CKobold::CKobold(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CMonster(pDevice, pDevice_Context)
@@ -50,6 +51,17 @@ _int CKobold::Tick(_float TimeDelta)
 			{
 				CData_Manager::GetInstance()->Add_MonsterCount();
 				CData_Manager::GetInstance()->Add_Score(m_pStatusCom->Get_Exp() * 5);
+
+				_vector vPos = m_pMovementCom->Get_State(EState::Position);
+				vPos.m128_f32[1] += 5.f;
+
+				MANATOKEN_DESC Data;
+				XMStoreFloat4(&Data.Move_Desc.vPos, vPos);
+				Data.Move_Desc.vScale = { 1.f,1.f,1.f,0.f };
+				Data.Collider_Desc.vScale = { 2.f,2.f,2.f };
+
+				GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_ManaToken"), (_uint)ELevel::Stage1, L"Layer_ManaToken", &Data);
+
 				return OBJECT_DEAD;
 			}
 		}
@@ -150,6 +162,17 @@ _int CKobold::Late_Tick(_float TimeDelta)
 		{
 			CData_Manager::GetInstance()->Add_MonsterCount();
 			CData_Manager::GetInstance()->Add_Score(m_pStatusCom->Get_Exp() * 5);
+
+			_vector vPos = m_pMovementCom->Get_State(EState::Position);
+			vPos.m128_f32[1] += 5.f;
+
+			MANATOKEN_DESC Data;
+			XMStoreFloat4(&Data.Move_Desc.vPos, vPos);
+			Data.Move_Desc.vScale = { 1.f,1.f,1.f,0.f };
+			Data.Collider_Desc.vScale = { 2.f,2.f,2.f };
+
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_ManaToken"), (_uint)ELevel::Stage1, L"Layer_ManaToken", &Data);
+
 			return OBJECT_DEAD;
 		}
 		else

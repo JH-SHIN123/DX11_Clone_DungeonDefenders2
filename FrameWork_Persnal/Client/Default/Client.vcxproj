@@ -210,6 +210,7 @@
     <ClInclude Include="..\public\LoadingScreen.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\public\MainMenu.h" />
+    <ClInclude Include="..\public\ManaToken.h" />
     <ClInclude Include="..\public\Masking_MeterBar_3D.h" />
     <ClInclude Include="..\public\Masking_UI.h" />
     <ClInclude Include="..\public\Masking_MeterBar.h" />
@@ -294,6 +295,7 @@
     <ClCompile Include="..\private\LoadingScreen.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\MainMenu.cpp" />
+    <ClCompile Include="..\private\ManaToken.cpp" />
     <ClCompile Include="..\private\Masking_MeterBar_3D.cpp" />
     <ClCompile Include="..\private\Masking_UI.cpp" />
     <ClCompile Include="..\private\Masking_MeterBar.cpp" />

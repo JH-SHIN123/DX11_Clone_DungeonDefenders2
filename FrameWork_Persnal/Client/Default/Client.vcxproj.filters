@@ -292,6 +292,9 @@
     <Filter Include="02.GameObject\07.Bullet\15.Player_Bullet">
       <UniqueIdentifier>{c40898de-7950-47e0-b186-77faadcc3b50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\11.ManaToken">
+      <UniqueIdentifier>{ae9872b0-cd1b-4a04-8671-3f773e877759}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -555,6 +558,9 @@
     <ClInclude Include="..\public\Player_Bullet.h">
       <Filter>02.GameObject\07.Bullet\15.Player_Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ManaToken.h">
+      <Filter>02.GameObject\11.ManaToken</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -796,6 +802,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Player_Bullet.cpp">
       <Filter>02.GameObject\07.Bullet\15.Player_Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ManaToken.cpp">
+      <Filter>02.GameObject\11.ManaToken</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

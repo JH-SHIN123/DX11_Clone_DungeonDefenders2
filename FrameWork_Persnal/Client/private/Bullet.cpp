@@ -91,11 +91,6 @@ HRESULT CBullet::Render()
 		m_pModelCom->Render_Model(i, 1);
 	}
 
-	if (nullptr != m_pTextureCom)
-	{
-
-	}
-
 	return S_OK;
 }
 

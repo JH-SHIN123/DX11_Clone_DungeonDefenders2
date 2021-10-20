@@ -63,6 +63,7 @@ public: // Setter
 
 public: // Add
 	void Add_Exp(_int iExp) { m_Status_Desc.iExp += iExp; }
+	void Add_Mp(_int iMp);
 
 private:
 	void Damage_Check(_float TimeDelta);

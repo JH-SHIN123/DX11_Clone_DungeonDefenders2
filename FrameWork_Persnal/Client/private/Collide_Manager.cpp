@@ -103,6 +103,48 @@ void CCollide_Manager::Collide_Check_Poison(const _tchar * szDstObjectLayer, ELe
 	return;
 }
 
+_bool CCollide_Manager::Collide_Check_Always(const _tchar * szDstObjectLayer, ELevel eDstObjectLevel, const _tchar * szSrcObjectLayer, ELevel eSrcObjectLevel)
+{
+	CLayer* pDstLayer = GET_GAMEINSTANCE->Get_Layer((_uint)eDstObjectLevel, szDstObjectLayer);
+	if (nullptr == pDstLayer)
+		return false;
+
+	CLayer* pSrcLayer = GET_GAMEINSTANCE->Get_Layer((_uint)eSrcObjectLevel, szSrcObjectLayer);
+	if (nullptr == pSrcLayer)
+		return false;
+
+	list<CGameObject*> Dst_Object = pDstLayer->Get_GameObject_List();
+	list<CGameObject*> Src_Object = pSrcLayer->Get_GameObject_List();
+
+
+	for (auto& Src : Src_Object) // Com_Collide_Attack
+	{
+		CCollider* pSrcCol_Attack = (CCollider*)Src->Get_Component(L"Com_Collide_Attack");
+
+		if (nullptr == pSrcCol_Attack)
+			continue;
+
+		for (auto& Dst : Dst_Object) // Com_Collide_Hit
+		{
+			CCollider* pDstCol_Hit = (CCollider*)Dst->Get_Component(L"Com_Collide_Hit");
+
+			if (nullptr == pDstCol_Hit)
+				continue;
+
+			if (true == pDstCol_Hit->Intersect_Collider(pSrcCol_Attack))
+			{
+				// ¸Â¾Ò¾î!
+				if (false == pSrcCol_Attack->Get_NotCollide())
+				{
+
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
 void CCollide_Manager::Collide_Push(const _tchar * szDstObjectLayer, ELevel eDstObjectLevel, const _tchar * szSrcObjectLayer, ELevel eSrcObjectLevel)
 {
 	CLayer* pDstLayer = GET_GAMEINSTANCE->Get_Layer((_uint)eDstObjectLevel, szDstObjectLayer);
