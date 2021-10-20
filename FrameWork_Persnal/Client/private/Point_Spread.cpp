@@ -53,9 +53,10 @@ _int CPoint_Spread::Tick(_float TimeDelta)
 
 	for (_int i = m_iInstance_StartIndex; i < m_iNumInstance + m_iInstance_StartIndex; ++i)
 	{
+		_int j = i - m_iInstance_StartIndex;
 		_vector vPos = m_pMovementCom->Get_State(EState::Position);
-		_vector vDir = XMLoadFloat3(&m_pIndexDir[i]);
-		//vPos -= vDir * 1.5f;
+		_vector vDir = XMLoadFloat3(&m_pIndexDir[i - m_iInstance_StartIndex]);
+		vPos -= vDir * 1.5f;
 
 		XMStoreFloat4(&pInstance[i].vPosition, vPos);
 	}
@@ -122,7 +123,7 @@ void CPoint_Spread::SetUp_IndexDir(_int iInstanceIndex)
 	m_pIndexDir = new _float3[m_iNumInstance];
 
 	// 15개라 한다면
-	for (_int i = 1; i < m_iNumInstance; ++i)
+	for (_int i = m_iInstance_StartIndex; i < m_iNumInstance + m_iInstance_StartIndex; ++i)
 	{
 		_vector vDir = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 
@@ -135,7 +136,8 @@ void CPoint_Spread::SetUp_IndexDir(_int iInstanceIndex)
 			vDir.m128_f32[j] = _float(iRand);
 		}
 
-		XMStoreFloat3(&m_pIndexDir[i], XMVector3Normalize(vDir));
+		XMStoreFloat3(&m_pIndexDir[i - m_iInstance_StartIndex], XMVector3Normalize(vDir));
+		_int k = 0;
 	}
 
 }
