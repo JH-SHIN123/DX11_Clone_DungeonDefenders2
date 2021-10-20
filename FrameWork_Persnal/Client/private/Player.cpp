@@ -225,6 +225,9 @@ void CPlayer::Key_Check(_float TimeDelta)
 		case Client::ETowerSpawn::Spawn:
 			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::TPS);
 			break;
+		case Client::ETowerSpawn::Repair:
+			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::Repair);
+			break;
 		default:
 			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::TPS);
 			m_fRotateTime += TimeDelta;
@@ -250,8 +253,12 @@ void CPlayer::Key_Check(_float TimeDelta)
 		case Client::ETowerSpawn::Spawn:
 			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::TPS);
 			break;
+		case Client::ETowerSpawn::Repair:
+			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::Repair);
+			break;
 		default:
 			CCursor_Manager::GetInstance()->Set_MouseTexture(EMouseTexture::TPS);
+			break;
 		}
 
 	}
@@ -263,13 +270,14 @@ void CPlayer::Key_Check(_float TimeDelta)
 	if (GET_KEY_INPUT(DIK_6))
 	{
 		static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_CameraView_Mode(ECameraViewMode::TopView);
-
+		m_eTowerSpawn = ETowerSpawn::Repair;
 		m_IsTowerUpgrade = true;
 	}
 
 	if (GET_KEY_INPUT(DIK_7))
 	{
 		static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_CameraView_Mode(ECameraViewMode::TopView);
+		m_eTowerSpawn = ETowerSpawn::Repair;
 
 		m_IsTowerHealing = true;
 	}
@@ -963,9 +971,9 @@ void CPlayer::Tower_Upgrade()
 			{
 				m_eAnimationState_Next = EPlayerAnimation::Summon;
 
+				m_eTowerSpawn = ETowerSpawn::End;
 				static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_CameraView_Mode(ECameraViewMode::TopToTPS);
 				static_cast<CDefenceTower*>(pTower)->Upgrade_Tower();
-
 				m_IsTowerUpgrade = false;
 			}
 		}
@@ -997,6 +1005,10 @@ void CPlayer::Tower_Healing()
 			{
 				m_eAnimationState_Next = EPlayerAnimation::Summon;
 
+				m_eTowerSpawn = ETowerSpawn::End;
+				static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_CameraView_Mode(ECameraViewMode::TopToTPS);
+				static_cast<CDefenceTower*>(pTower)->Healing_Tower();
+				m_IsTowerHealing = false;
 				//static_cast<CDefenceTower*>(pTower)->Upgrade_Tower();
 			}
 		}

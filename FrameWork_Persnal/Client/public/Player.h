@@ -49,7 +49,7 @@ enum class EPlayerAnimation
 };
 
 enum class ETowerSpawn
-{ Locate, Rotate, Spawn, End };
+{ Locate, Rotate, Spawn, Repair, End };
 
 typedef struct tagGameObject_Desc
 {
