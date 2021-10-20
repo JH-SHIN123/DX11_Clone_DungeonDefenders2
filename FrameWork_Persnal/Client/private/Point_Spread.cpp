@@ -53,7 +53,6 @@ _int CPoint_Spread::Tick(_float TimeDelta)
 
 	for (_int i = m_iInstance_StartIndex; i < m_iNumInstance + m_iInstance_StartIndex; ++i)
 	{
-		_int j = i - m_iInstance_StartIndex;
 		_vector vPos = m_pMovementCom->Get_State(EState::Position);
 		_vector vDir = XMLoadFloat3(&m_pIndexDir[i - m_iInstance_StartIndex]);
 		vPos -= vDir * 1.5f;
@@ -74,11 +73,17 @@ _int CPoint_Spread::Late_Tick(_float TimeDelta)
 		return OBJECT_DEAD;
 
 
+	if (nullptr == m_pRendererCom)
+		return -1;
+
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Alpha, this);
 }
 
 HRESULT CPoint_Spread::Render()
 {
+	if (nullptr == m_pBufferInstanceCom)
+		return S_OK;
+
 	m_pBufferInstanceCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTexturesCom->Get_ShaderResourceView(0));
 
 	_vector vCamPosition = GET_CAMERA_POSITION;
@@ -137,7 +142,6 @@ void CPoint_Spread::SetUp_IndexDir(_int iInstanceIndex)
 		}
 
 		XMStoreFloat3(&m_pIndexDir[i - m_iInstance_StartIndex], XMVector3Normalize(vDir));
-		_int k = 0;
 	}
 
 }

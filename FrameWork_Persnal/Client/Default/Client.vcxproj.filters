@@ -298,6 +298,9 @@
     <Filter Include="05.Effect%28Instanced%29\Rect\00.Spread">
       <UniqueIdentifier>{b8975ef6-a78e-4e57-be7b-c1517807b19b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Effect%28Instanced%29\Point\01.Spread2">
+      <UniqueIdentifier>{7a91e616-ff51-4de0-a2e7-b662dd6d0641}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -570,6 +573,9 @@
     <ClInclude Include="..\public\EffectDesc_Manager.h">
       <Filter>05.Effect%28Instanced%29</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Point_Spread2.h">
+      <Filter>05.Effect%28Instanced%29\Point\01.Spread2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -820,6 +826,9 @@
     </ClCompile>
     <ClCompile Include="..\private\EffectDesc_Manager.cpp">
       <Filter>05.Effect%28Instanced%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Point_Spread2.cpp">
+      <Filter>05.Effect%28Instanced%29\Point\01.Spread2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

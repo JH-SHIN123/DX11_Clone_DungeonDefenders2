@@ -6,7 +6,7 @@
 #include "GameObject.h"
 
 BEGIN(Client)
-
+// 정적으로 어느정도 퍼진 상태에서 렌더링
 typedef struct tagPointSpread_Desc
 {
 	_int iShaderPass = 0;
@@ -20,9 +20,9 @@ typedef struct tagPointSpread_Desc
 
 }POINT_SPREAD_DESC;
 
-class CPoint_Spread final : public CGameObject
+class CPoint_Spread : public CGameObject
 {
-private:
+protected:
 	explicit CPoint_Spread(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	explicit CPoint_Spread(const CPoint_Spread& rhs);
 	virtual ~CPoint_Spread() = default;
@@ -38,17 +38,17 @@ public:
 	HRESULT Ready_Component(void* pArg);
 	void Set_Pos(_fvector vPos);
 
-private:
+protected:
 	void SetUp_IndexDir(_int iInstanceIndex);
 	void Check_Instance(_float TimeDelta);
 
-
-private:
+protected:
 	CVIBuffer_PointInstance*	m_pBufferInstanceCom	= nullptr;
-	CRenderer*					m_pRendererCom = nullptr;
 	CTextures*					m_pTexturesCom = nullptr;
 	CMovement*					m_pMovementCom = nullptr;
+	CRenderer*					m_pRendererCom = nullptr;
 
+protected:
 	_float3*					m_pIndexDir	= nullptr;
 	_int						m_iNumInstance = 0; // 어디 부터 그려
 	_int						m_iInstance_StartIndex; // 그릴 개수
