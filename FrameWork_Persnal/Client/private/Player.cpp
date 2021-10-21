@@ -12,6 +12,7 @@
 #include "Cursor_Manager.h"
 #include "Staff_Basic.h"
 #include "Calculator.h"
+#include "Point_Trail.h"
 
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

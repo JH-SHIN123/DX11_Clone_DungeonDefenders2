@@ -54,9 +54,6 @@ public:
 	void Set_ShaderPass(_uint iShaderPass) { m_PointDesc.iShaderPass = iShaderPass; }
 
 protected:
-	void Check_Instance(_float TimeDelta);
-
-protected:
 	CVIBuffer_PointInstance*	m_pBufferInstanceCom	= nullptr;
 	CTextures*					m_pTexturesCom = nullptr;
 	CMovement*					m_pMovementCom = nullptr;

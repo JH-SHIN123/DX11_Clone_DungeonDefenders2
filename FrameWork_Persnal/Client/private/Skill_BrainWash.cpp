@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Skill_BrainWash.h"
+#include "Point_Trail.h"
 
 CSkill_BrainWash::CSkill_BrainWash(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CBullet(pDevice, pDevice_Context)
@@ -37,7 +38,8 @@ _int CSkill_BrainWash::Tick(_float TimeDelta)
 	_vector vDir = XMLoadFloat3(&m_vGoDir);
 	m_pMovementCom->Go_Dir_Vector(TimeDelta, vDir);
 
-
+	m_pPointTrail->Tick(TimeDelta);
+	m_pPointTrail->Set_Pos(m_pMovementCom->Get_State(EState::Position));
 
 	return iReturn;
 }
@@ -46,6 +48,8 @@ _int CSkill_BrainWash::Late_Tick(_float TimeDelta)
 {
 	if (true == m_pColliderCom_Attack->Get_IsCollide())
 		return OBJECT_DEAD;
+
+	m_pPointTrail->Late_Tick(TimeDelta);
 
 	return __super::Late_Tick(TimeDelta);
 }
@@ -66,6 +70,22 @@ HRESULT CSkill_BrainWash::Render()
 HRESULT CSkill_BrainWash::Ready_Component(void * pArg)
 {
 	HRESULT hr = S_OK;
+
+	POINT_TRAIL_DESC Data;
+	Data.fSpreadDis = 15.f;
+	Data.fSize = 1;
+	Data.fTimeTerm = 0.1f;
+	Data.fLifeTime = 10.f;
+	Data.InstanceValue = EInstanceValue::Point_300_10;
+	Data.iShaderPass = 4;
+	XMStoreFloat4(&Data.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	Data.vColor = { 1.f,1.f,1.f };
+	lstrcpy(Data.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_300_10");
+	lstrcpy(Data.szTextrueName, L"Component_Texture_GreenBall");
+
+	m_pPointTrail = CPoint_Trail::Create(m_pDevice, m_pDevice_Context);
+	m_pPointTrail->NativeConstruct(&Data);
+	m_pPointTrail->SetUp_IndexDir(5);
 
 
 
@@ -99,5 +119,6 @@ CGameObject * CSkill_BrainWash::Clone_GameObject(void * pArg)
 
 void CSkill_BrainWash::Free()
 {
+	Safe_Release(m_pPointTrail);
 	__super::Free();
 }

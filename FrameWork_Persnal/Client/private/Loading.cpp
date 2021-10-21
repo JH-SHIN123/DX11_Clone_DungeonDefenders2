@@ -45,9 +45,14 @@
 #include "Kobold_Boom.h"
 #include "Player_Bullet.h"
 #include "ManaToken.h"
+
+
 #include "Point_Spread.h"
 #include "Point_Spread2.h"
 #include "Point_Spread3.h"
+
+#include "Point_Trail.h"
+
 
 USING(Engine)
 
@@ -204,6 +209,12 @@ HRESULT CLoading::LoadingForStage()
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Explosion_Smoke/%d.png")));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Smoke")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Smoke/%d.png"), 2));
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Lightning")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Lightning.png")));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_GreenBall")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/GreenBall/%d.png")));
+
 #pragma endregion
 
 #pragma region GameObject
@@ -263,6 +274,8 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Spread"),  CPoint_Spread::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Spread2"), CPoint_Spread2::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Spread3"), CPoint_Spread3::Create(m_pDevice, m_pDevice_Context));
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Trail"), CPoint_Trail::Create(m_pDevice, m_pDevice_Context));
 
 #pragma endregion
 
@@ -355,6 +368,11 @@ HRESULT CLoading::LoadingForStage()
 	CEffectDesc_Manager::GetInstance()->Set_Instance(EInstanceValue::Point_100_10, 100, 10);
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_100_10")
 		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "DefaultTechnique", 100))))
+		return E_FAIL;
+
+	CEffectDesc_Manager::GetInstance()->Set_Instance(EInstanceValue::Point_300_10, 300, 10);
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_300_10")
+		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "DefaultTechnique", 300))))
 		return E_FAIL;
 
 

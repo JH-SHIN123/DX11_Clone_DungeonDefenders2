@@ -187,14 +187,6 @@ void CPoint_Spread::SetUp_IndexDir(_int iRandNum_Max)
 
 }
 
-void CPoint_Spread::Check_Instance(_float TimeDelta)
-{
-	// 0번을 주위로 퍼져나감
-
-
-
-}
-
 CPoint_Spread * CPoint_Spread::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 {
 	CPoint_Spread*		pInstance = new CPoint_Spread(pDevice, pDevice_Context);

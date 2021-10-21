@@ -17,7 +17,7 @@ typedef struct tagInstanceData
 }INSTANCE_DATA;
 
 enum class EInstanceValue
-{Point_200_5, Point_100_10, End_Value};
+{Point_200_5, Point_100_10, Point_300_10, End_Value};
 
 class CEffectDesc_Manager final : public CBase
 {
