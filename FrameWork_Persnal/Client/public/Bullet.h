@@ -12,6 +12,7 @@ typedef struct tagBulletDesc
 	_tchar			szModelName[MAX_PATH] = L"";
 	_tchar			szTextureName[MAX_PATH] = L"";
 	ELevel			eTextureLevel = ELevel::Stage1;
+	_float2			vTextureSize = { 1.f, 1.f };
 	STATUS_DESC		Stat_Desc;
 	MOVESTATE_DESC	MoveState_Desc;
 	COLLIDER_DESC	Attack_Collide_Desc;
@@ -33,8 +34,12 @@ public:
 	virtual _int	Late_Tick(_float TimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	HRESULT Render_Rect(_bool IsBillBoard, _int iShaderPass, _int iTextureIndex = 0);
+
 private:
 	HRESULT			Ready_Component(void* pArg);
+	_fmatrix		BillBorad();
 
 protected:
 	CStatus*				m_pStatusCom		= nullptr;
@@ -51,6 +56,8 @@ protected:
 protected:
 	_float		m_fLifeTime = 0.f;
 	_float3		m_vGoDir;
+	_bool		m_IsSetResource = false;
+	_float2		m_vTextureSize = { 1.f, 1.f };
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

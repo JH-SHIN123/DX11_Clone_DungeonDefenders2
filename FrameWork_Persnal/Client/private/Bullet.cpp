@@ -94,6 +94,27 @@ HRESULT CBullet::Render()
 	return S_OK;
 }
 
+HRESULT CBullet::Render_Rect(_bool IsBillBoard, _int iShaderPass, _int iTextureIndex)
+{
+	if (nullptr == m_pBufferRectCom || nullptr == m_pTextureCom)
+		return S_OK;
+
+	_matrix WorldMatrix = m_pMovementCom->Get_WorldMatrix();
+
+	if (true == IsBillBoard)
+		WorldMatrix = BillBorad();
+
+	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(WorldMatrix), sizeof(_matrix));
+	m_pBufferRectCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
+	m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
+	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(iTextureIndex));
+
+	m_pBufferRectCom->Render(iShaderPass);
+
+
+	return S_OK;
+}
+
 HRESULT CBullet::Ready_Component(void * pArg)
 {
 	BULLET_DESC Data;
@@ -110,19 +131,37 @@ HRESULT CBullet::Ready_Component(void * pArg)
 	if(2 < lstrlen(Data.szModelName))
 		hr = CGameObject::Add_Component((_uint)ELevel::Stage1, Data.szModelName, TEXT("Com_Model"), (CComponent**)&m_pModelCom);
 
-	//if (ELevel::End != Data.eTextureLevel)
-	//{
-	//	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect_Model"), TEXT("Com_Buffer"), (CComponent**)&m_pBufferRectCom);
-	//	hr = CGameObject::Add_Component((_uint)Data.eTextureLevel, Data.szTextureName, TEXT("Com_Texture_0"), (CComponent**)&m_pTextureCom);
-	//}
+	if (2 < lstrlen(Data.szTextureName))
+	{
+		hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_VIBuffer_Rect"), TEXT("Com_Buffer"), (CComponent**)&m_pBufferRectCom);
+		hr = CGameObject::Add_Component((_uint)ELevel::Stage1, Data.szTextureName, TEXT("Com_Texture_0"), (CComponent**)&m_pTextureCom);
+	}
 
 	m_vGoDir = Data.vDir;
 	m_fLifeTime = Data.fLifeTime;
+	m_vTextureSize = Data.vTextureSize;
 
 	if (S_OK != hr)
 		MSG_BOX("CBullet::Ready_Component Failed!");
 
 	return hr;
+}
+
+_fmatrix CBullet::BillBorad()
+{
+	_vector vCamPos = GET_CAMERA_POSITION;
+	_vector vLook = XMVector3Normalize(vCamPos - m_pMovementCom->Get_State(EState::Position));
+	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook));
+	_vector vUp = XMVector3Normalize(XMVector3Cross(vLook, vRight));
+
+	_matrix WorldMatrix = XMMatrixIdentity();
+
+	WorldMatrix.r[0] = vRight * m_vTextureSize.x;
+	WorldMatrix.r[1] = vUp * m_vTextureSize.y;
+	WorldMatrix.r[2] = vLook;
+	WorldMatrix.r[3] = m_pMovementCom->Get_State(EState::Position);
+
+	return WorldMatrix;
 }
 
 CGameObject * CBullet::Clone_GameObject(void * pArg)

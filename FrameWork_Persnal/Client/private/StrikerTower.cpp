@@ -70,6 +70,8 @@ _int CStrikerTower::Late_Tick(_float TimeDelta)
 
 			BULLET_DESC Data;
 			lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
+			lstrcpy(Data.szTextureName, L"Component_Texture_Glow_Green");
+			Data.vTextureSize = { 5.f, 5.f };
 			Data.MoveState_Desc.fRotatePerSec = 50.f;
 
 			_vector vDir = XMVector3Normalize(vTargetPos - vMyPos);

@@ -20,8 +20,6 @@ HRESULT CPoint_Spread::NativeConstruct_Prototype()
 HRESULT CPoint_Spread::NativeConstruct(void * pArg)
 {
 	Ready_Component(pArg);
-
-	SetUp_IndexDir(CEffectDesc_Manager::GetInstance()->Get_PointSpread_DrawCount());
 	
 	VTXMATRIX* pInstance = m_pBufferInstanceCom->Get_InstanceBuffer();
 
@@ -97,6 +95,16 @@ HRESULT CPoint_Spread::Render()
 	return S_OK;
 }
 
+VTXMATRIX * CPoint_Spread::Get_InstanceBuffer()
+{
+	return m_pBufferInstanceCom->Get_InstanceBuffer();
+}
+
+void CPoint_Spread::Set_InstanceBuffer(VTXMATRIX* pInstanceBuffer)
+{
+	m_pBufferInstanceCom->Set_InstanceBuffer(pInstanceBuffer);
+}
+
 HRESULT CPoint_Spread::Ready_Component(void * pArg)
 {
 	HRESULT hr = S_OK;
@@ -109,6 +117,9 @@ HRESULT CPoint_Spread::Ready_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, m_PointDesc.szTextrueName, TEXT("Com_Texture"), (CComponent**)&m_pTexturesCom);
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, m_PointDesc.szPointInstance_PrototypeName, TEXT("Com_Buffer"), (CComponent**)&m_pBufferInstanceCom);
 
+	m_iInstance_StartIndex = CEffectDesc_Manager::GetInstance()->Get_PointSpread_StartIndex();
+	m_iNumInstance = CEffectDesc_Manager::GetInstance()->Get_PointSpread_DrawCount();
+
 	if (hr != S_OK)
 		MSG_BOX("CPoint_Spread::Ready_Component Failed");
 
@@ -120,11 +131,8 @@ void CPoint_Spread::Set_Pos(_fvector vPos)
 	m_pMovementCom->Set_State(EState::Position, vPos);
 }
 
-void CPoint_Spread::SetUp_IndexDir(_int iInstanceIndex)
+void CPoint_Spread::SetUp_IndexDir(_int iRandNum_Max)
 {
-	m_iInstance_StartIndex = CEffectDesc_Manager::GetInstance()->Get_PointSpread_StartIndex();
-	m_iNumInstance = iInstanceIndex;
-
 	m_pIndexDir = new _float3[m_iNumInstance];
 
 	// 15개라 한다면
@@ -132,13 +140,16 @@ void CPoint_Spread::SetUp_IndexDir(_int iInstanceIndex)
 	{
 		_vector vDir = XMVectorSet(0.f, 0.f, 0.f, 0.f);
 
-		for (_int j = 0; j < 3; ++j)
+		if (0 < iRandNum_Max)
 		{
-			_int iRand = rand() % 10;
-			if (rand() % 2 == 0)
-				iRand *= -1;
+			for (_int j = 0; j < 3; ++j)
+			{
+				_int iRand = rand() % iRandNum_Max;
+				if (rand() % 2 == 0)
+					iRand *= -1;
 
-			vDir.m128_f32[j] = _float(iRand);
+				vDir.m128_f32[j] = _float(iRand);
+			}
 		}
 
 		XMStoreFloat3(&m_pIndexDir[i - m_iInstance_StartIndex], XMVector3Normalize(vDir));

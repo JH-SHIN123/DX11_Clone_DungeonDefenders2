@@ -83,12 +83,14 @@ HRESULT CPlayer_Bullet::Ready_Component(void * pArg)
 
 	POINT_SPREAD_DESC Point_Desc;
 	lstrcpy(Point_Desc.szTextrueName, L"Component_Texture_Ring_Gray");
-	lstrcpy(Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_15_5");
+	lstrcpy(Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_200_5");
 	XMStoreFloat4(&Point_Desc.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
 	Point_Desc.MoveDesc.vScale = { 1.f,1.f,0.f,0.f };
 
 	m_pPointSpread = CPoint_Spread::Create(m_pDevice, m_pDevice_Context);
 	m_pPointSpread->NativeConstruct(&Point_Desc);
+	m_pPointSpread->SetUp_IndexDir(10);
+
 
 	if (S_OK != hr)
 		MSG_BOX("CPlayer_Bullet::Ready_Component Failed!");

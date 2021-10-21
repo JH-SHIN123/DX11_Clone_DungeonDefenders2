@@ -185,6 +185,9 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Ring_Gray")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Ring_Gray/%d.png")));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Glow_Green")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Glow_Green/%d.png", 4)));
+
 #pragma endregion
 
 #pragma region GameObject
@@ -322,10 +325,10 @@ HRESULT CLoading::LoadingForStage()
 
 #pragma endregion
 
-	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_15_5")
-		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "DefaultTechnique", 50))))
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_200_5")
+		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "DefaultTechnique", 200))))
 		return E_FAIL;
-	CEffectDesc_Manager::GetInstance()->Set_PointSpread(50, 5);
+	CEffectDesc_Manager::GetInstance()->Set_PointSpread(200, 5);
 
 
 	if (hr != S_OK)

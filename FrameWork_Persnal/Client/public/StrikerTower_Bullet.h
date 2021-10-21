@@ -24,6 +24,9 @@ public:
 
 private:
 	HRESULT			Ready_Component(void* pArg);
+	
+private:
+	class CPoint_Spread* m_pPointSpread = nullptr;
 
 
 public:

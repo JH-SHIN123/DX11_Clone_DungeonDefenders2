@@ -127,6 +127,35 @@ void CWeapon::Create_Bullet(_fvector vDir, _int iAtt)
 	Data.Attack_Collide_Desc.IsCenter = true;
 	
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Player_Bullet", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
+
+	/*
+	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
+	vMyPos += XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * 8.f;
+
+	BULLET_DESC Data;
+	lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
+	lstrcpy(Data.szTextureName, L"Component_Texture_Glow_Green");
+	Data.vTextureSize = { 5.f, 5.f };
+	Data.MoveState_Desc.fRotatePerSec = 50.f;
+
+	_vector vDir = XMVector3Normalize(vTargetPos - vMyPos);
+
+	XMStoreFloat3(&Data.vDir, vDir);
+	XMStoreFloat4(&Data.MoveState_Desc.vPos, vMyPos);
+	Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+	Data.MoveState_Desc.fSpeedPerSec = 40.f;
+	Data.fLifeTime = 10.f;
+
+	Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Shock;
+	Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
+	Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
+	Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
+	//Data.Attack_Collide_Desc.vPosition = { 0.f, 50.f, 0.f };
+	Data.Attack_Collide_Desc.IsCenter = true;
+
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_StrikerTower_Bullet", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
+	
+	*/
 }
 
 

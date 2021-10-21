@@ -35,11 +35,17 @@ public:
 	virtual HRESULT Render() override;
 
 public:
+	VTXMATRIX* Get_InstanceBuffer();
+	void Set_InstanceBuffer(VTXMATRIX* pInstanceBuffer);
+	_int Get_Instance_StartIndex() { return m_iInstance_StartIndex; }
+	_int Get_Instance_Num() { return m_iNumInstance; }
+
+public:
 	HRESULT Ready_Component(void* pArg);
 	void Set_Pos(_fvector vPos);
+	void SetUp_IndexDir(_int iRandNum_Max = 10);
 
 protected:
-	void SetUp_IndexDir(_int iInstanceIndex);
 	void Check_Instance(_float TimeDelta);
 
 protected:
