@@ -123,6 +123,15 @@ BlendState BlendState_Add
 	BlendOp = Add;
 };
 
+BlendState BlendState_Add_Extern
+{
+	BlendEnable[0] = true;
+BlendEnable[1] = true;
+SrcBlend = SRC_ALPHA;
+DestBlend = INV_SRC_ALPHA;
+BlendOp = Add;
+};
+
 BlendState BlendState_None
 {
 	BlendEnable[0] = false;

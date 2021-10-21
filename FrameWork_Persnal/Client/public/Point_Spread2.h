@@ -3,15 +3,18 @@
 #ifndef __POINT_SPREAD_2_H__
 
 #include "Point_Spread.h"
+#include "EffectDesc_Manager.h"
 
 BEGIN(Client)
 // 이건 동적으로 퍼져 나가는거
 
 typedef struct tagPointSpread2_Desc
 {
+	EInstanceValue InstanceValue = EInstanceValue::Point_100_10;
 	POINT_SPREAD_DESC Point_Desc;
 	_float2 vSize = { 1.f,1.f };
-
+	_bool IsTime = false;;
+	_bool IsDown = false;
 }POINT_SPREAD_DESC_2;
 
 class CPoint_Spread2 final : public CPoint_Spread
@@ -30,6 +33,12 @@ public:
 
 private:
 	void SetUp_Size(_float2 vSize);
+
+	_bool m_IsTime = false;
+	_float m_fTime = 0.f;
+	_bool m_IsDown = false;
+	_float m_fDownTime = 0.f;
+
 
 public:
 	static CPoint_Spread2* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

@@ -21,6 +21,7 @@ public:
 
 public:
 	void Set_WorldMatrix(_fmatrix matWorld) { m_pMovementCom->Set_WorldMatrix(matWorld); }
+	void Creat_Effect();
 
 private:
 	HRESULT			Ready_Component(void* pArg);

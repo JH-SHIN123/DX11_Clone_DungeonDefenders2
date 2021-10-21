@@ -35,6 +35,9 @@ public:
 	virtual HRESULT Render() override;
 
 public:
+	void Move_Spread(_float TimeDelta);
+
+public:
 	VTXMATRIX* Get_InstanceBuffer();
 	void Set_InstanceBuffer(VTXMATRIX* pInstanceBuffer);
 	_int Get_Instance_StartIndex() { return m_iInstance_StartIndex; }
@@ -44,8 +47,8 @@ public:
 	HRESULT Ready_Component(void* pArg);
 	void Set_Pos(_fvector vPos);
 	void SetUp_IndexDir(_int iRandNum_Max = 10);
-	void Set_ShaderPass(_uint iShaderPass) { m_PointDesc.iShaderPass = iShaderPass; }
 	void SetUp_Color(_float4 vColor) { m_vColor = vColor, m_IsColor = true; }
+	void Set_ShaderPass(_uint iShaderPass) { m_PointDesc.iShaderPass = iShaderPass; }
 
 protected:
 	void Check_Instance(_float TimeDelta);
@@ -64,6 +67,9 @@ protected:
 
 	_float4			m_vColor;
 	_bool			m_IsColor = false;
+
+protected:
+	_float4*		m_pIndexPos = nullptr;
 
 public:
 	static CPoint_Spread* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

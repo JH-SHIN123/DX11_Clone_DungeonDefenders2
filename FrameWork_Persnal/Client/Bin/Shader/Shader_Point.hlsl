@@ -9,6 +9,7 @@ cbuffer CameraDesc
 texture2D		g_DiffuseTexture;
 float2			g_vSize;
 float4			g_vColor;
+float			g_fTime;
 
 sampler DiffuseSampler = sampler_state
 {
@@ -124,6 +125,20 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_ALPHA_TIME(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	float3 vColor = Out.vColor.rgb;
+
+	if(all(vColor))
+		Out.vColor.a = g_fTime;
+
+	return Out;
+}
+
 PS_OUT PS_MAIN_ALPHA_RED(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
@@ -181,6 +196,16 @@ technique11		DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = compile gs_5_0 GS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN_COLOR();
+	}
+
+	pass PointInstance_AlphaTime // 3
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Add_Extern, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		PixelShader = compile ps_5_0 PS_MAIN_ALPHA_TIME();
 	}
 };
 

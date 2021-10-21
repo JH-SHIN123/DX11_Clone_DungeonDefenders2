@@ -45,6 +45,8 @@
 #include "Kobold_Boom.h"
 #include "Player_Bullet.h"
 #include "ManaToken.h"
+#include "Point_Spread.h"
+#include "Point_Spread2.h"
 
 USING(Engine)
 
@@ -187,9 +189,13 @@ HRESULT CLoading::LoadingForStage()
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Glow_Green")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Glow_Green/%d.png"), 4));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Glow_Green__")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Glow_Green.png")));
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Flare")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Effect/Flare.tga")));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Particle")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Particle.png")));
 
 #pragma endregion
 
@@ -246,6 +252,9 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_ManaToken"), CManaToken::Create(m_pDevice, m_pDevice_Context));
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_MeshLevel_1_Navi"), CNavigation::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Navi.fbx"));
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Spread"), CPoint_Spread::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Spread2"), CPoint_Spread2::Create(m_pDevice, m_pDevice_Context));
 
 #pragma endregion
 
@@ -327,11 +336,17 @@ HRESULT CLoading::LoadingForStage()
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/ManaToken/", "ManaToken_L.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
 #pragma endregion
+	CEffectDesc_Manager::GetInstance()->Resize_Contanier((_uint)EInstanceValue::End_Value);
 
+	CEffectDesc_Manager::GetInstance()->Set_PointSpread(200, 5);
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_200_5")
 		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "DefaultTechnique", 200))))
 		return E_FAIL;
-	CEffectDesc_Manager::GetInstance()->Set_PointSpread(200, 5);
+
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_100_10")
+		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "DefaultTechnique", 100))))
+		return E_FAIL;
+	CEffectDesc_Manager::GetInstance()->Set_Instance(EInstanceValue::Point_100_10, 100, 10);
 
 
 	if (hr != S_OK)

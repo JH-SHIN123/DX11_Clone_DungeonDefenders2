@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "..\public\StrikerTower_Bullet.h"
-#include "Point_Spread.h"
+#include "Point_Spread2.h"
 
 CStrikerTower_Bullet::CStrikerTower_Bullet(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CBullet(pDevice, pDevice_Context)
@@ -57,8 +57,11 @@ _int CStrikerTower_Bullet::Tick(_float TimeDelta)
 
 _int CStrikerTower_Bullet::Late_Tick(_float TimeDelta)
 {
-	if (true == m_pColliderCom_Attack->Get_IsCollide())
+	if (true == m_pColliderCom_Attack->Get_IsCollide() || true == m_IsDelete_This)
+	{
+		Create_Effect();
 		return OBJECT_DEAD;
+	}
 
 	m_pPointSpread->Late_Tick(TimeDelta);
 
@@ -108,6 +111,22 @@ HRESULT CStrikerTower_Bullet::Ready_Component(void * pArg)
 		MSG_BOX("CStrikerTower_Bullet::Ready_Component Failed!");
 
 	return hr;
+}
+
+void CStrikerTower_Bullet::Create_Effect()
+{
+	POINT_SPREAD_DESC_2 Data;
+	Data.InstanceValue = EInstanceValue::Point_100_10;
+	Data.Point_Desc.fSpreadDis = 2.f;
+	Data.IsTime = true;
+	Data.vSize = { 2.f,2.f };
+	Data.Point_Desc.fLifeTime = 1.f;
+	Data.Point_Desc.iShaderPass = 3;
+	XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	lstrcpy(Data.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_100_10");
+	lstrcpy(Data.Point_Desc.szTextrueName, L"Component_Texture_Glow_Green__");
+
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
 }
 
 CStrikerTower_Bullet * CStrikerTower_Bullet::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

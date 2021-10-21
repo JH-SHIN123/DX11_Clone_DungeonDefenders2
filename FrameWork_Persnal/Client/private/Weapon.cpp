@@ -118,7 +118,7 @@ void CWeapon::Create_Bullet(_fvector vDir, _int iAtt)
 	XMStoreFloat4(&Data.MoveState_Desc.vPos, vMyPos);
 	Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 	Data.MoveState_Desc.fSpeedPerSec = 40.f;
-	Data.fLifeTime = 10.f;
+	Data.fLifeTime = 3.f;
 
 	Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Shock;
 	Data.Attack_Collide_Desc.Attack_Desc.iDamage = _int(iAtt * 0.8f);

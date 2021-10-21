@@ -24,6 +24,7 @@ public:
 
 private:
 	HRESULT			Ready_Component(void* pArg);
+	void Create_Effect();
 	
 private:
 	class CPoint_Spread* m_pPointSpread = nullptr;

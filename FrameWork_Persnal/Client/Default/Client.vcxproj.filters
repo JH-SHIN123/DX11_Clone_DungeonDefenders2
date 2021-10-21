@@ -286,9 +286,6 @@
     <Filter Include="05.Effect%28Instanced%29\Rect">
       <UniqueIdentifier>{8d2df7ef-366f-4a14-b07b-0194ccf0f123}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Effect%28Instanced%29\Point\00.Spread">
-      <UniqueIdentifier>{4862821a-4942-495a-b135-81ce09907b8f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\07.Bullet\15.Player_Bullet">
       <UniqueIdentifier>{c40898de-7950-47e0-b186-77faadcc3b50}</UniqueIdentifier>
     </Filter>
@@ -298,8 +295,11 @@
     <Filter Include="05.Effect%28Instanced%29\Rect\00.Spread">
       <UniqueIdentifier>{b8975ef6-a78e-4e57-be7b-c1517807b19b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Effect%28Instanced%29\Point\01.Spread2">
+    <Filter Include="05.Effect%28Instanced%29\Point\01.Spread2%28Free%29">
       <UniqueIdentifier>{7a91e616-ff51-4de0-a2e7-b662dd6d0641}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Effect%28Instanced%29\Point\00.Spread%28Member%29">
+      <UniqueIdentifier>{4862821a-4942-495a-b135-81ce09907b8f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -559,7 +559,7 @@
       <Filter>03.UI, HUD\00.2D\08.Number_Font</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Point_Spread.h">
-      <Filter>05.Effect%28Instanced%29\Point\00.Spread</Filter>
+      <Filter>05.Effect%28Instanced%29\Point\00.Spread%28Member%29</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Player_Bullet.h">
       <Filter>02.GameObject\07.Bullet\15.Player_Bullet</Filter>
@@ -574,7 +574,7 @@
       <Filter>05.Effect%28Instanced%29</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Point_Spread2.h">
-      <Filter>05.Effect%28Instanced%29\Point\01.Spread2</Filter>
+      <Filter>05.Effect%28Instanced%29\Point\01.Spread2%28Free%29</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -813,7 +813,7 @@
       <Filter>03.UI, HUD\00.2D\08.Number_Font</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Point_Spread.cpp">
-      <Filter>05.Effect%28Instanced%29\Point\00.Spread</Filter>
+      <Filter>05.Effect%28Instanced%29\Point\00.Spread%28Member%29</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Player_Bullet.cpp">
       <Filter>02.GameObject\07.Bullet\15.Player_Bullet</Filter>
@@ -828,7 +828,7 @@
       <Filter>05.Effect%28Instanced%29</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Point_Spread2.cpp">
-      <Filter>05.Effect%28Instanced%29\Point\01.Spread2</Filter>
+      <Filter>05.Effect%28Instanced%29\Point\01.Spread2%28Free%29</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

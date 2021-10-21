@@ -99,6 +99,27 @@ HRESULT CPoint_Spread::Render()
 	return S_OK;
 }
 
+void CPoint_Spread::Move_Spread(_float TimeDelta)
+{
+	m_PointDesc.fLifeTime -= TimeDelta;
+
+	VTXMATRIX* pInstance = m_pBufferInstanceCom->Get_InstanceBuffer();
+
+	XMStoreFloat4(&pInstance[m_iInstance_StartIndex].vPosition, m_pMovementCom->Get_State(EState::Position));
+
+	for (_int i = m_iInstance_StartIndex; i < m_iNumInstance + m_iInstance_StartIndex; ++i)
+	{
+		_vector vPos = m_pMovementCom->Get_State(EState::Position);
+		_vector vDir = XMLoadFloat3(&m_pIndexDir[i - m_iInstance_StartIndex]);
+		vPos -= vDir * 1.5f * TimeDelta;
+
+		XMStoreFloat4(&pInstance[i].vPosition, vPos);
+	}
+
+	m_pBufferInstanceCom->Set_InstanceBuffer(pInstance);
+	m_pBufferInstanceCom->Update_Instance(TimeDelta);
+}
+
 VTXMATRIX * CPoint_Spread::Get_InstanceBuffer()
 {
 	return m_pBufferInstanceCom->Get_InstanceBuffer();
@@ -138,6 +159,9 @@ void CPoint_Spread::Set_Pos(_fvector vPos)
 void CPoint_Spread::SetUp_IndexDir(_int iRandNum_Max)
 {
 	m_pIndexDir = new _float3[m_iNumInstance];
+	m_pIndexPos = new _float4[m_iNumInstance];
+	_float4 vPos;
+	XMStoreFloat4(&vPos, m_pMovementCom->Get_State(EState::Position));
 
 	// 15개라 한다면
 	for (_int i = m_iInstance_StartIndex; i < m_iNumInstance + m_iInstance_StartIndex; ++i)
@@ -156,6 +180,7 @@ void CPoint_Spread::SetUp_IndexDir(_int iRandNum_Max)
 			}
 		}
 
+		m_pIndexPos[i - m_iInstance_StartIndex] = vPos;
 		XMStoreFloat3(&m_pIndexDir[i - m_iInstance_StartIndex], XMVector3Normalize(vDir));
 	}
 
@@ -196,6 +221,7 @@ void CPoint_Spread::Free()
 	__super::Free();
 
 	Safe_Delete_Array(m_pIndexDir);
+	Safe_Delete_Array(m_pIndexPos);
 
 	Safe_Release(m_pBufferInstanceCom);
 	Safe_Release(m_pRendererCom);

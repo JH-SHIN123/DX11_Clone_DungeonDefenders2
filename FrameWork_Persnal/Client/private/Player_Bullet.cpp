@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Player_Bullet.h"
-#include "Point_Spread.h"
+#include "Point_Spread2.h"
 
 CPlayer_Bullet::CPlayer_Bullet(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CBullet(pDevice, pDevice_Context)
@@ -42,7 +42,10 @@ _int CPlayer_Bullet::Tick(_float TimeDelta)
 	if (nullptr != m_pColliderCom_Attack)
 	{
 		if (true == m_pColliderCom_Attack->Get_IsCollide())
+		{
+			Creat_Effect();
 			return OBJECT_DEAD;
+		}
 
 		m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 	}
@@ -56,7 +59,10 @@ _int CPlayer_Bullet::Tick(_float TimeDelta)
 _int CPlayer_Bullet::Late_Tick(_float TimeDelta)
 {
 	if (true == m_pColliderCom_Attack->Get_IsCollide())
+	{
+		Creat_Effect();
 		return OBJECT_DEAD;
+	}
 
 	m_pPointSpread->Late_Tick(TimeDelta);
 
@@ -75,6 +81,21 @@ HRESULT CPlayer_Bullet::Render()
 
 
 	return S_OK;
+}
+
+void CPlayer_Bullet::Creat_Effect()
+{
+	POINT_SPREAD_DESC_2 Data;
+	Data.InstanceValue = EInstanceValue::Point_100_10;
+	Data.IsTime = true;
+	Data.vSize = { 2.f,2.f };
+	Data.Point_Desc.fLifeTime = 2.f;
+	Data.Point_Desc.iShaderPass = 3;
+	XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	lstrcpy(Data.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_100_10");
+	lstrcpy(Data.Point_Desc.szTextrueName, L"Component_Texture_Ring_Gray");
+
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
 }
 
 HRESULT CPlayer_Bullet::Ready_Component(void * pArg)

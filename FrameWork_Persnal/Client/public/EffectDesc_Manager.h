@@ -14,8 +14,10 @@ typedef struct tagInstanceData
 	_int iStartIndex = 0;
 	_int iStartIndex_Max = 1;
 	_int iTerm = 5;
-
 }INSTANCE_DATA;
+
+enum class EInstanceValue
+{Point_100_10, End_Value};
 
 class CEffectDesc_Manager final : public CBase
 {
@@ -33,6 +35,17 @@ private:
 	_int m_iPointSpread_StartIndex = 0;
 	_int m_iPointSpread_StartIndex_Max = 1;
 	_int m_iPointSpread_Term = 5;
+
+public:
+	const _int	Get_Instance_StartIndex(EInstanceValue eIndex_Contanier);
+	const _int  Get_Instance_DrawCount(EInstanceValue eIndex_Contanier);
+	void		Set_Instance(EInstanceValue eIndex_Contanier, const _int& iStartIndex_Max, const _int& iInstance_Term);
+
+public:
+	void Resize_Contanier(_int iSize) { m_vecInstance.resize(iSize); }
+
+private:
+	vector<INSTANCE_DATA> m_vecInstance;
 
 public:
 	virtual void Free();

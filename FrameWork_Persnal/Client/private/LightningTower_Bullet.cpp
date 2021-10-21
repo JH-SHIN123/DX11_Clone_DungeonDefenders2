@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "LightningTower_Bullet.h"
 #include "LightningTower_Bullet_Effect.h"
-#include "Point_Spread.h"
+#include "Point_Spread2.h"
 
 CLightningTower_Bullet::CLightningTower_Bullet(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CBullet(pDevice, pDevice_Context)
@@ -43,10 +43,14 @@ _int CLightningTower_Bullet::Tick(_float TimeDelta)
 	_int iReturn = 0;
 	if (iReturn = __super::Tick(TimeDelta))
 	{
+		Create_Effect();
 		return iReturn;
 	}
 	if (true == m_pColliderCom_Attack->Get_IsCollide())
+	{
+		Create_Effect();
 		return OBJECT_DEAD;
+	}
 
 	Spawn_Check(TimeDelta);
 
@@ -73,6 +77,12 @@ _int CLightningTower_Bullet::Tick(_float TimeDelta)
 _int CLightningTower_Bullet::Late_Tick(_float TimeDelta)
 {
 	m_pPointSpread->Late_Tick(TimeDelta);
+
+	if (true == m_pColliderCom_Attack->Get_IsCollide() || true == m_IsDelete_This)
+	{
+		Create_Effect();
+		return OBJECT_DEAD;
+	}
 
 	return __super::Late_Tick(TimeDelta);
 }
@@ -197,26 +207,18 @@ void CLightningTower_Bullet::Spawn_Check(_float TimeDelta)
 
 void CLightningTower_Bullet::Create_Effect()
 {
-	//EFFECT_DESC Data;
-	//Data.eEffectType = EEffectType::Mesh;
-	//Data.eResourceLevel = ELevel::Stage1;
-	//Data.iShaderPass = 2;
-	//XMStoreFloat4(&Data.Move_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
-	//Data.Move_Desc.vScale = { 0.03f,  0.03f , 0.03f, 0.f };
-	//_vector vAxis = XMVectorSet(1.f, 0.f, 0.f, 0.f);
-	//
-	//lstrcpy(Data.szResourceName, L"Component_Mesh_LightningTower_Bullet_Effect_1");
-	//m_vecEffectMesh[0] = (CLightningTower_Bullet_Effect*)GET_GAMEINSTANCE->Add_Create_Clone((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet_Effect", (_uint)ELevel::Stage1, &Data);
-	//
-	//lstrcpy(Data.szResourceName, L"Component_Mesh_LightningTower_Bullet_Effect_2");
-	//m_vecEffectMesh[1] = (CLightningTower_Bullet_Effect*)GET_GAMEINSTANCE->Add_Create_Clone((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet_Effect", (_uint)ELevel::Stage1, &Data);
-	//m_vecEffectMesh[1]->Set_Rotate_Axis(vAxis, XMConvertToDegrees(70.f));
-	//
-	//vAxis = XMVectorSet(1.f, 0.f, 0.f, 0.f);
-	//lstrcpy(Data.szResourceName, L"Component_Mesh_LightningTower_Bullet_Effect_3");
-	//m_vecEffectMesh[2] = (CLightningTower_Bullet_Effect*)GET_GAMEINSTANCE->Add_Create_Clone((_uint)ELevel::Stage1, L"Prototype_LightningTower_Bullet_Effect", (_uint)ELevel::Stage1, &Data);
-	//m_vecEffectMesh[2]->Set_Rotate_Axis(vAxis, XMConvertToDegrees(90.f));
+	POINT_SPREAD_DESC_2 Data;
+	Data.InstanceValue = EInstanceValue::Point_100_10;
+	Data.Point_Desc.fSpreadDis = 2.f;
+	Data.IsTime = true;
+	Data.vSize = { 2.f,2.f };
+	Data.Point_Desc.fLifeTime = 1.f;
+	Data.Point_Desc.iShaderPass = 3;
+	XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	lstrcpy(Data.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_100_10");
+	lstrcpy(Data.Point_Desc.szTextrueName, L"Component_Texture_Particle");
 
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
 }
 
 void CLightningTower_Bullet::Target_Check(_float TimeDelta)

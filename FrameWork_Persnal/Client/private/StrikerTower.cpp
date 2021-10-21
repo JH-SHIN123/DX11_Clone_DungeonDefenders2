@@ -74,6 +74,7 @@ _int CStrikerTower::Late_Tick(_float TimeDelta)
 			Data.vTextureSize = { 5.f, 5.f };
 			Data.MoveState_Desc.fRotatePerSec = 50.f;
 
+			vTargetPos.m128_f32[1] += 4.f;
 			_vector vDir = XMVector3Normalize(vTargetPos - vMyPos);
 
 			XMStoreFloat3(&Data.vDir, vDir);

@@ -82,6 +82,7 @@ _int CLightningTower::Late_Tick(_float TimeDelta)
 
 				_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
 				vMyPos += XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * 8.f;
+				vTargetPos.m128_f32[1] += 4.f;
 
 				_vector vDir = vTargetPos;
 
