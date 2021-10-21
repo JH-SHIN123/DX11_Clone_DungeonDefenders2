@@ -56,7 +56,7 @@ _int CManaToken::Tick(_float TimeDelta)
 		m_fMoveRatio = 1.f;
 
 	m_pMovementCom->Go_Dir_Vector(TimeDelta * m_fMoveRatio, vDir);
-	m_pMovementCom->RotateToAxis_Tick(TimeDelta, XMVectorSet(0.f, 1.f, 0.f, 0.f));
+	m_pMovementCom->RotateToAxis_Tick(TimeDelta * 2.f, XMVectorSet(0.f, 1.f, 0.f, 0.f));
 	m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 
 	return _int();
@@ -135,7 +135,7 @@ HRESULT CManaToken::Ready_Component(void * pArg)
 	case Client::EManaType::Default:
 		hr = CGameObject::Add_Component((_uint)ELevel::Stage1, L"Component_Mesh_ManaToken", TEXT("Com_Model"), (CComponent**)&m_pModelCom);
 		Set_Pivot(XMVectorSet(0.05f, 0.05f, 0.05f, 0.f));
-		Set_Pivot_Rotate_Radian(XMVectorSet(180.f, 0.f, 90.f, 0.f));
+		Set_Pivot_Rotate_Radian(XMVectorSet(110.f, 0.f, 0.f, 0.f));
 		m_iMp = 15;
 		break;
 	case Client::EManaType::Large:
@@ -146,7 +146,7 @@ HRESULT CManaToken::Ready_Component(void * pArg)
 	default:
 		hr = CGameObject::Add_Component((_uint)ELevel::Stage1, L"Component_Mesh_ManaToken", TEXT("Com_Model"), (CComponent**)&m_pModelCom);
 		Set_Pivot(XMVectorSet(0.05f, 0.05f, 0.05f, 0.f));
-		Set_Pivot_Rotate_Radian(XMVectorSet(180.f, 0.f, 90.f, 0.f));
+		Set_Pivot_Rotate_Radian(XMVectorSet(110.f, 0.f, 0.f, 0.f));
 		m_iMp = 15;
 		break;
 	}

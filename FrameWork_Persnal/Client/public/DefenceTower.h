@@ -108,7 +108,7 @@ private:
 	_bool			m_IsSpawn = true;
 
 private:
-	_float4 m_vColor = { 0.8f, 3.f, 1.f, 0.6f };
+	_float4 m_vColor = { 0.8f, 3.f, 1.f, 0.4f };
 
 private:
 	_float m_fHealTime = 0.f;

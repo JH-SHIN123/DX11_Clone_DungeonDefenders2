@@ -58,7 +58,7 @@ _int CPoint_Spread2::Tick(_float TimeDelta)
 		if (true == m_IsDown)
 		{
 			m_fDownTime += TimeDelta * 2.f;
-			vPos -= (XMVectorSet(0.f, 1.f, 0.f, 0.f)) * m_fDownTime * TimeDelta;
+			vPos.m128_f32[1] -= m_fDownTime;
 		}
 
 		XMStoreFloat4(&pInstance[i].vPosition, vPos);
