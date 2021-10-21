@@ -17,7 +17,7 @@ typedef struct tagInstanceData
 }INSTANCE_DATA;
 
 enum class EInstanceValue
-{Point_100_10, End_Value};
+{Point_200_5, Point_100_10, End_Value};
 
 class CEffectDesc_Manager final : public CBase
 {
@@ -27,14 +27,14 @@ public:
 	CEffectDesc_Manager();
 	virtual ~CEffectDesc_Manager() = default;
 
-public:
-	const _int	Get_PointSpread_StartIndex();
-	const _int  Get_PointSpread_DrawCount() { return m_iPointSpread_Term; }
-	void		Set_PointSpread(const _int& iStartIndex_Max, const _int& iInstance_Term);
-private:
-	_int m_iPointSpread_StartIndex = 0;
-	_int m_iPointSpread_StartIndex_Max = 1;
-	_int m_iPointSpread_Term = 5;
+//public:
+//	const _int	Get_PointSpread_StartIndex();
+//	const _int  Get_PointSpread_DrawCount() { return m_iPointSpread_Term; }
+//	void		Set_PointSpread(const _int& iStartIndex_Max, const _int& iInstance_Term);
+//private:
+//	_int m_iPointSpread_StartIndex = 0;
+//	_int m_iPointSpread_StartIndex_Max = 1;
+//	_int m_iPointSpread_Term = 5;
 
 public:
 	const _int	Get_Instance_StartIndex(EInstanceValue eIndex_Contanier);

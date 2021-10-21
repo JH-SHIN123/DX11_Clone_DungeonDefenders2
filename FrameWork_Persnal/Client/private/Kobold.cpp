@@ -144,7 +144,7 @@ _int CKobold::Tick(_float TimeDelta)
 
 
 	m_pColliderCom_Hurt->Update_Collider(m_pMovementCom->Get_WorldMatrix());
-
+	m_pColiiderCom_Push->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 	m_pStatusCom->Tick(TimeDelta);
 
 	__super::Tick(TimeDelta);
@@ -195,6 +195,7 @@ HRESULT CKobold::Render()
 
 
 #ifdef _DEBUG
+	m_pColiiderCom_Push->Render_Collider();
 	m_pColliderCom_Attack->Render_Collider();
 	m_pColliderCom_Hurt->Render_Collider();
 #endif // _DEBUG
@@ -640,6 +641,9 @@ HRESULT CKobold::Ready_Component(void * pArg)
 	Data.Attack_Desc.iDamage = 30;
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data);
 
+	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
+	Data.vScale = { 3.f, 3.f, 3.f };
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Push"), (CComponent**)&m_pColiiderCom_Push, &Data);
 
 	return S_OK;
 }
@@ -722,6 +726,7 @@ CGameObject * CKobold::Clone_GameObject(void * pArg)
 
 void CKobold::Free()
 {
+	Safe_Release(m_pColiiderCom_Push);
 	Safe_Release(m_pColliderCom_Attack);
 	Safe_Release(m_pColliderCom_Hurt);
 

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Skill_ManaBomb.h"
+#include "Point_Spread2.h"
 
 CSkill_ManaBomb::CSkill_ManaBomb(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CBullet(pDevice, pDevice_Context)

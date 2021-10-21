@@ -235,6 +235,7 @@
     <ClInclude Include="..\public\Player_Bullet.h" />
     <ClInclude Include="..\public\Point_Spread.h" />
     <ClInclude Include="..\public\Point_Spread2.h" />
+    <ClInclude Include="..\public\Point_Spread3.h" />
     <ClInclude Include="..\public\Rect_Spread.h" />
     <ClInclude Include="..\public\Skill_BrainWash.h" />
     <ClInclude Include="..\public\Skill_BrainWash_Effect.h" />
@@ -323,6 +324,7 @@
     <ClCompile Include="..\private\Player_Bullet.cpp" />
     <ClCompile Include="..\private\Point_Spread.cpp" />
     <ClCompile Include="..\private\Point_Spread2.cpp" />
+    <ClCompile Include="..\private\Point_Spread3.cpp" />
     <ClCompile Include="..\private\Rect_Spread.cpp" />
     <ClCompile Include="..\private\Skill_BrainWash.cpp" />
     <ClCompile Include="..\private\Skill_BrainWash_Effect.cpp" />

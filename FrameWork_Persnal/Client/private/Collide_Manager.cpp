@@ -160,7 +160,7 @@ void CCollide_Manager::Collide_Push(const _tchar * szDstObjectLayer, ELevel eDst
 
 	for (auto& Src : Src_Object)
 	{
-		CCollider* pSrcCol_Hit = (CCollider*)Src->Get_Component(L"Com_Collide_Hit");
+		CCollider* pSrcCol_Hit = (CCollider*)Src->Get_Component(L"Com_Collide_Push");
 
 		if (true == Src->Get_Pushing() || nullptr == pSrcCol_Hit)
 			continue;
@@ -170,7 +170,7 @@ void CCollide_Manager::Collide_Push(const _tchar * szDstObjectLayer, ELevel eDst
 			if(Src == Dst)
 				continue;
 
-			CCollider* pDstCol_Hit = (CCollider*)Dst->Get_Component(L"Com_Collide_Hit");
+			CCollider* pDstCol_Hit = (CCollider*)Dst->Get_Component(L"Com_Collide_Push");
 
 			if (true == Dst->Get_Pushing() || nullptr == pDstCol_Hit)
 				continue;

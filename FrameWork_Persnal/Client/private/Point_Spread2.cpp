@@ -25,8 +25,8 @@ HRESULT CPoint_Spread2::NativeConstruct(void * pArg)
 
 	__super::Ready_Component(&Data.Point_Desc);
 
-	m_iInstance_StartIndex = CEffectDesc_Manager::GetInstance()->Get_Instance_StartIndex(Data.InstanceValue);
-	m_iNumInstance = CEffectDesc_Manager::GetInstance()->Get_Instance_DrawCount(Data.InstanceValue);
+	m_iInstance_StartIndex = CEffectDesc_Manager::GetInstance()->Get_Instance_StartIndex(Data.Point_Desc.InstanceValue);
+	m_iNumInstance = CEffectDesc_Manager::GetInstance()->Get_Instance_DrawCount(Data.Point_Desc.InstanceValue);
 
 	SetUp_Size(Data.vSize);
 
@@ -90,7 +90,7 @@ HRESULT CPoint_Spread2::Render()
 
 void CPoint_Spread2::SetUp_Size(_float2 vSize)
 {
-	SetUp_IndexDir(CEffectDesc_Manager::GetInstance()->Get_PointSpread_DrawCount());
+	SetUp_IndexDir();
 
 	VTXMATRIX* pInstance = m_pBufferInstanceCom->Get_InstanceBuffer();
 

@@ -126,6 +126,7 @@ private:
 	CMovement*			m_pMovementCom	= nullptr;
 	CRenderer*			m_pRendererCom	= nullptr;
 	CCollider*			m_pColliderCom_Hit = nullptr;
+	CCollider*			m_pColliderCom_Push = nullptr;
 	CNavigation*		m_pNaviCom = nullptr;
 
 private:

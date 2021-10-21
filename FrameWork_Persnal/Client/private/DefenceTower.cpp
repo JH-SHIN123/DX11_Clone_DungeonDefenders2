@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\public\DefenceTower.h"
 #include "Masking_MeterBar_3D.h"
+#include "Point_Spread2.h"
+#include "Point_Spread3.h"
 
 CDefenceTower::CDefenceTower(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -47,6 +49,12 @@ _int CDefenceTower::Late_Tick(_float TimeDelta)
 		return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Alpha, this);
 
 	m_pHpBar->Set_Count((_float)m_pStatusCom->Get_Hp(), (_float)m_pStatusCom->Get_HpMax());
+
+	if (0.f >= m_pStatusCom->Get_Hp())
+	{
+		Create_Dead_Effect();
+		return OBJECT_DEAD;
+	}
 
 	HpBar_Render_Check(TimeDelta);
 
@@ -236,6 +244,25 @@ void CDefenceTower::Get_TowerDesc(TOWER_DESC * pOutTowerDesc)
 
 	XMStoreFloat4(&pOutTowerDesc->MoveState_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
 	XMStoreFloat4(&pOutTowerDesc->MoveState_Desc.vRotateLook, m_pMovementCom->Get_State(EState::Look));
+
+}
+
+void CDefenceTower::Create_Dead_Effect()
+{
+	POINT_SPREAD_DESC_3 Point3_Desc;
+	Point3_Desc.IsTime = true;
+	Point3_Desc.vSize = { 2.f,2.f };
+	Point3_Desc.Point_Desc.fLifeTime = 2.f;
+	Point3_Desc.Point_Desc.iShaderPass = 3;
+	Point3_Desc.Point_Desc.InstanceValue = EInstanceValue::Point_200_5;
+	XMStoreFloat4(&Point3_Desc.Point_Desc.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	lstrcpy(Point3_Desc.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_200_5");
+	lstrcpy(Point3_Desc.Point_Desc.szTextrueName, L"Component_Texture_Explosion");
+
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread3", (_uint)ELevel::Stage1, L"Layer_Effect", &Point3_Desc);
+
+
+
 
 }
 

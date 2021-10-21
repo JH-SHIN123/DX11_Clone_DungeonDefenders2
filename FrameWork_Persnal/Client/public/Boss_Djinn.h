@@ -89,6 +89,7 @@ private:
 	CCollider*				m_pColliderCom_Hurt = nullptr;
 	CCollider*				m_pColliderCom_Attack = nullptr;
 	CCollider*				m_pColliderCom_LeftHand = nullptr;
+	CCollider*				m_pColliderCom_Push = nullptr;
 
 private:
 	CTextures*				m_pTextureCom_Specular = nullptr;

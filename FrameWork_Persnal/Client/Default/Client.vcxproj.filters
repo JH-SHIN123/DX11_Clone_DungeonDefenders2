@@ -301,6 +301,9 @@
     <Filter Include="05.Effect%28Instanced%29\Point\00.Spread%28Member%29">
       <UniqueIdentifier>{4862821a-4942-495a-b135-81ce09907b8f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Effect%28Instanced%29\Point\02.Spread3%28Up%29">
+      <UniqueIdentifier>{b36b0b5a-251f-4709-b004-0fc215e41e9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -576,6 +579,9 @@
     <ClInclude Include="..\public\Point_Spread2.h">
       <Filter>05.Effect%28Instanced%29\Point\01.Spread2%28Free%29</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Point_Spread3.h">
+      <Filter>05.Effect%28Instanced%29\Point\02.Spread3%28Up%29</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -829,6 +835,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Point_Spread2.cpp">
       <Filter>05.Effect%28Instanced%29\Point\01.Spread2%28Free%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Point_Spread3.cpp">
+      <Filter>05.Effect%28Instanced%29\Point\02.Spread3%28Up%29</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

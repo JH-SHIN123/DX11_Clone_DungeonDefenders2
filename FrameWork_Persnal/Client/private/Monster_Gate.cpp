@@ -292,6 +292,7 @@ void CMonster_Gate::Spawn_Monster()
 		MonData.fDetectDis = 15.f;
 		MonData.Stat_Desc.iExp = 15;
 		MonData.Stat_Desc.iHp_Max = 300;
+		MonData.Movement_Desc.fSpeedPerSec = 15.f;
 		lstrcpy(MonData.szModelName, L"Component_Mesh_Goblin");
 		lstrcpy(szPrototypeName, L"Prototype_Goblin");
 		break;
@@ -300,6 +301,7 @@ void CMonster_Gate::Spawn_Monster()
 		MonData.fDetectDis = 15.f;
 		MonData.Stat_Desc.iExp = 53;
 		MonData.Stat_Desc.iHp_Max = 500;
+		MonData.Movement_Desc.fSpeedPerSec = 9.f;
 		lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
 		lstrcpy(szPrototypeName, L"Prototype_Ogre");
 		break;

@@ -65,7 +65,18 @@ _int CManaToken::Tick(_float TimeDelta)
 _int CManaToken::Late_Tick(_float TimeDelta)
 {
 	if (true == m_pColliderCom_Attack->Get_IsCollide())
+	{
+		CGameObject* pTarget = GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player");
+
+		if (nullptr == pTarget)
+			return OBJECT_DEAD;
+
+		CStatus* pStatus = (CStatus*)pTarget->Get_Component(L"Com_Status");
+
+		pStatus->Add_Mp(m_iMp);
+
 		return OBJECT_DEAD;
+	}
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
@@ -73,8 +84,8 @@ _int CManaToken::Late_Tick(_float TimeDelta)
 HRESULT CManaToken::Render()
 {
 #ifdef _DEBUG
-	if (nullptr != m_pColliderCom_Attack)
-		m_pColliderCom_Attack->Render_Collider();
+	//	if (nullptr != m_pColliderCom_Attack)
+	//		m_pColliderCom_Attack->Render_Collider();
 #endif // _DEBUG
 
 

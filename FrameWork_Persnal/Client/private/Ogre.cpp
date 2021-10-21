@@ -229,9 +229,9 @@ void COgre::Anim_Check(_float TimeDelta)
 	m_pModelCom->Update_CombindTransformationMatrix();
 
 	_matrix Matrix = m_pMovementCom->Get_WorldMatrix();
+	m_pColliderCom_Push->Update_Collider(Matrix);
 	Matrix.r[3] += XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) * 7.f;
 	m_pColliderCom_Attack->Update_Collider(Matrix);
-
 	m_eAnim_Cur = m_eAnim_Next;
 }
 
@@ -283,6 +283,11 @@ HRESULT COgre::Ready_Component(void * pArg)
 	Data.Attack_Desc.eDamageType = EDamageType::Direct;
 	Data.Attack_Desc.iDamage = 15;
 	CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data);
+
+	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
+	Data.vScale = { 2.5f, 2.5f, 2.5f };
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Push"), (CComponent**)&m_pColliderCom_Push, &Data);
+
 
 	return S_OK;
 }
@@ -361,6 +366,7 @@ void COgre::Free()
 {
 	Safe_Release(m_pColliderCom_Attack);
 	Safe_Release(m_pColliderCom_Hurt);
+	Safe_Release(m_pColliderCom_Push);
 
 	__super::Free();
 

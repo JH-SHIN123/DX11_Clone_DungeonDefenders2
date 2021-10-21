@@ -118,7 +118,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
 	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_L]->Set_PhaseMonster_Info(Phase);
@@ -133,7 +133,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase);
 
-	CData_Manager::GetInstance()->Set_MonsterCount_Max(6);
+	CData_Manager::GetInstance()->Set_MonsterCount_Max(4);
 
 	return S_OK;
 }
@@ -412,7 +412,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
 	CGameInstance* pGameInstance = GET_GAMEINSTANCE;
 
 	GAMEOBJ_DESC Data;
-	Data.Movement_Desc.vPos = { 0.f, 2.f, 0.f, 1.f };
+	Data.Movement_Desc.vPos = { 0.f, 0.f, -9.f, 1.f };
 	Data.Movement_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
 	Data.Movement_Desc.fSpeedPerSec = 20.f;
 

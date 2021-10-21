@@ -57,6 +57,9 @@ public: // Getter
 	void Get_TowerDesc(TOWER_DESC* pOutTowerDesc);
 
 public:
+	void Create_Dead_Effect();
+
+public:
 	void Upgrade_Tower();
 	void Healing_Tower();
 

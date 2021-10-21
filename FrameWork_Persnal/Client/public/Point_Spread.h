@@ -4,6 +4,7 @@
 
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "EffectDesc_Manager.h"
 
 BEGIN(Client)
 // 정적으로 어느정도 퍼진 상태에서 렌더링
@@ -16,6 +17,8 @@ typedef struct tagPointSpread_Desc
 	_float fLifeTime = 10.f;
 	_tchar szTextrueName[MAX_PATH] = L"";
 	_tchar szPointInstance_PrototypeName[MAX_PATH] = L"";
+	EInstanceValue InstanceValue = EInstanceValue::Point_100_10;
+
 	MOVESTATE_DESC MoveDesc;
 
 }POINT_SPREAD_DESC;

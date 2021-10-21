@@ -145,7 +145,7 @@ _int CGoblin::Tick(_float TimeDelta)
 	}
 
 	m_pColliderCom_Hurt->Update_Collider(m_pMovementCom->Get_WorldMatrix());
-
+	m_pColliderCom_Push->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 	m_pStatusCom->Tick(TimeDelta);
 
 	__super::Tick(TimeDelta);
@@ -191,6 +191,7 @@ HRESULT CGoblin::Render()
 #ifdef _DEBUG
 	m_pColliderCom_Attack->Render_Collider();
 	m_pColliderCom_Hurt->Render_Collider();
+	m_pColliderCom_Push->Render_Collider();
 #endif // _DEBUG
 
 
@@ -281,6 +282,11 @@ HRESULT CGoblin::Ready_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data);
 
 
+	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
+	Data.vScale = { 2.f, 2.f, 2.f };
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Push"), (CComponent**)&m_pColliderCom_Push, &Data);
+
+
 	return S_OK;
 }
 
@@ -358,6 +364,7 @@ CGameObject * CGoblin::Clone_GameObject(void * pArg)
 
 void CGoblin::Free()
 {
+	Safe_Release(m_pColliderCom_Push);
 	Safe_Release(m_pColliderCom_Attack);
 	Safe_Release(m_pColliderCom_Hurt);
 

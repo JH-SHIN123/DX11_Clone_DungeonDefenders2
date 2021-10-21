@@ -449,7 +449,7 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 	}
 
 	// ´ÙÀ½²¨ °Ë»öÇÏ¼À
-	if (0.5f >= fCellDis && 8 > m_iMoveCount + 1)
+	if (3.f >= fCellDis && 8 > m_iMoveCount + 1)
 	{
 		++m_iMoveCount;
 		return EMonsterAI::Idle;

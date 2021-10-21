@@ -10,7 +10,6 @@ BEGIN(Client)
 
 typedef struct tagPointSpread2_Desc
 {
-	EInstanceValue InstanceValue = EInstanceValue::Point_100_10;
 	POINT_SPREAD_DESC Point_Desc;
 	_float2 vSize = { 1.f,1.f };
 	_bool IsTime = false;;

@@ -75,7 +75,7 @@ _int CPlayer::Tick(_float TimeDelta)
 	Key_Check(TimeDelta);
 
 	m_pColliderCom_Hit->Update_Collider(m_pMovementCom->Get_WorldMatrix());
-
+	m_pColliderCom_Push->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 	m_pWeapon->Tick(TimeDelta);
 
 	Tower_Pick();
@@ -175,6 +175,7 @@ HRESULT CPlayer::Render()
 
 #ifdef _DEBUG
 	m_pColliderCom_Hit->Render_Collider();
+	m_pColliderCom_Push->Render_Collider();
 	//m_pNaviCom->Render_Navigation();
 #endif
 
@@ -714,8 +715,10 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 	ZeroMemory(&ColliderDesc, sizeof(ColliderDesc));
 
 	ColliderDesc.vScale = XMFLOAT3(3.f, 3.f, 3.f);
-
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pColliderCom_Hit, &ColliderDesc);
+
+	ColliderDesc.vScale = XMFLOAT3(2.f, 2.f, 2.f);
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Push"), (CComponent**)&m_pColliderCom_Push, &ColliderDesc);
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_MeshLevel_1_Navi"), TEXT("Com_Navi"), (CComponent**)&m_pNaviCom);
 
@@ -1236,6 +1239,7 @@ void CPlayer::Free()
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pMovementCom);
 	Safe_Release(m_pColliderCom_Hit);
+	Safe_Release(m_pColliderCom_Push);
 	Safe_Release(m_pNaviCom);
 
 	Safe_Release(m_pBlockadeTower);

@@ -47,6 +47,7 @@
 #include "ManaToken.h"
 #include "Point_Spread.h"
 #include "Point_Spread2.h"
+#include "Point_Spread3.h"
 
 USING(Engine)
 
@@ -197,6 +198,12 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Particle")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Particle.png")));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Explosion")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Explosion.png")));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Explosion_Smoke")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Explosion_Smoke/%d.png")));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Smoke")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Smoke/%d.png"), 2));
 #pragma endregion
 
 #pragma region GameObject
@@ -253,8 +260,9 @@ HRESULT CLoading::LoadingForStage()
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_MeshLevel_1_Navi"), CNavigation::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Level_1/", "Navi.fbx"));
 
-	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Spread"), CPoint_Spread::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Spread"),  CPoint_Spread::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Spread2"), CPoint_Spread2::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Spread3"), CPoint_Spread3::Create(m_pDevice, m_pDevice_Context));
 
 #pragma endregion
 
@@ -338,15 +346,16 @@ HRESULT CLoading::LoadingForStage()
 #pragma endregion
 	CEffectDesc_Manager::GetInstance()->Resize_Contanier((_uint)EInstanceValue::End_Value);
 
-	CEffectDesc_Manager::GetInstance()->Set_PointSpread(200, 5);
+	//CEffectDesc_Manager::GetInstance()->Set_PointSpread(200, 5);
+	CEffectDesc_Manager::GetInstance()->Set_Instance(EInstanceValue::Point_200_5, 200, 5);
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_200_5")
 		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "DefaultTechnique", 200))))
 		return E_FAIL;
 
+	CEffectDesc_Manager::GetInstance()->Set_Instance(EInstanceValue::Point_100_10, 100, 10);
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_100_10")
 		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "DefaultTechnique", 100))))
 		return E_FAIL;
-	CEffectDesc_Manager::GetInstance()->Set_Instance(EInstanceValue::Point_100_10, 100, 10);
 
 
 	if (hr != S_OK)

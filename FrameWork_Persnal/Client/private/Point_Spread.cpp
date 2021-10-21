@@ -142,8 +142,9 @@ HRESULT CPoint_Spread::Ready_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, m_PointDesc.szTextrueName, TEXT("Com_Texture"), (CComponent**)&m_pTexturesCom);
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, m_PointDesc.szPointInstance_PrototypeName, TEXT("Com_Buffer"), (CComponent**)&m_pBufferInstanceCom);
 
-	m_iInstance_StartIndex = CEffectDesc_Manager::GetInstance()->Get_PointSpread_StartIndex();
-	m_iNumInstance = CEffectDesc_Manager::GetInstance()->Get_PointSpread_DrawCount();
+	m_iInstance_StartIndex = CEffectDesc_Manager::GetInstance()->Get_Instance_StartIndex(m_PointDesc.InstanceValue);
+	m_iNumInstance = CEffectDesc_Manager::GetInstance()->Get_Instance_DrawCount(m_PointDesc.InstanceValue);
+
 
 	if (hr != S_OK)
 		MSG_BOX("CPoint_Spread::Ready_Component Failed");

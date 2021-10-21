@@ -149,9 +149,9 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 	}
 
 	_matrix Matrix = m_pMovementCom->Get_WorldMatrix();
+	m_pColliderCom_Push->Update_Collider(Matrix);
 	(Matrix.r[3]).m128_f32[1] += 2.f;
 	m_pColliderCom_Hurt->Update_Collider(Matrix);
-
 	m_pStatusCom->Tick(TimeDelta);
 
 	__super::Tick(TimeDelta);
@@ -230,6 +230,7 @@ HRESULT CBoss_Djinn::Render()
 	m_pColliderCom_Attack->Render_Collider();
 	m_pColliderCom_Hurt->Render_Collider();
 	m_pColliderCom_LeftHand->Render_Collider();
+	m_pColliderCom_Push->Render_Collider();
 #endif // _DEBUG
 
 
@@ -343,6 +344,11 @@ HRESULT CBoss_Djinn::Ready_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data);
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack_LeftHand"), (CComponent**)&m_pColliderCom_LeftHand, &Data);
+
+	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
+	Data.vScale = { 5.f, 5.f, 5.f };
+	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Push"), (CComponent**)&m_pColliderCom_Push, &Data);
+
 
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_Boss_Djinn_Sepcualr"), TEXT("¹»¹ÙÂ¥»þ"), (CComponent**)&m_pTextureCom_Specular);
@@ -918,6 +924,7 @@ CGameObject * CBoss_Djinn::Clone_GameObject(void * pArg)
 
 void CBoss_Djinn::Free()
 {
+	Safe_Release(m_pColliderCom_Push);
 	Safe_Release(m_pColliderCom_Hurt);
 	Safe_Release(m_pColliderCom_Attack);
 	Safe_Release(m_pTextureCom_Specular);

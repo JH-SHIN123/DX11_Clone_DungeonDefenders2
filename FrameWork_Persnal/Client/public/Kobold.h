@@ -62,6 +62,7 @@ private:
 	_bool	m_IsFuseOn = false;
 
 private:
+	CCollider*				m_pColiiderCom_Push = nullptr;
 	CCollider*				m_pColliderCom_Attack = nullptr;
 	CCollider*				m_pColliderCom_Hurt = nullptr;
 	_bool					m_IsHurt = false;
