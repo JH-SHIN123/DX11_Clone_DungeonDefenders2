@@ -31,7 +31,10 @@ HRESULT CDefenceTower::NativeConstruct(void * pArg)
 _int CDefenceTower::Tick(_float TimeDelta)
 {
 	if (0 >= m_pStatusCom->Get_Hp())
+	{
+		Create_Dead_Effect();
 		return OBJECT_DEAD;
+	}
 
 
 	m_pHpBar->Tick(TimeDelta);
@@ -249,20 +252,36 @@ void CDefenceTower::Get_TowerDesc(TOWER_DESC * pOutTowerDesc)
 
 void CDefenceTower::Create_Dead_Effect()
 {
-	POINT_SPREAD_DESC_3 Point3_Desc;
-	Point3_Desc.IsTime = true;
-	Point3_Desc.vSize = { 2.f,2.f };
-	Point3_Desc.Point_Desc.fLifeTime = 2.f;
-	Point3_Desc.Point_Desc.iShaderPass = 3;
-	Point3_Desc.Point_Desc.InstanceValue = EInstanceValue::Point_200_5;
-	XMStoreFloat4(&Point3_Desc.Point_Desc.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
-	lstrcpy(Point3_Desc.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_200_5");
-	lstrcpy(Point3_Desc.Point_Desc.szTextrueName, L"Component_Texture_Explosion");
+	POINT_SPREAD_DESC_2 Data;
+	Data.IsTime = true;
+	Data.vSize = { 2.f,2.f };
+	Data.Point_Desc.fLifeTime = 2.f;
+	Data.Point_Desc.iShaderPass = 0;
+	Data.Point_Desc.InstanceValue = EInstanceValue::Point_100_10;
+	XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, XMVectorSet(15.f, 5.f, 0.f, 1.f));
+	lstrcpy(Data.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_100_10");
+	lstrcpy(Data.Point_Desc.szTextrueName, L"Component_Texture_Explosion_Smoke");
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
 
-	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread3", (_uint)ELevel::Stage1, L"Layer_Effect", &Point3_Desc);
+	Data.IsTime = true;
+	Data.vSize = { 2.f,2.f };
+	Data.Point_Desc.fLifeTime = 2.f;
+	Data.Point_Desc.iShaderPass = 1;
+	Data.Point_Desc.InstanceValue = EInstanceValue::Point_100_10;
+	XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, XMVectorSet(15.f, 5.f, 0.f, 1.f));
+	lstrcpy(Data.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_100_10");
+	lstrcpy(Data.Point_Desc.szTextrueName, L"Component_Texture_Explosion");
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
 
-
-
+	Data.IsTime = true;
+	Data.vSize = { 2.f,2.f };
+	Data.Point_Desc.fLifeTime = 2.f;
+	Data.Point_Desc.iShaderPass = 0;
+	Data.Point_Desc.InstanceValue = EInstanceValue::Point_100_10;
+	XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, XMVectorSet(15.f, 5.f, 0.f, 1.f));
+	lstrcpy(Data.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_100_10");
+	lstrcpy(Data.Point_Desc.szTextrueName, L"Component_Texture_Smoke");
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
 
 }
 

@@ -109,10 +109,18 @@ void CHpMp::HpMp_Check(_float TimeDelta)
 	vMaskPos = XMVectorSetY(vMaskPos, (fRealMp));
 	m_pMovementCom_MP_Mask->Set_State(EState::Position, vMaskPos);
 
-
-	char szHp[MAX_PATH] = "";
-	sprintf(szHp, "%d", pStatus->Get_Hp());
-	m_pHpFont->Set_Number(szHp);
+	if (0 < pStatus->Get_Hp())
+	{
+		char szHp[MAX_PATH] = "";
+		sprintf(szHp, "%d", pStatus->Get_Hp());
+		m_pHpFont->Set_Number(szHp);
+	}
+	else
+	{
+		char szHp[MAX_PATH] = "";
+		sprintf(szHp, "%d", 0);
+		m_pHpFont->Set_Number(szHp);
+	}
 
 	char szHpMax[MAX_PATH] = "";
 	sprintf(szHpMax, "%d", pStatus->Get_HpMax());
