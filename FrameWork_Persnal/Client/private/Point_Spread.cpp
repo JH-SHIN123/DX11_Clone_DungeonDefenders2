@@ -82,6 +82,10 @@ HRESULT CPoint_Spread::Render()
 	if (nullptr == m_pBufferInstanceCom)
 		return S_OK;
 
+	if (true == m_IsColor)
+		m_pBufferInstanceCom->Set_Variable("g_vColor", &m_vColor, sizeof(_float4));
+
+
 	m_pBufferInstanceCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTexturesCom->Get_ShaderResourceView(0));
 
 	_vector vCamPosition = GET_CAMERA_POSITION;
@@ -90,7 +94,7 @@ HRESULT CPoint_Spread::Render()
 	m_pBufferInstanceCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
 	m_pBufferInstanceCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
 
-	m_pBufferInstanceCom->Render(0, m_iNumInstance, m_iInstance_StartIndex);
+	m_pBufferInstanceCom->Render(m_PointDesc.iShaderPass, m_iNumInstance, m_iInstance_StartIndex);
 
 	return S_OK;
 }

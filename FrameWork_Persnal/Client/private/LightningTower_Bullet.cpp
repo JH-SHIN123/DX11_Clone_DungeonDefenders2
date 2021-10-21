@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "LightningTower_Bullet.h"
 #include "LightningTower_Bullet_Effect.h"
+#include "Point_Spread.h"
 
 CLightningTower_Bullet::CLightningTower_Bullet(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CBullet(pDevice, pDevice_Context)
@@ -59,9 +60,11 @@ _int CLightningTower_Bullet::Tick(_float TimeDelta)
 	//		iter->Tick(TimeDelta);
 	//	}
 	//}
-
-
 	Move_Check(TimeDelta);
+
+
+	m_pPointSpread->Set_Pos(m_pMovementCom->Get_State(EState::Position));
+	m_pPointSpread->Tick(TimeDelta);
 	m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 
 	return _int();
@@ -69,7 +72,7 @@ _int CLightningTower_Bullet::Tick(_float TimeDelta)
 
 _int CLightningTower_Bullet::Late_Tick(_float TimeDelta)
 {
-
+	m_pPointSpread->Late_Tick(TimeDelta);
 
 	return __super::Late_Tick(TimeDelta);
 }
@@ -78,11 +81,8 @@ HRESULT CLightningTower_Bullet::Render()
 {
 	//__super::Render();
 
-#ifdef _DEBUG
-	if (nullptr != m_pColliderCom_Attack)
-		m_pColliderCom_Attack->Render_Collider();
-#endif // _DEBUG
 
+	return S_OK;
 
 	if (nullptr == m_pModelCom)
 		return S_OK;
@@ -128,6 +128,36 @@ HRESULT CLightningTower_Bullet::Render()
 HRESULT CLightningTower_Bullet::Ready_Component(void * pArg)
 {
 	HRESULT hr = S_OK;
+
+	POINT_SPREAD_DESC Point_Desc;
+	lstrcpy(Point_Desc.szTextrueName, L"Component_Texture_Flare");
+	lstrcpy(Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_200_5");
+	XMStoreFloat4(&Point_Desc.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	Point_Desc.MoveDesc.vScale = { 1.f,1.f,0.f,0.f };
+
+	m_pPointSpread = CPoint_Spread::Create(m_pDevice, m_pDevice_Context);
+	m_pPointSpread->NativeConstruct(&Point_Desc);
+
+	VTXMATRIX* pInstance = m_pPointSpread->Get_InstanceBuffer();
+	_int iInstance_StartIndex = m_pPointSpread->Get_Instance_StartIndex();
+	_int iNumInstance = m_pPointSpread->Get_Instance_Num();
+	_float fSize = 8.f;
+
+	for (_int i = iInstance_StartIndex; i < iNumInstance + iInstance_StartIndex; ++i)
+	{
+		pInstance[i].vSize.x = fSize;
+		pInstance[i].vSize.y = fSize;
+
+		fSize -= 0.5f;
+	}
+
+	m_pPointSpread->Set_InstanceBuffer(pInstance);
+	m_pPointSpread->SetUp_IndexDir(1);
+
+	m_pPointSpread->Set_ShaderPass(2);
+	m_pPointSpread->SetUp_Color({ 0.8f, 2.f, 3.2f, 1.f });
+
+
 
 	if (S_OK != hr)
 		MSG_BOX("CLightningTower_Bullet::Ready_Component Filed!");
@@ -237,22 +267,12 @@ void CLightningTower_Bullet::Target_Check(_float TimeDelta)
 
 void CLightningTower_Bullet::Move_Check(_float TimeDelta)
 {
-	_vector vTargetPos = XMVectorZero();
+	_float fDis = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vGoDir) - m_pMovementCom->Get_State(EState::Position))) * 0.25f;
+	_vector vDir = XMVector3Normalize(XMLoadFloat3(&m_vGoDir) - m_pMovementCom->Get_State(EState::Position));
+	vDir = XMVectorSetW(vDir, 0.f);
+	vDir *= fDis;
 
-	if (false == m_IsCopyMonster)
-		vTargetPos = m_pMovementCom->Get_State(EState::Position);
-
-	else
-	{
-		vTargetPos = XMLoadFloat3(&m_vTargetPos[m_iBoundCount]);
-		vTargetPos - m_pMovementCom->Get_State(EState::Position);
-		XMStoreFloat3(&m_vGoDir, vTargetPos - m_pMovementCom->Get_State(EState::Position));
-	}
-
-	_float fDis = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vGoDir)));
-
-
-	m_pMovementCom->Go_Dir_Vector(TimeDelta, XMLoadFloat3(&m_vGoDir));
+	m_pMovementCom->Go_Dir_Vector(TimeDelta, vDir);
 }
 
 CLightningTower_Bullet * CLightningTower_Bullet::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -286,6 +306,7 @@ void CLightningTower_Bullet::Free()
 	//	for (_int i = 0; i < 3; ++i)
 	//		Safe_Release(m_pMonsterList[i]);
 	//}
+	Safe_Release(m_pPointSpread);
 
 	__super::Free();
 }

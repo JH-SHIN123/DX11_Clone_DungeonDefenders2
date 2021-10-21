@@ -64,6 +64,9 @@ private:
 	_bool				m_IsCopyMonster = false;
 	_float				m_fMoveTime = 2.f;
 
+private:
+	class CPoint_Spread* m_pPointSpread = nullptr;
+
 
 private:
 	//vector<class CLightningTower_Bullet_Effect*>	m_vecEffectMesh = { nullptr };

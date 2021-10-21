@@ -134,7 +134,7 @@ CGameObject * CStrikerTower_Bullet::Clone_GameObject(void * pArg)
 
 void CStrikerTower_Bullet::Free()
 {
-	__super::Free();
-
 	Safe_Release(m_pPointSpread);
+
+	__super::Free();
 }
