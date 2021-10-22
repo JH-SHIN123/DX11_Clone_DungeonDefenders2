@@ -59,6 +59,15 @@ _int CPoint_Ex_Trail::Tick(_float TimeDelta)
 			vPos = XMLoadFloat4(&pInstance[i].vPosition);//
 			pInstance[i].fTime -= TimeDelta * m_PointDesc.fAlphaTimePower;
 
+			pInstance[i].vSize.x -= TimeDelta;
+			pInstance[i].vSize.y -= TimeDelta;
+
+			if (0 >= pInstance[i].vSize.x)
+			{
+				pInstance[i].vSize.x = 0.f;
+				pInstance[i].vSize.y = 0.f;
+			}
+
 			if (0.f >= pInstance[i].fTime)
 				pInstance[i].fTime = 0.f;
 		}
@@ -93,6 +102,10 @@ HRESULT CPoint_Ex_Trail::Render()
 
 	if (true == m_IsColor)
 		m_pBufferInstanceCom->Set_Variable("g_vColor", &m_vColor, sizeof(_float4));
+
+	//m_PointDesc.fLifeTime
+	_float fTime = 1.f;
+	m_pBufferInstanceCom->Set_Variable("g_vTime", &fTime, sizeof(_float));
 
 
 	m_pBufferInstanceCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTexturesCom->Get_ShaderResourceView(0));

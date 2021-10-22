@@ -132,6 +132,15 @@ DestBlend = INV_SRC_ALPHA;
 BlendOp = Add;
 };
 
+BlendState BlendState_Test
+{
+	BlendEnable[0] = true;
+	BlendEnable[1] = true;
+	SrcBlend = SRC_ALPHA;
+	DestBlend = ONE;
+	BlendOp = Add;
+};
+
 BlendState BlendState_None
 {
 	BlendEnable[0] = false;

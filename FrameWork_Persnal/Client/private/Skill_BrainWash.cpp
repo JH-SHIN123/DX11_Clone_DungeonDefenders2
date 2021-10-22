@@ -76,10 +76,10 @@ HRESULT CSkill_BrainWash::Ready_Component(void * pArg)
 	Data.fAlphaTimePower = 1.f;
 	Data.fSpreadDis = 1.f;
 	Data.fSize = 1.5f;
-	Data.fTimeTerm = 0.01f;
+	Data.fTimeTerm = 0.025f;
 	Data.fLifeTime = 10.f;
 	Data.InstanceValue = EInstanceValue::Point_Ex_200_50;
-	Data.iShaderPass = 0;
+	Data.iShaderPass = 1;
 	XMStoreFloat4(&Data.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
 	Data.vColor = { 1.f,1.f,1.f };
 	lstrcpy(Data.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_50");

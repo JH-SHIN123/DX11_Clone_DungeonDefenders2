@@ -458,7 +458,7 @@ void CPlayer::Key_Check(_float TimeDelta)
 		CPlayerSkill* pSkill = static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"));
 		if (true == pSkill->Get_IsCoolDown(3))
 		{
-			pSkill->Set_Skill_CoolDown(3, 15.f);
+			pSkill->Set_Skill_CoolDown(3, 1.f);
 			m_eAnimationState_Next = EPlayerAnimation::ChargeMax;
 			m_fChargeSkill = 2.f;
 			m_IsCharging = true;
