@@ -31,6 +31,7 @@ private:
 
 private:
 	CNavigation* m_pNaviCom = nullptr;
+	class CPoint_Ex_Trail* m_pPoint_Trail = nullptr;
 
 public:
 	static CSkill_Meteor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

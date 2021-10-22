@@ -27,6 +27,7 @@ private: // 불기둥 뽱뽱
 
 private: // 만들어지고 바로 사라져라
 	_float m_fAttTime = 0.f;
+	_float m_fAlphaTime = 2.f;
 
 public:
 	static CMeteor_Explosion_Effect_2* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

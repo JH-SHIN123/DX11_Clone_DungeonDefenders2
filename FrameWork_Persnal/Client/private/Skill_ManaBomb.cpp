@@ -87,7 +87,6 @@ HRESULT CSkill_ManaBomb::Ready_Component(void * pArg)
 {
 	HRESULT hr = S_OK;
 
-
 	POINT_TRAIL_EX_DESC Effect_Data;
 	Effect_Data.iRandDir = 5;
 	Effect_Data.fAlphaTime = 1.f;
@@ -103,9 +102,9 @@ HRESULT CSkill_ManaBomb::Ready_Component(void * pArg)
 	lstrcpy(Effect_Data.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_10");
 	lstrcpy(Effect_Data.szTextrueName, L"Component_Texture_BlueGiant");
 
-
 	m_pPoint_Trail = CPoint_Ex_Trail::Create(m_pDevice, m_pDevice_Context);
 	m_pPoint_Trail->NativeConstruct(&Effect_Data);
+
 	if (S_OK != hr)
 		MSG_BOX("CSkill_ManaBomb::Ready_Component");
 

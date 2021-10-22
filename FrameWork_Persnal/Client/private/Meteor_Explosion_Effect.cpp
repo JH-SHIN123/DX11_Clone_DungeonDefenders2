@@ -63,7 +63,43 @@ _int CMeteor_Explosion_Effect::Late_Tick(_float TimeDelta)
 
 HRESULT CMeteor_Explosion_Effect::Render()
 {
-	__super::Render();
+	if (nullptr == m_pModelCom)
+		return S_OK;
+
+	m_pModelCom->Bind_VIBuffer();
+	//g_vColor
+
+
+	m_pModelCom->Set_Variable("g_PivotMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_PivotMatrix)), sizeof(_matrix));
+	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
+	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
+	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
+
+	LIGHT_DESC*		LightDesc = GET_GAMEINSTANCE->Get_LightDesc(0);
+
+	m_pModelCom->Set_Variable("vLightPosition", &LightDesc->vPosition, sizeof(_float3));
+	m_pModelCom->Set_Variable("fRange", &LightDesc->fRadius, sizeof(_float));
+
+	m_pModelCom->Set_Variable("vLightDiffuse", &LightDesc->vDiffuse, sizeof(_float4));
+	m_pModelCom->Set_Variable("vLightAmbient", &LightDesc->vAmbient, sizeof(_float4));
+	m_pModelCom->Set_Variable("vLightSpecular", &LightDesc->vSpecular, sizeof(_float4));
+
+	m_pModelCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
+
+	_uint iNumMaterials = m_pModelCom->Get_NumMaterials();
+
+	for (_uint i = 0; i < iNumMaterials; ++i)
+	{
+		if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_NORMALS)))
+		//	return E_FAIL;
+		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_SPECULAR)))
+		//	return E_FAIL;
+
+		m_pModelCom->Render_Model(i, 9);
+	}
+
 
 #ifdef _DEBUG
 	m_pColliderCom_Attack->Render_Collider();

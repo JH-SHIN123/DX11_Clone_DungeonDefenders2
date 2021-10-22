@@ -252,13 +252,15 @@ void CDefenceTower::Get_TowerDesc(TOWER_DESC * pOutTowerDesc)
 
 void CDefenceTower::Create_Dead_Effect()
 {
+	_vector vPos = m_pMovementCom->Get_State(EState::Position);
+
 	POINT_SPREAD_DESC_2 Data;
 	Data.IsTime = true;
 	Data.vSize = { 2.f,2.f };
 	Data.Point_Desc.fLifeTime = 2.f;
 	Data.Point_Desc.iShaderPass = 0;
 	Data.Point_Desc.InstanceValue = EInstanceValue::Point_100_10;
-	XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, XMVectorSet(15.f, 5.f, 0.f, 1.f));
+	XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, vPos);
 	lstrcpy(Data.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_100_10");
 	lstrcpy(Data.Point_Desc.szTextrueName, L"Component_Texture_Explosion_Smoke");
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
@@ -268,7 +270,7 @@ void CDefenceTower::Create_Dead_Effect()
 	Data.Point_Desc.fLifeTime = 2.f;
 	Data.Point_Desc.iShaderPass = 1;
 	Data.Point_Desc.InstanceValue = EInstanceValue::Point_100_10;
-	XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, XMVectorSet(15.f, 5.f, 0.f, 1.f));
+	XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, vPos);
 	lstrcpy(Data.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_100_10");
 	lstrcpy(Data.Point_Desc.szTextrueName, L"Component_Texture_Explosion");
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
@@ -278,7 +280,7 @@ void CDefenceTower::Create_Dead_Effect()
 	Data.Point_Desc.fLifeTime = 2.f;
 	Data.Point_Desc.iShaderPass = 0;
 	Data.Point_Desc.InstanceValue = EInstanceValue::Point_100_10;
-	XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, XMVectorSet(15.f, 5.f, 0.f, 1.f));
+	XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, vPos);
 	lstrcpy(Data.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_100_10");
 	lstrcpy(Data.Point_Desc.szTextrueName, L"Component_Texture_Smoke");
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);

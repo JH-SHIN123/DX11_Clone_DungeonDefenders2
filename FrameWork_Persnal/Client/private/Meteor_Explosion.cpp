@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Meteor_Explosion.h"
+#include "EffectDesc_Manager.h"
+#include "Point_Ex_Trail.h"
 
 CMeteor_Explosion::CMeteor_Explosion(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CBullet(pDevice, pDevice_Context)
@@ -135,6 +137,26 @@ void CMeteor_Explosion::Create_FirePillar()
 	Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 	Data.MoveState_Desc.vRotateLook = { 0.f, 0.f, 1.f, 0.f };
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Skill_Meteor_Explosion_Effect"), (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
+
+
+	POINT_TRAIL_EX_DESC Effect_Data;
+	Effect_Data.iRandDir = 5;
+	Effect_Data.fAlphaTime = 1.f;
+	Effect_Data.fAlphaTimePower = 1.5f;
+	Effect_Data.fSpreadDis = 20.f;
+	Effect_Data.fSize = 5.f;
+	Effect_Data.fTimeTerm = 0.f;
+	Effect_Data.fLifeTime = 1.f;
+	Effect_Data.InstanceValue = EInstanceValue::Point_Ex_200_10;
+	Effect_Data.iShaderPass = 1;
+	XMStoreFloat4(&Effect_Data.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	Effect_Data.vColor = { 1.f,1.f,1.f };
+	lstrcpy(Effect_Data.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_10");
+	lstrcpy(Effect_Data.szTextrueName, L"Component_Texture_Red_Dark");
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Trail", (_uint)ELevel::Stage1, L"Layer_Effect", &Effect_Data);
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Trail", (_uint)ELevel::Stage1, L"Layer_Effect", &Effect_Data);
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Trail", (_uint)ELevel::Stage1, L"Layer_Effect", &Effect_Data);
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Trail", (_uint)ELevel::Stage1, L"Layer_Effect", &Effect_Data);
 
 }
 

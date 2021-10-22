@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Skill_Meteor.h"
+#include "Point_Ex_Trail.h"
+#include "Point_Spread2.h"
 
 CSkill_Meteor::CSkill_Meteor(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CBullet(pDevice, pDevice_Context)
@@ -62,6 +64,9 @@ _int CSkill_Meteor::Tick(_float TimeDelta)
 		return OBJECT_DEAD;
 	}
 
+	m_pPoint_Trail->Set_Pos(vPos);
+	m_pPoint_Trail->Tick(TimeDelta);
+
 	return 0;
 }
 
@@ -75,6 +80,7 @@ _int CSkill_Meteor::Late_Tick(_float TimeDelta)
 
 		return iReturn;
 	}
+	m_pPoint_Trail->Late_Tick(TimeDelta);
 
 	return iReturn;
 }
@@ -91,6 +97,24 @@ HRESULT CSkill_Meteor::Ready_Component(void * pArg)
 	HRESULT hr = S_OK;
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_MeshLevel_1_Navi"), TEXT("Com_Navi"), (CComponent**)&m_pNaviCom);
+
+	POINT_TRAIL_EX_DESC Effect_Data;
+	Effect_Data.iRandDir = 5;
+	Effect_Data.fAlphaTime = 1.f;
+	Effect_Data.fAlphaTimePower = 1.5f;
+	Effect_Data.fSpreadDis = 2.f;
+	Effect_Data.fSize = 7.f;
+	Effect_Data.fTimeTerm = 0.05f;
+	Effect_Data.fLifeTime = 10.f;
+	Effect_Data.InstanceValue = EInstanceValue::Point_Ex_200_50;
+	Effect_Data.iShaderPass = 1;
+	XMStoreFloat4(&Effect_Data.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	Effect_Data.vColor = { 1.f,1.f,1.f };
+	lstrcpy(Effect_Data.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_50");
+	lstrcpy(Effect_Data.szTextrueName, L"Component_Texture_Red_Dark");
+
+	m_pPoint_Trail = CPoint_Ex_Trail::Create(m_pDevice, m_pDevice_Context);
+	m_pPoint_Trail->NativeConstruct(&Effect_Data);
 
 	if (S_OK != hr)
 		MSG_BOX("CSkill_Meteor::Ready_Component");
@@ -109,6 +133,20 @@ void CSkill_Meteor::Create_Explosion()
 	Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Skill_Meteor_Explosion"), (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
+
+	POINT_SPREAD_DESC_2 Effect_Data;
+	Effect_Data.IsTime = true;
+	Effect_Data.vSize = { 4.f, 4.f };
+	Effect_Data.Point_Desc.fLifeTime = 1.5f;
+	Effect_Data.Point_Desc.iShaderPass = 0;
+	Effect_Data.Point_Desc.fSpreadDis = 10.f;
+	Effect_Data.Point_Desc.InstanceValue = EInstanceValue::Point_100_10;
+	XMStoreFloat4(&Effect_Data.Point_Desc.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	lstrcpy(Effect_Data.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_100_10");
+	lstrcpy(Effect_Data.Point_Desc.szTextrueName, L"Component_Texture_Smoke");
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Effect_Data);
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Effect_Data);
+
 }
 
 CSkill_Meteor * CSkill_Meteor::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -135,5 +173,7 @@ CGameObject * CSkill_Meteor::Clone_GameObject(void * pArg)
 
 void CSkill_Meteor::Free()
 {
+	Safe_Release(m_pPoint_Trail);
+	Safe_Release(m_pNaviCom);
 	__super::Free();
 }

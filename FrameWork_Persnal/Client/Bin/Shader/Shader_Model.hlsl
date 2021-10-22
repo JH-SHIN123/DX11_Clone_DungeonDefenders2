@@ -281,6 +281,53 @@ PS_OUT PS_ALPHA_COLOR(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_ALPHA_BLUE(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+
+	if (0.05f >= Out.vColor.b)
+	{
+		Out.vColor.a = 0.f;
+		return Out;
+	}
+
+	Out.vColor.a = g_vColor.a;
+
+	Out.vColor.r *= g_vColor.r;
+	Out.vColor.g *= g_vColor.g;
+	Out.vColor.b *= g_vColor.b;
+
+
+	return Out;
+}
+
+PS_OUT PS_ALPHA_RED(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	if (0.01f >= Out.vColor.r)
+		Out.vColor.a = 0.f;
+
+	return Out;
+}
+
+PS_OUT PS_ALPHA_GREEN(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	if (0.05f >= Out.vColor.g)
+		Out.vColor.a = 0.f;
+
+	return Out;
+}
+
 technique11		DefaultTechnique
 {
 	pass BoneLight__Directional // 0
@@ -361,5 +408,35 @@ technique11		DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ALPHA_COLOR();
+	}
+
+	pass Light_Directional__AlphaBlue // 8
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL_TERRAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_ALPHA_BLUE();
+	}
+
+	pass Light_Directional__AlphaRed // 9
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL_TERRAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_ALPHA_RED();
+	}
+
+	pass Light_Directional__AlphaGreen // 10
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL_TERRAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_ALPHA_GREEN();
 	}
 };
