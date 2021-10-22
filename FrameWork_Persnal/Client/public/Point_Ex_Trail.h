@@ -10,6 +10,8 @@ BEGIN(Client)
 
 typedef struct tagPointTrail_Ex_Desc_
 {
+	_float fAnyTime = 0.f;
+	_float fScalePower = 2.f;
 	_int iRandDir = 5;
 	_float fAlphaTime = 1.5f;
 	_float fAlphaTimePower = 1.f;
@@ -28,7 +30,7 @@ typedef struct tagPointTrail_Ex_Desc_
 
 }POINT_TRAIL_EX_DESC;
 
-class CPoint_Ex_Trail final : public CGameObject
+class CPoint_Ex_Trail : public CGameObject
 {
 protected:
 	explicit CPoint_Ex_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

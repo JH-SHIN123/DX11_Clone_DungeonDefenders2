@@ -3,6 +3,7 @@
 #include "Masking_MeterBar_3D.h"
 #include "Point_Spread2.h"
 #include "Point_Spread3.h"
+#include "Ring_Explosion.h"
 
 CDefenceTower::CDefenceTower(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -186,6 +187,8 @@ _bool CDefenceTower::Enemy_Check(_float TimeDelta, _vector* vTargetPos)
 		return false;
 
 	list<CGameObject*> listObject = pLayer->Get_GameObject_List();
+	if (true == listObject.empty())
+		return false;
 
 	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
 	_float	fTargetDis = -1.f;
@@ -253,10 +256,11 @@ void CDefenceTower::Get_TowerDesc(TOWER_DESC * pOutTowerDesc)
 void CDefenceTower::Create_Dead_Effect()
 {
 	_vector vPos = m_pMovementCom->Get_State(EState::Position);
+	vPos.m128_f32[1] += 3.f;
 
 	POINT_SPREAD_DESC_2 Data;
 	Data.IsTime = true;
-	Data.vSize = { 2.f,2.f };
+	Data.vSize = { 5.f,5.f };
 	Data.Point_Desc.fLifeTime = 2.f;
 	Data.Point_Desc.iShaderPass = 0;
 	Data.Point_Desc.InstanceValue = EInstanceValue::Point_100_10;
@@ -266,7 +270,7 @@ void CDefenceTower::Create_Dead_Effect()
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
 
 	Data.IsTime = true;
-	Data.vSize = { 2.f,2.f };
+	Data.vSize = { 5.f,5.f };
 	Data.Point_Desc.fLifeTime = 2.f;
 	Data.Point_Desc.iShaderPass = 1;
 	Data.Point_Desc.InstanceValue = EInstanceValue::Point_100_10;
@@ -276,7 +280,7 @@ void CDefenceTower::Create_Dead_Effect()
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
 
 	Data.IsTime = true;
-	Data.vSize = { 2.f,2.f };
+	Data.vSize = { 4.f,4.f };
 	Data.Point_Desc.fLifeTime = 2.f;
 	Data.Point_Desc.iShaderPass = 0;
 	Data.Point_Desc.InstanceValue = EInstanceValue::Point_100_10;
@@ -284,6 +288,18 @@ void CDefenceTower::Create_Dead_Effect()
 	lstrcpy(Data.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_100_10");
 	lstrcpy(Data.Point_Desc.szTextrueName, L"Component_Texture_Smoke");
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
+
+
+	// Prototype_Ring_Explosion
+
+	//RING_EXPLOSION_DESC Mesh_Desc;
+	//ZeroMemory(&Mesh_Desc, sizeof(RING_EXPLOSION_DESC));
+	//Mesh_Desc.fLifeTime = 3.f;
+	//XMStoreFloat4(&Mesh_Desc.Move_Desc.vPos, vPos);
+	//Mesh_Desc.vScale = { 3.f,3.f,3.f };
+	//lstrcpy(Mesh_Desc.szModelName, L"Component_Mesh_Ring_Explosion");
+	//
+	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ring_Explosion", (_uint)ELevel::Stage1, L"Layer_Effect_Mesh", &Mesh_Desc);
 
 }
 

@@ -189,6 +189,9 @@ private:
 	_bool m_IsPushing = false;
 
 private:
+	//class CPoint
+
+private:
 	HRESULT	Ready_Component(void* pArg);
 
 public:

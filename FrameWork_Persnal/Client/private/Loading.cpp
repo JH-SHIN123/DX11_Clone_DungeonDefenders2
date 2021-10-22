@@ -45,7 +45,7 @@
 #include "Kobold_Boom.h"
 #include "Player_Bullet.h"
 #include "ManaToken.h"
-
+#include "Ring_Explosion.h"
 
 #include "Point_Spread.h"
 #include "Point_Spread2.h"
@@ -287,6 +287,8 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Trail"), CPoint_Trail::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Ex_Trail"), CPoint_Ex_Trail::Create(m_pDevice, m_pDevice_Context));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Ring_Explosion"), CRing_Explosion::Create(m_pDevice, m_pDevice_Context));
+
 #pragma endregion
 
 #pragma region Model
@@ -366,7 +368,11 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_ManaToken_L"),
 		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/ManaToken/", "ManaToken_L.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Mesh_Ring_Explosion"),
+		CModel::Create(m_pDevice, m_pDevice_Context, "../Bin/Resources/Mesh/Explosion/", "Ring_Explosion.fbx", TEXT("../Bin/Shader/Shader_Model.hlsl"), "DefaultTechnique"));
+
 #pragma endregion
+
 	CEffectDesc_Manager::GetInstance()->Resize_Contanier((_uint)EInstanceValue::End_Value);
 
 	//CEffectDesc_Manager::GetInstance()->Set_PointSpread(200, 5);
@@ -400,6 +406,10 @@ HRESULT CLoading::LoadingForStage()
 		, CVIBuffer_PointInstance_Extend::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "ExtendTechnique", 200))))
 		return E_FAIL;
 
+	CEffectDesc_Manager::GetInstance()->Set_Instance(EInstanceValue::Point_Ex_200_100, 200, 100);
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_Ex_200_100")
+		, CVIBuffer_PointInstance_Extend::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "ExtendTechnique", 200))))
+		return E_FAIL;
 
 	if (hr != S_OK)
 		MSG_BOX("LoadingForStage Fail");

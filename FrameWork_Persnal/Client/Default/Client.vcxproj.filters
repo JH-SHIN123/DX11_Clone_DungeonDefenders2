@@ -229,21 +229,6 @@
     <Filter Include="03.UI, HUD\00.2D\08.Number_Font">
       <UniqueIdentifier>{e543d21b-28d3-4460-85ae-8f55af3ba355}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\08.Effect%28Old%29">
-      <UniqueIdentifier>{547f0240-c7f5-4a3d-8064-a5166b464693}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\08.Effect%28Old%29\Old">
-      <UniqueIdentifier>{82734aef-8550-43e3-83ea-2e0f00fda7e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\08.Effect%28Old%29\Old\00.StrikerTower_Effect">
-      <UniqueIdentifier>{7281c425-9464-460e-bb93-67e1bdf67015}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\08.Effect%28Old%29\Old\01.LightningTower_Effect">
-      <UniqueIdentifier>{1cb8b737-54dd-43b8-93f6-36422ab7f71d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\08.Effect%28Old%29\Old\01.LightningTower_Effect\00.LightningTower_Bullet_Effect">
-      <UniqueIdentifier>{f5b2c4fc-a332-4dad-9af9-8e27b720cdc1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96.Utility">
       <UniqueIdentifier>{5ae64ff8-9f27-4b0a-a3c4-3a4ba9d72bc5}</UniqueIdentifier>
     </Filter>
@@ -315,6 +300,27 @@
     </Filter>
     <Filter Include="05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\00.Point_Ex_Trail">
       <UniqueIdentifier>{c697216c-36c4-40ff-8290-0ffdabbb9ce0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect">
+      <UniqueIdentifier>{547f0240-c7f5-4a3d-8064-a5166b464693}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect\Old">
+      <UniqueIdentifier>{82734aef-8550-43e3-83ea-2e0f00fda7e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect\Old\00.StrikerTower_Effect">
+      <UniqueIdentifier>{7281c425-9464-460e-bb93-67e1bdf67015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect\Old\01.LightningTower_Effect">
+      <UniqueIdentifier>{1cb8b737-54dd-43b8-93f6-36422ab7f71d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect\Old\01.LightningTower_Effect\00.LightningTower_Bullet_Effect">
+      <UniqueIdentifier>{f5b2c4fc-a332-4dad-9af9-8e27b720cdc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\08.Effect\00.Ring_Explosion">
+      <UniqueIdentifier>{41155442-6118-4a27-b47c-16b1de76fdbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\01.Point_Ex_BuffAura">
+      <UniqueIdentifier>{7851d64c-3bc6-4c43-b3ab-b4ebb45e9ca6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -478,7 +484,7 @@
       <Filter>02.GameObject\07.Bullet\01.LightningTower_Bullet</Filter>
     </ClInclude>
     <ClInclude Include="..\public\LightningTower_Bullet_Effect.h">
-      <Filter>02.GameObject\08.Effect%28Old%29\Old\01.LightningTower_Effect\00.LightningTower_Bullet_Effect</Filter>
+      <Filter>02.GameObject\08.Effect\Old\01.LightningTower_Effect\00.LightningTower_Bullet_Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Goblin.h">
       <Filter>02.GameObject\05.Monster\00.Goblin</Filter>
@@ -565,7 +571,7 @@
       <Filter>02.GameObject\05.Monster\03.Kobold</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Effect.h">
-      <Filter>02.GameObject\08.Effect%28Old%29\Old</Filter>
+      <Filter>02.GameObject\08.Effect\Old</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Effect_Sprites.h">
       <Filter>05.Effect%28Instanced%29\00.Effect_Sprites</Filter>
@@ -599,6 +605,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Point_Ex_Trail.h">
       <Filter>05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\00.Point_Ex_Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Ring_Explosion.h">
+      <Filter>02.GameObject\08.Effect\00.Ring_Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Point_Ex_BuffAura.h">
+      <Filter>05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\01.Point_Ex_BuffAura</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -741,7 +753,7 @@
       <Filter>02.GameObject\07.Bullet\01.LightningTower_Bullet</Filter>
     </ClCompile>
     <ClCompile Include="..\private\LightningTower_Bullet_Effect.cpp">
-      <Filter>02.GameObject\08.Effect%28Old%29\Old\01.LightningTower_Effect\00.LightningTower_Bullet_Effect</Filter>
+      <Filter>02.GameObject\08.Effect\Old\01.LightningTower_Effect\00.LightningTower_Bullet_Effect</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Goblin.cpp">
       <Filter>02.GameObject\05.Monster\00.Goblin</Filter>
@@ -828,7 +840,7 @@
       <Filter>02.GameObject\05.Monster\03.Kobold</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Effect.cpp">
-      <Filter>02.GameObject\08.Effect%28Old%29\Old</Filter>
+      <Filter>02.GameObject\08.Effect\Old</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Effect_Sprites.cpp">
       <Filter>05.Effect%28Instanced%29\00.Effect_Sprites</Filter>
@@ -862,6 +874,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Point_Ex_Trail.cpp">
       <Filter>05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\00.Point_Ex_Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Ring_Explosion.cpp">
+      <Filter>02.GameObject\08.Effect\00.Ring_Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Point_Ex_BuffAura.cpp">
+      <Filter>05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\01.Point_Ex_BuffAura</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
