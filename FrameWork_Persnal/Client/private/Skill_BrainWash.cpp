@@ -72,6 +72,7 @@ HRESULT CSkill_BrainWash::Ready_Component(void * pArg)
 	HRESULT hr = S_OK;
 
 	POINT_TRAIL_EX_DESC Data;
+	Data.iRandDir = 5;
 	Data.fAlphaTime = 1.f;
 	Data.fAlphaTimePower = 1.f;
 	Data.fSpreadDis = 1.f;
@@ -87,7 +88,6 @@ HRESULT CSkill_BrainWash::Ready_Component(void * pArg)
 
 	m_pPointTrail = CPoint_Ex_Trail::Create(m_pDevice, m_pDevice_Context);
 	m_pPointTrail->NativeConstruct(&Data);
-	m_pPointTrail->SetUp_IndexDir(5);
 
 
 

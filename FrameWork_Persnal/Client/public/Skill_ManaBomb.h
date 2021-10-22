@@ -26,7 +26,7 @@ public:
 private:
 	_bool	m_IsFall = false;
 	_float	m_fCastTime = 0.5f;
-	//CCollider*	
+	class CPoint_Ex_Trail* m_pPoint_Trail = nullptr;
 
 
 public:

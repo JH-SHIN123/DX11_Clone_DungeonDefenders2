@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Skill_ManaBomb.h"
 #include "Point_Spread2.h"
+#include "Point_Ex_Trail.h"
 
 CSkill_ManaBomb::CSkill_ManaBomb(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CBullet(pDevice, pDevice_Context)
@@ -56,6 +57,9 @@ _int CSkill_ManaBomb::Tick(_float TimeDelta)
 		//Æã
 	}
 
+	_vector vPos = m_pMovementCom->Get_State(EState::Position);
+	m_pPoint_Trail->Set_Pos(vPos);
+	m_pPoint_Trail->Tick(TimeDelta);
 	return 0;
 }
 
@@ -67,6 +71,8 @@ _int CSkill_ManaBomb::Late_Tick(_float TimeDelta)
 		Create_Explosion();
 		return iReturn;
 	}
+
+	m_pPoint_Trail->Late_Tick(TimeDelta);
 	return iReturn;
 }
 
@@ -82,7 +88,24 @@ HRESULT CSkill_ManaBomb::Ready_Component(void * pArg)
 	HRESULT hr = S_OK;
 
 
+	POINT_TRAIL_EX_DESC Effect_Data;
+	Effect_Data.iRandDir = 5;
+	Effect_Data.fAlphaTime = 1.f;
+	Effect_Data.fAlphaTimePower = 1.5f;
+	Effect_Data.fSpreadDis = 1.f;
+	Effect_Data.fSize = 5.f;
+	Effect_Data.fTimeTerm = 0.2f;
+	Effect_Data.fLifeTime = 10.f;
+	Effect_Data.InstanceValue = EInstanceValue::Point_Ex_200_10;
+	Effect_Data.iShaderPass = 1;
+	XMStoreFloat4(&Effect_Data.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	Effect_Data.vColor = { 1.f,1.f,1.f };
+	lstrcpy(Effect_Data.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_10");
+	lstrcpy(Effect_Data.szTextrueName, L"Component_Texture_BlueGiant");
 
+
+	m_pPoint_Trail = CPoint_Ex_Trail::Create(m_pDevice, m_pDevice_Context);
+	m_pPoint_Trail->NativeConstruct(&Effect_Data);
 	if (S_OK != hr)
 		MSG_BOX("CSkill_ManaBomb::Ready_Component");
 
@@ -117,6 +140,45 @@ void CSkill_ManaBomb::Create_Explosion()
 
 		fAngle += 360.f / 10.f;
 	}
+
+	POINT_TRAIL_EX_DESC Effect_Data;
+	Effect_Data.iRandDir = 5;
+	Effect_Data.fAlphaTime = 1.f;
+	Effect_Data.fAlphaTimePower = 1.5f;
+	Effect_Data.fSpreadDis = 7.f;
+	Effect_Data.fSize = 2.f;
+	Effect_Data.fTimeTerm = 0.01f;
+	Effect_Data.fLifeTime = 10.f;
+	Effect_Data.InstanceValue = EInstanceValue::Point_Ex_200_50;
+	Effect_Data.iShaderPass = 1;
+	XMStoreFloat4(&Effect_Data.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	Effect_Data.vColor = { 1.f,1.f,1.f };
+	lstrcpy(Effect_Data.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_50");
+	lstrcpy(Effect_Data.szTextrueName, L"Component_Texture_BlueSmall");
+
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Trail", (_uint)ELevel::Stage1, L"Layer_Effect", &Effect_Data);
+
+	ZeroMemory(&Effect_Data, sizeof(POINT_TRAIL_EX_DESC));
+	Effect_Data.iRandDir = 5;
+	Effect_Data.fAlphaTime = 1.f;
+	Effect_Data.fAlphaTimePower = 15.f;
+	Effect_Data.fSpreadDis = 5.f;
+	Effect_Data.fSize = 7.0f;
+	Effect_Data.fTimeTerm = 0.025f;
+	Effect_Data.fLifeTime = 10.f;
+	Effect_Data.InstanceValue = EInstanceValue::Point_Ex_200_10;
+	Effect_Data.iShaderPass = 1;
+	XMStoreFloat4(&Effect_Data.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	Effect_Data.vColor = { 1.f,1.f,1.f };
+	lstrcpy(Effect_Data.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_10");
+	lstrcpy(Effect_Data.szTextrueName, L"Component_Texture_BlueBig");
+
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Trail", (_uint)ELevel::Stage1, L"Layer_Effect", &Effect_Data);
+
+	Effect_Data.fAlphaTimePower = 5.f;
+	Effect_Data.fSize = 4.0f;
+	lstrcpy(Effect_Data.szTextrueName, L"Component_Texture_BlueSmall");
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Trail", (_uint)ELevel::Stage1, L"Layer_Effect", &Effect_Data);
 }
 
 CSkill_ManaBomb * CSkill_ManaBomb::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -143,5 +205,6 @@ CGameObject * CSkill_ManaBomb::Clone_GameObject(void * pArg)
 
 void CSkill_ManaBomb::Free()
 {
+	Safe_Release(m_pPoint_Trail);
 	__super::Free();
 }

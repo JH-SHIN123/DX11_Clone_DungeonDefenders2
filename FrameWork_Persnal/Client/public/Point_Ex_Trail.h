@@ -10,6 +10,7 @@ BEGIN(Client)
 
 typedef struct tagPointTrail_Ex_Desc_
 {
+	_int iRandDir = 5;
 	_float fAlphaTime = 1.5f;
 	_float fAlphaTimePower = 1.f;
 	_float fSize = 5.f;

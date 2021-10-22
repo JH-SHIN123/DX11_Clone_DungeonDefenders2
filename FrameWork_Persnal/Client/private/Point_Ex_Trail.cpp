@@ -36,6 +36,8 @@ HRESULT CPoint_Ex_Trail::NativeConstruct(void * pArg)
 
 	m_pBufferInstanceCom->Set_InstanceBuffer(pInstance);
 
+	SetUp_IndexDir(m_PointDesc.iRandDir);
+
 	return S_OK;
 }
 
@@ -59,8 +61,8 @@ _int CPoint_Ex_Trail::Tick(_float TimeDelta)
 			vPos = XMLoadFloat4(&pInstance[i].vPosition);//
 			pInstance[i].fTime -= TimeDelta * m_PointDesc.fAlphaTimePower;
 
-			pInstance[i].vSize.x -= TimeDelta;
-			pInstance[i].vSize.y -= TimeDelta;
+			pInstance[i].vSize.x -= TimeDelta* m_PointDesc.fAlphaTimePower;
+			pInstance[i].vSize.y -= TimeDelta* m_PointDesc.fAlphaTimePower;
 
 			if (0 >= pInstance[i].vSize.x)
 			{
