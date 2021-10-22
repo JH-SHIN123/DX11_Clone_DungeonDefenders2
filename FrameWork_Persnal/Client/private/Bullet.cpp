@@ -51,8 +51,8 @@ _int CBullet::Late_Tick(_float TimeDelta)
 HRESULT CBullet::Render()
 {
 #ifdef _DEBUG
-	if(nullptr != m_pColliderCom_Attack)
-		m_pColliderCom_Attack->Render_Collider();
+//	if(nullptr != m_pColliderCom_Attack)
+//		m_pColliderCom_Attack->Render_Collider();
 #endif // _DEBUG
 
 

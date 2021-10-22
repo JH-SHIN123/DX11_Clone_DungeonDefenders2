@@ -50,13 +50,13 @@ _int CPoint_Trail::Tick(_float TimeDelta)
 	for (_int i = m_iInstance_StartIndex; i < m_iNumInstance + m_iInstance_StartIndex; ++i)
 	{
 		_int iMyIndex = i - m_iInstance_StartIndex;
-		_vector vPos = XMLoadFloat4(&pInstance[i].vPosition);//m_pMovementCom->Get_State(EState::Position);
+		_vector vPos = m_pMovementCom->Get_State(EState::Position);
 
 		m_pTimeBuffer[iMyIndex] -= TimeDelta;
 		if (0.f >= m_pTimeBuffer[iMyIndex])
 		{
-			m_pTimeBuffer[iMyIndex] = m_PointDesc.fTimeTerm;
-			vPos = m_pMovementCom->Get_State(EState::Position);
+			//m_pTimeBuffer[iMyIndex] = m_PointDesc.fTimeTerm;
+			vPos = XMLoadFloat4(&pInstance[i].vPosition);//
 		}
 
 		_vector vDir = XMLoadFloat3(&m_pIndexDir[iMyIndex]);
@@ -180,6 +180,9 @@ void CPoint_Trail::SetUp_IndexDir(_int iRandNum_Max)
 	_float4 vPos;
 	XMStoreFloat4(&vPos, m_pMovementCom->Get_State(EState::Position));
 
+	VTXMATRIX* pInstance = m_pBufferInstanceCom->Get_InstanceBuffer();
+
+
 	// 15개라 한다면
 	_float fTime = 0.f;
 	for (_int i = m_iInstance_StartIndex; i < m_iNumInstance + m_iInstance_StartIndex; ++i)
@@ -201,9 +204,12 @@ void CPoint_Trail::SetUp_IndexDir(_int iRandNum_Max)
 		m_pTimeBuffer[i - m_iInstance_StartIndex] = fTime;
 		m_pIndexPos[i - m_iInstance_StartIndex] = vPos;
 		XMStoreFloat3(&m_pIndexDir[i - m_iInstance_StartIndex], XMVector3Normalize(vDir));
-
+		pInstance[i].vPosition = vPos;
 		fTime += m_PointDesc.fTimeTerm;
 	}
+
+	m_pBufferInstanceCom->Set_InstanceBuffer(pInstance);
+	m_pBufferInstanceCom->Update_Instance(0.f);
 
 }
 

@@ -21,7 +21,7 @@ public:
 private:
 	HRESULT			Ready_Component(void* pArg);
 
-	class CPoint_Trail* m_pPointTrail = nullptr;
+	class CPoint_Ex_Trail* m_pPointTrail = nullptr;
 
 public:
 	static CSkill_BrainWash* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

@@ -220,4 +220,136 @@ technique11		DefaultTechnique
 };
 
 
+struct EX_VS_IN
+{
+	/* 본래 정점버퍼 */
+	float3 vPosition : POSITION;
+
+	/* 인스턴스 정점버퍼 */
+	float2 vInstanceSize : PSIZE;
+	row_major matrix WorldMatrix : WORLD;
+	float fTime : TEXCOORD0;
+};
+
+struct EX_VS_OUT
+{
+	float4 vPosition : POSITION;
+	float2 vSize : PSIZE;
+	float fTime : TEXCOORD0;
+};
+
+EX_VS_OUT EX_VS_MAIN(EX_VS_IN In)
+{
+	EX_VS_OUT			Out = (EX_VS_OUT)0;
+
+	matrix		matWV, matWVP;
+
+	Out.vPosition = mul(vector(In.vPosition, 1.f), In.WorldMatrix);
+	Out.vSize = In.vInstanceSize;
+	Out.fTime = In.fTime;
+
+	return Out;
+}
+
+struct EX_GS_OUT
+{
+	float4 vPosition : SV_POSITION;
+	float2 vTexUV : TEXCOORD0;
+	float fTime : TEXCOORD1;
+};
+
+[maxvertexcount(6)]
+void EX_GS_MAIN(/*입력*/ point EX_VS_OUT In[1], /*출력*/ inout TriangleStream<EX_GS_OUT> TriStream)
+{
+	EX_GS_OUT		Out[6];
+
+	float3		vLook = normalize(g_vCamPosition - In[0].vPosition).xyz;
+	float3		vAxisY = vector(0.f, 1.f, 0.f, 0.f).xyz;
+	float3		vRight = normalize(cross(vAxisY, vLook));
+	float3		vUp = normalize(cross(vLook, vRight));
+
+	float2		vHalfSize = float2(In[0].vSize.x * 0.5f, In[0].vSize.y * 0.5f);
+
+	matrix		matVP;
+	matVP = mul(ViewMatrix, ProjMatrix);
+
+
+	/* 좌상 */
+	Out[0].vPosition = In[0].vPosition + vector(vRight, 0.f) * vHalfSize.x + vector(vUp, 0.f) * vHalfSize.y;
+	Out[0].vPosition = mul(Out[0].vPosition, matVP);
+	Out[0].vTexUV = float2(0.f, 0.f);
+	Out[0].fTime = In[0].fTime;
+	TriStream.Append(Out[0]);
+
+
+	/* 우상 */
+	Out[1].vPosition = In[0].vPosition - vector(vRight, 0.f) * vHalfSize.x + vector(vUp, 0.f) * vHalfSize.y;
+	Out[1].vPosition = mul(Out[1].vPosition, matVP);
+	Out[1].vTexUV = float2(1.0f, 0.f);
+	Out[1].fTime = In[0].fTime;
+	TriStream.Append(Out[1]);
+
+	/* 우하 */
+	Out[2].vPosition = In[0].vPosition - vector(vRight, 0.f) * vHalfSize.x - vector(vUp, 0.f) * vHalfSize.y;
+	Out[2].vPosition = mul(Out[2].vPosition, matVP);
+	Out[2].vTexUV = float2(1.0f, 1.f);
+	Out[2].fTime = In[0].fTime;
+	TriStream.Append(Out[2]);
+
+	TriStream.RestartStrip();
+
+	TriStream.Append(Out[0]);
+
+	TriStream.Append(Out[2]);
+
+	/* 좌하 */
+	Out[3].vPosition = In[0].vPosition + vector(vRight, 0.f) * vHalfSize.x - vector(vUp, 0.f) * vHalfSize.y;
+	Out[3].vPosition = mul(Out[3].vPosition, matVP);
+	Out[3].vTexUV = float2(0.0f, 1.f);
+	Out[3].fTime = In[0].fTime;
+	TriStream.Append(Out[3]);
+}
+
+struct EX_PS_IN
+{
+	float4 vPosition : SV_POSITION;
+	float2 vTexUV : TEXCOORD0;
+	float fTime : TEXCOORD1;
+};
+
+struct EX_PS_OUT
+{
+	vector	vColor : SV_TARGET;
+};
+
+/* 픽셀의 최종적인 색을 결정하낟. */
+EX_PS_OUT EX_PS_MAIN(EX_PS_IN In)
+{
+	EX_PS_OUT		Out = (EX_PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	float3 vRGB = Out.vColor.rgb;
+
+
+	Out.vColor.a *= In.fTime;
+
+	return Out;
+}
+
+technique11		ExtendTechnique
+{
+	pass PointInstance_AlphaBlendTime // 1
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 EX_VS_MAIN();
+		GeometryShader = compile gs_5_0 EX_GS_MAIN();
+		PixelShader = compile ps_5_0 EX_PS_MAIN();
+	}
+
+
+
+};
 

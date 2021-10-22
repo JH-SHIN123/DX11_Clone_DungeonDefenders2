@@ -18,6 +18,7 @@
 #include "VIBuffer_Terrain.h"
 #include "VIBuffer_RectInstance.h"
 #include "VIBuffer_PointInstance.h"
+#include "VIBuffer_PointInstance_Extend.h"
 
 class CComponent_Manager final : public CBase
 {

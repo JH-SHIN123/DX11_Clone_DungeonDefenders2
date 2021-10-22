@@ -142,9 +142,6 @@
     <Filter Include="02.Utility\02.Component\08.Collider">
       <UniqueIdentifier>{bbde9d43-3544-4dbe-92c9-2742367a30c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Utility\06.DebugDraw">
-      <UniqueIdentifier>{10f6d977-1126-4b87-9cf6-dd04c4bb2a59}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Utility\02.Component\09.Navigation">
       <UniqueIdentifier>{9e4ec541-0ae7-424d-a13a-39fd38ae0171}</UniqueIdentifier>
     </Filter>
@@ -159,6 +156,12 @@
     </Filter>
     <Filter Include="02.Utility\02.Component\01.Buffer\10.Instance_Buffer\01.Point">
       <UniqueIdentifier>{8f7d5e79-b72b-472d-b0b0-68f9b785c04d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\06.DebugDraw">
+      <UniqueIdentifier>{10f6d977-1126-4b87-9cf6-dd04c4bb2a59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\01.Buffer\10.Instance_Buffer\02.Point_Extend">
+      <UniqueIdentifier>{8b324431-9ad3-4995-aa94-c270e838eb7d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -321,6 +324,9 @@
     <ClInclude Include="..\public\VIBuffer_PointInstance.h">
       <Filter>02.Utility\02.Component\01.Buffer\10.Instance_Buffer\01.Point</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_PointInstance_Extend.h">
+      <Filter>02.Utility\02.Component\01.Buffer\10.Instance_Buffer\02.Point_Extend</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -454,6 +460,9 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_PointInstance.cpp">
       <Filter>02.Utility\02.Component\01.Buffer\10.Instance_Buffer\01.Point</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_PointInstance_Extend.cpp">
+      <Filter>02.Utility\02.Component\01.Buffer\10.Instance_Buffer\02.Point_Extend</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

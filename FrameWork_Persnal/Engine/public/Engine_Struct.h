@@ -75,6 +75,17 @@ namespace Engine
 		XMFLOAT4			vPosition;
 	}VTXMATRIX;
 
+	typedef struct tagVertexMatrix_Extend
+	{
+		// 행렬의 모습을 띄고있다. For. 인스턴싱
+		XMFLOAT2			vSize;
+		XMFLOAT4			vRight;
+		XMFLOAT4			vUp;
+		XMFLOAT4			vLook;
+		XMFLOAT4			vPosition;
+		float				fTime;
+	}VTXMATRIX_EXTEND;
+
 	typedef struct tagVertexNormalTexture
 	{
 		XMFLOAT3			vPosition;

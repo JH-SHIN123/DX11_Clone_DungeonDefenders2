@@ -375,6 +375,15 @@ HRESULT CLoading::LoadingForStage()
 		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "DefaultTechnique", 300))))
 		return E_FAIL;
 
+	CEffectDesc_Manager::GetInstance()->Set_Instance(EInstanceValue::Point_500_250, 500, 250);
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_500_250")
+		, CVIBuffer_PointInstance::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "DefaultTechnique", 500))))
+		return E_FAIL;
+
+	CEffectDesc_Manager::GetInstance()->Set_Instance(EInstanceValue::Point_Ex_200_50, 200, 50);
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_Ex_200_50")
+		, CVIBuffer_PointInstance_Extend::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "ExtendTechnique", 200))))
+		return E_FAIL;
 
 	if (hr != S_OK)
 		MSG_BOX("LoadingForStage Fail");

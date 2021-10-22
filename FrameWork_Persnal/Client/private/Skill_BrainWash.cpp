@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Skill_BrainWash.h"
-#include "Point_Trail.h"
+#include "Point_Ex_Trail.h"
 
 CSkill_BrainWash::CSkill_BrainWash(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CBullet(pDevice, pDevice_Context)
@@ -71,19 +71,21 @@ HRESULT CSkill_BrainWash::Ready_Component(void * pArg)
 {
 	HRESULT hr = S_OK;
 
-	POINT_TRAIL_DESC Data;
-	Data.fSpreadDis = 15.f;
-	Data.fSize = 1;
-	Data.fTimeTerm = 0.1f;
+	POINT_TRAIL_EX_DESC Data;
+	Data.fAlphaTime = 1.f;
+	Data.fAlphaTimePower = 1.f;
+	Data.fSpreadDis = 1.f;
+	Data.fSize = 1.5f;
+	Data.fTimeTerm = 0.01f;
 	Data.fLifeTime = 10.f;
-	Data.InstanceValue = EInstanceValue::Point_300_10;
-	Data.iShaderPass = 4;
+	Data.InstanceValue = EInstanceValue::Point_Ex_200_50;
+	Data.iShaderPass = 0;
 	XMStoreFloat4(&Data.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
 	Data.vColor = { 1.f,1.f,1.f };
-	lstrcpy(Data.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_300_10");
+	lstrcpy(Data.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_50");
 	lstrcpy(Data.szTextrueName, L"Component_Texture_GreenBall");
 
-	m_pPointTrail = CPoint_Trail::Create(m_pDevice, m_pDevice_Context);
+	m_pPointTrail = CPoint_Ex_Trail::Create(m_pDevice, m_pDevice_Context);
 	m_pPointTrail->NativeConstruct(&Data);
 	m_pPointTrail->SetUp_IndexDir(5);
 

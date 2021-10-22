@@ -280,32 +280,41 @@
     <Filter Include="05.Effect%28Instanced%29\00.Effect_Sprites">
       <UniqueIdentifier>{31122d70-d1d7-4534-90b6-c746bdc54bd4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Effect%28Instanced%29\Point">
-      <UniqueIdentifier>{3b309fff-e318-42fa-83f5-61ad6d9edab9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Effect%28Instanced%29\Rect">
-      <UniqueIdentifier>{8d2df7ef-366f-4a14-b07b-0194ccf0f123}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\07.Bullet\15.Player_Bullet">
       <UniqueIdentifier>{c40898de-7950-47e0-b186-77faadcc3b50}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\11.ManaToken">
       <UniqueIdentifier>{ae9872b0-cd1b-4a04-8671-3f773e877759}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Effect%28Instanced%29\Rect\00.Spread">
-      <UniqueIdentifier>{b8975ef6-a78e-4e57-be7b-c1517807b19b}</UniqueIdentifier>
+    <Filter Include="05.Effect%28Instanced%29\00.VTXMATRIX">
+      <UniqueIdentifier>{c197779e-b7ec-48ed-bc05-0706c78cd315}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Effect%28Instanced%29\Point\01.Spread2%28Free%29">
+    <Filter Include="05.Effect%28Instanced%29\00.VTXMATRIX\Point">
+      <UniqueIdentifier>{3b309fff-e318-42fa-83f5-61ad6d9edab9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Effect%28Instanced%29\00.VTXMATRIX\Point\01.Spread2%28Free%29">
       <UniqueIdentifier>{7a91e616-ff51-4de0-a2e7-b662dd6d0641}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Effect%28Instanced%29\Point\00.Spread%28Member%29">
+    <Filter Include="05.Effect%28Instanced%29\00.VTXMATRIX\Point\00.Spread%28Member%29">
       <UniqueIdentifier>{4862821a-4942-495a-b135-81ce09907b8f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Effect%28Instanced%29\Point\02.Spread3%28Up%29">
+    <Filter Include="05.Effect%28Instanced%29\00.VTXMATRIX\Point\02.Spread3%28Up%29">
       <UniqueIdentifier>{b36b0b5a-251f-4709-b004-0fc215e41e9c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Effect%28Instanced%29\Point\03.Trail%28Time%29">
+    <Filter Include="05.Effect%28Instanced%29\00.VTXMATRIX\Point\03.Trail%28Time%29">
       <UniqueIdentifier>{60b893c5-6d06-435f-8784-4d890645d2fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Effect%28Instanced%29\00.VTXMATRIX\Rect">
+      <UniqueIdentifier>{8d2df7ef-366f-4a14-b07b-0194ccf0f123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Effect%28Instanced%29\00.VTXMATRIX\Rect\00.Spread">
+      <UniqueIdentifier>{b8975ef6-a78e-4e57-be7b-c1517807b19b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND">
+      <UniqueIdentifier>{0525b1f7-8330-441e-82c8-e1370c70c8e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\00.Point_Ex_Trail">
+      <UniqueIdentifier>{c697216c-36c4-40ff-8290-0ffdabbb9ce0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -565,7 +574,7 @@
       <Filter>03.UI, HUD\00.2D\08.Number_Font</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Point_Spread.h">
-      <Filter>05.Effect%28Instanced%29\Point\00.Spread%28Member%29</Filter>
+      <Filter>05.Effect%28Instanced%29\00.VTXMATRIX\Point\00.Spread%28Member%29</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Player_Bullet.h">
       <Filter>02.GameObject\07.Bullet\15.Player_Bullet</Filter>
@@ -574,18 +583,23 @@
       <Filter>02.GameObject\11.ManaToken</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Rect_Spread.h">
-      <Filter>05.Effect%28Instanced%29\Rect\00.Spread</Filter>
+      <Filter>05.Effect%28Instanced%29\00.VTXMATRIX\Rect\00.Spread</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EffectDesc_Manager.h">
       <Filter>05.Effect%28Instanced%29</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Point_Spread2.h">
-      <Filter>05.Effect%28Instanced%29\Point\01.Spread2%28Free%29</Filter>
+      <Filter>05.Effect%28Instanced%29\00.VTXMATRIX\Point\01.Spread2%28Free%29</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Point_Spread3.h">
-      <Filter>05.Effect%28Instanced%29\Point\02.Spread3%28Up%29</Filter>
+      <Filter>05.Effect%28Instanced%29\00.VTXMATRIX\Point\02.Spread3%28Up%29</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Point_Trail.h" />
+    <ClInclude Include="..\public\Point_Trail.h">
+      <Filter>05.Effect%28Instanced%29\00.VTXMATRIX\Point\03.Trail%28Time%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Point_Ex_Trail.h">
+      <Filter>05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\00.Point_Ex_Trail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -823,7 +837,7 @@
       <Filter>03.UI, HUD\00.2D\08.Number_Font</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Point_Spread.cpp">
-      <Filter>05.Effect%28Instanced%29\Point\00.Spread%28Member%29</Filter>
+      <Filter>05.Effect%28Instanced%29\00.VTXMATRIX\Point\00.Spread%28Member%29</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Player_Bullet.cpp">
       <Filter>02.GameObject\07.Bullet\15.Player_Bullet</Filter>
@@ -832,18 +846,23 @@
       <Filter>02.GameObject\11.ManaToken</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Rect_Spread.cpp">
-      <Filter>05.Effect%28Instanced%29\Rect\00.Spread</Filter>
+      <Filter>05.Effect%28Instanced%29\00.VTXMATRIX\Rect\00.Spread</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EffectDesc_Manager.cpp">
       <Filter>05.Effect%28Instanced%29</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Point_Spread2.cpp">
-      <Filter>05.Effect%28Instanced%29\Point\01.Spread2%28Free%29</Filter>
+      <Filter>05.Effect%28Instanced%29\00.VTXMATRIX\Point\01.Spread2%28Free%29</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Point_Spread3.cpp">
-      <Filter>05.Effect%28Instanced%29\Point\02.Spread3%28Up%29</Filter>
+      <Filter>05.Effect%28Instanced%29\00.VTXMATRIX\Point\02.Spread3%28Up%29</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Point_Trail.cpp" />
+    <ClCompile Include="..\private\Point_Trail.cpp">
+      <Filter>05.Effect%28Instanced%29\00.VTXMATRIX\Point\03.Trail%28Time%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Point_Ex_Trail.cpp">
+      <Filter>05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\00.Point_Ex_Trail</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
