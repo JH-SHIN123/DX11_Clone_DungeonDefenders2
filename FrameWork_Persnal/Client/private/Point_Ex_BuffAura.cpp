@@ -18,7 +18,11 @@ HRESULT CPoint_Ex_BuffAura::NativeConstruct_Prototype()
 
 HRESULT CPoint_Ex_BuffAura::NativeConstruct(void * pArg)
 {
-	__super::Ready_Component(pArg);
+	POINT_EX_BUFF_DESC Data;
+	memcpy(&Data, pArg, sizeof(POINT_EX_BUFF_DESC));
+	lstrcpy(m_szBuffTarget, Data.szBuffTarget);
+
+	__super::Ready_Component(&Data.Point_Desc);
 
 	SetUp_Dir_Up(m_PointDesc.iRandDir);
 
@@ -28,7 +32,27 @@ HRESULT CPoint_Ex_BuffAura::NativeConstruct(void * pArg)
 
 _int CPoint_Ex_BuffAura::Tick(_float TimeDelta)
 {
+	if (0 >= m_PointDesc.fLifeTime)
+		return 0;
+
+	CGameObject* pTarget = GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, m_szBuffTarget);
+	if (nullptr == pTarget)
+		return 0;
+
+	_vector vPos = static_cast<CMovement*>(pTarget->Get_Component(L"Com_Movement"))->Get_State(EState::Position);
+	//vPos.m128_f32[1] -= m_PointDesc.fSize;// *0.5f;
+
+	m_pMovementCom->Set_State(EState::Position, vPos);
+
 	m_PointDesc.fLifeTime -= TimeDelta;
+	m_PointDesc.fSpreadDis -= TimeDelta;
+	m_fTime += TimeDelta * 2.f;
+
+	if (1.f >= m_PointDesc.fSpreadDis)
+		m_PointDesc.fSpreadDis = 1.f;
+
+	if (1.5f >= m_fTime)
+		m_fTime = 1.5f;
 
 	VTXMATRIX_EXTEND* pInstance = m_pBufferInstanceCom->Get_InstanceBuffer();
 
@@ -39,15 +63,36 @@ _int CPoint_Ex_BuffAura::Tick(_float TimeDelta)
 		_int iMyIndex = i - m_iInstance_StartIndex;
 		_vector vPos = m_pMovementCom->Get_State(EState::Position);
 
-		m_pTimeBuffer[iMyIndex] -= TimeDelta;
 		if (0.f >= m_pTimeBuffer[iMyIndex])
 		{
 			//m_pTimeBuffer[iMyIndex] = m_PointDesc.fTimeTerm;
 			vPos = XMLoadFloat4(&pInstance[i].vPosition);//
 			pInstance[i].fTime -= TimeDelta * m_PointDesc.fAlphaTimePower;
 
-			pInstance[i].vSize.x -= TimeDelta* m_PointDesc.fScalePower;
-			pInstance[i].vSize.y -= TimeDelta* m_PointDesc.fScalePower;
+			if (0 < pInstance[i].fTime)
+			{
+				_float2 vSize;
+				//m_pTimeBuffer[iMyIndex] += TimeDelta;
+				vSize.x = (m_PointDesc.fSize - pInstance[i].vSize.x) * 0.25f;
+				vSize.y = (m_PointDesc.fSize - pInstance[i].vSize.y) * 0.25f;
+
+				pInstance[i].vSize.x += vSize.x;
+				pInstance[i].vSize.y += vSize.y;
+
+				_float fCheck = fabs(m_PointDesc.fSize - pInstance[i].vSize.x);
+
+				if (fCheck < 0.5f)
+				{
+					pInstance[i].vSize.x = m_PointDesc.fSize;
+					pInstance[i].vSize.y = m_PointDesc.fSize;
+				}
+
+			}
+			else
+			{
+				pInstance[i].vSize.x -= TimeDelta* m_PointDesc.fScalePower;
+				pInstance[i].vSize.y -= TimeDelta* m_PointDesc.fScalePower;
+			}
 
 			if (0 >= pInstance[i].vSize.x)
 			{
@@ -59,11 +104,12 @@ _int CPoint_Ex_BuffAura::Tick(_float TimeDelta)
 				pInstance[i].fTime = 0.f;
 		}
 
+		m_pTimeBuffer[iMyIndex] -= TimeDelta;
 		//fAnyTime
 
 		_vector vDir = XMLoadFloat3(&m_pIndexDir[iMyIndex]);
 		vPos -= vDir * m_PointDesc.fSpreadDis * TimeDelta;
-
+		vPos.m128_f32[1] += m_fTime * TimeDelta;
 		// ¾Æ¿ì¶ó Ã³·³ ¹¦ÇÑ °î¼± ()
 
 		XMStoreFloat4(&pInstance[i].vPosition, vPos);
@@ -76,7 +122,9 @@ _int CPoint_Ex_BuffAura::Tick(_float TimeDelta)
 
 _int CPoint_Ex_BuffAura::Late_Tick(_float TimeDelta)
 {
-	
+	if (0 >= m_PointDesc.fLifeTime)
+		return 0;
+
 	return __super::Late_Tick(TimeDelta);
 }
 
@@ -126,8 +174,8 @@ void CPoint_Ex_BuffAura::SetUp_Dir_Up(_int iRandNum_Max)
 		m_pIndexPos[i - m_iInstance_StartIndex] = vPos;
 		pInstance[i].vPosition = vPos;
 		pInstance[i].fTime = m_PointDesc.fAlphaTime;
-		pInstance[i].vSize.x = fSize;
-		pInstance[i].vSize.y = fSize;
+		pInstance[i].vSize.x = 0.f;// m_PointDesc.fSize;
+		pInstance[i].vSize.y = 0.f;// m_PointDesc.fSize;
 		XMStoreFloat3(&m_pIndexDir[i - m_iInstance_StartIndex], XMVector3Normalize(vDir));
 
 		fTime += m_PointDesc.fTimeTerm;

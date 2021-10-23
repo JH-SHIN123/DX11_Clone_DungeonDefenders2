@@ -13,6 +13,8 @@
 #include "Staff_Basic.h"
 #include "Calculator.h"
 #include "Point_Trail.h"
+#include "Point_Ex_BuffAura.h"
+#include "Point_Ex_Healing.h"
 
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -411,7 +413,6 @@ void CPlayer::Key_Check(_float TimeDelta)
 	if (GET_KEY_INPUT(DIK_1))
 	{
 		CPlayerSkill* pSkill = static_cast<CPlayerSkill*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_UI"));
-		m_IsCast_AttackBuff = true;
 
 		m_fAttBuff_Time = 10.f;
 		if (true == pSkill->Get_IsCoolDown(0))
@@ -419,6 +420,7 @@ void CPlayer::Key_Check(_float TimeDelta)
 			pSkill->Set_Skill_CoolDown(0, 10.f);
 			m_eAnimationState_Next = EPlayerAnimation::Detonate;
 			m_IsAttack = true;
+			m_IsCast_AttackBuff = false;
 		}
 	}
 
@@ -506,6 +508,7 @@ void CPlayer::Turn_Check(_float TimeDelta)
 
 void CPlayer::Skill_Check(_float TimeDelta)
 {
+	Skill_AttackBuff(TimeDelta);
 	Skill_ManaBomb();
 	Skill_Meteor();
 	Skill_BrainWash();
@@ -771,6 +774,7 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 
 	m_iAtt = m_pStatusCom->Get_AttBasic();
 
+
 	return S_OK;
 }
 
@@ -780,11 +784,24 @@ void CPlayer::Skill_AttackBuff(_float TimeDelta)
 	{
 		_int iAnimTime = (_int)m_pModelCom->Get_AnimTime();
 
-		if (false == m_IsCast_AttackBuff && 196 == iAnimTime)
+		if (false == m_IsCast_AttackBuff && 190 == iAnimTime)
 		{
-	 		static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Cam_Shake(_float3(0.05f, 0.05f, 0.05f), 0.25f);
+			static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_ZoomIn(80.f, 2.f);
 
+			POINT_EX_BUFF_DESC Point_Desc;
+			Point_Desc.Point_Desc.fLifeTime = 10.f;
+			Point_Desc.Point_Desc.fSize = 5.f;
+			Point_Desc.Point_Desc.fSpreadDis = 11.f;
+			Point_Desc.Point_Desc.fTimeTerm = 0.1f;
+			Point_Desc.Point_Desc.InstanceValue = EInstanceValue::Point_Ex_200_100;
+			Point_Desc.Point_Desc.iShaderPass = 1;
+			lstrcpy(Point_Desc.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_100");
+			lstrcpy(Point_Desc.Point_Desc.szTextrueName, L"Component_Texture_Aura");
+			lstrcpy(Point_Desc.szBuffTarget, L"Layer_Player");
 
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_BuffAura", (_uint)ELevel::Stage1, L"Layer_Effect", &Point_Desc);
+
+			m_IsCast_AttackBuff = true;
 		}
 	}
 
@@ -869,11 +886,6 @@ void CPlayer::Skill_Meteor()
 
 void CPlayer::Skill_BrainWash()
 {
-	//if (0 < m_fBrainWash_Time_Max && false == m_IsChargeSkill_Change)
-	//{
-	//	m_IsChargeSkill_Change = true;
-	//	m_fChargeSkill = m_fBrainWash_Time_Max;
-	//}
 
 	if (EPlayerAnimation::ChargeMax == m_eAnimationState_Next)
 	{
@@ -881,9 +893,6 @@ void CPlayer::Skill_BrainWash()
 
 		if (false == m_IsCast_BrainWash && 37 == (_uint)fAnimTime /*&& 5 == (_uint)m_fChargeSkill * 10*/)
 		{
-			//m_eAnimationState_Next = EPlayerAnimation::KnockBack;
-
-
 			// Dir은 나중에 네비메쉬가 추가되면 바꾼다 
 			_vector vDir = XMVector3Normalize(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) + XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * -1.f);
 			_vector vPos = m_pWeapon->Get_State(EState::Position);
@@ -907,42 +916,8 @@ void CPlayer::Skill_BrainWash()
 
 
 			m_IsCast_BrainWash = true;
-			//m_IsCast_BrainWash_End = false;
 		}
 	}
-
-	//if (false == m_IsCast_BrainWash_End && true == m_IsCast_BrainWash)
-	//{
-	//	if (EPlayerAnimation::ChargeMax == m_eAnimationState_Next)
-	//	{
-	//
-	//		_float fAnimTime = m_pModelCom->Get_AnimTime();
-	//
-	//		if (false == m_IsCast_BrainWash_End && 536 == (_uint)fAnimTime)
-	//		{
-	//			m_IsCast_BrainWash_End = true;
-	//
-	//			// Dir은 나중에 네비메쉬가 추가되면 바꾼다 
-	//			_vector vDir = XMVector3Normalize(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)) + XMVector3Normalize(m_pMovementCom->Get_State(EState::Up)) * -1.f);
-	//			_vector vPos = m_pWeapon->Get_State(EState::Position);
-	//			BULLET_DESC Data;
-	//			Data.fLifeTime = 2.f;
-	//			lstrcpy(Data.szModelName, L"Component_Mesh_Skill_BrainWash");
-	//			XMStoreFloat4(&Data.MoveState_Desc.vPos, vPos);
-	//			XMStoreFloat3(&Data.vDir, vDir);
-	//			Data.MoveState_Desc.fSpeedPerSec = 30.f;
-	//			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
-	//
-	//			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Shock;
-	//			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
-	//			Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
-	//			Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
-	//			Data.Attack_Collide_Desc.IsCenter = true;
-	//
-	//			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Skill_BrainWash", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
-	//		}
-	//	}
-	//}
 }
 
 void CPlayer::Skill_Healing(_float TimeDelta)
@@ -951,14 +926,35 @@ void CPlayer::Skill_Healing(_float TimeDelta)
 	{
 		m_fHealTime += TimeDelta;
 
-		if (0.125 <= m_fHealTime)
+		if (0.125f <= m_fHealTime)
 		{
 			m_fHealTime = 0.f;
 
 			_int iHp = m_pStatusCom->Get_Hp() + 5/*(m_iHealSize / 500.f)*/;
 
 			if ((_int)iHp > m_pStatusCom->Get_HpMax())
+			{
 				iHp = m_pStatusCom->Get_HpMax();
+				_int iSize = rand() % 3 + 1;
+
+				POINT_EX_HEAL_DESC Point_Desc;
+				Point_Desc.Point_Desc.iRandDir = 7;
+				Point_Desc.Point_Desc.fLifeTime = 3.f;
+				Point_Desc.Point_Desc.fSize = (_float)iSize / 3.f;
+				Point_Desc.Point_Desc.fSpreadDis = 3.f;
+				Point_Desc.Point_Desc.fTimeTerm = 0.05f;
+				Point_Desc.Point_Desc.InstanceValue = EInstanceValue::Point_Ex_50_1;
+				Point_Desc.Point_Desc.iShaderPass = 2;
+				Point_Desc.Point_Desc.fAlphaTime = 1.f;
+				Point_Desc.Point_Desc.fAlphaTimePower = 2.f;
+				Point_Desc.Point_Desc.fScalePower = 3.f;
+				XMStoreFloat4(&Point_Desc.Point_Desc.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+				lstrcpy(Point_Desc.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_50_1");
+				lstrcpy(Point_Desc.Point_Desc.szTextrueName, L"Component_Texture_Healing");
+				lstrcpy(Point_Desc.szBuffTarget, L"Layer_Player");
+
+				GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Healing", (_uint)ELevel::Stage1, L"Layer_Effect", &Point_Desc);
+			}
 
 			m_pStatusCom->Set_Hp((_int)iHp);
 

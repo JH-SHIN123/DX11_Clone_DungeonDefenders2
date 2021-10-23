@@ -234,6 +234,7 @@
     <ClInclude Include="..\public\PlayerSkill.h" />
     <ClInclude Include="..\public\Player_Bullet.h" />
     <ClInclude Include="..\public\Point_Ex_BuffAura.h" />
+    <ClInclude Include="..\public\Point_Ex_Healing.h" />
     <ClInclude Include="..\public\Point_Ex_Trail.h" />
     <ClInclude Include="..\public\Point_Spread.h" />
     <ClInclude Include="..\public\Point_Spread2.h" />
@@ -327,6 +328,7 @@
     <ClCompile Include="..\private\PlayerSkill.cpp" />
     <ClCompile Include="..\private\Player_Bullet.cpp" />
     <ClCompile Include="..\private\Point_Ex_BuffAura.cpp" />
+    <ClCompile Include="..\private\Point_Ex_Healing.cpp" />
     <ClCompile Include="..\private\Point_Ex_Trail.cpp" />
     <ClCompile Include="..\private\Point_Spread.cpp" />
     <ClCompile Include="..\private\Point_Spread2.cpp" />

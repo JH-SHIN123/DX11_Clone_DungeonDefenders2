@@ -90,8 +90,7 @@ HRESULT CPoint_Ex_Trail::Render()
 		m_pBufferInstanceCom->Set_Variable("g_vColor", &m_vColor, sizeof(_float4));
 
 	//m_PointDesc.fLifeTime
-	_float fTime = 1.f;
-	m_pBufferInstanceCom->Set_Variable("g_vTime", &fTime, sizeof(_float));
+	m_pBufferInstanceCom->Set_Variable("g_fTime", &m_PointDesc.fLifeTime, sizeof(_float));
 
 
 	m_pBufferInstanceCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTexturesCom->Get_ShaderResourceView(0));

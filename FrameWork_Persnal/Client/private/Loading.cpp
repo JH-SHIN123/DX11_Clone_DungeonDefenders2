@@ -53,7 +53,8 @@
 #include "Point_Trail.h"
 
 #include "Point_Ex_Trail.h"
-
+#include "Point_Ex_BuffAura.h"
+#include "Point_Ex_Healing.h"
 
 USING(Engine)
 
@@ -223,6 +224,10 @@ HRESULT CLoading::LoadingForStage()
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Blue/giant.png")));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Red_Dark")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Red/Red_Dark.png")));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Aura")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Aura/%d.png")));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Healing")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Heal/%d.png")));
 
 #pragma endregion
 
@@ -288,6 +293,9 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Ex_Trail"), CPoint_Ex_Trail::Create(m_pDevice, m_pDevice_Context));
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Ring_Explosion"), CRing_Explosion::Create(m_pDevice, m_pDevice_Context));
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Ex_BuffAura"), CPoint_Ex_BuffAura::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Ex_Healing"), CPoint_Ex_Healing::Create(m_pDevice, m_pDevice_Context));
 
 #pragma endregion
 
@@ -373,6 +381,7 @@ HRESULT CLoading::LoadingForStage()
 
 #pragma endregion
 
+#pragma region Instance Buffer
 	CEffectDesc_Manager::GetInstance()->Resize_Contanier((_uint)EInstanceValue::End_Value);
 
 	//CEffectDesc_Manager::GetInstance()->Set_PointSpread(200, 5);
@@ -410,6 +419,13 @@ HRESULT CLoading::LoadingForStage()
 	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_Ex_200_100")
 		, CVIBuffer_PointInstance_Extend::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "ExtendTechnique", 200))))
 		return E_FAIL;
+
+	CEffectDesc_Manager::GetInstance()->Set_Instance(EInstanceValue::Point_Ex_50_1, 1000, 5);
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_Ex_50_1")
+		, CVIBuffer_PointInstance_Extend::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "ExtendTechnique", 1000))))
+		return E_FAIL;
+
+#pragma endregion
 
 	if (hr != S_OK)
 		MSG_BOX("LoadingForStage Fail");

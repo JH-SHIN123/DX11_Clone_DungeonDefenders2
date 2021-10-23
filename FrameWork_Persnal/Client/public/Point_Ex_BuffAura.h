@@ -6,6 +6,13 @@
 #include "Point_Ex_Trail.h"
 
 BEGIN(Client)
+
+typedef struct tagPointBuff_Desc
+{
+	POINT_TRAIL_EX_DESC Point_Desc;
+	_tchar szBuffTarget[MAX_PATH] = L"";
+}POINT_EX_BUFF_DESC;
+
 class CPoint_Ex_BuffAura final : public CPoint_Ex_Trail
 {
 protected:
@@ -21,9 +28,14 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void SetUp_Dir_Up(_int iRandNum_Max);
+	void Set_LifeTime(_float fTime) { m_PointDesc.fLifeTime = fTime, m_fTime = 0.f; }
+	void Set_SpreadDis(_float fDis) { m_PointDesc.fSpreadDis = fDis; }
 
+public:
+	void SetUp_Dir_Up(_int iRandNum_Max);
+	_tchar m_szBuffTarget[MAX_PATH] = L"";
 	_float m_fTime = 0.f;
+	
 
 
 public:
