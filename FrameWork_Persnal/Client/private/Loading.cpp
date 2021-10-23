@@ -55,6 +55,7 @@
 #include "Point_Ex_Trail.h"
 #include "Point_Ex_BuffAura.h"
 #include "Point_Ex_Healing.h"
+#include "Point_Ex_Particle.h"
 
 USING(Engine)
 
@@ -228,6 +229,10 @@ HRESULT CLoading::LoadingForStage()
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Aura/%d.png")));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Healing")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Heal/%d.png")));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Blood_Particle")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Effect/Particle/%d.png")));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Masking")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Tga, TEXT("../Bin/Resources/Effect/Masking.tga")));
 
 #pragma endregion
 
@@ -296,6 +301,7 @@ HRESULT CLoading::LoadingForStage()
 
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Ex_BuffAura"), CPoint_Ex_BuffAura::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Ex_Healing"), CPoint_Ex_Healing::Create(m_pDevice, m_pDevice_Context));
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Ex_Particle"), CPoint_Ex_Particle::Create(m_pDevice, m_pDevice_Context));
 
 #pragma endregion
 

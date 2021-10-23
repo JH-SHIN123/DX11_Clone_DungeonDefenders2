@@ -48,6 +48,9 @@ public:
 	virtual HRESULT Render() override;
 
 public:
+	void Create_Hit_Particle(_float fOffSetY);
+
+public:
 	_float Get_HpRatio() const;
 	_float Get_DisToCell(const _int& iCellIndex);
 
@@ -121,6 +124,9 @@ protected:
 	const _float	m_fPoisonTick = 0.125f;
 	_float			m_fCoughTime = 0.f;
 	_float			m_fCoughTick = 5.f;
+
+private:
+	_float4		m_vColor = { 1.f, 1.f, 1.f, 1.f };
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

@@ -360,6 +360,23 @@ EX_PS_OUT EX_PS_MAIN_ALPHATIME(EX_PS_IN In)
 	return Out;
 }
 
+EX_PS_OUT EX_PS_MAIN_ALPHATIME_BLACK(EX_PS_IN In)
+{
+	EX_PS_OUT		Out = (EX_PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	if (0 < Out.vColor.a)
+		Out.vColor.a = g_fTime;
+
+	float fColor = (Out.vColor.r + Out.vColor.g + Out.vColor.b);
+
+	if(0.5 > fColor)
+		Out.vColor.a = 0;
+
+	return Out;
+}
+
 technique11		ExtendTechnique
 {
 	pass PointInstance_AlphaBlendTime // 0
@@ -392,5 +409,14 @@ technique11		ExtendTechnique
 		PixelShader = compile ps_5_0 EX_PS_MAIN_ALPHATIME();
 	}
 
+	pass PointInstance_AlphaTimeBlack // 3
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 EX_VS_MAIN();
+		GeometryShader = compile gs_5_0 EX_GS_MAIN();
+		PixelShader = compile ps_5_0 EX_PS_MAIN_ALPHATIME_BLACK();
+	}
 };
 

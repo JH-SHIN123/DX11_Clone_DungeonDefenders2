@@ -325,6 +325,12 @@
     <Filter Include="05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\02.Point_Ex_Healing">
       <UniqueIdentifier>{942d6fd8-edfe-407a-ba88-2853c266bf07}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Effect%28Instanced%29\No_Instance">
+      <UniqueIdentifier>{a9b0b181-231d-45d2-a342-4b9bfb0f0984}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\03.Point_Ex_Particle">
+      <UniqueIdentifier>{de564adc-1dc4-4582-8a75-1261c12726ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -618,6 +624,9 @@
     <ClInclude Include="..\public\Point_Ex_Healing.h">
       <Filter>05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\02.Point_Ex_Healing</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Point_Ex_Particle.h">
+      <Filter>05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\03.Point_Ex_Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -889,6 +898,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Point_Ex_Healing.cpp">
       <Filter>05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\02.Point_Ex_Healing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Point_Ex_Particle.cpp">
+      <Filter>05.Effect%28Instanced%29\01.VTXMATRIX_EXTEND\03.Point_Ex_Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

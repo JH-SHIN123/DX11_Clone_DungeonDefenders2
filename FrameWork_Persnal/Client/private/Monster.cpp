@@ -2,6 +2,7 @@
 #include "..\public\Monster.h"
 #include "Masking_MeterBar_3D.h"
 #include "Player.h"
+#include "Point_Ex_Healing.h"
 
 CMonster::CMonster(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -72,6 +73,9 @@ _int CMonster::Late_Tick(_float TimeDelta)
 		}
 	}
 
+	if (0 > m_pStatusCom->Get_Hp())
+		m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Alpha, this);
+
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
 
@@ -98,6 +102,23 @@ HRESULT CMonster::Render()
 
 	m_pModelCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
 
+	_int iShader = 0;
+
+	if (0 > m_pStatusCom->Get_Hp()) 
+	{
+		iShader = 7;
+		_vector vColor_Now = XMLoadFloat4(&m_vColor);
+		_vector vColor = XMVectorSet(5.f, 5.f, 5.f, 0.f);
+
+		_vector vTerm = vColor - vColor_Now;
+		vColor_Now += vTerm * (0.008f);
+
+		XMStoreFloat4(&m_vColor, vColor_Now);
+
+
+		m_pModelCom->Set_Variable("g_vColor", &m_vColor, sizeof(_float4));
+	}
+
 	_uint iNumMaterials = m_pModelCom->Get_NumMaterials();
 
 	for (_uint i = 0; i < iNumMaterials; ++i)
@@ -109,7 +130,7 @@ HRESULT CMonster::Render()
 		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_SPECULAR)))
 		//	return E_FAIL;
 
-		m_pModelCom->Render_Model(i, 0);
+		m_pModelCom->Render_Model(i, iShader);
 	}
 
 
@@ -119,6 +140,31 @@ HRESULT CMonster::Render()
 
 
 	return S_OK;
+}
+
+void CMonster::Create_Hit_Particle(_float fOffSetY)
+{
+	_int iSize = rand() % 3 + 1;
+
+	_vector vPos = m_pMovementCom->Get_State(EState::Position);
+	vPos.m128_f32[1] += fOffSetY;
+
+	POINT_EX_HEAL_DESC Point_Desc;
+	Point_Desc.Point_Desc.iRandDir = 7;
+	Point_Desc.Point_Desc.fLifeTime = 3.f;
+	Point_Desc.Point_Desc.fSize = ((_float)iSize / 5.f);
+	Point_Desc.Point_Desc.fSpreadDis = 3.f;
+	Point_Desc.Point_Desc.fTimeTerm = 0.05f;
+	Point_Desc.Point_Desc.InstanceValue = EInstanceValue::Point_Ex_200_10;
+	Point_Desc.Point_Desc.iShaderPass = 3;
+	Point_Desc.Point_Desc.fAlphaTime = 1.f;
+	Point_Desc.Point_Desc.fAlphaTimePower = 2.f;
+	Point_Desc.Point_Desc.fScalePower = 3.f;
+	XMStoreFloat4(&Point_Desc.Point_Desc.MoveDesc.vPos, vPos);
+	lstrcpy(Point_Desc.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_10");
+	lstrcpy(Point_Desc.Point_Desc.szTextrueName, L"Component_Texture_Blood_Particle");
+
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Particle", (_uint)ELevel::Stage1, L"Layer_Effect", &Point_Desc);
 }
 
 EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsContinueAnimation)

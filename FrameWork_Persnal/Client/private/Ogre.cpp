@@ -84,6 +84,8 @@ _int COgre::Tick(_float TimeDelta)
 	if (true == m_pColliderCom_Hurt->Get_IsCollide() || true == m_IsHurt)
 	{
 		m_IsAttack = false;
+		Create_Hit_Particle();
+
 		m_pColliderCom_Hurt->Set_IsCollide(false);
 		m_IsHurt = true;
 
@@ -101,7 +103,7 @@ _int COgre::Tick(_float TimeDelta)
 	else
 	{
 		
-		switch (__super::AI_Check(TimeDelta, &vTargetPos, m_IsAttack || m_IsSpecialAttack || m_IsHurt))
+		switch (__super::AI_Check(TimeDelta, &vTargetPos, m_IsAttack || m_IsSpecialAttack))
 		{
 		case Client::EMonsterAI::Idle:
 			if (true == m_IsAttack)

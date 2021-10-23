@@ -84,6 +84,8 @@ _int CKobold::Tick(_float TimeDelta)
 	if (true == m_pColliderCom_Hurt->Get_IsCollide() || true == m_IsHurt)
 	{
 		m_IsAttack = false;
+		Create_Hit_Particle();
+
 		m_pColliderCom_Hurt->Set_IsCollide(false);
 		m_IsHurt = true;
 
@@ -100,7 +102,7 @@ _int CKobold::Tick(_float TimeDelta)
 	}
 	else
 	{
-		switch (AI_Check_Kobold(TimeDelta, &vTargetPos, m_IsAttack || m_IsHurt))
+		switch (AI_Check_Kobold(TimeDelta, &vTargetPos, m_IsAttack))
 		{
 		case Client::EMonsterAI::Idle:
 			m_eAnim_Next = EKoboldAnim::Idle;

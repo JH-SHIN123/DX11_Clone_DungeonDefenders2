@@ -51,8 +51,7 @@ protected:
 	CVIBuffer_Rect*	m_pVIBufferCom	= nullptr;
 
 protected:
-	_uint			m_iShaderPass = 0;
-	 
+	_uint			m_iShaderPass = 0;	 
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;
