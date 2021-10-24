@@ -84,7 +84,7 @@ void CSound_Manager::PlayBGM(TCHAR * pSoundKey, CHANNEL_TYPE eChannel, _float fV
 
 	FMOD_Sound_SetMode(iter->second, FMOD_LOOP_NORMAL);
 	FMOD_System_PlaySound(m_pSystem, iter->second, nullptr, 0, &(m_pChannel[eChannel]));
-	FMOD_Channel_SetVolume(m_pChannel[eChannel], fVolume);
+	//FMOD_Channel_SetVolume(m_pChannel[eChannel], fVolume);
 }
 
 void CSound_Manager::Set_BGMVolume(CHANNEL_TYPE eChannel, _float fVolume)

@@ -140,7 +140,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 
 	CData_Manager::GetInstance()->Set_MonsterCount_Max(4);
 
-	CSound_Manager::GetInstance()->PlayBGM(L"BGM2.mp3", Engine::CHANNEL_BGM, 1.f);
+	CSound_Manager::GetInstance()->PlayBGM(L"BGM2.mp3", Engine::CHANNEL_BGM, 0.2f);
 	CSound_Manager::GetInstance()->Play_Sound(L"button.wav", Engine::CHANNEL_PLAYER, 1.f);
 
 	return S_OK;
@@ -150,7 +150,7 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 {
 	CLevel::Tick(Timedelta);
 	//CSound_Manager::GetInstance()->PlayBGM(L"BGM2.mp3", Engine::CHANNEL_BGM, 1.f);
-	//CSound_Manager::GetInstance()->Play_Sound(L"button.wav", Engine::CHANNEL_PLAYER, 1.f);
+	//CSound_Manager::GetInstance()->Play_Sound(L"button.wav", Engine::CHANNEL_PLAYER, GET_CAMERA_POSITION, XMVectorSet(0.f,0.f,0.f,1.f), 10.f);
 
 	if (GET_KEY_INPUT(DIK_F1) && true == CData_Manager::GetInstance()->Get_Tick_Stop())
 	{
