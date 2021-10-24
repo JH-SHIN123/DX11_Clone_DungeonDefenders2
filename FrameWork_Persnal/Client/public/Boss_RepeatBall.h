@@ -21,6 +21,8 @@ public:
 
 private:
 	HRESULT			Ready_Component(void* pArg);
+	_float m_fAlphaTime = 2.f;
+	class CPoint_Ex_Trail* m_pPoint_Trail = nullptr;
 
 public:
 	static CBoss_RepeatBall* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

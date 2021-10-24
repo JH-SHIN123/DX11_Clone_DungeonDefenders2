@@ -111,7 +111,7 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 		{
 			if (EDjinn_Attack::End == m_eAttack_Value)
 			{
-				m_eAttack_Value = EDjinn_Attack::TrapBall;// (EDjinn_Attack)(rand() % (_uint)EDjinn_Attack::End);
+				m_eAttack_Value = EDjinn_Attack::RepeatBall;// (EDjinn_Attack)(rand() % (_uint)EDjinn_Attack::End);
 				m_iAttackCount = 0;
 			}
 
@@ -808,7 +808,7 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 	BULLET_DESC Data;
 	lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
 	Data.MoveState_Desc.fRotatePerSec = 50.f;
-
+	//1342
 	for (_int i = 0; i < 4; ++i)
 	{
 		if (i <= m_iAttackCount)
@@ -840,7 +840,7 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 			XMStoreFloat4(&Data.MoveState_Desc.vPos, vRightHand);
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 			Data.MoveState_Desc.fSpeedPerSec = 40.f;
-			Data.fLifeTime = 6.9586134f;
+			Data.fLifeTime = 3.f;
 
 			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
 			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
@@ -864,7 +864,7 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 			XMStoreFloat4(&Data.MoveState_Desc.vPos, vLeftHand);
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 			Data.MoveState_Desc.fSpeedPerSec = 40.f;
-			Data.fLifeTime = 6.9419365f;
+			Data.fLifeTime = 3.f;
 
 			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
 			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
@@ -888,7 +888,7 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 			XMStoreFloat4(&Data.MoveState_Desc.vPos, vRightHand);
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 			Data.MoveState_Desc.fSpeedPerSec = 40.f;
-			Data.fLifeTime = 5.3081026f;
+			Data.fLifeTime = 3.f;
 
 			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
 			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
@@ -912,7 +912,7 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 			XMStoreFloat4(&Data.MoveState_Desc.vPos, vLeftHand);
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 			Data.MoveState_Desc.fSpeedPerSec = 40.f;
-			Data.fLifeTime = 4.8579593f;
+			Data.fLifeTime = 3.f;
 
 			Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
 			Data.Attack_Collide_Desc.Attack_Desc.iDamage = 50;
