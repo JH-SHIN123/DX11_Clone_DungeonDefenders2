@@ -5,6 +5,8 @@
 #include "Bullet.h"
 
 #include "StrikerTower_Bullet.h"
+#include "Ring_Explosion.h"
+#include "Point_Ex_Healing.h"
 
 CBoss_Djinn::CBoss_Djinn(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CMonster(pDevice, pDevice_Context)
@@ -80,7 +82,7 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 	if (true == m_pColliderCom_Hurt->Get_IsCollide() || true == m_IsHurt)
 	{
 		m_IsAttack = false;
-		Create_Hit_Particle();
+		Create_Hit_Particle(8.f);
 
 		m_pColliderCom_Hurt->Set_IsCollide(false);
 		m_IsHurt = true;
@@ -109,7 +111,7 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 		{
 			if (EDjinn_Attack::End == m_eAttack_Value)
 			{
-				m_eAttack_Value = (EDjinn_Attack)(rand() % (_uint)EDjinn_Attack::End);
+				m_eAttack_Value = EDjinn_Attack::WideRange;// (EDjinn_Attack)(rand() % (_uint)EDjinn_Attack::End);
 				m_iAttackCount = 0;
 			}
 
@@ -626,7 +628,7 @@ void CBoss_Djinn::Attack_WideRange()
 
 			//마지막에 돌면서
 			BULLET_DESC Data;
-			lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
+			lstrcpy(Data.szModelName, L"Component_Mesh_HalfSphere");
 			Data.MoveState_Desc.fRotatePerSec = 50.f;
 
 			XMStoreFloat4(&Data.MoveState_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
@@ -642,6 +644,31 @@ void CBoss_Djinn::Attack_WideRange()
 			Data.Attack_Collide_Desc.IsCenter = true;
 
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Boss_Boom", (_uint)ELevel::Stage1, L"Layer_Bullet_Monster", &Data);
+
+
+			_vector vPos = m_pMovementCom->Get_State(EState::Position);
+
+			POINT_EX_HEAL_DESC Point_Desc;
+			Point_Desc.Point_Desc.iRandDir = 7;
+			Point_Desc.Point_Desc.fLifeTime = 3.f;
+			Point_Desc.Point_Desc.fSize = 20.f;
+			Point_Desc.Point_Desc.fSpreadDis = 5.f;
+			Point_Desc.Point_Desc.fTimeTerm = 0.05f;
+			Point_Desc.Point_Desc.InstanceValue = EInstanceValue::Point_Ex_200_10;
+			Point_Desc.Point_Desc.iShaderPass = 3;
+			Point_Desc.Point_Desc.fAlphaTime = 1.f;
+			Point_Desc.Point_Desc.fAlphaTimePower = 2.f;
+			Point_Desc.Point_Desc.fScalePower = 3.f;
+			XMStoreFloat4(&Point_Desc.Point_Desc.MoveDesc.vPos, vPos);
+			lstrcpy(Point_Desc.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_10");
+			lstrcpy(Point_Desc.Point_Desc.szTextrueName, L"Component_Texture_Particle_22");
+
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Particle", (_uint)ELevel::Stage1, L"Layer_Effect", &Point_Desc);
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Particle", (_uint)ELevel::Stage1, L"Layer_Effect", &Point_Desc);
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Particle", (_uint)ELevel::Stage1, L"Layer_Effect", &Point_Desc);
+
+
+
 
 			++m_iAttackCount;
 		}

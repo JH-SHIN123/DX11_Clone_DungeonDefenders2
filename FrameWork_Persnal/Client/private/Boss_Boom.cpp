@@ -22,7 +22,10 @@ HRESULT CBoss_Boom::NativeConstruct(void * pArg)
 
 	Ready_Component(pArg);
 
-	Set_Pivot(XMVectorSet(0.01f, 0.01f, 0.01f, 0.f));
+	Set_Pivot(XMVectorSet(0.1f, 0.1f, 0.1f, 0.f));
+	Set_Pivot_Rotate_Radian(XMVectorSet(90.f, 0.f, 90.f, 0.f));
+
+
 
 	return S_OK;
 }
@@ -33,18 +36,36 @@ _int CBoss_Boom::Tick(_float TimeDelta)
 	if (iReturn = __super::Tick(TimeDelta))
 		return iReturn;
 
+	m_fAlphaTime -= TimeDelta * 10.f;
 
 
 
 	//_vector vDir = XMLoadFloat3(&m_vGoDir);
 	//m_pMovementCom->Go_Dir_Vector(TimeDelta, vDir);
+	m_pColliderCom_Attack->Set_Scale_Tick_Linear(_float3(2.5f, 2.5f, 2.5f), TimeDelta * 5.f);
 
-	m_pColliderCom_Attack->Set_Scale_Tick_Linear(_float3(30.f, 30.f, 30.f), TimeDelta * 5.f);
+	/*
+	m_ColliderDesc.vScale.x += (vScale.x - m_ColliderDesc.vScale.x) * TimeDelta;
+	m_ColliderDesc.vScale.y += (vScale.y - m_ColliderDesc.vScale.y) * TimeDelta;
+	m_ColliderDesc.vScale.z += (vScale.z - m_ColliderDesc.vScale.z) * TimeDelta;
+
+	*/
+
+	_vector vMyScale = XMVectorZero();
+	vMyScale.m128_f32[0] = m_pMovementCom->Get_Scale(EState::Right);
+	vMyScale.m128_f32[1] = m_pMovementCom->Get_Scale(EState::Up);
+	vMyScale.m128_f32[2] = m_pMovementCom->Get_Scale(EState::Look);
+
+	vMyScale.m128_f32[0] += (8.f - vMyScale.m128_f32[0]) * TimeDelta * 5.f;
+	vMyScale.m128_f32[1] += (8.f - vMyScale.m128_f32[1]) * TimeDelta * 5.f;
+	vMyScale.m128_f32[2] += (8.f - vMyScale.m128_f32[2]) * TimeDelta * 5.f;
+
+	m_pMovementCom->Set_Scale(vMyScale);
 
 	if (nullptr != m_pColliderCom_Attack)
 	{
-		if (true == m_pColliderCom_Attack->Get_IsCollide())
-			return OBJECT_DEAD;
+		//if (true == m_pColliderCom_Attack->Get_IsCollide())
+		//	return OBJECT_DEAD;
 
 		m_pColliderCom_Attack->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 	}
@@ -54,15 +75,58 @@ _int CBoss_Boom::Tick(_float TimeDelta)
 
 _int CBoss_Boom::Late_Tick(_float TimeDelta)
 {
-	if (true == m_pColliderCom_Attack->Get_IsCollide())
+	//if (true == m_pColliderCom_Attack->Get_IsCollide())
+	//	return OBJECT_DEAD;
+
+	m_fLifeTime -= TimeDelta;
+	if (0.f >= m_fLifeTime)
+		m_IsDelete_This = true;
+
+	if (true == m_IsDelete_This)
 		return OBJECT_DEAD;
 
-	return __super::Late_Tick(TimeDelta);
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Alpha, this);
 }
 
 HRESULT CBoss_Boom::Render()
 {
-	__super::Render();
+	m_pModelCom->Bind_VIBuffer();
+
+	m_pModelCom->Set_Variable("g_PivotMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_PivotMatrix)), sizeof(_matrix));
+	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
+	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
+	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
+
+	LIGHT_DESC*		LightDesc = GET_GAMEINSTANCE->Get_LightDesc(0);
+
+	m_pModelCom->Set_Variable("vLightPosition", &LightDesc->vPosition, sizeof(_float3));
+	m_pModelCom->Set_Variable("fRange", &LightDesc->fRadius, sizeof(_float));
+
+	m_pModelCom->Set_Variable("vLightDiffuse", &LightDesc->vDiffuse, sizeof(_float4));
+	m_pModelCom->Set_Variable("vLightAmbient", &LightDesc->vAmbient, sizeof(_float4));
+	m_pModelCom->Set_Variable("vLightSpecular", &LightDesc->vSpecular, sizeof(_float4));
+
+	m_pModelCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
+
+	_float4 vColor = { 5.f, 0.3f, 0.05f, m_fAlphaTime };
+	m_pModelCom->Set_Variable("g_vColor", &vColor, sizeof(_float4));
+
+	_uint iNumMaterials = m_pModelCom->Get_NumMaterials();
+
+	for (_uint i = 0; i < iNumMaterials; ++i)
+	{
+		if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_NORMALS)))
+		//	return E_FAIL;
+		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_SPECULAR)))
+		//	return E_FAIL;
+
+		m_pModelCom->Render_Model(i, 8);
+	}
+
+
+	return S_OK;
 
 
 #ifdef _DEBUG

@@ -22,6 +22,11 @@ public:
 private:
 	HRESULT			Ready_Component(void* pArg);
 
+
+
+private:
+	_float m_fAlphaTime = 2.f;
+
 public:
 	static CBoss_Boom* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

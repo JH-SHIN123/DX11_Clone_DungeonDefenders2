@@ -3,6 +3,8 @@
 #include "Data_Manager.h"
 #include "Kobold_Boom.h"
 #include "ManaToken.h"
+#include "Point_Ex_Particle.h"
+#include "Point_Ex_Healing.h"
 
 CKobold::CKobold(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CMonster(pDevice, pDevice_Context)
@@ -84,11 +86,10 @@ _int CKobold::Tick(_float TimeDelta)
 	if (true == m_pColliderCom_Hurt->Get_IsCollide() || true == m_IsHurt)
 	{
 		m_IsAttack = false;
-		Create_Hit_Particle();
+		Create_Hit_Particle(4.f);
 
 		m_pColliderCom_Hurt->Set_IsCollide(false);
 		m_IsHurt = true;
-
 
 		switch (m_pStatusCom->Get_DamageType())
 		{
@@ -627,6 +628,47 @@ void CKobold::Explosion()
 	Data.Attack_Collide_Desc.IsCenter = true;
 
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Kobold_Boom", (_uint)ELevel::Stage1, L"Layer_Bullet_Monster", &Data);
+
+
+	_int iSize = 10;
+	_vector vPos = m_pMovementCom->Get_State(EState::Position);
+	vPos.m128_f32[1] += 4.f;
+
+
+	POINT_EX_HEAL_DESC Point_Desc;
+	Point_Desc.Point_Desc.iRandDir = 7;
+	Point_Desc.Point_Desc.fLifeTime = 3.f;
+	Point_Desc.Point_Desc.fSize = ((_float)iSize);
+	Point_Desc.Point_Desc.fSpreadDis = 7.f;
+	Point_Desc.Point_Desc.fTimeTerm = 0.05f;
+	Point_Desc.Point_Desc.InstanceValue = EInstanceValue::Point_Ex_200_10;
+	Point_Desc.Point_Desc.iShaderPass = 3;
+	Point_Desc.Point_Desc.fAlphaTime = 1.f;
+	Point_Desc.Point_Desc.fAlphaTimePower = 2.f;
+	Point_Desc.Point_Desc.fScalePower = 3.f;
+	XMStoreFloat4(&Point_Desc.Point_Desc.MoveDesc.vPos, vPos);
+	lstrcpy(Point_Desc.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_10");
+	lstrcpy(Point_Desc.Point_Desc.szTextrueName, L"Component_Texture_Explosion");
+
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Particle", (_uint)ELevel::Stage1, L"Layer_Effect", &Point_Desc);
+
+	iSize = 7;
+	Point_Desc.Point_Desc.iRandDir = 7;
+	Point_Desc.Point_Desc.fLifeTime = 3.f;
+	Point_Desc.Point_Desc.fSize = ((_float)iSize);
+	Point_Desc.Point_Desc.fSpreadDis = 3.f;
+	Point_Desc.Point_Desc.fTimeTerm = 0.05f;
+	Point_Desc.Point_Desc.InstanceValue = EInstanceValue::Point_Ex_200_10;
+	Point_Desc.Point_Desc.iShaderPass = 3;
+	Point_Desc.Point_Desc.fAlphaTime = 1.f;
+	Point_Desc.Point_Desc.fAlphaTimePower = 3.f;
+	Point_Desc.Point_Desc.fScalePower = 4.f;
+	XMStoreFloat4(&Point_Desc.Point_Desc.MoveDesc.vPos, vPos);
+	lstrcpy(Point_Desc.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_10");
+	lstrcpy(Point_Desc.Point_Desc.szTextrueName, L"Component_Texture_Explosion");
+
+	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Particle", (_uint)ELevel::Stage1, L"Layer_Effect", &Point_Desc);
+
 }
 
 HRESULT CKobold::Ready_Component(void * pArg)

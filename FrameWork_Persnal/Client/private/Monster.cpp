@@ -179,7 +179,6 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 
 		if (m_fCoughTick <= m_fCoughTime)
 		{
-			m_fCoughTime = 0.f;
 			return EMonsterAI::Cough;
 		}
 	}

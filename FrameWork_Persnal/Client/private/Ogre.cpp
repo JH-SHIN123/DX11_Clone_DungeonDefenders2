@@ -84,7 +84,7 @@ _int COgre::Tick(_float TimeDelta)
 	if (true == m_pColliderCom_Hurt->Get_IsCollide() || true == m_IsHurt)
 	{
 		m_IsAttack = false;
-		Create_Hit_Particle();
+		Create_Hit_Particle(5.f);
 
 		m_pColliderCom_Hurt->Set_IsCollide(false);
 		m_IsHurt = true;

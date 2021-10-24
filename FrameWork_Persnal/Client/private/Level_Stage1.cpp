@@ -97,10 +97,10 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 1;
 
 	m_pMonsterGate[(_uint)EMonster_MovePath::North_L]->Set_PhaseMonster_Info(Phase);
 
