@@ -81,6 +81,9 @@ private:
 	void Attack_RepeatBall(_float TimeDelta);
 
 private:
+	_fvector Get_TargetPos();
+
+private:
 	_int	m_iAttackCount = 0;
 	_bool	m_IsAttack = false;
 
@@ -113,6 +116,8 @@ private:
 
 	_float fTimeTest[4] = {0.f,0.f,0.f,0.f};
 
+private:
+	_float4 m_vTargetPosition;
 private:
 	//_float4x4 m_RevercePivot
 

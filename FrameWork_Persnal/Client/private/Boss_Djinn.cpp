@@ -111,7 +111,7 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 		{
 			if (EDjinn_Attack::End == m_eAttack_Value)
 			{
-				m_eAttack_Value = EDjinn_Attack::WideRange;// (EDjinn_Attack)(rand() % (_uint)EDjinn_Attack::End);
+				m_eAttack_Value = EDjinn_Attack::TrapBall;// (EDjinn_Attack)(rand() % (_uint)EDjinn_Attack::End);
 				m_iAttackCount = 0;
 			}
 
@@ -545,10 +545,8 @@ void CBoss_Djinn::Attack_EnergyBall()
 		break;
 	case 2:
 	{
-		CMovement* pTarget_Player = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
-
 		_vector vLeftHand = (XMLoadFloat4x4(&m_LeftHand_Matrix)).r[3];
-		_vector vTargetPos = pTarget_Player->Get_State(EState::Position);
+		_vector vTargetPos = Get_TargetPos();
 		vTargetPos.m128_f32[1] += 1.f;
 		_vector vDir = XMVector3Normalize(vTargetPos - m_pMovementCom->Get_State(EState::Position));
 
@@ -668,8 +666,6 @@ void CBoss_Djinn::Attack_WideRange()
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Particle", (_uint)ELevel::Stage1, L"Layer_Effect", &Point_Desc);
 
 
-
-
 			++m_iAttackCount;
 		}
 	}
@@ -723,16 +719,42 @@ void CBoss_Djinn::Attack_TrapBall(_float TimeDelta)
 		m_eAnim_Next = EDjinnAnim::Spell_2_Loop;
 		m_fTime_TrapBall += TimeDelta;
 
+		if (1 == (_int)m_fTime_TrapBall && 0.f == m_vTargetPosition.w )
+		{
+			XMStoreFloat4(&m_vTargetPosition, Get_TargetPos());
+
+			POINT_EX_HEAL_DESC Point_Desc;
+			Point_Desc.Point_Desc.iRandDir = 7;
+			Point_Desc.Point_Desc.fLifeTime = 3.f;
+			Point_Desc.Point_Desc.fSize = 5.f;
+			Point_Desc.Point_Desc.fSpreadDis = 3.f;
+			Point_Desc.Point_Desc.fTimeTerm = 0.05f;
+			Point_Desc.Point_Desc.InstanceValue = EInstanceValue::Point_Ex_200_10;
+			Point_Desc.Point_Desc.iShaderPass = 3;
+			Point_Desc.Point_Desc.fAlphaTime = 1.f;
+			Point_Desc.Point_Desc.fAlphaTimePower = 2.f;
+			Point_Desc.Point_Desc.fScalePower = 3.f;
+			Point_Desc.Point_Desc.MoveDesc.vPos = m_vTargetPosition;
+			lstrcpy(Point_Desc.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_10");
+			lstrcpy(Point_Desc.Point_Desc.szTextrueName, L"Component_Texture_GreenBall_2");
+
+			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Particle", (_uint)ELevel::Stage1, L"Layer_Effect", &Point_Desc);
+
+
+			//Component_Texture_GreenBall_2
+
+
+		}
+
 		if (m_fTime_TrapBall_Max <= m_fTime_TrapBall)
 		{
-			CMovement* pTarget_Player = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
-
 			BULLET_DESC Data;
-			lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
+			lstrcpy(Data.szModelName, L"Component_Mesh_Tornado");
 			Data.MoveState_Desc.fRotatePerSec = 50.f;
 
-			XMStoreFloat4(&Data.MoveState_Desc.vPos, pTarget_Player->Get_State(EState::Position));
+			Data.MoveState_Desc.vPos = m_vTargetPosition;
 			Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
+			Data.MoveState_Desc.fRotatePerSec = 3.f;
 			Data.MoveState_Desc.fSpeedPerSec = 40.f;
 			Data.fLifeTime = 2.f;
 
@@ -744,6 +766,7 @@ void CBoss_Djinn::Attack_TrapBall(_float TimeDelta)
 
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Boss_TrapBall", (_uint)ELevel::Stage1, L"Layer_Bullet_Monster", &Data);
 
+			m_vTargetPosition = { 0.f,0.f,0.f,0.f };
 			m_fTime_TrapBall = 0.f;
 			++m_iAttackCount;
 		}
@@ -775,12 +798,10 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 	_bool IsFinished = m_pModelCom->Get_IsFinishedAnimaion();
 	_uint iAnimTime = (_uint)m_pModelCom->Get_AnimTime();
 
-	CMovement* pTarget_Player = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
-
 	_vector vLeftHand = (XMLoadFloat4x4(&m_LeftHand_Matrix)).r[3];
 	_vector vRightHand = (XMLoadFloat4x4(&m_RightHand_Matrix)).r[3];
 
-	_vector vTargetPos = pTarget_Player->Get_State(EState::Position);
+	_vector vTargetPos = Get_TargetPos();
 	vTargetPos.m128_f32[1] += 2.f;
 	_vector vDir = vTargetPos;//XMVector3Normalize(vTargetPos);
 
@@ -927,6 +948,49 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 		m_eAttack_Value = EDjinn_Attack::End;
 		break;
 	}
+}
+
+_fvector CBoss_Djinn::Get_TargetPos()
+{
+	_vector vTargetPos;
+	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
+
+	CLayer* pLayer = GET_GAMEINSTANCE->Get_Layer((_uint)ELevel::Stage1, L"Layer_Tower");
+
+	_float fTowerDis = 1000.f;
+	if (nullptr != pLayer)
+	{
+		list<CGameObject*> listObject = pLayer->Get_GameObject_List();
+
+		for (auto& iter : listObject)
+		{
+			_vector vTowerPos = static_cast<CMovement*>(iter->Get_Component(L"Com_Movement"))->Get_State(EState::Position);
+			_float	fDis = XMVectorGetX(XMVector3Length(vTowerPos - vMyPos));
+
+			if (fTowerDis > fDis)
+			{
+				// 타워 때릴 준비 완료
+				fTowerDis = fDis;
+				vTargetPos = vTowerPos;
+			}
+		}
+	}
+
+	CMovement* pTarget_Player = static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
+	if (nullptr == pTarget_Player)
+		return XMVectorZero();
+
+	_vector vPlayerPos = pTarget_Player->Get_State(EState::Position);
+
+	_float fDis = XMVectorGetX(XMVector3Length(vPlayerPos - vMyPos));
+
+	if (fTowerDis > fDis)
+	{
+		vTargetPos = vPlayerPos;
+	}
+	vTargetPos.m128_f32[1] += 3.f;
+
+	return vTargetPos;
 }
 
 CBoss_Djinn * CBoss_Djinn::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
