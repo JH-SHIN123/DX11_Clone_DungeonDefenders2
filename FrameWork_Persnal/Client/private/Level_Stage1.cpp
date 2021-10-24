@@ -139,9 +139,9 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase);
 
 	CData_Manager::GetInstance()->Set_MonsterCount_Max(4);
-
-	CSound_Manager::GetInstance()->PlayBGM(L"BGM2.mp3", Engine::CHANNEL_BGM, 0.2f);
-	CSound_Manager::GetInstance()->Play_Sound(L"button.wav", Engine::CHANNEL_PLAYER, 1.f);
+	CSound_Manager::GetInstance()->Set_BGMVolume(CHANNEL_BGM, 0.2f);
+	CSound_Manager::GetInstance()->PlayBGM(L"BGM2.mp3", CHANNEL_BGM, 0.2f);
+	CSound_Manager::GetInstance()->Play_Sound(L"button.wav", CHANNEL_PLAYER, 1.f);
 
 	return S_OK;
 }

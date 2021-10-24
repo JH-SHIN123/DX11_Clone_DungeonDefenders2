@@ -20,7 +20,7 @@ void CSound_Manager::LoadSoundFile()
 	long long handle = 0;
 	int iResult = 0;
 	//../Bin/Resources/Sound/
-	handle = _findfirst("../Sound/*.*", &fd);
+	handle = _findfirst("../Bin/Resources/Sound/*.*", &fd);
 
 	if (-1 == handle)
 	{
@@ -37,7 +37,7 @@ void CSound_Manager::LoadSoundFile()
 	{
 
 		char szFullPath[256] = "";
-		strcpy_s(szFullPath, 256, "../Sound/");
+		strcpy_s(szFullPath, 256, "../Bin/Resources/Sound/");
 		strcat_s(szFullPath, 256, fd.name);
 
 		FMOD_SOUND*	pSound = nullptr;
