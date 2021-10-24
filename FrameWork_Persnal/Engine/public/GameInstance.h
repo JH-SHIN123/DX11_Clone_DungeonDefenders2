@@ -11,6 +11,7 @@
 #include "Timer_Manager.h"
 #include "Frame_Manger.h"
 #include "Light_Manager.h"
+#include "Sound_Manager.h"
 
 /* 싱글톤. */
 /* 엔진프로젝트 하나에 딱 한번만 할당된다. */
@@ -108,7 +109,7 @@ private:
 	CInputDev*						m_pInputDev_Manager = nullptr;
 	CTimer_Manager*					m_pTimer_Manager = nullptr;
 	CFrame_Manger*					m_pFrame_Manger = nullptr;
-
+	CSound_Manager*					m_pSound_Manager = nullptr;
 public:
 	static _ulong	Release_Engine();
 	virtual void Free() override;

@@ -15,6 +15,8 @@
 #include "Point_Spread.h"
 #include "Point_Spread2.h"
 
+#include "Sound_Manager.h"
+
 CLevel_Stage1::CLevel_Stage1(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CLevel(pDevice, pDevice_Context)
 {
@@ -138,12 +140,17 @@ HRESULT CLevel_Stage1::NativeConstruct()
 
 	CData_Manager::GetInstance()->Set_MonsterCount_Max(4);
 
+	CSound_Manager::GetInstance()->PlayBGM(L"BGM2.mp3", Engine::CHANNEL_BGM, 1.f);
+	CSound_Manager::GetInstance()->Play_Sound(L"button.wav", Engine::CHANNEL_PLAYER, 1.f);
+
 	return S_OK;
 }
 
 _int CLevel_Stage1::Tick(_float Timedelta)
 {
 	CLevel::Tick(Timedelta);
+	//CSound_Manager::GetInstance()->PlayBGM(L"BGM2.mp3", Engine::CHANNEL_BGM, 1.f);
+	//CSound_Manager::GetInstance()->Play_Sound(L"button.wav", Engine::CHANNEL_PLAYER, 1.f);
 
 	if (GET_KEY_INPUT(DIK_F1) && true == CData_Manager::GetInstance()->Get_Tick_Stop())
 	{

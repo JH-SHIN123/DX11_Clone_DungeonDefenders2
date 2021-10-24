@@ -226,6 +226,7 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     <ClInclude Include="..\public\Pipeline_Manager.h" />
     <ClInclude Include="..\public\Renderer.h" />
     <ClInclude Include="..\public\ScreenCapture.h" />
+    <ClInclude Include="..\public\Sound_Manager.h" />
     <ClInclude Include="..\public\Status.h" />
     <ClInclude Include="..\public\Textures.h" />
     <ClInclude Include="..\public\Textures_Extend.h" />
@@ -273,6 +274,7 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     <ClCompile Include="..\private\Pipeline_Manager.cpp" />
     <ClCompile Include="..\private\Renderer.cpp" />
     <ClCompile Include="..\private\ScreenCapture.cpp" />
+    <ClCompile Include="..\private\Sound_Manager.cpp" />
     <ClCompile Include="..\private\Status.cpp" />
     <ClCompile Include="..\private\Textures.cpp" />
     <ClCompile Include="..\private\Textures_Extend.cpp" />

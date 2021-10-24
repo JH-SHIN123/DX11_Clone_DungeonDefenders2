@@ -28,6 +28,10 @@
 #include <DirectXTK/SpriteBatch.h>
 #include <DirectXTK/SpriteFont.h>
 
+// 사운드 재생
+#pragma comment (lib, "fmod_vc.lib")
+#pragma comment (lib, "fmodL_vc.lib")
+
 
 using namespace DirectX;
 

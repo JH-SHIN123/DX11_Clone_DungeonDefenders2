@@ -327,6 +327,9 @@
     <ClInclude Include="..\public\VIBuffer_PointInstance_Extend.h">
       <Filter>02.Utility\02.Component\01.Buffer\10.Instance_Buffer\02.Point_Extend</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Sound_Manager.h">
+      <Filter>01.System\02.Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -463,6 +466,9 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_PointInstance_Extend.cpp">
       <Filter>02.Utility\02.Component\01.Buffer\10.Instance_Buffer\02.Point_Extend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sound_Manager.cpp">
+      <Filter>01.System\02.Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

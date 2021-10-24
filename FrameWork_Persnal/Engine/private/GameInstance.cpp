@@ -12,6 +12,7 @@ CGameInstance::CGameInstance()
 	, m_pTimer_Manager(CTimer_Manager::GetInstance())
 	, m_pFrame_Manger(CFrame_Manger::GetInstance())
 	, m_pLight_Manager(CLight_Manager::GetInstance())
+	, m_pSound_Manager(CSound_Manager::GetInstance())
 {
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pGameObject_Manager);
@@ -34,6 +35,9 @@ HRESULT CGameInstance::Initialize(HINSTANCE hInst, HWND hWnd, CGraphic_Device::W
 		if (FAILED(m_pInputDev_Manager->Ready_InputDev(hInst, hWnd)))
 			return E_FAIL;
 	}
+
+	m_pSound_Manager->Initialize();
+	m_pSound_Manager->LoadSoundFile();
 
 	return S_OK;
 }
@@ -67,7 +71,7 @@ _int CGameInstance::Tick(_float TimeDelta)
 		return iEvent;
 
 	m_pPipeline_Manager->Tick();
-
+	m_pSound_Manager->UpdateSound();
 	//return 0;
 
 	return m_pLevel_Manager->Tick(TimeDelta);
@@ -327,6 +331,7 @@ void CGameInstance::Free()
 	Safe_Release(m_pInputDev_Manager);
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pFrame_Manger);
+	Safe_Release(m_pSound_Manager);
 
 	/* 게임인스턴스 안에 선언된 멤버함수의 정리를 수행한다. */
 	Safe_Release(m_pGraphic_Device);
