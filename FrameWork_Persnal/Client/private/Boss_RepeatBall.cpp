@@ -124,7 +124,7 @@ HRESULT CBoss_RepeatBall::Render()
 
 	m_pModelCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
 
-	_float4 vColor = { 0.8f, 5.f, 0.8f, m_fAlphaTime };
+	_float4 vColor = { 0.8f, 2.f, 2.f, m_fAlphaTime };
 	m_pModelCom->Set_Variable("g_vColor", &vColor, sizeof(_float4));
 
 	_uint iNumMaterials = m_pModelCom->Get_NumMaterials();

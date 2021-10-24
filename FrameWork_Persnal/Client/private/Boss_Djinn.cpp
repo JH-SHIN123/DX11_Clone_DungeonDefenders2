@@ -111,7 +111,7 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 		{
 			if (EDjinn_Attack::End == m_eAttack_Value)
 			{
-				m_eAttack_Value = EDjinn_Attack::RepeatBall;// (EDjinn_Attack)(rand() % (_uint)EDjinn_Attack::End);
+				m_eAttack_Value = EDjinn_Attack::EnergyBall;// (EDjinn_Attack)(rand() % (_uint)EDjinn_Attack::End);
 				m_iAttackCount = 0;
 			}
 
@@ -548,7 +548,7 @@ void CBoss_Djinn::Attack_EnergyBall()
 		_vector vLeftHand = (XMLoadFloat4x4(&m_LeftHand_Matrix)).r[3];
 		_vector vTargetPos = Get_TargetPos();
 		vTargetPos.m128_f32[1] += 1.f;
-		_vector vDir = XMVector3Normalize(vTargetPos - m_pMovementCom->Get_State(EState::Position));
+		_vector vDir = XMVector3Normalize(vTargetPos - vLeftHand);
 
 		BULLET_DESC Data;
 		lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");

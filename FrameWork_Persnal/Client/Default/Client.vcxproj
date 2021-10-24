@@ -215,6 +215,7 @@
     <ClInclude Include="..\public\Masking_MeterBar_3D.h" />
     <ClInclude Include="..\public\Masking_UI.h" />
     <ClInclude Include="..\public\Masking_MeterBar.h" />
+    <ClInclude Include="..\public\Mesh_Effect.h" />
     <ClInclude Include="..\public\Meteor_Explosion.h" />
     <ClInclude Include="..\public\Meteor_Explosion_Effect.h" />
     <ClInclude Include="..\public\Meteor_Explosion_Effect_2.h" />
@@ -310,6 +311,7 @@
     <ClCompile Include="..\private\Masking_MeterBar_3D.cpp" />
     <ClCompile Include="..\private\Masking_UI.cpp" />
     <ClCompile Include="..\private\Masking_MeterBar.cpp" />
+    <ClCompile Include="..\private\Mesh_Effect.cpp" />
     <ClCompile Include="..\private\Meteor_Explosion.cpp" />
     <ClCompile Include="..\private\Meteor_Explosion_Effect.cpp" />
     <ClCompile Include="..\private\Meteor_Explosion_Effect_2.cpp" />

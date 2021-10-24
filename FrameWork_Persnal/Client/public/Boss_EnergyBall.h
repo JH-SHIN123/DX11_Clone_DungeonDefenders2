@@ -22,6 +22,12 @@ public:
 private:
 	HRESULT			Ready_Component(void* pArg);
 
+private:
+	void Create_Effect();
+
+	_float m_fAlphaTime = 2.f;
+	class CPoint_Ex_Trail* m_pPoint_Trail = nullptr;
+
 public:
 	static CBoss_EnergyBall* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;
