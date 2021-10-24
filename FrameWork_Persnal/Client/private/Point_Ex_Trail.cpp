@@ -29,6 +29,12 @@ _int CPoint_Ex_Trail::Tick(_float TimeDelta)
 {
 	m_PointDesc.fLifeTime -= TimeDelta;
 
+	if (0.f >= m_PointDesc.fLifeTime)
+	{
+		m_PointDesc.fLifeTime = 0.f;
+		return 0;
+	}
+
 	VTXMATRIX_EXTEND* pInstance = m_pBufferInstanceCom->Get_InstanceBuffer();
 
 	XMStoreFloat4(&pInstance[m_iInstance_StartIndex].vPosition, m_pMovementCom->Get_State(EState::Position));
@@ -216,6 +222,50 @@ void CPoint_Ex_Trail::SetUp_IndexDir(_int iRandNum_Max)
 	m_pBufferInstanceCom->Set_InstanceBuffer(pInstance);
 	m_pBufferInstanceCom->Update_Instance(0.f);
 
+}
+
+void CPoint_Ex_Trail::Set_LifeTime(_float fLifeTime)
+{
+	m_PointDesc.fLifeTime = fLifeTime;
+
+
+
+	_float4 vPos;
+	XMStoreFloat4(&vPos, m_pMovementCom->Get_State(EState::Position));
+
+	VTXMATRIX_EXTEND* pInstance = m_pBufferInstanceCom->Get_InstanceBuffer();
+
+	_float fSize = m_PointDesc.fSize;
+
+	// 15개라 한다면
+	_float fTime = 0.f;
+	for (_int i = m_iInstance_StartIndex; i < m_iNumInstance + m_iInstance_StartIndex; ++i)
+	{
+		_vector vDir = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+
+		if (0 < m_PointDesc.iRandDir)
+		{
+			for (_int j = 0; j < 3; ++j)
+			{
+				_int iRand = rand() % m_PointDesc.iRandDir;
+				if (rand() % 2 == 0)
+					iRand *= -1;
+
+				vDir.m128_f32[j] = _float(iRand);
+			}
+		}
+		pInstance[i].vSize.x = fSize;
+		pInstance[i].vSize.y = fSize;
+		m_pTimeBuffer[i - m_iInstance_StartIndex] = fTime;
+		m_pIndexPos[i - m_iInstance_StartIndex] = vPos;
+		XMStoreFloat3(&m_pIndexDir[i - m_iInstance_StartIndex], XMVector3Normalize(vDir));
+		pInstance[i].vPosition = vPos;
+		pInstance[i].fTime = m_PointDesc.fAlphaTime;
+		fTime += m_PointDesc.fTimeTerm;
+	}
+
+	m_pBufferInstanceCom->Set_InstanceBuffer(pInstance);
+	m_pBufferInstanceCom->Update_Instance(0.f);
 }
 
 CPoint_Ex_Trail * CPoint_Ex_Trail::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

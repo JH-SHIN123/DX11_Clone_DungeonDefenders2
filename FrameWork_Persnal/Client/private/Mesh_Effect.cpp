@@ -29,6 +29,7 @@ HRESULT CMesh_Effect::NativeConstruct(void * pArg)
 
 	}
 	Set_Pivot(XMVectorSet(0.1f, 0.1f, 0.1f, 0.f));
+	//Set_Pivot_Rotate_Radian(XMVectorSet(180.f, 0.f, 90.f, 0.f));
 
 	return S_OK;
 }
@@ -43,6 +44,8 @@ _int CMesh_Effect::Tick(_float TimeDelta)
 
 _int CMesh_Effect::Late_Tick(_float TimeDelta)
 {
+	Set_Pivot(XMVectorSet(0.01f, 0.01f, 0.01f, 0.f));
+
 	m_fLifeTime -= TimeDelta;
 	if (0.f >= m_fLifeTime)
 		m_IsDelete_This = true;

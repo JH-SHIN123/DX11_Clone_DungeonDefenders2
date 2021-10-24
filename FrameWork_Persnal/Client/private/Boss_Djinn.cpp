@@ -7,6 +7,9 @@
 #include "StrikerTower_Bullet.h"
 #include "Ring_Explosion.h"
 #include "Point_Ex_Healing.h"
+#include "Ring_Effect.h"
+#include "Point_Ex_Particle.h"
+#include "Point_Ex_Trail.h"
 
 CBoss_Djinn::CBoss_Djinn(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CMonster(pDevice, pDevice_Context)
@@ -81,21 +84,25 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 
 	if (true == m_pColliderCom_Hurt->Get_IsCollide() || true == m_IsHurt)
 	{
-		m_IsAttack = false;
-		Create_Hit_Particle(8.f);
-
-		m_pColliderCom_Hurt->Set_IsCollide(false);
-		m_IsHurt = true;
-
-
-		switch (m_pStatusCom->Get_DamageType())
+		if (false == m_IsAttack)
 		{
-		case Engine::EDamageType::Shock:
-			m_eAnim_Next = EDjinnAnim::Hurt;
-			break;
-		default:
-			m_IsHurt = false;
-			break;
+
+			m_IsAttack = false;
+			Create_Hit_Particle(8.f);
+
+			m_pColliderCom_Hurt->Set_IsCollide(false);
+			m_IsHurt = true;
+
+
+			switch (m_pStatusCom->Get_DamageType())
+			{
+			case Engine::EDamageType::Shock:
+				m_eAnim_Next = EDjinnAnim::Hurt;
+				break;
+			default:
+				m_IsHurt = false;
+				break;
+			}
 		}
 	}
 	else
@@ -111,7 +118,7 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 		{
 			if (EDjinn_Attack::End == m_eAttack_Value)
 			{
-				m_eAttack_Value = EDjinn_Attack::EnergyBall;// (EDjinn_Attack)(rand() % (_uint)EDjinn_Attack::End);
+				m_eAttack_Value = EDjinn_Attack::Attack;// (EDjinn_Attack)(rand() % (_uint)EDjinn_Attack::End);
 				m_iAttackCount = 0;
 			}
 
@@ -158,6 +165,11 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 	m_pColliderCom_Hurt->Update_Collider(Matrix);
 	m_pStatusCom->Tick(TimeDelta);
 
+	m_pEffect_RightHand->Tick(TimeDelta);
+
+	if(1)
+	m_pTrail_RightHand->Tick(TimeDelta);
+
 	__super::Tick(TimeDelta);
 
 	return _int();
@@ -184,8 +196,17 @@ _int CBoss_Djinn::Late_Tick(_float TimeDelta)
 
 	GemColor_Check(TimeDelta);
 
+
+	m_pTrail_RightHand->Late_Tick(TimeDelta);
+
+
 	CData_Manager::GetInstance()->Set_BossHP_Max(m_pStatusCom->Get_HpMax());
 	CData_Manager::GetInstance()->Set_BossHP(m_pStatusCom->Get_Hp());
+	if (EDjinnAnim::Attack_1 == m_eAnim_Next)
+	{
+		m_pRing_Effect->Set_WorldMatrix(m_pMovementCom->Get_WorldMatrix());
+		m_pRing_Effect->Late_Tick(TimeDelta);
+	}
 
 	return __super::Late_Tick(TimeDelta);
 }
@@ -269,6 +290,11 @@ void CBoss_Djinn::Anim_Check(_float TimeDelta)
 	m_pColliderCom_Attack->Update_Collider(WorldMatrix);
 	XMStoreFloat4x4(&m_RightHand_Matrix, WorldMatrix);
 
+	_fvector vRightHand = WorldMatrix.r[3];
+	m_pEffect_RightHand->Set_Pos(vRightHand);
+	m_pEffect_RightHand->Late_Tick(TimeDelta);
+	m_pTrail_RightHand-> Set_Pos(vRightHand);
+
 
 
 	// ¿Þ¼Õ
@@ -340,7 +366,7 @@ HRESULT CBoss_Djinn::Ready_Component(void * pArg)
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pColliderCom_Hurt, &Data);
 
 	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
-	Data.vScale = { 4.f, 4.f, 4.f };
+	Data.vScale = { 7.f, 7.f, 7.f };
 
 	Data.IsCenter = true;
 	Data.Attack_Desc.eDamageType = EDamageType::Direct;
@@ -380,6 +406,53 @@ HRESULT CBoss_Djinn::Ready_Component(void * pArg)
 
 	m_pTestHand = CStrikerTower_Bullet::Create(m_pDevice, m_pDevice_Context);
 	m_pTestHand->NativeConstruct(&BulletData);
+
+
+
+	RING_EFFECT_DESC Ring_Desc;
+	Ring_Desc.fLifeTime = 0.f;
+	Ring_Desc.MoveState_Desc.vPos = { 0.f,0.f,0.f,1.f };
+	Ring_Desc.MoveState_Desc.vScale = { 1.f,1.f,1.f,0.f };
+	lstrcpy(Ring_Desc.szModelName, L"Component_Mesh_Ring");
+	m_pRing_Effect = CRing_Effect::Create(m_pDevice, m_pDevice_Context);
+	m_pRing_Effect->NativeConstruct(&Ring_Desc);
+
+
+	POINT_EX_HEAL_DESC Point_Desc;
+	Point_Desc.Point_Desc.iRandDir = 5;
+	Point_Desc.Point_Desc.fLifeTime = 0.f;
+	Point_Desc.Point_Desc.fSize = 12.f;
+	Point_Desc.Point_Desc.fSpreadDis = 3.f;
+	Point_Desc.Point_Desc.fTimeTerm = 0.1f;
+	Point_Desc.Point_Desc.InstanceValue = EInstanceValue::Point_Ex_200_50;
+	Point_Desc.Point_Desc.iShaderPass = 3;
+	Point_Desc.Point_Desc.fAlphaTime = 1.f;
+	Point_Desc.Point_Desc.fAlphaTimePower = 2.f;
+	Point_Desc.Point_Desc.fScalePower = 3.f;
+	XMStoreFloat4(&Point_Desc.Point_Desc.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	lstrcpy(Point_Desc.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_50");
+	lstrcpy(Point_Desc.Point_Desc.szTextrueName, L"Component_Texture_Glow_Blue");
+
+	m_pEffect_RightHand = CPoint_Ex_Particle::Create(m_pDevice, m_pDevice_Context);
+	m_pEffect_RightHand->NativeConstruct(&Point_Desc);
+
+	POINT_TRAIL_EX_DESC Effect_Data;
+	Effect_Data.iRandDir = 5;
+	Effect_Data.fAlphaTime = 1.f;
+	Effect_Data.fAlphaTimePower = 1.5f;
+	Effect_Data.fSpreadDis = 2.f;
+	Effect_Data.fSize = 6.f;
+	Effect_Data.fTimeTerm = 0.05f;
+	Effect_Data.fLifeTime = 10.f;
+	Effect_Data.InstanceValue = EInstanceValue::Point_Ex_200_50;
+	Effect_Data.iShaderPass = 1;
+	XMStoreFloat4(&Effect_Data.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	Effect_Data.vColor = { 1.f,1.f,1.f };
+	lstrcpy(Effect_Data.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_50");
+	lstrcpy(Effect_Data.szTextrueName, L"Component_Texture_Mola");
+
+	m_pTrail_RightHand = CPoint_Ex_Trail::Create(m_pDevice, m_pDevice_Context);
+	m_pTrail_RightHand->NativeConstruct(&Effect_Data);
 
 	return hr;
 }
@@ -509,12 +582,16 @@ void CBoss_Djinn::Attack_Default()
 	case 0:
 		m_eAnim_Next = EDjinnAnim::Attack_1;
 		++m_iAttackCount;
-
-
+		m_pRing_Effect->Set_LifeTime(2.f);
+		m_pTrail_RightHand->Set_LifeTime(1.75f);
 		break;
 	case 1:
 		if (EDjinnAnim::Attack_1 == m_eAnim_Next && 40 == iAnimTime)
+		{
 			m_pColliderCom_Attack->Set_NotCollide(false);
+			m_pEffect_RightHand->Set_LifeTime(2.f);
+			m_pEffect_RightHand->SetUp_Dir_Up(5);
+		}
 
 		if (true == IsFinished)
 			++m_iAttackCount;
@@ -603,7 +680,7 @@ void CBoss_Djinn::Attack_WideRange()
 		m_eAnim_Next = EDjinnAnim::Spell_1_Start;
 		++m_iAttackCount;
 	}
-			break;
+	break;
 	case 1:
 	{
 		if (890 == iAnimTime && EDjinnAnim::Spell_1_Start == m_eAnim_Next)
@@ -618,7 +695,7 @@ void CBoss_Djinn::Attack_WideRange()
 		//}
 
 	}
-			break;
+	break;
 
 	case 2: {
 		if (910 == iAnimTime - 1)
@@ -673,21 +750,21 @@ void CBoss_Djinn::Attack_WideRange()
 
 	case 3:
 	{
-		if(929 == iAnimTime)
+		if (929 == iAnimTime)
 			++m_iAttackCount;
 	}
-		break;
-			//
-			//case 4:
-			//	if (m_eAnim_Next == EDjinnAnim::Spell_1_Stop)
-			//	{
-			//		iAnimTime = (_uint)m_pModelCom->Get_AnimTime();
-			//
-			//	if ((_uint)EDjinnAnim::Spell_1_Stop == iAnimTime - 1)
-			//		++m_iAttackCount;
-			//	}
-			//
-			//	break;
+	break;
+	//
+	//case 4:
+	//	if (m_eAnim_Next == EDjinnAnim::Spell_1_Stop)
+	//	{
+	//		iAnimTime = (_uint)m_pModelCom->Get_AnimTime();
+	//
+	//	if ((_uint)EDjinnAnim::Spell_1_Stop == iAnimTime - 1)
+	//		++m_iAttackCount;
+	//	}
+	//
+	//	break;
 	default:
 		m_iAttackCount = 0;
 		m_IsAttack = false;
@@ -719,7 +796,7 @@ void CBoss_Djinn::Attack_TrapBall(_float TimeDelta)
 		m_eAnim_Next = EDjinnAnim::Spell_2_Loop;
 		m_fTime_TrapBall += TimeDelta;
 
-		if (1 == (_int)m_fTime_TrapBall && 0.f == m_vTargetPosition.w )
+		if (1 == (_int)m_fTime_TrapBall && 0.f == m_vTargetPosition.w)
 		{
 			XMStoreFloat4(&m_vTargetPosition, Get_TargetPos());
 
@@ -1022,8 +1099,10 @@ void CBoss_Djinn::Free()
 	Safe_Release(m_pColliderCom_Attack);
 	Safe_Release(m_pTextureCom_Specular);
 
+	Safe_Release(m_pTrail_RightHand);
 	Safe_Release(m_pColliderCom_LeftHand);
 	Safe_Release(m_pTestHand);
+	Safe_Release(m_pRing_Effect);
 
 	__super::Free();
 }

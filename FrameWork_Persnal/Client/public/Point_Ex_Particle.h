@@ -20,8 +20,9 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void Set_LifeTime(_float fTime) { m_PointDesc.fLifeTime = fTime, m_fTime = 0.f; }
+	void Set_LifeTime(_float fTime);
 	void Set_SpreadDis(_float fDis) { m_PointDesc.fSpreadDis = fDis; }
+	void Set_Pos(_fvector vPos) { m_pMovementCom->Set_State(EState::Position, vPos); }
 
 public:
 	void SetUp_Dir_Up(_int iRandNum_Max);

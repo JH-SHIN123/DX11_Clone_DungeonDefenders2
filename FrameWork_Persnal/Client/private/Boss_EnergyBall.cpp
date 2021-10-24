@@ -138,7 +138,7 @@ void CBoss_EnergyBall::Create_Effect()
 {
 	MESH_EFFECT_DESC Mesh_Desc;
 
-	Mesh_Desc.fLifeTime = 0.5f;
+	Mesh_Desc.fLifeTime = 0.02f;
 	lstrcpy(Mesh_Desc.szModelName, L"Component_Mesh_Lightning");
 
 

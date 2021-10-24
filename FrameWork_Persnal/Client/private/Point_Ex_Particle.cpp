@@ -99,6 +99,22 @@ HRESULT CPoint_Ex_Particle::Render()
 	return S_OK;
 }
 
+void CPoint_Ex_Particle::Set_LifeTime(_float fTime)
+{
+	m_PointDesc.fLifeTime = fTime;
+	m_fTime = 1.f;
+
+	_float fTimeReset = 0.f;
+
+	for (_int i = 0; i < m_iNumInstance; ++i)
+	{
+		m_pTimeBuffer[i] = fTimeReset;
+		fTimeReset += m_PointDesc.fTimeTerm;
+	}	
+
+
+}
+
 void CPoint_Ex_Particle::SetUp_Dir_Up(_int iRandNum_Max)
 {
 	VTXMATRIX_EXTEND* pInstance = m_pBufferInstanceCom->Get_InstanceBuffer();

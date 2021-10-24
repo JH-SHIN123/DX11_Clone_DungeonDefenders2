@@ -118,6 +118,10 @@ private:
 
 private:
 	_float4 m_vTargetPosition;
+	class CRing_Effect* m_pRing_Effect = nullptr;
+	class CPoint_Ex_Particle* m_pEffect_RightHand = nullptr;
+	class CPoint_Ex_Trail* m_pTrail_RightHand = nullptr;
+
 private:
 	//_float4x4 m_RevercePivot
 

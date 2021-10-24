@@ -334,6 +334,9 @@
     <Filter Include="02.GameObject\08.Effect\01.Mesh_Effect">
       <UniqueIdentifier>{76cb44ef-43eb-4c6f-a7ec-c3951b6ea0ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\08.Effect\02.Ring_Effect">
+      <UniqueIdentifier>{eebd80ed-0d09-40b8-b24f-57151741e727}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -633,6 +636,7 @@
     <ClInclude Include="..\public\Mesh_Effect.h">
       <Filter>02.GameObject\08.Effect\01.Mesh_Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Ring_Effect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -911,6 +915,7 @@
     <ClCompile Include="..\private\Mesh_Effect.cpp">
       <Filter>02.GameObject\08.Effect\01.Mesh_Effect</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Ring_Effect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

@@ -60,6 +60,10 @@ public:
 	void SetUp_Color(_float4 vColor) { m_vColor = vColor, m_IsColor = true; }
 	void Set_ShaderPass(_uint iShaderPass) { m_PointDesc.iShaderPass = iShaderPass; }
 
+public:
+	void Set_LifeTime(_float fLifeTime);
+
+
 protected:
 	CVIBuffer_PointInstance_Extend*	m_pBufferInstanceCom = nullptr;
 	CTextures*					m_pTexturesCom = nullptr;

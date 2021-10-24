@@ -435,7 +435,7 @@ technique11		DefaultTechnique
 
 	pass Light_Directional__AlphaBlue // 8
 	{
-		SetRasterizerState(Rasterizer_Solid);
+		SetRasterizerState(Rasterizer_Solid_NotCurl);
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL_TERRAIN();
@@ -445,7 +445,7 @@ technique11		DefaultTechnique
 
 	pass Light_Directional__AlphaRed // 9
 	{
-		SetRasterizerState(Rasterizer_Solid);
+		SetRasterizerState(Rasterizer_Solid_NotCurl);
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL_TERRAIN();
@@ -455,7 +455,7 @@ technique11		DefaultTechnique
 
 	pass Light_Directional__AlphaGreen // 10
 	{
-		SetRasterizerState(Rasterizer_Solid);
+		SetRasterizerState(Rasterizer_Solid_NotCurl);
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL_TERRAIN();
@@ -465,7 +465,7 @@ technique11		DefaultTechnique
 
 	pass Light_Directional__AlphaBlue2 // 11
 	{
-		SetRasterizerState(Rasterizer_Solid);
+		SetRasterizerState(Rasterizer_Solid_NotCurl);
 		SetDepthStencilState(DepthStecil_NotZWrite, 0);
 		SetBlendState(BlendState_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL_TERRAIN();
