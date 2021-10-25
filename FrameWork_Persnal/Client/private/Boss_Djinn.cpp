@@ -61,6 +61,9 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 
 	if (0 >= m_pStatusCom->Get_Hp())
 	{
+		CSound_Manager::GetInstance()->Play_Sound(L"GenieKing_Death.ogg", CHANNEL_BOSS_D);
+		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS_D, 0.7f);
+
 		if (EDjinnAnim::Death == m_eAnim_Next)
 		{
 			if (true == m_pModelCom->Get_IsFinishedAnimaion())
@@ -97,6 +100,33 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 			m_pColliderCom_Hurt->Set_IsCollide(false);
 			m_IsHurt = true;
 
+			_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+			if (60.f > fDis)
+			{
+				m_IsSkillSound[(_int)EDjinn_Attack::Attack] = true;
+				fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+
+				_int iRandSound = rand() % 4;
+
+				switch (iRandSound)
+				{
+				case 0:
+					CSound_Manager::GetInstance()->Play_Sound(L"Boss_Skill1.wav", CHANNEL_BOSS_H);
+					break;
+				case 1:
+					CSound_Manager::GetInstance()->Play_Sound(L"Boss_Skill2.wav", CHANNEL_BOSS_H);
+					break;
+				case 2:
+					CSound_Manager::GetInstance()->Play_Sound(L"Boss_Skill3.wav", CHANNEL_BOSS_H);
+					break;
+				case 3:
+					CSound_Manager::GetInstance()->Play_Sound(L"Boss_Skill4.wav", CHANNEL_BOSS_H);
+					break;
+				default:
+					break;
+				}
+				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS_H, fDis + 0.1f);
+			}
 
 			switch (m_pStatusCom->Get_DamageType())
 			{
@@ -185,6 +215,9 @@ _int CBoss_Djinn::Late_Tick(_float TimeDelta)
 
 	if (0 >= m_pStatusCom->Get_Hp())
 	{
+		CSound_Manager::GetInstance()->Play_Sound(L"GenieKing_Death.ogg", CHANNEL_BOSS_D);
+		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS_D, 0.7f);
+
 		if (EDjinnAnim::Death == m_eAnim_Next)
 		{
 			if (true == m_pModelCom->Get_IsFinishedAnimaion())
@@ -599,9 +632,9 @@ void CBoss_Djinn::Attack_Default()
 			m_IsSkillSound[(_int)EDjinn_Attack::Attack] = true;
 			fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
 
-			CSound_Manager::GetInstance()->StopSound(CHANNEL_GOBLIN);
-			CSound_Manager::GetInstance()->Play_Sound(L"Boss_Punch.ogg", CHANNEL_GOBLIN);
-			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN, fDis + 0.1f);
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_BOSS);
+			CSound_Manager::GetInstance()->Play_Sound(L"Boss_Punch.ogg", CHANNEL_BOSS);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS, fDis + 0.1f);
 		}
 
 	}
@@ -621,9 +654,9 @@ void CBoss_Djinn::Attack_Default()
 					m_IsSkillSound[(_int)EDjinn_Attack::Attack] = true;
 					fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
 
-					CSound_Manager::GetInstance()->StopSound(CHANNEL_GOBLIN_A);
-					CSound_Manager::GetInstance()->Play_Sound(L"Boss_Skill1.wav", CHANNEL_GOBLIN_A);
-					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN_A, fDis + 0.1f);
+					CSound_Manager::GetInstance()->StopSound(CHANNEL_BOSS_A);
+					CSound_Manager::GetInstance()->Play_Sound(L"Boss_Skill1.wav", CHANNEL_BOSS_A);
+					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS_A, fDis + 0.1f);
 				}
 			}
 		}
@@ -665,20 +698,20 @@ void CBoss_Djinn::Attack_EnergyBall()
 					m_IsSkillSound[(_int)EDjinn_Attack::EnergyBall] = true;
 					fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
 
-					CSound_Manager::GetInstance()->StopSound(CHANNEL_GOBLIN_A);
+					CSound_Manager::GetInstance()->StopSound(CHANNEL_BOSS_A);
 					switch (iSoundNum)
 					{
 					case 0:
-						CSound_Manager::GetInstance()->Play_Sound(L"Djinn_ShootFire1.wav", CHANNEL_GOBLIN_A);
+						CSound_Manager::GetInstance()->Play_Sound(L"Djinn_ShootFire1.wav", CHANNEL_BOSS_A);
 						break;
 					case 1:
-						CSound_Manager::GetInstance()->Play_Sound(L"Djinn_ShootFire2.wav", CHANNEL_GOBLIN_A);
+						CSound_Manager::GetInstance()->Play_Sound(L"Djinn_ShootFire2.wav", CHANNEL_BOSS_A);
 						break;
 					default:
-						CSound_Manager::GetInstance()->Play_Sound(L"Djinn_ShootFire3.wav", CHANNEL_GOBLIN_A);
+						CSound_Manager::GetInstance()->Play_Sound(L"Djinn_ShootFire3.wav", CHANNEL_BOSS_A);
 						break;
 					}
-					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN_A, fDis + 0.1f);
+					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS_A, fDis + 0.1f);
 				}
 			}
 		}
@@ -774,12 +807,12 @@ void CBoss_Djinn::Attack_WideRange()
 					m_IsSkillSound[(_int)EDjinn_Attack::WideRange] = true;
 					fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
 					//Boss_EyeLaserShootStart
-					CSound_Manager::GetInstance()->StopSound(CHANNEL_GOBLIN_A);
-					CSound_Manager::GetInstance()->StopSound(CHANNEL_GOBLIN);
-					CSound_Manager::GetInstance()->Play_Sound(L"Boss_WideRange.wav", CHANNEL_GOBLIN_A);
-					CSound_Manager::GetInstance()->Play_Sound(L"Boss_EyeLaserShootStart.wav", CHANNEL_GOBLIN);
-					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN_A, fDis + 0.1f);
-					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN, fDis + 0.1f);
+					CSound_Manager::GetInstance()->StopSound(CHANNEL_BOSS_A);
+					CSound_Manager::GetInstance()->StopSound(CHANNEL_BOSS);
+					CSound_Manager::GetInstance()->Play_Sound(L"Boss_WideRange.wav", CHANNEL_BOSS_A);
+					CSound_Manager::GetInstance()->Play_Sound(L"Boss_EyeLaserShootStart.wav", CHANNEL_BOSS);
+					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS_A, fDis + 0.1f);
+					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS, fDis + 0.1f);
 				}
 			}
 
@@ -908,9 +941,9 @@ void CBoss_Djinn::Attack_TrapBall(_float TimeDelta)
 					m_IsSkillSound[(_int)EDjinn_Attack::WideRange] = true;
 					fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
 
-					CSound_Manager::GetInstance()->StopSound(CHANNEL_GOBLIN);
-					CSound_Manager::GetInstance()->Play_Sound(L"Boss_TrapReady.wav", CHANNEL_GOBLIN);
-					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN, fDis + 0.1f);
+					CSound_Manager::GetInstance()->StopSound(CHANNEL_BOSS);
+					CSound_Manager::GetInstance()->Play_Sound(L"Boss_TrapReady.wav", CHANNEL_BOSS);
+					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS, fDis + 0.1f);
 				}
 			}
 			//Component_Texture_GreenBall_2
@@ -950,12 +983,12 @@ void CBoss_Djinn::Attack_TrapBall(_float TimeDelta)
 					m_IsSkillSound[(_int)EDjinn_Attack::TrapBall] = true;
 					fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
 					//Boss_EyeLaserShootStart
-					CSound_Manager::GetInstance()->StopSound(CHANNEL_GOBLIN_A);
-					CSound_Manager::GetInstance()->StopSound(CHANNEL_GOBLIN);
-					CSound_Manager::GetInstance()->Play_Sound(L"Djinn_ShootPoison2.ogg", CHANNEL_GOBLIN_A);
-					CSound_Manager::GetInstance()->Play_Sound(L"Djinn.ogg", CHANNEL_GOBLIN);
-					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN_A, fDis + 0.1f);
-					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN, fDis + 0.1f);
+					CSound_Manager::GetInstance()->StopSound(CHANNEL_BOSS_A);
+					CSound_Manager::GetInstance()->StopSound(CHANNEL_BOSS);
+					CSound_Manager::GetInstance()->Play_Sound(L"Djinn_ShootPoison2.ogg", CHANNEL_BOSS_A);
+					CSound_Manager::GetInstance()->Play_Sound(L"Djinn.ogg", CHANNEL_BOSS);
+					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS_A, fDis + 0.1f);
+					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS, fDis + 0.1f);
 				}
 			}
 		}
@@ -993,6 +1026,20 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 	_vector vTargetPos = Get_TargetPos();
 	vTargetPos.m128_f32[1] += 2.f;
 	_vector vDir = vTargetPos;//XMVector3Normalize(vTargetPos);
+
+
+	_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+	if (60.f > fDis)
+	{
+		fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+		//Boss_EyeLaserShootStart
+		CSound_Manager::GetInstance()->StopSound(CHANNEL_BOSS);
+		CSound_Manager::GetInstance()->Play_Sound(L"Apprenctice_Knockback_loop.ogg", CHANNEL_BOSS);
+		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS, fDis + 0.1f);
+	}
+	
+	/*
+	*/
 
 	BULLET_DESC Data;
 	lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
@@ -1041,6 +1088,11 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 
 			m_fTime_RepeatBall = 0.f;
 			++m_iAttackCount;
+
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_BOSS_A);
+			CSound_Manager::GetInstance()->Play_Sound(L"Apprenctice_Knockback_release2.ogg", CHANNEL_BOSS_A);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS_A, fDis + 0.1f);
+
 		}
 		break;
 
@@ -1065,6 +1117,11 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 
 			m_fTime_RepeatBall = 0.f;
 			++m_iAttackCount;
+
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_BOSS_A);
+			CSound_Manager::GetInstance()->Play_Sound(L"Apprenctice_Knockback_release2.ogg", CHANNEL_BOSS_A);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS_A, fDis + 0.1f);
+
 		}
 		break;
 
@@ -1089,6 +1146,11 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 
 			m_fTime_RepeatBall = 0.f;
 			++m_iAttackCount;
+
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_BOSS_A);
+			CSound_Manager::GetInstance()->Play_Sound(L"Apprenctice_Knockback_release2.ogg", CHANNEL_BOSS_A);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS_A, fDis + 0.1f);
+
 		}
 		break;
 
@@ -1113,6 +1175,11 @@ void CBoss_Djinn::Attack_RepeatBall(_float TimeDelta)
 
 			m_fTime_RepeatBall = 0.f;
 			++m_iAttackCount;
+
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_BOSS_A);
+			CSound_Manager::GetInstance()->Play_Sound(L"Apprenctice_Knockback_release2.ogg", CHANNEL_BOSS_A);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS_A, fDis + 0.1f);
+
 		}
 		break;
 

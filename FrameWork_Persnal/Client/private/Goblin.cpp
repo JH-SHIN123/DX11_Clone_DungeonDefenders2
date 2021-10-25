@@ -64,7 +64,7 @@ _int CGoblin::Tick(_float TimeDelta)
 						else
 							CSound_Manager::GetInstance()->Play_Sound(L"Goblin_Dead2.ogg", CHANNEL_GOBLIN_D);
 
-						CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN_D, fDis + 0.4);
+						CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN_D, fDis + 0.4f);
 					}
 				}
 			}

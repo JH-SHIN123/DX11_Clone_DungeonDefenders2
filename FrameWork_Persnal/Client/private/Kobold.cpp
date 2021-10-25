@@ -104,7 +104,7 @@ _int CKobold::Tick(_float TimeDelta)
 			else
 				CSound_Manager::GetInstance()->Play_Sound(L"Kobold_explode2.ogg", CHANNEL_KOBOLD_D);
 
-			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD_D, fDis + 0.4);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD_D, fDis + 0.2f);
 		}
 
 		m_pColliderCom_Hurt->Set_IsCollide(false);
