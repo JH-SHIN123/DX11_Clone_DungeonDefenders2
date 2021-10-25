@@ -73,8 +73,11 @@ _int CMonster::Late_Tick(_float TimeDelta)
 		}
 	}
 
-	if (0 > m_pStatusCom->Get_Hp())
-		m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Alpha, this);
+	if (0 >= m_pStatusCom->Get_Hp())
+	{
+		m_fDissolveTime += TimeDelta * 0.5f;
+		m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
+	}
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
@@ -106,17 +109,19 @@ HRESULT CMonster::Render()
 
 	if (0 > m_pStatusCom->Get_Hp()) 
 	{
-		iShader = 7;
-		_vector vColor_Now = XMLoadFloat4(&m_vColor);
-		_vector vColor = XMVectorSet(5.f, 5.f, 5.f, 0.f);
+		iShader = 12;
+		//_vector vColor_Now = XMLoadFloat4(&m_vColor);
+		//_vector vColor = XMVectorSet(5.f, 5.f, 5.f, 0.f);
+		//
+		//_vector vTerm = vColor - vColor_Now;
+		//vColor_Now += vTerm * (0.008f);
+		//
+		//XMStoreFloat4(&m_vColor, vColor_Now);
+		//m_pModelCom->Set_Variable("g_vColor", &m_vColor, sizeof(_float4));
 
-		_vector vTerm = vColor - vColor_Now;
-		vColor_Now += vTerm * (0.008f);
+		m_pModelCom->Set_ShaderResourceView_Direct("g_DissolveTexture", m_pTextureCom_Dissolve->Get_ShaderResourceView(0));
+		m_pModelCom->Set_Variable("g_fTime", &m_fDissolveTime, sizeof(_float));
 
-		XMStoreFloat4(&m_vColor, vColor_Now);
-
-
-		m_pModelCom->Set_Variable("g_vColor", &m_vColor, sizeof(_float4));
 	}
 
 	_uint iNumMaterials = m_pModelCom->Get_NumMaterials();
@@ -175,12 +180,12 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 
 	if (true == m_IsPoison)
 	{
-		m_fCoughTime += TimeDelta;
-
-		if (m_fCoughTick <= m_fCoughTime)
-		{
-			return EMonsterAI::Cough;
-		}
+		//m_fCoughTime += TimeDelta;
+		//
+		//if (m_fCoughTick <= m_fCoughTime)
+		//{
+		//	return EMonsterAI::Cough;
+		//}
 	}
 
 	// 하던거 마저 하고
@@ -356,6 +361,13 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 		case Client::EMonster_MovePath::West_R:
 			vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_R[m_iMoveCount]);
 			break;
+		case EMonster_MovePath::East_L:
+			vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iEast_L[m_iMoveCount]);
+			break;
+		case EMonster_MovePath::East_R:
+			vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iEast_R[m_iMoveCount]);
+			break;
+
 		}
 	}
 	else
@@ -379,6 +391,13 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 		case Client::EMonster_MovePath::West_R:
 			vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_R[m_iMoveCount + 1]);
 			break;
+		case EMonster_MovePath::East_L:
+			vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iEast_L[m_iMoveCount] + 1);
+			break;
+		case EMonster_MovePath::East_R:
+			vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iEast_R[m_iMoveCount] + 1);
+			break;
+
 		}
 	}
 	else
@@ -411,6 +430,16 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 			iNearCellIndex = m_iWest_R[m_iMoveCount];
 			fDis = Get_DisToCell(m_iWest_R[m_iMoveCount]);
 		}
+		if (fDis > Get_DisToCell(m_iEast_R[m_iMoveCount]))
+		{
+			iNearCellIndex = m_iEast_R[m_iMoveCount];
+			fDis = Get_DisToCell(m_iEast_R[m_iMoveCount]);
+		}
+		if (fDis > Get_DisToCell(m_iEast_L[m_iMoveCount]))
+		{
+			iNearCellIndex = m_iEast_L[m_iMoveCount];
+			fDis = Get_DisToCell(m_iEast_L[m_iMoveCount]);
+		}
 
 		if (-1 < m_iMoveCount - 1)
 		{
@@ -433,6 +462,18 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 			{
 				iNearCellIndex = m_iWest_L[m_iMoveCount - 1];
 				fDis = Get_DisToCell(m_iWest_L[m_iMoveCount - 1]);
+			}
+
+			if (fDis > Get_DisToCell(m_iEast_R[m_iMoveCount - 1]))
+			{
+				iNearCellIndex = m_iEast_R[m_iMoveCount - 1];
+				fDis = Get_DisToCell(m_iEast_R[m_iMoveCount - 1]);
+			}
+
+			if (fDis > Get_DisToCell(m_iEast_L[m_iMoveCount - 1]))
+			{
+				iNearCellIndex = m_iEast_L[m_iMoveCount - 1];
+				fDis = Get_DisToCell(m_iEast_L[m_iMoveCount - 1]);
 			}
 		}
 
@@ -458,6 +499,16 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 				iNearCellIndex = m_iWest_L[m_iMoveCount + 1];
 				fDis = Get_DisToCell(m_iWest_L[m_iMoveCount + 1]);
 			}
+			if (fDis > Get_DisToCell(m_iEast_R[m_iMoveCount + 1]))
+			{
+				iNearCellIndex = m_iEast_R[m_iMoveCount + 1];
+				fDis = Get_DisToCell(m_iEast_R[m_iMoveCount + 1]);
+			}
+			if (fDis > Get_DisToCell(m_iEast_L[m_iMoveCount + 1]))
+			{
+				iNearCellIndex = m_iEast_L[m_iMoveCount + 1];
+				fDis = Get_DisToCell(m_iEast_L[m_iMoveCount + 1]);
+			}
 		}
 		// 제일 가까운 경로 찾음
 		vCellPos = m_pNaviCom->Get_CellCenter_Pos(iNearCellIndex);
@@ -478,7 +529,13 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 				vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_L[m_iMoveCount + 1]);
 				break;
 			case Client::EMonster_MovePath::West_R:
-				vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_R[m_iMoveCount] + 1);
+				vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_R[m_iMoveCount + 1]);
+				break;
+			case Client::EMonster_MovePath::East_L:
+				vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iEast_L[m_iMoveCount + 1]);
+				break;	
+			case Client::EMonster_MovePath::East_R:
+				vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iEast_R[m_iMoveCount + 1]);
 				break;
 			}
 		}
@@ -635,6 +692,12 @@ EMonsterAI CMonster::AI_BrainWashed(_float TimeDelta, _vector * pTargetPos, _boo
 			case Client::EMonster_MovePath::West_R:
 				vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_R[m_iMoveCount]);
 				break;
+			case Client::EMonster_MovePath::East_L:
+				vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iEast_L[m_iMoveCount]);
+				break;
+			case Client::EMonster_MovePath::East_R:
+				vCellPos = m_pNaviCom->Get_CellCenter_Pos(m_iEast_R[m_iMoveCount]);
+				break;
 			}
 		}
 		else
@@ -657,6 +720,12 @@ EMonsterAI CMonster::AI_BrainWashed(_float TimeDelta, _vector * pTargetPos, _boo
 				break;
 			case Client::EMonster_MovePath::West_R:
 				vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_R[m_iMoveCount + 1]);
+				break;
+			case Client::EMonster_MovePath::East_L:
+				vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iEast_L[m_iMoveCount + 1]);
+				break;
+			case Client::EMonster_MovePath::East_R:
+				vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iEast_R[m_iMoveCount + 1]);
 				break;
 			}
 		}
@@ -690,6 +759,16 @@ EMonsterAI CMonster::AI_BrainWashed(_float TimeDelta, _vector * pTargetPos, _boo
 				iNearCellIndex = m_iWest_R[m_iMoveCount];
 				fDis = Get_DisToCell(m_iWest_R[m_iMoveCount]);
 			}
+			if (fDis > Get_DisToCell(m_iEast_R[m_iMoveCount]))
+			{
+				iNearCellIndex = m_iEast_R[m_iMoveCount];
+				fDis = Get_DisToCell(m_iEast_R[m_iMoveCount]);
+			}
+			if (fDis > Get_DisToCell(m_iEast_L[m_iMoveCount]))
+			{
+				iNearCellIndex = m_iEast_L[m_iMoveCount];
+				fDis = Get_DisToCell(m_iEast_L[m_iMoveCount]);
+			}
 
 			if (-1 < m_iMoveCount - 1)
 			{
@@ -712,6 +791,16 @@ EMonsterAI CMonster::AI_BrainWashed(_float TimeDelta, _vector * pTargetPos, _boo
 				{
 					iNearCellIndex = m_iWest_L[m_iMoveCount - 1];
 					fDis = Get_DisToCell(m_iWest_L[m_iMoveCount - 1]);
+				}
+				if (fDis > Get_DisToCell(m_iEast_R[m_iMoveCount - 1]))
+				{
+					iNearCellIndex = m_iEast_R[m_iMoveCount - 1];
+					fDis = Get_DisToCell(m_iEast_R[m_iMoveCount - 1]);
+				}
+				if (fDis > Get_DisToCell(m_iEast_L[m_iMoveCount - 1]))
+				{
+					iNearCellIndex = m_iEast_L[m_iMoveCount - 1];
+					fDis = Get_DisToCell(m_iEast_L[m_iMoveCount - 1]);
 				}
 			}
 
@@ -737,6 +826,16 @@ EMonsterAI CMonster::AI_BrainWashed(_float TimeDelta, _vector * pTargetPos, _boo
 					iNearCellIndex = m_iWest_L[m_iMoveCount + 1];
 					fDis = Get_DisToCell(m_iWest_L[m_iMoveCount + 1]);
 				}
+				if (fDis > Get_DisToCell(m_iEast_R[m_iMoveCount + 1]))
+				{
+					iNearCellIndex = m_iEast_R[m_iMoveCount + 1];
+					fDis = Get_DisToCell(m_iEast_R[m_iMoveCount + 1]);
+				}
+				if (fDis > Get_DisToCell(m_iEast_L[m_iMoveCount + 1]))
+				{
+					iNearCellIndex = m_iEast_L[m_iMoveCount + 1];
+					fDis = Get_DisToCell(m_iEast_L[m_iMoveCount + 1]);
+				}
 			}
 			// 제일 가까운 경로 찾음
 			vCellPos = m_pNaviCom->Get_CellCenter_Pos(iNearCellIndex);
@@ -758,6 +857,12 @@ EMonsterAI CMonster::AI_BrainWashed(_float TimeDelta, _vector * pTargetPos, _boo
 					break;
 				case Client::EMonster_MovePath::West_R:
 					vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_R[m_iMoveCount] + 1);
+					break;
+				case Client::EMonster_MovePath::East_L:
+					vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iEast_L[m_iMoveCount] + 1);
+					break;
+				case Client::EMonster_MovePath::East_R:
+					vNextCell_Pos = m_pNaviCom->Get_CellCenter_Pos(m_iEast_R[m_iMoveCount] + 1);
 					break;
 				}
 			}
@@ -841,6 +946,18 @@ EMonster_MovePath CMonster::Research_MovePath(const _int & iCellIndex)
 			m_iMoveCount = i;
 			return EMonster_MovePath::West_R;
 		}
+
+		if (iCellIndex == m_iEast_L[i])
+		{
+			m_iMoveCount = i;
+			return EMonster_MovePath::East_L;
+		}
+
+		if (iCellIndex == m_iEast_R[i])
+		{
+			m_iMoveCount = i;
+			return EMonster_MovePath::East_R;
+		}
 	}
 
 	return EMonster_MovePath::End;
@@ -852,6 +969,8 @@ HRESULT CMonster::Ready_Component(void * pArg)
 	memcpy(&Data, pArg, sizeof(MONSTER_DESC));
 	
 	HRESULT hr = S_OK;
+	// m_pTextureCom_Dissolve
+	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_Texture_Dissolve"), TEXT("Com_Tex"), (CComponent**)&m_pTextureCom_Dissolve);
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Status"), TEXT("Com_Status"), (CComponent**)&m_pStatusCom, &Data.Stat_Desc);
@@ -876,6 +995,12 @@ HRESULT CMonster::Ready_Component(void * pArg)
 		break;
 	case Client::EMonster_MovePath::West_R:
 		vPos = m_pNaviCom->Get_CellCenter_Pos(m_iWest_R[0]);
+		break;
+	case Client::EMonster_MovePath::East_L:
+		vPos = m_pNaviCom->Get_CellCenter_Pos(m_iEast_L[0]);
+		break;
+	case Client::EMonster_MovePath::East_R:
+		vPos = m_pNaviCom->Get_CellCenter_Pos(m_iEast_R[0]);
 		break;
 	}
 	m_pNaviCom->SetUp_NavigationIndex(vPos);
@@ -958,6 +1083,8 @@ void CMonster::Free()
 	Safe_Release(m_pNaviCom);
 
 	Safe_Release(m_pMeterBar_Hp);
+
+	Safe_Release(m_pTextureCom_Dissolve);
 
 	__super::Free();
 }

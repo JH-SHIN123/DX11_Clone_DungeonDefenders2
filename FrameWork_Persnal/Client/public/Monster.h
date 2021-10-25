@@ -82,6 +82,7 @@ protected:
 	CMovement*				m_pMovementCom	= nullptr;
 	CNavigation*			m_pNaviCom		= nullptr;
 	_bool					m_IsDead = false;
+	CTextures*				m_pTextureCom_Dissolve	= nullptr;
 
 protected:
 	_bool	m_IsBrainWashed				= false;
@@ -99,11 +100,14 @@ protected:
 	_float			m_fAttackDis = 0.f;
 
 protected: //Path_Index
-	const _int m_iNorth_L[7]	= { 83,	81,	 77,  73,  100,	17,	 0 };
-	const _int m_iNorth_R[7]	= { 99,	119, 116, 107, 100,	17,	 0 };
-	const _int m_iWest_L[7]		= { 87,	85,	 36,  31,  24,	12,	 0 };
-	const _int m_iWest_R[7]		= { 93,	53,	 50,  44,  25,	12,	 0 };
-
+	const _int m_iNorth_L[7]	= { 83,		81,		77,		73,		159,	17,		0 };
+	const _int m_iNorth_R[7]	= { 113,	177,	179,	165,	158,	17,		0 };
+	const _int m_iWest_L[7]		= { 87,		85,		36,		31,		24,		12,		0 };
+	const _int m_iWest_R[7]		= { 93,		53,		50,		44,		25,		12,		0 };
+	const _int m_iEast_L[7]		= { 186,	118,	105,	106,	101,	99,		0 };
+	const _int m_iEast_R[7]		= { 190,	114,	103,	126,	100,	99,		0 };
+	// 190, 114, 103, 126, 100, 99, 0
+	// = { 186,	118,	105,	106,	101,	99,		0 };
 	_int m_iMoveCount = 0;
 	_bool m_IsChaseTarget = false;
 	_bool m_IsTowerAttack = false;
@@ -127,6 +131,7 @@ protected:
 
 private:
 	_float4		m_vColor = { 1.f, 1.f, 1.f, 1.f };
+	_float m_fDissolveTime = 0.f;
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

@@ -99,22 +99,20 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 1;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 1;
-
+	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 	m_pMonsterGate[(_uint)EMonster_MovePath::North_L]->Set_PhaseMonster_Info(Phase);
 
 	Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 1;
 	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
-	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 1;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
-
 	m_pMonsterGate[(_uint)EMonster_MovePath::North_R]->Set_PhaseMonster_Info(Phase);
 
 	Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
@@ -125,7 +123,6 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
-
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_L]->Set_PhaseMonster_Info(Phase);
 
 	Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
@@ -138,10 +135,32 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase);
 
+
+	Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
+	m_pMonsterGate[(_uint)EMonster_MovePath::East_L]->Set_PhaseMonster_Info(Phase);
+
+
+	Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
+	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 1;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
+	m_pMonsterGate[(_uint)EMonster_MovePath::East_R]->Set_PhaseMonster_Info(Phase);
+
 	CData_Manager::GetInstance()->Set_MonsterCount_Max(4);
 
 	CSound_Manager::GetInstance()->PlayBGM(L"Bgm.mp3", CHANNEL_BGM);
-	CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, 0.2f);
+	CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, 0.1f);
 	CSound_Manager::GetInstance()->Play_Sound(L"Sound_0.wav", CHANNEL_PLAYER);
 
 	return S_OK;
@@ -372,12 +391,12 @@ HRESULT CLevel_Stage1::Ready_Layer_Monster_Gate(const _tchar * pLayerTag)
 
 	// µ¿ÁÂ
 	Data.StartPath = EMonster_MovePath::East_L;
-	Data.MoveDesc.vPos = { 31.5f,-31.5f,228.5f,1.f };
+	Data.MoveDesc.vPos = { -19.5f,-31.5f,228.5f,1.f };
 	Data.MoveDesc.vRotateLook = { 0.f,0.f,1.f,0.f };
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, L"Layer_Gate_EL", &Data);
 
 	Data.StartPath = EMonster_MovePath::East_R;
-	Data.MoveDesc.vPos = { -19.5f,-31.5f,228.5f,1.f };
+	Data.MoveDesc.vPos = { 31.5f,-31.5f,228.5f,1.f };
 	Data.MoveDesc.vRotateLook = { 0.f,0.f,1.f,0.f };
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, L"Layer_Gate_ER", &Data);
 

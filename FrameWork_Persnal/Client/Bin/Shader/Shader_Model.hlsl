@@ -28,6 +28,7 @@ cbuffer MtrlDesc
 	float4		vMtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
 	float4		vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 };
+texture2D		g_DissolveTexture;
 
 texture2D		g_MaskingTexture;
 texture2D		g_DiffuseTexture;
@@ -36,6 +37,7 @@ texture2D		g_SpecularTexture;
 float3			g_RGBColor;
 matrix			g_PivotMatrix;
 float4			g_vColor;
+float			g_fTime;
 
 sampler DiffuseSampler = sampler_state
 {
@@ -351,6 +353,39 @@ PS_OUT PS_ALPHA_GREEN(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_DISSOLVE(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	float4 vDissolve = g_DissolveTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	// 0.7 >= 0 (최초 시작)
+	if (vDissolve.x >= g_fTime)
+	{
+		Out.vColor.a = 1.f;
+		// 이건 그린다.
+		float fDis = abs(vDissolve.x - g_fTime);
+
+		if (fDis <= 0.08f)
+		{
+			//0.294117659f, 0.000000000f, 0.509803951f, 1.000000000f
+			Out.vColor.r = 0.3f;
+			Out.vColor.g = 0.8f;
+			Out.vColor.b = 0.51f;
+			Out.vColor.a = 1.f;
+
+		}
+
+	}
+	else
+		discard;
+
+
+	return Out;
+}
+
 technique11		DefaultTechnique
 {
 	pass BoneLight__Directional // 0
@@ -472,4 +507,15 @@ technique11		DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_ALPHA_BLUE_2();
 	}
+
+	pass Light_Directional__Dissolve // 12
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_Default, 0);
+		SetBlendState(BlendState_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_DISSOLVE();
+	}
 };
+//g_DissolveTexture
