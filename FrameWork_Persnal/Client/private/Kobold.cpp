@@ -90,6 +90,23 @@ _int CKobold::Tick(_float TimeDelta)
 		m_IsAttack = false;
 		Create_Hit_Particle(4.f);
 
+		m_IsDeadSound = true;
+
+		_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+		if (60.f > fDis)
+		{
+			fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_KOBOLD_D);
+
+			if (rand() % 2 == 0)
+				CSound_Manager::GetInstance()->Play_Sound(L"Kobold_explode1.ogg", CHANNEL_KOBOLD_D);
+			else
+				CSound_Manager::GetInstance()->Play_Sound(L"Kobold_explode2.ogg", CHANNEL_KOBOLD_D);
+
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD_D, fDis + 0.4);
+		}
+
 		m_pColliderCom_Hurt->Set_IsCollide(false);
 		m_IsHurt = true;
 
@@ -215,7 +232,26 @@ void CKobold::Anim_Check(_float TimeDelta)
 		return;
 
 	if (true == m_IsFuseOn)
+	{
 		m_eAnim_Next = EKoboldAnim::Run_Suicide;
+		_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+		if (60.f > fDis)
+		{
+			fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+
+			if (false == CSound_Manager::GetInstance()->IsPlaying(CHANNEL_KOBOLD_A))
+			{			
+				CSound_Manager::GetInstance()->Play_Sound(L"Kobold_screamloop2.ogg", CHANNEL_KOBOLD_A);
+				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD_A, fDis);
+			}
+			else
+			{
+				CSound_Manager::GetInstance()->Play_Sound(L"Kobold_screamloop2.ogg", CHANNEL_KOBOLD);
+				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD_A, fDis);
+			}
+		}
+
+	}
 
 	if (true == m_pModelCom->Get_IsFinishedAnimaion())
 	{
