@@ -123,7 +123,7 @@ private:
 	class CPoint_Ex_Trail* m_pTrail_RightHand = nullptr;
 
 private:
-	//_float4x4 m_RevercePivot
+	_bool m_IsSkillSound[(_uint)EDjinn_Attack::End] = { false };
 
 public:
 	static CBoss_Djinn* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
