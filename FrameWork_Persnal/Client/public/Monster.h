@@ -16,7 +16,7 @@ enum class EMonsterAI
 
 enum class EMonster_MovePath
 {
-	North_L, North_R, West_L, West_R, End
+	North_L, North_R, West_L, West_R, East_L, East_R, End
 };
 
 typedef struct tagMonsterDesc

@@ -143,6 +143,19 @@ private:
 #pragma endregion
 
 
+#pragma region SoundVolume
+public:
+	void Set_SoundVolume_BGM(_float fVolume) { m_fSoundVolume_BGM = fVolume; }
+	void Set_SoundVolume_Effect(_float fVolume) { m_fSoundVolume_Effect = fVolume; }
+	const _float Get_SoundVolume_BGM() { return m_fSoundVolume_BGM; }
+	const _float Get_SoundVolume_Effect() { return m_fSoundVolume_Effect; }
+
+private:
+	_float m_fSoundVolume_BGM = 1.f;
+	_float m_fSoundVolume_Effect = 1.f;
+
+#pragma endregion
+
 
 public:
 	virtual void Free();

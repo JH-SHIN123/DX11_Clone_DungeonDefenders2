@@ -29,6 +29,7 @@ public:
 
 public:
 	_bool	Get_IsPick();
+	void Set_Pos(_fvector vPos);
 
 private:
 	HRESULT	Ready_Component();

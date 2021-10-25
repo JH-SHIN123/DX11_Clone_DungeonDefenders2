@@ -82,6 +82,8 @@ HRESULT CVIBuffer_Font::NativeConstruct_Prototype(const _tchar * pShaderFilePath
 	if (FAILED(CVIBuffer::SetUp_InputLayOuts(ElementDesc, 2, pShaderFilePath, pTechniqueName)))
 		return E_FAIL;
 
+	Safe_Delete(pVertices);
+	Safe_Delete(pPolygonIndices);
 	return S_OK;
 }
 

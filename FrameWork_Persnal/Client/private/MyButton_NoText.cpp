@@ -90,6 +90,18 @@ _bool CMyButton_NoText::Get_IsClick_R()
 	return false;
 }
 
+_bool CMyButton_NoText::Get_IsDown()
+{
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+	{
+		if (true == m_IsPick && false == m_IsClicked)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 _bool CMyButton_NoText::Get_IsPick()
 {
 	if (m_IsPick == true)

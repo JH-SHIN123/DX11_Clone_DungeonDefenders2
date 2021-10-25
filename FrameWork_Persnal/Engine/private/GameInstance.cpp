@@ -37,7 +37,6 @@ HRESULT CGameInstance::Initialize(HINSTANCE hInst, HWND hWnd, CGraphic_Device::W
 	}
 
 	m_pSound_Manager->Initialize();
-	m_pSound_Manager->LoadSoundFile();
 
 	return S_OK;
 }

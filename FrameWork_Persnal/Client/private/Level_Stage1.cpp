@@ -139,9 +139,10 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase);
 
 	CData_Manager::GetInstance()->Set_MonsterCount_Max(4);
-	CSound_Manager::GetInstance()->Set_BGMVolume(CHANNEL_BGM, 0.2f);
-	CSound_Manager::GetInstance()->PlayBGM(L"BGM2.mp3", CHANNEL_BGM, 0.2f);
-	CSound_Manager::GetInstance()->Play_Sound(L"button.wav", CHANNEL_PLAYER, 1.f);
+
+	CSound_Manager::GetInstance()->PlayBGM(L"Bgm.mp3", CHANNEL_BGM);
+	CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, 0.2f);
+	CSound_Manager::GetInstance()->Play_Sound(L"Sound_0.wav", CHANNEL_PLAYER);
 
 	return S_OK;
 }
@@ -370,11 +371,13 @@ HRESULT CLevel_Stage1::Ready_Layer_Monster_Gate(const _tchar * pLayerTag)
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, L"Layer_Gate_WR", &Data);
 
 	// µ¿ÁÂ
-	Data.MoveDesc.vPos = { 30.f,-31.5f,228.5f,1.f };
+	Data.StartPath = EMonster_MovePath::East_L;
+	Data.MoveDesc.vPos = { 31.5f,-31.5f,228.5f,1.f };
 	Data.MoveDesc.vRotateLook = { 0.f,0.f,1.f,0.f };
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, L"Layer_Gate_EL", &Data);
 
-	Data.MoveDesc.vPos = { 30.f,-31.5f,228.5f,1.f };
+	Data.StartPath = EMonster_MovePath::East_R;
+	Data.MoveDesc.vPos = { -19.5f,-31.5f,228.5f,1.f };
 	Data.MoveDesc.vRotateLook = { 0.f,0.f,1.f,0.f };
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_Monster_Gate"), (_uint)ELevel::Stage1, L"Layer_Gate_ER", &Data);
 
@@ -386,6 +389,8 @@ HRESULT CLevel_Stage1::Ready_Layer_Monster_Gate(const _tchar * pLayerTag)
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_L] = (CMonster_Gate*)GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, TEXT("Layer_Gate_WL"));
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_R] = (CMonster_Gate*)GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, TEXT("Layer_Gate_WR"));
 
+	m_pMonsterGate[(_uint)EMonster_MovePath::East_L] = (CMonster_Gate*)GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, TEXT("Layer_Gate_EL"));
+	m_pMonsterGate[(_uint)EMonster_MovePath::East_R] = (CMonster_Gate*)GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, TEXT("Layer_Gate_ER"));
 
 
 	return S_OK;

@@ -232,9 +232,6 @@
     <Filter Include="96.Utility">
       <UniqueIdentifier>{5ae64ff8-9f27-4b0a-a3c4-3a4ba9d72bc5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96.Utility\00.Stage_Manager">
-      <UniqueIdentifier>{b58efceb-9753-4fa5-9490-0c31d5584e00}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96.Utility\01.Calculator">
       <UniqueIdentifier>{9b52f15a-8f7d-4887-afd7-8139266b7cd3}</UniqueIdentifier>
     </Filter>
@@ -398,9 +395,6 @@
     </ClInclude>
     <ClInclude Include="..\public\HpMp.h">
       <Filter>03.UI, HUD\00.2D\02.Hp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Wave_Manger.h">
-      <Filter>96.Utility\00.Stage_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MainMenu.h">
       <Filter>03.UI, HUD\01.MainMenu</Filter>
@@ -680,9 +674,6 @@
     </ClCompile>
     <ClCompile Include="..\private\HpMp.cpp">
       <Filter>03.UI, HUD\00.2D\02.Hp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Wave_Manger.cpp">
-      <Filter>96.Utility\00.Stage_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MainMenu.cpp">
       <Filter>03.UI, HUD\01.MainMenu</Filter>

@@ -28,18 +28,18 @@ public:
 
 public:
 	void Initialize(void);
-	void LoadSoundFile();
-	void Play_Sound(TCHAR* pSoundKey, CHANNEL_TYPE eChannel, _float fVolume = 1.f);
-	void PlayBGM(TCHAR* pSoundKey, CHANNEL_TYPE eChannel, _float fVolume = 1.f);
-	void Set_BGMVolume(CHANNEL_TYPE eChannel, _float fVolume);
 	void UpdateSound(void);
+
+public:
+	void Play_Sound(TCHAR* pSoundKey, CHANNEL_TYPE eChannel);
+	void PlayBGM(TCHAR* pSoundKey, CHANNEL_TYPE eChannel);
+	void Set_Volume(CHANNEL_TYPE eChannel, _float fVolume);
 	void StopSound(CHANNEL_TYPE eChannel);
 	void StopSoundAll(void);
+	bool IsPlaying(CHANNEL_TYPE eChannel);
 
 public:
 	void Play_Sound(TCHAR* pSoundKey, CHANNEL_TYPE eChannel, _fvector vecCamEye, _fvector vecSoundPos, _float fRange, _int iSoundNum = 1, _bool bPlayOnce = false);
-	void Play_RandomSound(TCHAR* pSoundKey, CHANNEL_TYPE eChannel, _int iNum, _float fVolume = 1.f); // 0~iNum 까지 중 랜덤으로 재생
-	bool IsPlaying(CHANNEL_TYPE eChannel); // 해당 채널이 Play중인지 확인
 
 private:
 	FMOD_SYSTEM*				m_pSystem = nullptr;

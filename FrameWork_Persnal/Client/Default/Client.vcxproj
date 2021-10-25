@@ -260,7 +260,6 @@
     <ClInclude Include="..\public\UI_2D.h" />
     <ClInclude Include="..\public\UI_3D.h" />
     <ClInclude Include="..\public\PhaseInfo.h" />
-    <ClInclude Include="..\public\Wave_Manger.h" />
     <ClInclude Include="..\public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -357,7 +356,6 @@
     <ClCompile Include="..\private\UI_2D.cpp" />
     <ClCompile Include="..\private\UI_3D.cpp" />
     <ClCompile Include="..\private\PhaseInfo.cpp" />
-    <ClCompile Include="..\private\Wave_Manger.cpp" />
     <ClCompile Include="..\private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">

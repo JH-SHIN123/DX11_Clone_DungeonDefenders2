@@ -6,6 +6,7 @@
 #include "Masking_MeterBar.h"
 #include "Cursor_Manager.h"
 #include "MyButton_NoText.h"
+#include "Data_Manager.h"
 
 CMainMenu::CMainMenu(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CUI_2D(pDevice, pDevice_Context)
@@ -58,27 +59,40 @@ _int CMainMenu::Tick(_float TimeDelta)
 
 		if (m_IsMove == true)
 		{
+			_bool IsMove[3] = { false };
 			_vector vPos = XMVectorSet(0.f, 30.f, 0.f, 1.f);
 			_float fLenght = XMVectorGetX(XMVector3Length(vPos - m_pMovementCom_UI[0]->Get_State(EState::Position)));
 			if (fLenght >= 10.f)
 				m_pMovementCom_UI[0]->Go_Dir(TimeDelta, vPos);
+			else
+				IsMove[0] = true;
 
 			vPos = XMVectorSet(0.f, -130.f, 0.f, 1.f);
 			fLenght = XMVectorGetX(XMVector3Length(vPos - m_pMovementCom_UI[1]->Get_State(EState::Position)));
 			if (fLenght >= 10.f)
 				m_pMovementCom_UI[1]->Go_Dir(TimeDelta, vPos);
+			else
+				IsMove[1] = true;
 
 			vPos = XMVectorSet(0.f, -285.f, 0.f, 1.f);
 			fLenght = XMVectorGetX(XMVector3Length(vPos - m_pMovementCom_UI[2]->Get_State(EState::Position)));
 			if (fLenght >= 10.f)
 				m_pMovementCom_UI[2]->Go_Dir(TimeDelta, vPos);
+			else
+				IsMove[2] = true;
+
+
+			if (IsMove[0] && IsMove[1] && IsMove[2])
+				m_IsShowButton = true;
 		}
 	}
+
 
 	Button_Position_Check(TimeDelta);
 
 	Button_Select_Check(TimeDelta);
 
+	m_pButton_Start_Stage->Tick(TimeDelta);
 
 	m_pOption_BGM->Tick(TimeDelta);
 	m_pOption_SFX->Tick(TimeDelta);
@@ -107,7 +121,6 @@ _int CMainMenu::Late_Tick(_float TimeDelta)
 
 		return SCENE_CHANGE;
 	}
-
 	
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::UI, this);
@@ -118,25 +131,46 @@ HRESULT CMainMenu::Render()
 	m_pBufferRectCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
 	m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
 
+	//m_pWallPaper
+	_matrix World = XMMatrixIdentity();
+	World.r[0] = XMVectorSet(1280.f, 0.f, 0.f, 0.f);
+	World.r[1] = XMVectorSet(0.f, 720.f, 0.f, 0.f);
+	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(World), sizeof(_matrix));
+	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pWallPaper->Get_ShaderResourceView(0));
+	m_pBufferRectCom->Render(1);
+
+
+
 	if (m_IsClick == true) // 최초 클릭
 	{
-		m_pBufferRectCom->Set_Variable("g_AlphaTime", &m_fAlphaTime, sizeof(_float));
-		m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_Board->Get_WorldMatrix()), sizeof(_matrix));
-		m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_UI->Get_ShaderResourceView(0));
-		m_pBufferRectCom->Render(6);
+		//m_pBufferRectCom->Set_Variable("g_AlphaTime", &m_fAlphaTime, sizeof(_float));
+		//m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_Board->Get_WorldMatrix()), sizeof(_matrix));
+		//m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_UI->Get_ShaderResourceView(0));
+		//
+		//if(2.f < m_fAlphaTime)
+		//	m_pBufferRectCom->Render(23);
+		//else
+		//	m_pBufferRectCom->Render(6);
+
 
 		Render_Button();
 	}
 
 	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
-	m_pBufferRectCom->Render(1);
+	m_pBufferRectCom->Render(23);
 
 	if (m_IsClick == false)
 		return S_OK;
 
 	Render_Button_Select(m_eButtonSelect);
 
+	if (true == m_IsShowButton && EButtonSelect::End == m_eButtonSelect)
+	{
+		m_pButton_Start_Stage->Render();
+		m_pButton_Start_Option->Render();
+		m_pButton_Start_Score->Render();
+	}
 
 	return S_OK;
 }
@@ -205,7 +239,9 @@ HRESULT CMainMenu::Ready_Component(void * pArg)
 HRESULT CMainMenu::Ready_Button_Stage()
 {
 	HRESULT hr = S_OK;
-	
+	//m_pWallPaper
+	hr = CGameObject::Add_Component((_uint)ELevel::Logo, TEXT("Component_Texture_WallPaper"), TEXT("Com_Texture_Wall"), (CComponent**)&m_pWallPaper);
+
 	hr = CGameObject::Add_Component((_uint)ELevel::Logo, TEXT("Component_Texture_UI_TabMenu"), TEXT("Com_Texture_UI_TabMenu"), (CComponent**)&m_pTextureCom_UI_Stage_Button);
 	hr = CGameObject::Add_Component((_uint)ELevel::Logo, TEXT("Component_Texture_UI_Stage_Select"), TEXT("Com_Texture_UI_Stage_PreView_0"), (CComponent**)&m_pTextureCom_UI_Stage_PreView[0]);
 	hr = CGameObject::Add_Component((_uint)ELevel::Logo, TEXT("Component_Texture_UI_Stage_Select_Difficult"), TEXT("Com_Texture_UI_Stage_PreView_1"), (CComponent**)&m_pTextureCom_UI_Stage_PreView[1]);
@@ -237,48 +273,37 @@ HRESULT CMainMenu::Ready_Button_Stage()
 
 	// Stage Button
 	BUTTON_DESC ButtonDesc;
-	ButtonDesc.UI_Desc.Movement_Desc.vScale = { 130.f, 40.f, 0.f, 0.f };
-	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -460.f, 15.f, 0.f, 1.f };
-	ButtonDesc.Text_Desc.iScaleCount = 2;
-	lstrcpy(ButtonDesc.Text_Desc.szText, L"STAGE 1");
-	m_pStage_Button[0] = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
-
-	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -460.f, -30.f, 0.f, 1.f };
-	ButtonDesc.Text_Desc.iScaleCount = 2;
-	lstrcpy(ButtonDesc.Text_Desc.szText, L"STAGE 2");
-	m_pStage_Button[1] = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
-
-	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -222.f, 15.f, 0.f, 1.f };
-	ButtonDesc.Text_Desc.iScaleCount = 2;
-	lstrcpy(ButtonDesc.Text_Desc.szText, L"EASY");
-	m_pStage_Button[2] = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
-	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -248.f, -30.f, 0.f, 1.f };
-	ButtonDesc.Text_Desc.iScaleCount = 2;
-	lstrcpy(ButtonDesc.Text_Desc.szText, L"NORMAL");
-	m_pStage_Button[3] = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
-	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -280.f, -79.f, 0.f, 1.f };
-	ButtonDesc.Text_Desc.iScaleCount = 2;
-	lstrcpy(ButtonDesc.Text_Desc.szText, L"OVER KILL");
-	m_pStage_Button[4] = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
-
-	ButtonDesc.UI_Desc.Movement_Desc.vPos = {-30.f, 15.f, 0.f, 1.f };
-	ButtonDesc.Text_Desc.iScaleCount = 2;
-	lstrcpy(ButtonDesc.Text_Desc.szText, L"MAGE");
-	m_pStage_Button[5] = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
-	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -50.f, -30.f, 0.f, 1.f };
-	ButtonDesc.Text_Desc.iScaleCount = 2;
-	lstrcpy(ButtonDesc.Text_Desc.szText, L"KNIGHT");
-	m_pStage_Button[6] = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
-
-
-
-	// Stage Start Button
-	ButtonDesc.UI_Desc.Movement_Desc.vScale = { 130.f, 40.f, 0.f, 0.f };
-	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -38.f, -280.f, 0.f, 1.f };
-	ButtonDesc.Text_Desc.iScaleCount = 2;
+	ButtonDesc.UI_Desc.Movement_Desc.vScale = { 170.f, 70.f, 0.f, 0.f };
+	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -45.f, 30.f, 0.f, 1.f };
+	ButtonDesc.Text_Desc.iScaleCount = 3;
 	lstrcpy(ButtonDesc.Text_Desc.szText, L"START");
 	m_pButton_Start_Stage = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
 
+	ButtonDesc.UI_Desc.Movement_Desc.vScale = { 170.f, 70.f, 0.f, 0.f };
+	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -70.f, -130.f, 0.f, 1.f };
+	ButtonDesc.Text_Desc.iScaleCount = 3;
+	lstrcpy(ButtonDesc.Text_Desc.szText, L"OPTION");
+	m_pButton_Start_Option = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
+
+
+	ButtonDesc.UI_Desc.Movement_Desc.vScale = { 170.f, 70.f, 0.f, 0.f };
+	ButtonDesc.UI_Desc.Movement_Desc.vPos = { -45.f, -285.f, 0.f, 1.f };
+	ButtonDesc.Text_Desc.iScaleCount = 3;
+	lstrcpy(ButtonDesc.Text_Desc.szText, L"SCORE");
+	m_pButton_Start_Score = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
+
+
+	ButtonDesc.UI_Desc.Movement_Desc.vScale = { 170.f, 70.f, 0.f, 0.f };
+	ButtonDesc.UI_Desc.Movement_Desc.vPos = { 255.f, 28.f, 0.f, 1.f };
+	ButtonDesc.Text_Desc.iScaleCount = 3;
+	lstrcpy(ButtonDesc.Text_Desc.szText, L"BGM");
+	m_pButton_Text_BGM = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
+
+	ButtonDesc.UI_Desc.Movement_Desc.vScale = { 170.f, 70.f, 0.f, 0.f };
+	ButtonDesc.UI_Desc.Movement_Desc.vPos = { 255.f, -72.f, 0.f, 1.f };
+	ButtonDesc.Text_Desc.iScaleCount = 3;
+	lstrcpy(ButtonDesc.Text_Desc.szText, L"SFX");
+	m_pButton_Text_SFX = CMyButton::Create(m_pDevice, m_pDevice_Context, &ButtonDesc);
 
 	return S_OK;
 }
@@ -504,7 +529,8 @@ void CMainMenu::Button_Select_Check(_float TimeDelta)
 	switch (m_eButtonSelect)
 	{
 	case Client::EButtonSelect::Stage:
-		Button_Stage_Check(TimeDelta);
+		m_IsNextScene = true;
+		//Button_Stage_Check(TimeDelta);
 		break;
 	case Client::EButtonSelect::Option:
 		Button_Option_Check(TimeDelta);
@@ -514,76 +540,66 @@ void CMainMenu::Button_Select_Check(_float TimeDelta)
 	case Client::EButtonSelect::Exit:
 		DestroyWindow(g_hWnd);
 		break;
+	case Client::EButtonSelect::End:
+		m_eButtonSelect = EButtonSelect::End;
+		break;
 	}
 }
 
 void CMainMenu::Button_Stage_Check(_float TimeDelta)
 {
-	for (_int i = 0; i < 7; ++i)
-		m_pStage_Button[i]->Tick(TimeDelta);
-
-	m_pButton_Start_Stage->Tick(TimeDelta);
-
-	if (true == m_pStage_Button[0]->Get_IsPick())
-		m_StageMakeInfo.iStage = 0;
-	if (true == m_pStage_Button[1]->Get_IsPick())
-		m_StageMakeInfo.iStage = 1;
-
-	if (true == m_pStage_Button[2]->Get_IsPick())
-		m_StageMakeInfo.iDifficult = 0;
-	if (true == m_pStage_Button[3]->Get_IsPick())
-		m_StageMakeInfo.iDifficult = 1;
-	if (true == m_pStage_Button[4]->Get_IsPick())
-		m_StageMakeInfo.iDifficult = 2;
-
-	if (true == m_pStage_Button[5]->Get_IsPick())
-		m_StageMakeInfo.iClass = 0;
-	if (true == m_pStage_Button[6]->Get_IsPick())
-		m_StageMakeInfo.iClass = 1;
 }
 
 void CMainMenu::Button_Option_Check(_float TimeDelta)
 {
 	// uv를 건들자
 
-	if (m_pButton_Option_BGM[0]->Get_IsClick())
+	if (m_pButton_Option_BGM[0]->Get_IsDown())
 	{
-		m_vSound.x -= TimeDelta * 10.f;
+		m_vSound.x -= TimeDelta * 15.f;
 
 		if (m_vSound.x < 0.f)
 			m_vSound.x = 0.f;
 
 		m_pOption_BGM->Set_Count(m_vSound.x, 100.f);
+		CData_Manager::GetInstance()->Set_SoundVolume_BGM(m_vSound.x / 100.f);
+
 	}
 
-	if (m_pButton_Option_BGM[1]->Get_IsClick())
+	if (m_pButton_Option_BGM[1]->Get_IsDown())
 	{
-		m_vSound.x += TimeDelta * 10.f;
+		m_vSound.x += TimeDelta * 15.f;
 
 		if (m_vSound.x > 100.f)
 			m_vSound.x = 100.f;
 
 		m_pOption_BGM->Set_Count(m_vSound.x, 100.f);
+		CData_Manager::GetInstance()->Set_SoundVolume_BGM(m_vSound.x / 100.f);
+			
 	}
 
-	if (m_pButton_Option_SFX[0]->Get_IsClick())
+	if (m_pButton_Option_SFX[0]->Get_IsDown())
 	{
-		m_vSound.y -= TimeDelta * 10.f;
+		m_vSound.y -= TimeDelta * 15.f;
 
 		if (m_vSound.y < 0.f)
 			m_vSound.y = 0.f;
 
 		m_pOption_SFX->Set_Count(m_vSound.y, 100.f);
+		CData_Manager::GetInstance()->Set_SoundVolume_BGM(m_vSound.y / 100.f);
+
 	}
 
-	if (m_pButton_Option_SFX[1]->Get_IsClick())
+	if (m_pButton_Option_SFX[1]->Get_IsDown())
 	{
-		m_vSound.y += TimeDelta * 10.f;
+		m_vSound.y += TimeDelta * 15.f;
 
 		if (m_vSound.y > 100.f)
 			m_vSound.y = 100.f;
 
 		m_pOption_SFX->Set_Count(m_vSound.y, 100.f);
+		CData_Manager::GetInstance()->Set_SoundVolume_BGM(m_vSound.y / 100.f);
+
 	}
 }
 
@@ -620,10 +636,13 @@ void CMainMenu::Render_Button()
 
 void CMainMenu::Render_Button_Info(_int iIndex)
 {
-	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_UI->Get_ShaderResourceView(3));
-	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_UI_Info[iIndex]->Get_WorldMatrix()), sizeof(_matrix));
+	//m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom_UI->Get_ShaderResourceView(3));
+	//m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_UI_Info[iIndex]->Get_WorldMatrix()), sizeof(_matrix));
 
-	m_pBufferRectCom->Render(1);
+	//if(0 == iIndex)
+	//	m_pButton_Start_Stage->Render();
+
+	//m_pBufferRectCom->Render(1);
 }
 
 void CMainMenu::Render_Button_Select(EButtonSelect eSelect)
@@ -681,10 +700,10 @@ void CMainMenu::Render_Button_Stage()
 	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom_UI_Stage_PreView[1]->Get_WorldMatrix()), sizeof(_matrix));
 	m_pBufferRectCom->Render(6);
 
-	for (_int i = 0; i < 7; ++i)
-		m_pStage_Button[i]->Render();
+	//for (_int i = 0; i < 7; ++i)
+	//	m_pStage_Button[i]->Render();
 
-	m_pButton_Start_Stage->Render();
+
 
 }
 
@@ -698,6 +717,11 @@ void CMainMenu::Render_Button_Option()
 		m_pButton_Option_BGM[i]->Render(i);
 		m_pButton_Option_SFX[i]->Render(i);
 	}
+
+
+	m_pButton_Text_BGM->Render();
+	m_pButton_Text_SFX->Render();
+
 }
 
 CMainMenu * CMainMenu::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -740,10 +764,8 @@ void CMainMenu::Free()
 		}
 	}
 
-	for (_int i = 0; i < 7; ++i)
-	{
-		Safe_Release(m_pStage_Button[i]);
-	}
+	//for (_int i = 0; i < 7; ++i)
+	//	Safe_Release(m_pStage_Button[i]);
 	
 	Safe_Release(m_pOption_SFX);
 	Safe_Release(m_pOption_BGM);
@@ -752,6 +774,13 @@ void CMainMenu::Free()
 	Safe_Release(m_pTextureCom_UI);
 	Safe_Release(m_pTextureCom_UI_Stage_Button);
 	Safe_Release(m_pButton_Start_Stage);
+	Safe_Release(m_pButton_Start_Option);
+	Safe_Release(m_pButton_Start_Score);
+
+	Safe_Release(m_pButton_Text_BGM);
+	Safe_Release(m_pButton_Text_SFX);
+
+	Safe_Release(m_pWallPaper);
 
 	__super::Free();
 }

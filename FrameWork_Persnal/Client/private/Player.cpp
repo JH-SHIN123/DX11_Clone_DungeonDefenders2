@@ -125,6 +125,12 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 	m_pLightningTower->Update_Anim(TimeDelta);
 
 
+	_tchar m_szFPS[MAX_PATH] = L"";
+	wsprintf(m_szFPS, TEXT("%d - FPS"), m_pNaviCom->Get_CellIndex(m_pMovementCom->Get_State(EState::Position)));
+	SetWindowText(g_hWnd, m_szFPS);
+
+
+
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
 

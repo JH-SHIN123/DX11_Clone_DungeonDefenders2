@@ -12,30 +12,22 @@ void CSound_Manager::Initialize(void)
 {
 	FMOD_System_Create(&m_pSystem);
 	FMOD_System_Init(m_pSystem, CHANNEL_END, FMOD_INIT_NORMAL, NULL);
-}
 
-void CSound_Manager::LoadSoundFile()
-{
 	_finddata_t	fd = {};
 	long long handle = 0;
 	int iResult = 0;
+
 	//../Bin/Resources/Sound/
 	handle = _findfirst("../Bin/Resources/Sound/*.*", &fd);
 
 	if (-1 == handle)
 	{
-		//MessageBox(hwnd, L"Not found soundfile", L"Not found soundfile", MB_OK);
+		MSG_BOX("Can't Read SoundFile");
 		return;
-	}
-
-	if (handle == EINVAL)
-	{
-		_int i = 0;
 	}
 
 	while (-1 != iResult)
 	{
-
 		char szFullPath[256] = "";
 		strcpy_s(szFullPath, 256, "../Bin/Resources/Sound/");
 		strcat_s(szFullPath, 256, fd.name);
@@ -43,7 +35,7 @@ void CSound_Manager::LoadSoundFile()
 		FMOD_SOUND*	pSound = nullptr;
 
 		FMOD_RESULT FResult = FMOD_System_CreateSound(m_pSystem, szFullPath, FMOD_DEFAULT, NULL, &pSound);
-		
+
 		if (FMOD_OK == FResult)
 		{
 			TCHAR*	pSoundKey = new TCHAR[256];
@@ -52,7 +44,7 @@ void CSound_Manager::LoadSoundFile()
 
 			m_MapSound.insert(make_pair(pSoundKey, pSound));
 		}
-		
+
 		iResult = _findnext(handle, &fd);
 	}
 
@@ -62,19 +54,18 @@ void CSound_Manager::LoadSoundFile()
 
 }
 
-void CSound_Manager::Play_Sound(TCHAR * pSoundKey, CHANNEL_TYPE eChannel, _float fVolume)
+void CSound_Manager::Play_Sound(TCHAR * pSoundKey, CHANNEL_TYPE eChannel)
 {
 	map<TCHAR*, FMOD_SOUND*>::iterator iter = find_if(m_MapSound.begin(),
 		m_MapSound.end(), CTagFinder(pSoundKey));
 
 	if (iter == m_MapSound.end())
 		return;
-	//0, &(m_pChannel[eChannel])
+
 	FMOD_System_PlaySound(m_pSystem, iter->second, nullptr, 0, &(m_pChannel[eChannel]));
-	FMOD_Channel_SetVolume(m_pChannel[eChannel], fVolume);
 }
 
-void CSound_Manager::PlayBGM(TCHAR * pSoundKey, CHANNEL_TYPE eChannel, _float fVolume)
+void CSound_Manager::PlayBGM(TCHAR * pSoundKey, CHANNEL_TYPE eChannel)
 {
 	map<TCHAR*, FMOD_SOUND*>::iterator iter = find_if(m_MapSound.begin(),
 		m_MapSound.end(), CTagFinder(pSoundKey));
@@ -84,10 +75,9 @@ void CSound_Manager::PlayBGM(TCHAR * pSoundKey, CHANNEL_TYPE eChannel, _float fV
 
 	FMOD_Sound_SetMode(iter->second, FMOD_LOOP_NORMAL);
 	FMOD_System_PlaySound(m_pSystem, iter->second, nullptr, 0, &(m_pChannel[eChannel]));
-	//FMOD_Channel_SetVolume(m_pChannel[eChannel], fVolume);
 }
 
-void CSound_Manager::Set_BGMVolume(CHANNEL_TYPE eChannel, _float fVolume)
+void CSound_Manager::Set_Volume(CHANNEL_TYPE eChannel, _float fVolume)
 {
 	FMOD_Channel_SetVolume(m_pChannel[eChannel], fVolume);
 }
@@ -108,6 +98,17 @@ void CSound_Manager::StopSoundAll(void)
 		FMOD_Channel_Stop(m_pChannel[i]);
 }
 
+bool CSound_Manager::IsPlaying(CHANNEL_TYPE eChannel)
+{
+	FMOD_BOOL IsPlay;
+	FMOD_Channel_IsPlaying(m_pChannel[eChannel], &IsPlay);
+
+	if (IsPlay == 0)
+		return false;
+	else
+		return true;
+}
+
 void CSound_Manager::Play_Sound(TCHAR * pSoundKey, CHANNEL_TYPE eChannel, _fvector vecCamEye, _fvector vecSoundPos, _float fRange, _int iSoundNum, _bool bPlayOnce)
 {
 	if (bPlayOnce) // 소리가 한 번만 나고싶을 때
@@ -121,36 +122,8 @@ void CSound_Manager::Play_Sound(TCHAR * pSoundKey, CHANNEL_TYPE eChannel, _fvect
 		return;
 
 	// 거리에 따른 소리의 감소도 추가하고 싶으면 할 것.
+	Play_Sound(pSoundKey, eChannel);
 
-	if (iSoundNum != 1) // 랜덤 사운드
-		Play_RandomSound(pSoundKey, eChannel, iSoundNum);
-	else
-		Play_Sound(pSoundKey, eChannel);
-
-}
-
-void CSound_Manager::Play_RandomSound(TCHAR * pSoundKey, CHANNEL_TYPE eChannel, _int iNum, _float fVolume)
-{
-	TCHAR szTemp[128] = {};
-	lstrcpy(szTemp, pSoundKey);
-
-	lstrcpyn(szTemp, szTemp, lstrlen(szTemp) - 3); // 0.ogg 버리기
-
-	wsprintf(szTemp, L"%s%d%s", szTemp, rand() % iNum + 1, L".ogg");
-
-	CSound_Manager::GetInstance()->Play_Sound(szTemp, eChannel);
-	FMOD_Channel_SetVolume(m_pChannel[eChannel], fVolume);
-}
-
-bool CSound_Manager::IsPlaying(CHANNEL_TYPE eChannel)
-{
-	FMOD_BOOL IsPlay;
-	FMOD_Channel_IsPlaying(m_pChannel[eChannel], &IsPlay);
-
-	if (IsPlay == 0)
-		return false;
-	else
-		return true;
 }
 
 void CSound_Manager::Free()

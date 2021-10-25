@@ -183,10 +183,6 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 		}
 	}
 
-	_tchar sz[MAX_PATH] = L"";
-	wsprintf(sz, TEXT("%d"), (_int)m_eAI_Next);
-	SetWindowText(g_hWnd, sz);
-
 	// 하던거 마저 하고
 	if (/*EMonsterAI::Attack == m_eAI_Next &&*/ IsContinueAnimation)
 		return m_eAI_Next;

@@ -58,6 +58,7 @@ private:
 	_bool		m_IsStage_Select		= false;
 	_bool		m_IsNextScene			= false;
 	_float		m_fAlphaTime			= 0.f;
+	_bool		m_IsShowButton			= false;
 
 private:
 	_bool			m_IsButtonPick[4]		= { false };
@@ -76,7 +77,12 @@ private:
 	CMovement*	m_pMovementCom_UI_Select[4]		= { nullptr };	// 0 뒤로 1 스테이지 진입
 	CTextures*	m_pTextureCom_UI				= nullptr;
 	CMyButton*	m_pButton_Start_Stage			= nullptr;	// 스테이지 진입
+	CMyButton*	m_pButton_Start_Option			= nullptr;	//	옵션
+	CMyButton*	m_pButton_Start_Score			= nullptr;	// 스코어
+
 	CMyButton*	m_pButton_Back					= nullptr;	// 뒤로가기 폰트
+	CMyButton*	m_pButton_Text_BGM = nullptr;
+	CMyButton*	m_pButton_Text_SFX = nullptr;
 
 private:
 	CTextures*	m_pTextureCom_UI_Stage_Button = nullptr;
@@ -85,7 +91,7 @@ private:
 	CTextures*	m_pTextureCom_UI_Stage_PreView[2] = { nullptr }; // 왼쪽에 띄울 스테이지 예시
 	CMovement*	m_pMovementCom_UI_Stage_PreView[2] = { nullptr };
 
-	CMyButton*	m_pStage_Button[7] = { nullptr };// 01 Stage 234 diffi
+	//CMyButton*	m_pStage_Button[7] = { nullptr };// 01 Stage 234 diffi
 	STAGE_PREVIEW_DESC		m_StageMakeInfo;
 
 private: // 옵션 - 음량 조절
@@ -99,6 +105,9 @@ private: // 하이스코어 10위까지
 	RANK_DESC			m_RankDesc[10];
 	CTextures*			m_pTextureCom_UI_Rank		= nullptr;
 	CMovement*			m_pMovementCom_UI_Rank[10]	= { nullptr };
+
+private:
+	CTextures*		m_pWallPaper = nullptr;
 
 public:
 	static CMainMenu* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

@@ -243,6 +243,19 @@ PS_OUT PS_MAIN_BLUE(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_LOGO(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	// 픽셀의 색 = Texture의 UV 좌표에서 g_DiffuseTexture의 색을 따라가되 DiffuseSampler라는 이름의 샘플러를 사용 할 것
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+
+	if (Out.vColor.r <= 0.3f)
+		Out.vColor.a = 0.f;
+
+	return Out;
+}
+
 PS_OUT PS_REDMASKING(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
@@ -797,6 +810,17 @@ technique11		DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN_UI_TEXTURE2_UV_TIME();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MASKING_UV_RATIO_COLOR_2();
+	}
+
+	pass UI_Titlke //23
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_LOGO();
 	}
 };
 

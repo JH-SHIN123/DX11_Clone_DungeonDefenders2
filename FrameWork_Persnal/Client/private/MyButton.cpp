@@ -77,6 +77,12 @@ _bool CMyButton::Get_IsPick()
 	return false;
 }
 
+void CMyButton::Set_Pos(_fvector vPos)
+{
+	m_pMovementCom->Set_State(EState::Position, vPos);
+	m_pText->Set_Pos(vPos);
+}
+
 HRESULT CMyButton::Ready_Component()
 {
 	return S_OK;

@@ -21,6 +21,7 @@ public:
 public:
 	_bool	Get_IsClick();
 	_bool	Get_IsClick_R();
+	_bool   Get_IsDown();
 	_bool	Get_IsPick();
 	void	Get_Button_Pos(_float4* pPos) {	XMStoreFloat4(pPos, m_pMovementCom->Get_State(EState::Position)); }
 
