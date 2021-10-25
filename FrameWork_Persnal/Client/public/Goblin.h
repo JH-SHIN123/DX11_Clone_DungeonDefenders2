@@ -55,6 +55,7 @@ private:
 	_bool	m_IsSecondAttack = false;
 	_bool	m_IsAttack = false;
 
+
 private:
 	CCollider*				m_pColliderCom_Push = nullptr;
 	CCollider*				m_pColliderCom_Attack = nullptr;

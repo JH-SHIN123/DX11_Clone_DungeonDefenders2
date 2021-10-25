@@ -187,6 +187,9 @@ void CCrystalCore::Button_Dis_Check(_float TimeDelta)
 			if (GET_KEY_INPUT(DIK_E))
 			{
 				CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Combat);
+
+				CSound_Manager::GetInstance()->Play_Sound(L"Crystal_Activate.ogg", CHANNEL_CORE);
+				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_CORE, CData_Manager::GetInstance()->Get_SoundVolume_Effect());
 			}
 		}
 	}

@@ -87,7 +87,6 @@ protected:
 protected:
 	_bool	m_IsBrainWashed				= false;
 	_bool	m_IsBrainWashed_Complete = false;
-
 	_float	m_fBrainWashTime = 0.f;
 
 protected: // 스케일 값 보존용
@@ -132,6 +131,11 @@ protected:
 private:
 	_float4		m_vColor = { 1.f, 1.f, 1.f, 1.f };
 	_float m_fDissolveTime = 0.f;
+
+protected: // Sound
+	_bool	m_IsDeadSound = false;
+	_bool	m_IsAttackSound = false;
+
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

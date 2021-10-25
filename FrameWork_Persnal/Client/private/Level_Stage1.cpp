@@ -99,8 +99,8 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
-	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 1;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 1;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 	m_pMonsterGate[(_uint)EMonster_MovePath::North_L]->Set_PhaseMonster_Info(Phase);
@@ -109,9 +109,9 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 1;
-	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
-	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 1;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 	m_pMonsterGate[(_uint)EMonster_MovePath::North_R]->Set_PhaseMonster_Info(Phase);
 
@@ -151,7 +151,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 1;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
@@ -159,9 +159,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 
 	CData_Manager::GetInstance()->Set_MonsterCount_Max(4);
 
-	CSound_Manager::GetInstance()->PlayBGM(L"Bgm.mp3", CHANNEL_BGM);
-	CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, 0.1f);
-	CSound_Manager::GetInstance()->Play_Sound(L"Sound_0.wav", CHANNEL_PLAYER);
+	CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, CData_Manager::GetInstance()->Get_SoundVolume_BGM());
 
 	return S_OK;
 }

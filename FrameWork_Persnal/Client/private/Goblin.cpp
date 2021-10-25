@@ -46,6 +46,28 @@ _int CGoblin::Tick(_float TimeDelta)
 	{
 		if (EGoblinAnim::Death == m_eAnim_Next)
 		{
+			if (EGoblinAnim::Death == m_eAnim_Next && false == m_IsDeadSound)
+			{
+				if (127 == (_uint)m_pModelCom->Get_AnimTime())
+				{
+					m_IsDeadSound = true;
+
+					_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+					if (60.f > fDis)
+					{
+						fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+
+						CSound_Manager::GetInstance()->StopSound(CHANNEL_GOBLIN_D);
+
+						if (rand() % 2 == 0)
+							CSound_Manager::GetInstance()->Play_Sound(L"Goblin_Dead.ogg", CHANNEL_GOBLIN_D);
+						else
+							CSound_Manager::GetInstance()->Play_Sound(L"Goblin_Dead2.ogg", CHANNEL_GOBLIN_D);
+
+						CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN_D, fDis + 0.4);
+					}
+				}
+			}
 			if (true == m_pModelCom->Get_IsFinishedAnimaion())
 			{
 				CData_Manager::GetInstance()->Add_MonsterCount();
@@ -76,6 +98,8 @@ _int CGoblin::Tick(_float TimeDelta)
 			m_IsHurt = false;
 			m_eAnim_Next = EGoblinAnim::Idle;
 		}
+
+
 		m_IsHurt = false;
 	}
 
@@ -86,6 +110,19 @@ _int CGoblin::Tick(_float TimeDelta)
 		m_pColliderCom_Hurt->Set_IsCollide(false);
 		m_IsHurt = true;
 
+		_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+		if (60.f > fDis)
+		{
+			fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_GOBLIN_H);
+
+			if (rand() % 2 == 0)
+				CSound_Manager::GetInstance()->Play_Sound(L"Goblin_Hurt.ogg", CHANNEL_GOBLIN_H);
+			else
+				CSound_Manager::GetInstance()->Play_Sound(L"Goblin_Hurt2.ogg", CHANNEL_GOBLIN_H);
+
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN_H, fDis + 0.05f);
+		}
 
 		switch (m_pStatusCom->Get_DamageType())
 		{
@@ -234,6 +271,10 @@ void CGoblin::Attack_Check()
 {
 	_bool IsFinished = m_pModelCom->Get_IsFinishedAnimaion();
 
+	_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+	fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+
+
 	if (true == m_IsAttack)
 	{
 		if (0 == m_iAttackCount)
@@ -245,26 +286,71 @@ void CGoblin::Attack_Check()
 			m_eAnim_Next = EGoblinAnim::Attack_2;
 
 		if (true == m_pModelCom->Get_IsFinishedAnimaion())
-		{
 			++m_iAttackCount;
-		}
+
+		if (EGoblinAnim::Attack_1 == m_eAnim_Next && 16 == (_uint)m_pModelCom->Get_AnimTime())
+		{
+			if (false == m_IsAttackSound)
+			{
+				if (60.f > fDis)
+				{
+					m_IsAttackSound = true;
+					CSound_Manager::GetInstance()->StopSound(CHANNEL_GOBLIN);
+					CSound_Manager::GetInstance()->StopSound(CHANNEL_GOBLIN_A);
+
+					CSound_Manager::GetInstance()->Play_Sound(L"Goblin_Attack.ogg", CHANNEL_GOBLIN_A);
+
+					if (rand() % 2 == 0)
+						CSound_Manager::GetInstance()->Play_Sound(L"Goblin_attack2.ogg", CHANNEL_GOBLIN);
+					else
+						CSound_Manager::GetInstance()->Play_Sound(L"Goblin_attack4.ogg", CHANNEL_GOBLIN);
+
+
+					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN_A, fDis * 1.5f);
+					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN, fDis);
+				}
+			}
+
+		}		
+
 
 		if (EGoblinAnim::Attack_1 == m_eAnim_Next && 19 == (_uint)m_pModelCom->Get_AnimTime())
-		{
 			m_pColliderCom_Attack->Set_NotCollide(false);
+
+		if (EGoblinAnim::Attack_2 == m_eAnim_Next && 56 == (_uint)m_pModelCom->Get_AnimTime())
+		{
+			if (false == m_IsAttackSound)
+			{
+				if (60.f > fDis)
+				{
+					m_IsAttackSound = true;
+					CSound_Manager::GetInstance()->StopSound(CHANNEL_GOBLIN);
+					CSound_Manager::GetInstance()->StopSound(CHANNEL_GOBLIN_A);
+
+					CSound_Manager::GetInstance()->Play_Sound(L"Goblin_Attack.ogg", CHANNEL_GOBLIN_A);
+
+					if (rand() % 2 == 0)
+						CSound_Manager::GetInstance()->Play_Sound(L"Goblin_attack2.ogg", CHANNEL_GOBLIN);
+					else
+						CSound_Manager::GetInstance()->Play_Sound(L"Goblin_attack4.ogg", CHANNEL_GOBLIN);
+
+
+					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN_A, fDis * 1.5f);
+					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_GOBLIN, fDis);
+				}
+			}
 		}
+
 
 		if (EGoblinAnim::Attack_2 == m_eAnim_Next && 58 == (_uint)m_pModelCom->Get_AnimTime())
-		{
 			m_pColliderCom_Attack->Set_NotCollide(false);
-		}
-
 	}
 
 	else
 	{
 		m_IsSecondAttack = false;
 		m_IsAttack = false;
+		m_IsAttackSound = false;
 	}
 }
 

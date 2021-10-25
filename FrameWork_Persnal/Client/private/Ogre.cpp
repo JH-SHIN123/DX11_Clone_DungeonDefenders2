@@ -43,10 +43,33 @@ _int COgre::Tick(_float TimeDelta)
 
 	Attack_Check();
 
+	if (false == m_IsAttack)
+		m_IsAttackSound = false;
+
 	if (0 >= m_pStatusCom->Get_Hp())
 	{
 		if (EOgreAnim::Death == m_eAnim_Next)
 		{
+			if (false == m_IsDeadSound)
+			{
+				if (90 == (_uint)m_pModelCom->Get_AnimTime())
+				{
+					m_IsDeadSound = true;
+
+					_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+					if (60.f > fDis)
+					{
+						fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+
+						CSound_Manager::GetInstance()->StopSound(CHANNEL_OGRE_D);
+
+						CSound_Manager::GetInstance()->Play_Sound(L"Ogre_Dead.ogg", CHANNEL_OGRE_D);
+
+						CSound_Manager::GetInstance()->Set_Volume(CHANNEL_OGRE_D, fDis + 0.2f);
+					}
+				}
+			}
+
 			if (true == m_pModelCom->Get_IsFinishedAnimaion())
 			{
 				CData_Manager::GetInstance()->Add_MonsterCount();
@@ -89,6 +112,19 @@ _int COgre::Tick(_float TimeDelta)
 		m_pColliderCom_Hurt->Set_IsCollide(false);
 		m_IsHurt = true;
 
+		_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+		if (60.f > fDis)
+		{
+			fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_OGRE_H);
+
+			if (rand() % 2 == 0)
+				CSound_Manager::GetInstance()->Play_Sound(L"Ogre_hurt1.ogg", CHANNEL_OGRE_H);
+			else
+				CSound_Manager::GetInstance()->Play_Sound(L"Ogre_hurt2.ogg", CHANNEL_OGRE_H);
+
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_OGRE_H, fDis + 0.05f);
+		}
 
 		switch (m_pStatusCom->Get_DamageType())
 		{
@@ -260,11 +296,41 @@ void COgre::Attack_Check()
 		if (EOgreAnim::Pound == m_eAnim_Next && 400 == (_uint)m_pModelCom->Get_AnimTime())
 		{
 			m_pColliderCom_Attack->Set_NotCollide(false);
+
+			_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+			if (60.f > fDis)
+			{
+				if (false == m_IsAttackSound)
+				{
+					m_IsAttackSound = true;
+					fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+					CSound_Manager::GetInstance()->StopSound(CHANNEL_OGRE_A);
+
+					CSound_Manager::GetInstance()->Play_Sound(L"Ogre_Attack1.ogg", CHANNEL_OGRE_A);
+
+					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_OGRE_A, fDis);
+				}
+			}
 		}
 		
 		if (EOgreAnim::Sweep == m_eAnim_Next && 491 == (_uint)m_pModelCom->Get_AnimTime())
 		{
 			m_pColliderCom_Attack->Set_NotCollide(false);
+
+			_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+			if (60.f > fDis)
+			{
+				if (false == m_IsAttackSound)
+				{
+					m_IsAttackSound = true;
+					fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+					CSound_Manager::GetInstance()->StopSound(CHANNEL_OGRE_A);
+
+					CSound_Manager::GetInstance()->Play_Sound(L"Ogre_Attack2.ogg", CHANNEL_OGRE_A);
+
+					CSound_Manager::GetInstance()->Set_Volume(CHANNEL_OGRE_A, fDis);
+				}
+			}
 		}
 	}
 }

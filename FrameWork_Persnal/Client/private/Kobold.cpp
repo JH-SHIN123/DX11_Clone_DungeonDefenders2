@@ -27,6 +27,8 @@ HRESULT CKobold::NativeConstruct(void * pArg)
 
 	Ready_Component(pArg);
 
+
+
 	Set_HpBar_OffSet_Position(_float3(0.f, 12.f, 0.f));
 
 	m_pModelCom->Set_AnimationIndex(0);

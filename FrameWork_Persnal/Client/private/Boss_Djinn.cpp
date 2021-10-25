@@ -202,11 +202,11 @@ _int CBoss_Djinn::Late_Tick(_float TimeDelta)
 
 	CData_Manager::GetInstance()->Set_BossHP_Max(m_pStatusCom->Get_HpMax());
 	CData_Manager::GetInstance()->Set_BossHP(m_pStatusCom->Get_Hp());
-	if (EDjinnAnim::Attack_1 == m_eAnim_Next)
-	{
-		m_pRing_Effect->Set_WorldMatrix(m_pMovementCom->Get_WorldMatrix());
-		m_pRing_Effect->Late_Tick(TimeDelta);
-	}
+	//if (EDjinnAnim::Attack_1 == m_eAnim_Next)
+	//{
+	//	m_pRing_Effect->Set_WorldMatrix(m_pMovementCom->Get_WorldMatrix());
+	//	m_pRing_Effect->Late_Tick(TimeDelta);
+	//}
 
 	return __super::Late_Tick(TimeDelta);
 }
