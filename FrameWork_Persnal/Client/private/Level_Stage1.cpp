@@ -62,7 +62,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 1;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 3;
 	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
@@ -73,17 +73,17 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
 	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
-	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 1;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 3;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 1;
 	m_pMonsterGate[(_uint)EMonster_MovePath::North_R]->Set_PhaseMonster_Info(Phase);
 
 	Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
-	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 3;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_L]->Set_PhaseMonster_Info(Phase);
@@ -92,7 +92,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
@@ -110,7 +110,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	m_pMonsterGate[(_uint)EMonster_MovePath::East_L]->Set_PhaseMonster_Info(Phase);
 	m_pMonsterGate[(_uint)EMonster_MovePath::East_R]->Set_PhaseMonster_Info(Phase);
 
-	CData_Manager::GetInstance()->Set_MonsterCount_Max(14);
+	CData_Manager::GetInstance()->Set_MonsterCount_Max(15);
 
 
 	return S_OK;
@@ -133,10 +133,13 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 	{
 		if (false == m_IsBGM)
 		{
-			m_IsBGM = true;
-			CSound_Manager::GetInstance()->StopSound(CHANNEL_BGM);
-			CSound_Manager::GetInstance()->PlayBGM(L"Phase_Bulid_BGM.ogg", CHANNEL_BGM);
-			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, CData_Manager::GetInstance()->Get_SoundVolume_BGM());
+			if (true == CSound_Manager::GetInstance()->IsPlaying(CHANNEL_CORE))
+			{
+				m_IsBGM = true;
+				CSound_Manager::GetInstance()->StopSound(CHANNEL_BGM);
+				CSound_Manager::GetInstance()->PlayBGM(L"Phase_Bulid_BGM.ogg", CHANNEL_BGM);
+				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, CData_Manager::GetInstance()->Get_SoundVolume_BGM());
+			}
 		}
 	}
 	
@@ -161,6 +164,7 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 	}
 
 	// 맞을놈, 때릴놈
+	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_CrystalCore", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Monster", ELevel::Stage1, L"Layer_Bullet", ELevel::Stage1);
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1, L"Layer_Bullet_Monster", ELevel::Stage1);
@@ -200,29 +204,29 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 		Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 		Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 		Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
+		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 4;
 		Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
 		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 1;
 		Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 
-		m_pMonsterGate[(_uint)EMonster_MovePath::North_L]->Set_PhaseMonster_Info(Phase);
-		m_pMonsterGate[(_uint)EMonster_MovePath::North_R]->Set_PhaseMonster_Info(Phase);
+		m_pMonsterGate[(_uint)EMonster_MovePath::North_L]->Set_PhaseMonster_Info(Phase); //6
+		m_pMonsterGate[(_uint)EMonster_MovePath::North_R]->Set_PhaseMonster_Info(Phase); //6
 
 		Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
 		Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 		Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 		Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 1;
-		Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
+		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 3;
+		Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 3;
 		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 1;
 		Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 
-		m_pMonsterGate[(_uint)EMonster_MovePath::West_L]->Set_PhaseMonster_Info(Phase);
-		m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase);
+		m_pMonsterGate[(_uint)EMonster_MovePath::West_L]->Set_PhaseMonster_Info(Phase); //6
+		m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase); //6
 
 		CData_Manager::GetInstance()->Reset_MonsterCount();
-		CData_Manager::GetInstance()->Set_MonsterCount_Max(18);
-		CData_Manager::GetInstance()->Set_BossDead(false);
+		CData_Manager::GetInstance()->Set_MonsterCount_Max(24);
+		//CData_Manager::GetInstance()->Set_BossDead(false);
 		++m_iWaveCount;
 
 		m_IsCombat = true;
@@ -254,11 +258,14 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 		Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
 		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
 		Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 1;
-		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
+		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 1;
 		Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 1;
 
 		m_pMonsterGate[(_uint)EMonster_MovePath::North_L]->Set_PhaseMonster_Info(Phase);
 
+		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 5;
+		Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 1;
+		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 2;
 		Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 
 		m_pMonsterGate[(_uint)EMonster_MovePath::North_R]->Set_PhaseMonster_Info(Phase);
@@ -267,9 +274,9 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 		Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 		Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 		Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 1;
+		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 3;
 		Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
-		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 1;
+		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 2;
 		Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 
 		m_pMonsterGate[(_uint)EMonster_MovePath::West_L]->Set_PhaseMonster_Info(Phase);
@@ -281,7 +288,19 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 		CData_Manager::GetInstance()->Set_BossPhase(true);
 		++m_iWaveCount;
 	}
+		break;
+	case 4:
+		// 클리어 했다
+		CSound_Manager::GetInstance()->StopSound(CHANNEL_BGM);
+		CSound_Manager::GetInstance()->PlayBGM(L"Phase_Complete.ogg", CHANNEL_BGM);
+		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, CData_Manager::GetInstance()->Get_SoundVolume_BGM());
+		++m_iWaveCount;
+		break;
 
+	case 5:
+		m_fTime -= Timedelta;
+		if (0.f >= m_fTime)
+			++m_iWaveCount;
 		break;
 	default:
 		break;

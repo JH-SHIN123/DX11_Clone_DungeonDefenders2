@@ -191,7 +191,7 @@ _bool CDefenceTower::Enemy_Check(_float TimeDelta, _vector* vTargetPos)
 		return false;
 
 	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
-	_float	fTargetDis = -1.f;
+	_float	fTargetDis = 30.f;
 	_float	fTurnAngle = 0.f;
 
 	for (auto& iter : listObject)
@@ -206,18 +206,17 @@ _bool CDefenceTower::Enemy_Check(_float TimeDelta, _vector* vTargetPos)
 		//_float fAngle = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(vDir, vMyAngle))));
 		_float fAngle_Axis = XMConvertToDegrees(acosf(XMVectorGetX(XMVector3Dot(vDir, XMVectorSet(1.f,0.f,0.f,0.f)))));
 
-		if (-1.f == fTargetDis)
-		{
-			fTargetDis = fDis;
-			*vTargetPos = vPos;
-			fTurnAngle = fAngle_Axis;
-		}
+		//if (-1.f == fTargetDis)
+		//{
+		//	fTargetDis = fDis;
+		//	*vTargetPos = vPos;
+		//	fTurnAngle = fAngle_Axis;
+		//}
 
-		else if (fTargetDis >= fDis)
+		/*else*/ if (fTargetDis >= fDis)
 		{
 			if (m_fTowerRangeMin <= fAngle_Axis && fAngle_Axis <= m_fTowerRangeMax)
 			{
-
 				fTargetDis = fDis;
 				*vTargetPos = vPos;
 				fTurnAngle = fAngle_Axis;

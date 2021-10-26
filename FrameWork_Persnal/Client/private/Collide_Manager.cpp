@@ -29,6 +29,8 @@ _bool CCollide_Manager::Collide_Check(const _tchar * szDstObjectLayer, ELevel eD
 	list<CGameObject*> Dst_Object = pDstLayer->Get_GameObject_List();
 	list<CGameObject*> Src_Object = pSrcLayer->Get_GameObject_List();
 
+	if (Dst_Object.empty() || Src_Object.empty())
+		return false;
 
 	for (auto& Src : Src_Object) // Com_Collide_Attack
 	{

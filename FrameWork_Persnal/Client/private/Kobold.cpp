@@ -65,6 +65,7 @@ _int CKobold::Tick(_float TimeDelta)
 				Data.Collider_Desc.vScale = { 2.f,2.f,2.f };
 
 				GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_ManaToken"), (_uint)ELevel::Stage1, L"Layer_ManaToken", &Data);
+				CSound_Manager::GetInstance()->StopSound(CHANNEL_KOBOLD_A);
 
 				return OBJECT_DEAD;
 			}
@@ -190,6 +191,7 @@ _int CKobold::Late_Tick(_float TimeDelta)
 			Data.Collider_Desc.vScale = { 2.f,2.f,2.f };
 
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, TEXT("Prototype_ManaToken"), (_uint)ELevel::Stage1, L"Layer_ManaToken", &Data);
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_KOBOLD_A);
 
 			return OBJECT_DEAD;
 		}
@@ -201,6 +203,9 @@ _int CKobold::Late_Tick(_float TimeDelta)
 	{
 		Explosion();
 		CData_Manager::GetInstance()->Add_MonsterCount();
+		CData_Manager::GetInstance()->Add_Score(m_pStatusCom->Get_Exp() * 2);
+		CSound_Manager::GetInstance()->StopSound(CHANNEL_KOBOLD_A);
+
 		return OBJECT_DEAD;
 	}
 
@@ -239,7 +244,7 @@ void CKobold::Anim_Check(_float TimeDelta)
 			{			
 				CSound_Manager::GetInstance()->Play_Sound(L"Kobold_screamloop2.ogg", CHANNEL_KOBOLD_A);
 			}
-				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD_A, fDis - 0.7f);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD_A, fDis - 0.7f);
 		}
 
 	}
@@ -642,13 +647,15 @@ void CKobold::Explosion()
 	_vector vMyPos = m_pMovementCom->Get_State(EState::Position);
 
 	BULLET_DESC Data;
-	lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
+	// ¸ô¶ó ¾È°íÃÄ 
+	//lstrcpy(Data.szModelName, L"Component_Mesh_StrikerTower_Bullet");
 
 	XMStoreFloat4(&Data.MoveState_Desc.vPos, vMyPos);
 	Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 	Data.MoveState_Desc.fSpeedPerSec = 40.f;
 	Data.fLifeTime = 10.f;
 
+	XMStoreFloat3(&Data.Attack_Collide_Desc.vPosition, vMyPos);
 	Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Direct;
 	Data.Attack_Collide_Desc.Attack_Desc.iDamage = 30;
 	Data.Attack_Collide_Desc.Attack_Desc.fHitTime = 0.f;
@@ -656,7 +663,7 @@ void CKobold::Explosion()
 	//Data.Attack_Collide_Desc.vPosition = { 0.f, 50.f, 0.f };
 	Data.Attack_Collide_Desc.IsCenter = true;
 
-	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Kobold_Boom", (_uint)ELevel::Stage1, L"Layer_Bullet_Monster", &Data);
+	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Kobold_Boom", (_uint)ELevel::Stage1, L"Layer_Bullet_Monster", &Data);
 
 
 	_int iSize = 10;
@@ -700,9 +707,9 @@ void CKobold::Explosion()
 
 
 	_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
-	if (60.f > fDis)
+	if (100.f > fDis)
 	{
-		fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+		fDis /= 100.f;
 		_int i = rand() % 2;
 
 		CSound_Manager::GetInstance()->StopSound(CHANNEL_KOBOLD);
@@ -711,7 +718,7 @@ void CKobold::Explosion()
 		else
 			CSound_Manager::GetInstance()->Play_Sound(L"Kobold_explode2.ogg", CHANNEL_KOBOLD);
 
-		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD, fDis - 0.7f);
+		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD, 1.f - fDis);
 	}
 
 }

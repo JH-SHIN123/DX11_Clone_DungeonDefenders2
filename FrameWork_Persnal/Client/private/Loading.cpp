@@ -58,6 +58,8 @@
 #include "Point_Ex_Particle.h"
 #include "Mesh_Effect.h"
 
+#include "UI_Hit_Effect.h"
+
 USING(Engine)
 
 CLoading::CLoading(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -256,6 +258,9 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Dissolve")
 		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/dissolve.png")));
 
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_Texture_Hit_UI_Effect")
+		, CTextures::Create(m_pDevice, m_pDevice_Context, ETextureType::Wic, TEXT("../Bin/Resources/Textures/Hit/%d.png")));
+
 #pragma endregion
 
 #pragma region GameObject
@@ -326,7 +331,9 @@ HRESULT CLoading::LoadingForStage()
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Ex_BuffAura"), CPoint_Ex_BuffAura::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Ex_Healing"), CPoint_Ex_Healing::Create(m_pDevice, m_pDevice_Context));
 	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_Point_Ex_Particle"), CPoint_Ex_Particle::Create(m_pDevice, m_pDevice_Context));
-	
+
+
+	hr = m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Prototype_UI_Hit_Effect"), CUI_Hit_Effect::Create(m_pDevice, m_pDevice_Context));
 #pragma endregion
 
 #pragma region Model

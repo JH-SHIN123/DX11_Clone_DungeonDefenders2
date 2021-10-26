@@ -15,6 +15,7 @@
 #include "Point_Trail.h"
 #include "Point_Ex_BuffAura.h"
 #include "Point_Ex_Healing.h"
+#include "UI_Hit_Effect.h"
 
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
@@ -73,6 +74,18 @@ _int CPlayer::Tick(_float TimeDelta)
 
 	__super::Tick(TimeDelta);
 
+	if (true == m_pColliderCom_Hit->Get_IsCollide())
+	{
+		UI2D_DESC UI_Desc;
+
+		ZeroMemory(&UI_Desc, sizeof(UI2D_DESC));
+		UI_Desc.eLevel = ELevel::Stage1;
+		lstrcpy(UI_Desc.szTextureName, L"Component_Texture_Hit_UI_Effect");
+		m_pColliderCom_Hit->Set_IsCollide(false);
+
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_UI_Hit_Effect", (_uint)ELevel::Stage1, L"Layer_Effect",&UI_Desc);
+	}
+
 	SpecialAnimation_Check(TimeDelta);
 
 	Key_Check(TimeDelta);
@@ -96,7 +109,7 @@ _int CPlayer::Tick(_float TimeDelta)
 		m_pStrikerTower->Set_TowerLookDir(vMyLook);
 		m_pLightningTower->Set_TowerLookDir(vMyLook);
 	}
-
+	// 
 	return _int();
 }
 
@@ -748,7 +761,7 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 	ColliderDesc.vScale = XMFLOAT3(3.f, 3.f, 3.f);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Hit"), (CComponent**)&m_pColliderCom_Hit, &ColliderDesc);
 
-	ColliderDesc.vScale = XMFLOAT3(2.f, 2.f, 2.f);
+	ColliderDesc.vScale = XMFLOAT3(1.f, 1.f, 1.f);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Push"), (CComponent**)&m_pColliderCom_Push, &ColliderDesc);
 
 	hr = CGameObject::Add_Component((_uint)ELevel::Stage1, TEXT("Component_MeshLevel_1_Navi"), TEXT("Com_Navi"), (CComponent**)&m_pNaviCom);

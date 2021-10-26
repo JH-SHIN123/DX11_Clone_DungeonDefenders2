@@ -378,7 +378,7 @@ HRESULT COgre::Ready_Component(void * pArg)
 	CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Attack"), (CComponent**)&m_pColliderCom_Attack, &Data);
 
 	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
-	Data.vScale = { 2.5f, 2.5f, 2.5f };
+	Data.vScale = { 2.0f, 2.0f, 2.0f };
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Push"), (CComponent**)&m_pColliderCom_Push, &Data);
 
 

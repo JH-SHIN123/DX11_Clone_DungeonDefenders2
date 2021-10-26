@@ -372,7 +372,7 @@ HRESULT CGoblin::Ready_Component(void * pArg)
 
 
 	ZeroMemory(&Data, sizeof(COLLIDER_DESC));
-	Data.vScale = { 2.f, 2.f, 2.f };
+	Data.vScale = { 1.f, 1.f, 1.f };
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Collider_Sphere"), TEXT("Com_Collide_Push"), (CComponent**)&m_pColliderCom_Push, &Data);
 
 

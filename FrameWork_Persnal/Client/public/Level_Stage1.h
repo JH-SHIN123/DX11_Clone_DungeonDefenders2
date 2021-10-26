@@ -57,6 +57,7 @@ private:
 
 	_bool m_IsBulid = false;
 	_bool m_IsCombat = false;
+	_float m_fTime = 7.f;
 
 public:
 	static CLevel_Stage1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

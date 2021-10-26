@@ -61,8 +61,7 @@ _int CKobold_Boom::Late_Tick(_float TimeDelta)
 
 HRESULT CKobold_Boom::Render()
 {
-	__super::Render();
-
+	//__super::Render();
 
 #ifdef _DEBUG
 	m_pColliderCom_Attack->Render_Collider();

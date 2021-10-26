@@ -555,6 +555,20 @@ PS_OUT PS_TEX_ALPHA(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_TEX_HITUI(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vColor.a = g_AlphaTime;
+
+	if (Out.vColor.a <= 0.f)
+		discard;
+	
+
+	return Out;
+}
+
 // 네임스페이스 정도
 technique11		DefaultTechnique
 {
@@ -813,6 +827,17 @@ technique11		DefaultTechnique
 	}
 
 	pass UI_Titlke //23
+	{
+		// 깊이버퍼 비교 X
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_NotZWrite, 0);
+		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_UI();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_LOGO();
+	}
+
+	pass UI_Hit //24
 	{
 		// 깊이버퍼 비교 X
 		SetRasterizerState(Rasterizer_Solid);
