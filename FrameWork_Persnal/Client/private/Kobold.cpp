@@ -97,14 +97,10 @@ _int CKobold::Tick(_float TimeDelta)
 		{
 			fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
 
-			CSound_Manager::GetInstance()->StopSound(CHANNEL_KOBOLD_D);
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_KOBOLD_E);
+			CSound_Manager::GetInstance()->Play_Sound(L"Kobold_explode2.ogg", CHANNEL_KOBOLD_E);
 
-			if (rand() % 2 == 0)
-				CSound_Manager::GetInstance()->Play_Sound(L"Kobold_explode1.ogg", CHANNEL_KOBOLD_D);
-			else
-				CSound_Manager::GetInstance()->Play_Sound(L"Kobold_explode2.ogg", CHANNEL_KOBOLD_D);
-
-			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD_D, fDis + 0.2f);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD_E, fDis);
 		}
 
 		m_pColliderCom_Hurt->Set_IsCollide(false);
@@ -242,12 +238,12 @@ void CKobold::Anim_Check(_float TimeDelta)
 			if (false == CSound_Manager::GetInstance()->IsPlaying(CHANNEL_KOBOLD_A))
 			{			
 				CSound_Manager::GetInstance()->Play_Sound(L"Kobold_screamloop2.ogg", CHANNEL_KOBOLD_A);
-				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD_A, fDis);
+				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD_A, fDis - 0.3f);
 			}
 			else
 			{
 				CSound_Manager::GetInstance()->Play_Sound(L"Kobold_screamloop2.ogg", CHANNEL_KOBOLD);
-				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD_A, fDis);
+				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD, fDis - 0.3f);
 			}
 		}
 
