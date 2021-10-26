@@ -217,7 +217,7 @@ HRESULT CPhaseInfo::Ready_Component(void * pArg)
 	// Enemy Bar
 	MOVESTATE_DESC Data;
 	Data.fSpeedPerSec = 100.f;
-	Data.vScale = _float4(512.f, 64.f, 0.f, 0.f);
+	Data.vScale = _float4(400.f, 50.f, 0.f, 0.f);
 	Data.vPos = _float4(m_vKillBar_Pos.x, m_vKillBar_Pos.y, 0.f, 1.f);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Movement"), TEXT("Com_Movement_Enemy"), (CComponent**)&m_pMovementCom_Enemy, &Data);
 	hr = CGameObject::Add_Component((_uint)ELevel::Static, TEXT("Component_Texture_EnemyKillBar"), TEXT("Com_Texture_Enemy"), (CComponent**)&m_pTextureCom_Enemy);

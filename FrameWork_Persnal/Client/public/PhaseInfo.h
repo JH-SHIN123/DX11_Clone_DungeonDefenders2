@@ -57,7 +57,7 @@ private:
 	CTextures*				m_pTextureCom_Text[5] = { nullptr };
 
 private:
-	_float2			m_vKillBar_Pos = _float2(205.f, 320.f);
+	_float2			m_vKillBar_Pos = _float2(261.f, 320.f);
 	_float2			m_vBossBar_Pos = _float2(0.f, 310.f);
 	_float			m_fBarAlphaTime = 0.f;
 	_int			m_iEnemyCount = 50;

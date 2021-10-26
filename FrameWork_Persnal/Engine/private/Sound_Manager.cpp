@@ -19,7 +19,7 @@ void CSound_Manager::Initialize(void)
 
 	//../Bin/Resources/Sound/
 	handle = _findfirst("../Bin/Resources/Sound/*.*", &fd);
-
+	//_findfirst()
 	if (-1 == handle)
 	{
 		MSG_BOX("Can't Read SoundFile");

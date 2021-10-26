@@ -27,6 +27,7 @@ private:
 	HRESULT			Ready_Component(void* pArg);
 
 	class CPoint_Spread* m_pPointSpread = nullptr;
+	class CPoint_Ex_Trail* m_pPoint_Trail = nullptr;
 
 public:
 	static CPlayer_Bullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

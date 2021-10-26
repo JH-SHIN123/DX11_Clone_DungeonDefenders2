@@ -3,6 +3,7 @@
 #include "Point_Spread.h"
 #include "Point_Spread2.h"
 #include "Data_Manager.h"
+#include "Point_Ex_Trail.h"
 
 CPlayer_Bullet::CPlayer_Bullet(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CBullet(pDevice, pDevice_Context)
@@ -54,6 +55,8 @@ _int CPlayer_Bullet::Tick(_float TimeDelta)
 
 	m_pPointSpread->Set_Pos(m_pMovementCom->Get_State(EState::Position));
 	m_pPointSpread->Tick(TimeDelta);
+	m_pPoint_Trail->Set_Pos(m_pMovementCom->Get_State(EState::Position));
+	m_pPoint_Trail->Tick(TimeDelta);
 
 	return iReturn;
 }
@@ -67,6 +70,7 @@ _int CPlayer_Bullet::Late_Tick(_float TimeDelta)
 	}
 
 	m_pPointSpread->Late_Tick(TimeDelta);
+	m_pPoint_Trail->Late_Tick(TimeDelta);
 
 	return __super::Late_Tick(TimeDelta);
 }
@@ -125,6 +129,24 @@ HRESULT CPlayer_Bullet::Ready_Component(void * pArg)
 	m_pPointSpread->NativeConstruct(&Point_Desc);
 	m_pPointSpread->SetUp_IndexDir(10);
 
+	// 이거 시간값 좀만 손보고 인스턴싱 따로 만들자
+	POINT_TRAIL_EX_DESC Effect_Data;
+	Effect_Data.iRandDir = 5;
+	Effect_Data.fAlphaTime = 1.f;
+	Effect_Data.fAlphaTimePower = 1.5f;
+	Effect_Data.fSpreadDis = 3.f;
+	Effect_Data.fSize = 3.f;
+	Effect_Data.fTimeTerm = 0.05f;
+	Effect_Data.fLifeTime = 10.f;
+	Effect_Data.InstanceValue = EInstanceValue::Point_Ex_200_50;
+	Effect_Data.iShaderPass = 4;
+	XMStoreFloat4(&Effect_Data.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
+	Effect_Data.vColor = { 1.f,1.f,1.f };
+	lstrcpy(Effect_Data.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_50");
+	lstrcpy(Effect_Data.szTextrueName, L"Component_Texture_Ring_Gray");
+
+	m_pPoint_Trail = CPoint_Ex_Trail::Create(m_pDevice, m_pDevice_Context);
+	m_pPoint_Trail->NativeConstruct(&Effect_Data);
 
 	if (S_OK != hr)
 		MSG_BOX("CPlayer_Bullet::Ready_Component Failed!");
@@ -157,6 +179,7 @@ CGameObject * CPlayer_Bullet::Clone_GameObject(void * pArg)
 void CPlayer_Bullet::Free()
 {
 	Safe_Release(m_pPointSpread);
+	Safe_Release(m_pPoint_Trail);
 
 	__super::Free();
 }

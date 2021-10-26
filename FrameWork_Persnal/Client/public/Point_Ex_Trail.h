@@ -86,7 +86,7 @@ protected:
 public:
 	static CPoint_Ex_Trail* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual CPoint_Ex_Trail* Clone_GameObject(void* pArg = nullptr) override;
-	virtual void Free();
+	virtual void Free() override;
 };
 
 END

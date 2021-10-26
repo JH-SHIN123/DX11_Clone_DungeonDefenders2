@@ -32,12 +32,12 @@ HRESULT CCrystalCore::NativeConstruct(void * pArg)
 
 _int CCrystalCore::Tick(_float TimeDelta)
 {
-	if (0 >= m_pStatusCom->Get_Hp())
-	{
-		static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
-
-		return OBJECT_DEAD;
-	}
+	//if (0 >= m_pStatusCom->Get_Hp())
+	//{
+	//	static_cast<CMovement*>((GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Player"))->Get_Component(L"Com_Movement"));
+	//
+	//	return OBJECT_DEAD;
+	//}
 
 
 	m_pStatusCom->Tick(TimeDelta);

@@ -83,7 +83,7 @@ _int CPlayer::Tick(_float TimeDelta)
 		lstrcpy(UI_Desc.szTextureName, L"Component_Texture_Hit_UI_Effect");
 		m_pColliderCom_Hit->Set_IsCollide(false);
 
-		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_UI_Hit_Effect", (_uint)ELevel::Stage1, L"Layer_Effect",&UI_Desc);
+		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_UI_Hit_Effect", (_uint)ELevel::Stage1, L"Layer_Effect", &UI_Desc);
 	}
 
 	SpecialAnimation_Check(TimeDelta);

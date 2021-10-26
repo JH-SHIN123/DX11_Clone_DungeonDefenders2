@@ -20,7 +20,8 @@ public:
 
 private:
 	_bool  m_IsAlphaUp = true;
-	_float m_fAlphaTime = 0.f;
+	_float m_fAlphaTime = 0.3f;
+	_float2 m_vScale = { 1280.f, 720.f };
 
 public:
 	static CUI_Hit_Effect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

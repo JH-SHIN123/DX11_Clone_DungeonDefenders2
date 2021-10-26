@@ -35,23 +35,28 @@ _int CUI_Hit_Effect::Late_Tick(_float TimeDelta)
 
 	if (true == m_IsAlphaUp)
 	{
-		m_fAlphaTime += TimeDelta * 5.f;
-
-		if (1.f <= m_fAlphaTime)
-		{
-			m_fAlphaTime = 0.f;
-			m_IsAlphaUp = false;
-		}
+		m_fAlphaTime -= TimeDelta;
+		m_vScale.x += (16.f * 5.f) * TimeDelta;
+		m_vScale.y += (9.f * 5.f) * TimeDelta;
+		if (0.f >= m_fAlphaTime)
+			m_IsDelete_This = true;
+		//m_fAlphaTime += TimeDelta * 7.f;
+		//
+		//if (1.f <= m_fAlphaTime)
+		//{
+		//	m_fAlphaTime = 0.f;
+		//	m_IsAlphaUp = false;
+		//}
 	}
 	else
 	{
-		m_fAlphaTime += TimeDelta * 3.f;
-
-		if (0.f >= m_fAlphaTime)
-			m_IsDelete_This = true;
+		//m_fAlphaTime -= TimeDelta * 5.f;
+		//
+		//if (0.f >= m_fAlphaTime)
+		//	m_IsDelete_This = true;
 	}
 
-	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::AlphaUI, this);
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::SceneChange, this);
 }
 
 HRESULT CUI_Hit_Effect::Render()
@@ -60,15 +65,15 @@ HRESULT CUI_Hit_Effect::Render()
 		return S_OK;
 
 	_matrix WorldMatrix = XMMatrixIdentity();
-	WorldMatrix.r[0] = XMVectorSet((_float)g_iWinCX, 0.f, 0.f, 0.f);
-	WorldMatrix.r[1] = XMVectorSet(0.f, (_float)g_iWinCY, 0.f, 0.f);
+	WorldMatrix.r[0] = XMVectorSet(m_vScale.x, 0.f, 0.f, 0.f);
+	WorldMatrix.r[1] = XMVectorSet(0.f, m_vScale.y, 0.f, 0.f);
 
 	m_pBufferRectCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(WorldMatrix), sizeof(_matrix));
 	m_pBufferRectCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_INDENTITY_MATRIX), sizeof(_matrix));
 	m_pBufferRectCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_ORTHO_SPACE), sizeof(_matrix));
 
 	m_pBufferRectCom->Set_ShaderResourceView("g_DiffuseTexture", m_pTextureCom->Get_ShaderResourceView(0));
-	m_pBufferRectCom->Set_Variable("g_fTime", &m_fAlphaTime, sizeof(_float));
+	m_pBufferRectCom->Set_Variable("g_AlphaTime", &m_fAlphaTime, sizeof(_float));
 	
 	m_pBufferRectCom->Render(24);
 
