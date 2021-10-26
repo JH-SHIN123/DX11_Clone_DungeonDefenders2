@@ -4,6 +4,7 @@
 
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "Data_Manager.h"
 
 BEGIN(Client)
 

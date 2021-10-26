@@ -40,6 +40,36 @@ _int CBlockadeTower::Tick(_float TimeDelta)
 	if (iReturn = __super::Tick(TimeDelta))
 		return iReturn;
 
+	if (true == m_pCollider_Hit->Get_IsCollide())
+	{
+		_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+		if (60.f > fDis)
+		{
+			fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+			_int iRand = rand() % 4;
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_TOWER_1);
+
+			switch (iRand)
+			{
+			case 0:
+				CSound_Manager::GetInstance()->Play_Sound(L"TowerDamage1.ogg", CHANNEL_TOWER_1);
+				break;
+			case 1:
+				CSound_Manager::GetInstance()->Play_Sound(L"TowerDamage2.ogg", CHANNEL_TOWER_1);
+				break;
+			case 2:
+				CSound_Manager::GetInstance()->Play_Sound(L"TowerDamage3.ogg", CHANNEL_TOWER_1);
+				break;
+			default:
+				CSound_Manager::GetInstance()->Play_Sound(L"TowerDamage4.ogg", CHANNEL_TOWER_1);
+				break;
+			}
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_TOWER_1, fDis + 0.2f);
+		}
+
+		m_pCollider_Hit->Set_IsCollide(false);
+	}
+
 	m_pCollider_Hit->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 
 	return iReturn;

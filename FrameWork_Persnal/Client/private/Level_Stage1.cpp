@@ -25,6 +25,8 @@ CLevel_Stage1::CLevel_Stage1(ID3D11Device * pDevice, ID3D11DeviceContext * pDevi
 
 HRESULT CLevel_Stage1::NativeConstruct()
 {
+	CSound_Manager::GetInstance()->StopSoundAll();
+
 	CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Build);
 
 	CLevel::NativeConstruct();
@@ -52,45 +54,6 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	if (FAILED(Ready_Layer_CrystalCore(L"Layer_CrystalCore")))
 		return E_FAIL;
 		
-	MONSTER_DESC MonData;
-	//lstrcpy(MonData.szModelName, L"Component_Mesh_Goblin");
-	//MonData.eLevel = ELevel::Stage1;
-	//MonData.fDetectDis = 20.f;
-	//MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(20.f);
-	//MonData.Movement_Desc.fSpeedPerSec = 15.f;
-	//MonData.Movement_Desc.vPos = { -5.f, 0.f, 5.f, 1.f };
-	//MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
-	//MonData.Stat_Desc.iHp_Max = 100;
-	//MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
-	//MonData.Stat_Desc.iExp = 15;
-	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Goblin", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);
-	//
-	
-	//lstrcpy(MonData.szModelName, L"Component_Mesh_Ogre");
-	//MonData.eLevel = ELevel::Stage1;
-	//MonData.fDetectDis = 15.f;
-	//MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
-	//MonData.Movement_Desc.fSpeedPerSec = 10.f;
-	//MonData.eMovePath = EMonster_MovePath::West_L;
-	//MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
-	//MonData.Stat_Desc.iHp_Max = 700;
-	//MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
-	//MonData.Stat_Desc.iExp = 15;
-	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ogre", (_uint)ELevel::Stage1, L"Layer_Monster", &MonData);	
-
-	//lstrcpy(MonData.szModelName, L"Component_Mesh_Boss_Djinn");
-	//MonData.eLevel = ELevel::Stage1;
-	//MonData.fDetectDis = 15.f;
-	//MonData.Movement_Desc.fRotatePerSec = XMConvertToRadians(120.f);
-	//MonData.Movement_Desc.fSpeedPerSec = 10.f;
-	//MonData.eMovePath = EMonster_MovePath::West_L;
-	//MonData.Movement_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
-	//MonData.Stat_Desc.iHp_Max = 700;
-	//MonData.Stat_Desc.iHp = MonData.Stat_Desc.iHp_Max;
-	//MonData.Stat_Desc.iExp = 15;
-	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Boss_Djinn", (_uint)ELevel::Stage1, L"Layer_Boss", &MonData);
-
-
 
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, L"Prototype_Fade", (_uint)ELevel::Stage1, L"Layer_Fade");
 
@@ -100,7 +63,7 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
 	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 1;
-	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 	m_pMonsterGate[(_uint)EMonster_MovePath::North_L]->Set_PhaseMonster_Info(Phase);
@@ -109,8 +72,8 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 1;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 	m_pMonsterGate[(_uint)EMonster_MovePath::North_R]->Set_PhaseMonster_Info(Phase);
@@ -119,9 +82,9 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_L]->Set_PhaseMonster_Info(Phase);
 
@@ -129,8 +92,8 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
+	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
+	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 	m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase);
@@ -145,21 +108,10 @@ HRESULT CLevel_Stage1::NativeConstruct()
 	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 	m_pMonsterGate[(_uint)EMonster_MovePath::East_L]->Set_PhaseMonster_Info(Phase);
-
-
-	Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
-	Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
-	Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
-	Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-	Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
-	Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 	m_pMonsterGate[(_uint)EMonster_MovePath::East_R]->Set_PhaseMonster_Info(Phase);
 
-	CData_Manager::GetInstance()->Set_MonsterCount_Max(4);
+	CData_Manager::GetInstance()->Set_MonsterCount_Max(14);
 
-	CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, CData_Manager::GetInstance()->Get_SoundVolume_BGM());
 
 	return S_OK;
 }
@@ -169,6 +121,24 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 	CLevel::Tick(Timedelta);
 	//CSound_Manager::GetInstance()->PlayBGM(L"BGM2.mp3", Engine::CHANNEL_BGM, 1.f);
 	//CSound_Manager::GetInstance()->Play_Sound(L"button.wav", Engine::CHANNEL_PLAYER, GET_CAMERA_POSITION, XMVectorSet(0.f,0.f,0.f,1.f), 10.f);
+
+	if (true == m_IsIntro)
+	{
+		m_IsIntro = false;
+		CSound_Manager::GetInstance()->StopSound(CHANNEL_CORE);
+		CSound_Manager::GetInstance()->Play_Sound(L"Phase_Intro.ogg", CHANNEL_CORE);
+		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_CORE, CData_Manager::GetInstance()->Get_SoundVolume_BGM());
+	}
+	else
+	{
+		if (false == m_IsBGM)
+		{
+			m_IsBGM = true;
+			CSound_Manager::GetInstance()->PlayBGM(L"Phase_Bulid_BGM.mp3", CHANNEL_BGM);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, CData_Manager::GetInstance()->Get_SoundVolume_BGM());
+		}
+	}
+	
 
 	if (GET_KEY_INPUT(DIK_F1) && true == CData_Manager::GetInstance()->Get_Tick_Stop())
 	{
@@ -226,14 +196,50 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 		Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 		Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 		Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
-		Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
-		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
+		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
+		Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
+		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 1;
 		Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 
 		m_pMonsterGate[(_uint)EMonster_MovePath::North_L]->Set_PhaseMonster_Info(Phase);
+		m_pMonsterGate[(_uint)EMonster_MovePath::North_R]->Set_PhaseMonster_Info(Phase);
 
+		Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
+		Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
+		Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
+		Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
+		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 1;
+		Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
+		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 1;
+		Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
+
+		m_pMonsterGate[(_uint)EMonster_MovePath::West_L]->Set_PhaseMonster_Info(Phase);
+		m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase);
+
+		CData_Manager::GetInstance()->Reset_MonsterCount();
+		CData_Manager::GetInstance()->Set_MonsterCount_Max(18);
+		CData_Manager::GetInstance()->Set_BossDead(false);
+		CData_Manager::GetInstance()->Set_BossPhase(true);
+		++m_iWaveCount;
+	}
+		break;
+	case 2:
+		break;
+	case 3:
+	{
+		PHASEINFO_DESC Phase;
+		Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
+		Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
+		Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
+		Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
+		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 2;
+		Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 1;
+		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
 		Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 1;
+
+		m_pMonsterGate[(_uint)EMonster_MovePath::North_L]->Set_PhaseMonster_Info(Phase);
+
+		Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 
 		m_pMonsterGate[(_uint)EMonster_MovePath::North_R]->Set_PhaseMonster_Info(Phase);
 
@@ -241,60 +247,27 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 		Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;
 		Phase.IsAddMonster[(_uint)EMonster_List::Kamikaze] = true;
 		Phase.IsAddMonster[(_uint)EMonster_List::Boss] = true;
-		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 0;
-		Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 0;
-		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 0;
+		Phase.iMonsterCount[(_uint)EMonster_List::Goblin] = 1;
+		Phase.iMonsterCount[(_uint)EMonster_List::Ogre] = 2;
+		Phase.iMonsterCount[(_uint)EMonster_List::Kamikaze] = 1;
 		Phase.iMonsterCount[(_uint)EMonster_List::Boss] = 0;
 
 		m_pMonsterGate[(_uint)EMonster_MovePath::West_L]->Set_PhaseMonster_Info(Phase);
 		m_pMonsterGate[(_uint)EMonster_MovePath::West_R]->Set_PhaseMonster_Info(Phase);
 
 		CData_Manager::GetInstance()->Reset_MonsterCount();
-		CData_Manager::GetInstance()->Set_MonsterCount_Max(1);
+		CData_Manager::GetInstance()->Set_MonsterCount_Max(15);
 		CData_Manager::GetInstance()->Set_BossDead(false);
 		CData_Manager::GetInstance()->Set_BossPhase(true);
 		++m_iWaveCount;
 	}
+
 		break;
 	default:
 		break;
 	}
 	
 	Cheet_Monster_Spawn();
-
-	if (GetAsyncKeyState('P') & 0x8000)
-	{
-		POINT_SPREAD_DESC_2 Data;
-		Data.IsTime = true;
-		Data.vSize = { 2.f,2.f };
-		Data.Point_Desc.fLifeTime = 2.f;
-		Data.Point_Desc.iShaderPass = 0;
-		Data.Point_Desc.InstanceValue = EInstanceValue::Point_100_10;
-		XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, XMVectorSet(15.f, 5.f,0.f,1.f));
-		lstrcpy(Data.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_100_10");
-		lstrcpy(Data.Point_Desc.szTextrueName, L"Component_Texture_Explosion_Smoke");
-		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
-
-		Data.IsTime = true;
-		Data.vSize = { 2.f,2.f };
-		Data.Point_Desc.fLifeTime = 2.f;
-		Data.Point_Desc.iShaderPass = 1;
-		Data.Point_Desc.InstanceValue = EInstanceValue::Point_100_10;
-		XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, XMVectorSet(15.f, 5.f, 0.f, 1.f));
-		lstrcpy(Data.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_100_10");
-		lstrcpy(Data.Point_Desc.szTextrueName, L"Component_Texture_Explosion");
-		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
-
-		Data.IsTime = true;
-		Data.vSize = { 2.f,2.f };
-		Data.Point_Desc.fLifeTime = 2.f;
-		Data.Point_Desc.iShaderPass = 0;
-		Data.Point_Desc.InstanceValue = EInstanceValue::Point_100_10;
-		XMStoreFloat4(&Data.Point_Desc.MoveDesc.vPos, XMVectorSet(15.f, 5.f, 0.f, 1.f));
-		lstrcpy(Data.Point_Desc.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_100_10");
-		lstrcpy(Data.Point_Desc.szTextrueName, L"Component_Texture_Smoke");
-		GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
-	}
 
 	return 0;
 }
@@ -488,9 +461,9 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar * pLayerTag)
 	Data.Status_Desc.iAtt_Basic = 50;
 	Data.Status_Desc.iExp = 0;
 	Data.Status_Desc.iExp_Max = 100;
-	Data.Status_Desc.iHp_Max = 300;
+	Data.Status_Desc.iHp_Max = 400;
 	Data.Status_Desc.iLevel = 1;
-	Data.Status_Desc.iMp_Max = 100;
+	Data.Status_Desc.iMp_Max = 250;
 
 	lstrcpy(Data.szModelName, L"Component_Mesh_Mage");
 

@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "MainMenu.h"
+#include "Data_Manager.h"
 
 CLevel_Logo::CLevel_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CLevel(pDevice, pDevice_Context)
@@ -12,6 +13,8 @@ CLevel_Logo::CLevel_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_C
 
 HRESULT CLevel_Logo::NativeConstruct()
 {
+	CSound_Manager::GetInstance()->StopSoundAll();
+
 	CLevel::NativeConstruct();
 
 	GET_GAMEINSTANCE->Clear_This_Level((_uint)ELevel::Loading);
@@ -25,13 +28,14 @@ HRESULT CLevel_Logo::NativeConstruct()
 
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, L"Prototype_Fade", (_uint)ELevel::Logo, L"Layer_Fade");
 
-
+	CSound_Manager::GetInstance()->PlayBGM(L"Menu.mp3", CHANNEL_BGM);
 	return S_OK;
 }
 
 _int CLevel_Logo::Tick(_float Timedelta)
 {
 	CLevel::Tick(Timedelta);
+	CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, CData_Manager::GetInstance()->Get_SoundVolume_BGM());
 
 	return 0;
 }

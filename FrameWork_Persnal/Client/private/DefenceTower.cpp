@@ -290,17 +290,15 @@ void CDefenceTower::Create_Dead_Effect()
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
 
 
-	// Prototype_Ring_Explosion
+	_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+	if (60.f > fDis)
+	{
+		fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
 
-	//RING_EXPLOSION_DESC Mesh_Desc;
-	//ZeroMemory(&Mesh_Desc, sizeof(RING_EXPLOSION_DESC));
-	//Mesh_Desc.fLifeTime = 3.f;
-	//XMStoreFloat4(&Mesh_Desc.Move_Desc.vPos, vPos);
-	//Mesh_Desc.vScale = { 3.f,3.f,3.f };
-	//lstrcpy(Mesh_Desc.szModelName, L"Component_Mesh_Ring_Explosion");
-	//
-	//GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Ring_Explosion", (_uint)ELevel::Stage1, L"Layer_Effect_Mesh", &Mesh_Desc);
-
+		CSound_Manager::GetInstance()->StopSound(CHANNEL_ANYTHING);
+		CSound_Manager::GetInstance()->Play_Sound(L"TowerDestroy2.ogg", CHANNEL_ANYTHING);
+		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_ANYTHING, fDis);
+	}
 }
 
 void CDefenceTower::Upgrade_Tower()
@@ -316,6 +314,17 @@ void CDefenceTower::Upgrade_Tower()
 	Stat.iHp = (_int)fHp_Max;
 
 	Stat.iAtt_Basic += 20;
+
+	_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+	if (60.f > fDis)
+	{
+		fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+
+		CSound_Manager::GetInstance()->StopSound(CHANNEL_ANYTHING);
+		CSound_Manager::GetInstance()->Play_Sound(L"Tower_upgrade.ogg", CHANNEL_ANYTHING);
+		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_ANYTHING, fDis + 0.2f);
+	}
+	
 
 	m_pStatusCom->Set_Stat(Stat);
 }
@@ -347,10 +356,28 @@ void CDefenceTower::HpBar_Render_Check(_float TimeDelta)
 void CDefenceTower::Healing_Check(_float TimeDelta)
 {
 	if (false == m_IsHealTic)
+	{
+		m_IsSound_Heal = false;
 		return;
+	}
 
 	m_fHealTime += TimeDelta;
 	m_fHealTime_Total += TimeDelta;
+
+	if (false == m_IsSound_Heal)
+	{
+		_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+		if (60.f > fDis)
+		{
+			m_IsSound_Heal = true;
+			fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_ANYTHING);
+			CSound_Manager::GetInstance()->Play_Sound(L"TowerRepair.ogg", CHANNEL_ANYTHING);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_ANYTHING, fDis + 0.2f);
+		}
+	}
+
 
 	if (0.125f <= m_fHealTime)
 	{

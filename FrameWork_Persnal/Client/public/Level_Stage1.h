@@ -51,6 +51,10 @@ private:
 	_int m_iWaveCount = 0;
 	//EPhaseState m_ePhase = EPhaseState::End;
 
+private:
+	_bool m_IsIntro = false;
+	_bool m_IsBGM = false;
+
 public:
 	static CLevel_Stage1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual void Free();

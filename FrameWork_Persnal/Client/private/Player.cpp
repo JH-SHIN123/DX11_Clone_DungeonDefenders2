@@ -125,9 +125,9 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 	m_pLightningTower->Update_Anim(TimeDelta);
 
 
-	_tchar m_szFPS[MAX_PATH] = L"";
-	wsprintf(m_szFPS, TEXT("%d - FPS"), m_pNaviCom->Get_CellIndex(m_pMovementCom->Get_State(EState::Position)));
-	SetWindowText(g_hWnd, m_szFPS);
+	//_tchar m_szFPS[MAX_PATH] = L"";
+	//wsprintf(m_szFPS, TEXT("%d - FPS"), m_pNaviCom->Get_CellIndex(m_pMovementCom->Get_State(EState::Position)));
+	//SetWindowText(g_hWnd, m_szFPS);
 
 	if (EPlayerAnimation::Heal == m_eAnimationState_Next)
 	{
@@ -772,7 +772,7 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 	TowerData.MoveState_Desc.vScale = _float4(1.f, 1.f, 1.f, 0.f);
 	XMStoreFloat4(&TowerData.MoveState_Desc.vPos, vPos);
 	m_CreateTower_Desc.vPos = TowerData.MoveState_Desc.vPos;
-	TowerData.Stat_Desc.iHp_Max = 400;
+	TowerData.Stat_Desc.iHp_Max = 1000;
 
 	m_pBlockadeTower = CBlockadeTower::Create(m_pDevice, m_pDevice_Context);
 	m_pBlockadeTower->NativeConstruct(&TowerData);
@@ -780,7 +780,7 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 	m_pBlockadeTower->Set_IsSpawn(false);
 
 	// STRIKER
-	TowerData.Stat_Desc.iHp_Max = 200;
+	TowerData.Stat_Desc.iHp_Max = 500;
 	lstrcpy(TowerData.szModelName, L"Component_Mesh_StrikerTower");
 	TowerData.eTowerRange = ETowerRange::Quarter;
 
@@ -790,7 +790,7 @@ HRESULT CPlayer::Ready_Component(void* pArg)
 	m_pStrikerTower->Set_IsSpawn(false);
 
 	// LIGHTNING
-	TowerData.Stat_Desc.iHp_Max = 130;
+	TowerData.Stat_Desc.iHp_Max = 400;
 	lstrcpy(TowerData.szModelName, L"Component_Mesh_LightningTower");
 	TowerData.eTowerRange = ETowerRange::Pi;
 
@@ -955,7 +955,7 @@ void CPlayer::Skill_BrainWash()
 
 			CSound_Manager::GetInstance()->StopSound(CHANNEL_PLAYER);
 			CSound_Manager::GetInstance()->Play_Sound(L"Player_Poison.ogg", CHANNEL_PLAYER);
-			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_PLAYER, 0.7f);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_PLAYER, 0.3f);
 			m_IsCast_BrainWash = true;
 		}
 	}

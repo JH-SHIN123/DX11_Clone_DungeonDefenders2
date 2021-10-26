@@ -303,6 +303,17 @@ EMonsterAI CMonster::AI_Check(_float TimeDelta, _vector* pTargetPos, _bool IsCon
 				// 타워 때릴 준비 완료
 				fTowerDis = fDis;
 				*pTargetPos = vTowerPos;
+
+				_vector vDir = XMVector3Normalize(*pTargetPos - vMyPos);
+				_vector vLook = vDir;
+				_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+				_vector vRight = XMVector3Cross(vUp, vDir);
+
+				m_pMovementCom->Set_State(EState::Right, vRight * m_vScale.x);
+				m_pMovementCom->Set_State(EState::Up, vUp *m_vScale.y);
+				m_pMovementCom->Set_State(EState::Look, vLook * m_vScale.z);
+				//m_pMovementCom->Go_Dir(TimeDelta, vDir, m_pNaviCom);
+
 			}
 		}
 

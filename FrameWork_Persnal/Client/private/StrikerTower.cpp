@@ -40,6 +40,38 @@ _int CStrikerTower::Tick(_float TimeDelta)
 	if (iReturn = __super::Tick(TimeDelta))
 		return iReturn;
 
+	if (true == m_pCollider_Hit->Get_IsCollide())
+	{
+		_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+		if (60.f > fDis)
+		{
+			fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+			_int iRand = rand() % 4;
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_ANYTHING_2);
+			
+			switch (iRand)
+			{
+			case 0:
+				CSound_Manager::GetInstance()->Play_Sound(L"TowerDamage1.ogg", CHANNEL_ANYTHING_2);
+				break;
+			case 1:
+				CSound_Manager::GetInstance()->Play_Sound(L"TowerDamage2.ogg", CHANNEL_ANYTHING_2);
+				break;
+			case 2:
+				CSound_Manager::GetInstance()->Play_Sound(L"TowerDamage3.ogg", CHANNEL_ANYTHING_2);
+				break;
+			default:
+				CSound_Manager::GetInstance()->Play_Sound(L"TowerDamage4.ogg", CHANNEL_ANYTHING_2);
+				break;
+			}
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_ANYTHING_2, fDis + 0.2f);
+		}
+
+
+		m_pCollider_Hit->Set_IsCollide(false);
+	}
+	
+
 	m_pCollider_Hit->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 
 	return iReturn;
@@ -47,7 +79,7 @@ _int CStrikerTower::Tick(_float TimeDelta)
 
 _int CStrikerTower::Late_Tick(_float TimeDelta)
 {
-	Attack_Check(TimeDelta);
+	//Attack_Check(TimeDelta);
 
 	m_pModelCom->Update_AnimaionMatrix(TimeDelta);
 
@@ -91,6 +123,17 @@ _int CStrikerTower::Late_Tick(_float TimeDelta)
 			Data.Attack_Collide_Desc.IsCenter = true;
 
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_StrikerTower_Bullet", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
+
+
+			_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+			if (60.f > fDis)
+			{
+				fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+
+				CSound_Manager::GetInstance()->StopSound(CHANNEL_TOWER_2);
+				CSound_Manager::GetInstance()->Play_Sound(L"Tower_Fireball1.ogg", CHANNEL_TOWER_2);
+				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_TOWER_2, fDis + 0.2f);
+			}
 		}
 	}
 	else

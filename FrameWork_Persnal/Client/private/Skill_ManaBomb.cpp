@@ -178,6 +178,16 @@ void CSkill_ManaBomb::Create_Explosion()
 	Effect_Data.fSize = 4.0f;
 	lstrcpy(Effect_Data.szTextrueName, L"Component_Texture_BlueSmall");
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Trail", (_uint)ELevel::Stage1, L"Layer_Effect", &Effect_Data);
+
+
+	_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+	if (60.f > fDis)
+	{
+		fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+		CSound_Manager::GetInstance()->StopSound(CHANNEL_ANYTHING_3);
+		CSound_Manager::GetInstance()->Play_Sound(L"explosion.wav", CHANNEL_ANYTHING_3);
+		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_ANYTHING_3, fDis + 0.2f);
+	}
 }
 
 CSkill_ManaBomb * CSkill_ManaBomb::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)

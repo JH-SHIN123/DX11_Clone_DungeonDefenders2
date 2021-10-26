@@ -238,13 +238,8 @@ void CKobold::Anim_Check(_float TimeDelta)
 			if (false == CSound_Manager::GetInstance()->IsPlaying(CHANNEL_KOBOLD_A))
 			{			
 				CSound_Manager::GetInstance()->Play_Sound(L"Kobold_screamloop2.ogg", CHANNEL_KOBOLD_A);
-				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD_A, fDis - 0.3f);
 			}
-			else
-			{
-				CSound_Manager::GetInstance()->Play_Sound(L"Kobold_screamloop2.ogg", CHANNEL_KOBOLD);
-				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD, fDis - 0.3f);
-			}
+				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD_A, fDis - 0.7f);
 		}
 
 	}
@@ -702,6 +697,22 @@ void CKobold::Explosion()
 	lstrcpy(Point_Desc.Point_Desc.szTextrueName, L"Component_Texture_Explosion");
 
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Particle", (_uint)ELevel::Stage1, L"Layer_Effect", &Point_Desc);
+
+
+	_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+	if (60.f > fDis)
+	{
+		fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+		_int i = rand() % 2;
+
+		CSound_Manager::GetInstance()->StopSound(CHANNEL_KOBOLD);
+		if(i == 0)
+			CSound_Manager::GetInstance()->Play_Sound(L"Kobold_explode1.ogg", CHANNEL_KOBOLD);
+		else
+			CSound_Manager::GetInstance()->Play_Sound(L"Kobold_explode2.ogg", CHANNEL_KOBOLD);
+
+		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_KOBOLD, fDis - 0.7f);
+	}
 
 }
 

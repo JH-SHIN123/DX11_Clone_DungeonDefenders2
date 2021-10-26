@@ -2,6 +2,7 @@
 #include "..\public\Player_Bullet.h"
 #include "Point_Spread.h"
 #include "Point_Spread2.h"
+#include "Data_Manager.h"
 
 CPlayer_Bullet::CPlayer_Bullet(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CBullet(pDevice, pDevice_Context)
@@ -97,6 +98,15 @@ void CPlayer_Bullet::Creat_Effect()
 	lstrcpy(Data.Point_Desc.szTextrueName, L"Component_Texture_Ring_Gray");
 
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Spread2", (_uint)ELevel::Stage1, L"Layer_Effect", &Data);
+
+	_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+	if (60.f > fDis)
+	{
+		fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+		CSound_Manager::GetInstance()->StopSound(CHANNEL_ANYTHING_4);
+		CSound_Manager::GetInstance()->Play_Sound(L"Energyball.wav", CHANNEL_ANYTHING_4);
+		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_ANYTHING_4, fDis + 0.2f);
+	}
 }
 
 HRESULT CPlayer_Bullet::Ready_Component(void * pArg)

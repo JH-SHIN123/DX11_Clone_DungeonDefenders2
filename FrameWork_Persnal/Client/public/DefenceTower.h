@@ -4,6 +4,7 @@
 
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "Data_Manager.h"
 
 BEGIN(Client)
 
@@ -94,6 +95,10 @@ private:
 	ETowerState		m_eTowerState_Next	= ETowerState::Spawn;
 
 protected:
+	_bool m_IsSound_Attack = false;
+	_bool m_IsSound_Dead = false;
+
+protected:
 	ETowerRange		m_eTowerRange		= ETowerRange::End;
 
 private:
@@ -118,6 +123,11 @@ private:
 	_float m_fHealTime_Total = 0.f;
 	const _float m_fHealTime_Max = 2.f;
 	_bool m_IsHealTic = false;
+
+private:
+	_bool m_IsSound_Heal = false;
+	_bool m_IsSound_Upgrade = false;
+
 
 public:
 	virtual CGameObject* Clone_GameObject(void* pArg = nullptr) override;

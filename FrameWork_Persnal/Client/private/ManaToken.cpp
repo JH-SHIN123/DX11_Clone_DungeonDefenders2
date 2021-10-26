@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\ManaToken.h"
+#include "Data_Manager.h"
 
 CManaToken::CManaToken(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context)
 	: CGameObject(pDevice, pDevice_Context)
@@ -75,6 +76,20 @@ _int CManaToken::Late_Tick(_float TimeDelta)
 
 		pStatus->Add_Mp(m_iMp);
 
+		_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+		if (60.f > fDis)
+		{
+			fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_ANYTHING_5);
+			_int iRand = rand() % 2;
+
+			if(iRand == 0)
+				CSound_Manager::GetInstance()->Play_Sound(L"Tokenpickup1.ogg", CHANNEL_ANYTHING_5);
+			else
+				CSound_Manager::GetInstance()->Play_Sound(L"Tokenpickup2.ogg", CHANNEL_ANYTHING_5);
+
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_ANYTHING_5, fDis + 0.2f);
+		}
 		return OBJECT_DEAD;
 	}
 
