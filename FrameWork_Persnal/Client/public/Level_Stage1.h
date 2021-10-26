@@ -55,6 +55,9 @@ private:
 	_bool m_IsIntro = false;
 	_bool m_IsBGM = false;
 
+	_bool m_IsBulid = false;
+	_bool m_IsCombat = false;
+
 public:
 	static CLevel_Stage1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
 	virtual void Free();

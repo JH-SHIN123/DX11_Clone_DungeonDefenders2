@@ -197,6 +197,8 @@ _int CGoblin::Late_Tick(_float TimeDelta)
 
 	if (0 >= m_pStatusCom->Get_Hp())
 	{
+		m_pColliderCom_Hurt->Set_NotCollide(true);
+
 		if (true == m_pModelCom->Get_IsFinishedAnimaion())
 		{
 			CData_Manager::GetInstance()->Add_MonsterCount();

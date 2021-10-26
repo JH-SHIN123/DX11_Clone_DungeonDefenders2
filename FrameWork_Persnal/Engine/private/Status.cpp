@@ -39,6 +39,11 @@ _uint CStatus::Tick(_float TimeDelta)
 {
 	Damage_Check(TimeDelta);
 
+	if (0 >= m_Status_Desc.iHp)
+	{
+		m_Status_Desc.iHp = 0;
+	}
+
 	return _uint();
 }
 

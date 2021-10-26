@@ -187,6 +187,10 @@ _int COgre::Tick(_float TimeDelta)
 		}
 	}
 
+	if (0 >= m_pStatusCom->Get_Hp())
+		m_eAnim_Next = EOgreAnim::Death;
+		
+
 	m_pColliderCom_Hurt->Update_Collider(m_pMovementCom->Get_WorldMatrix());
 
 	m_pStatusCom->Tick(TimeDelta);
@@ -204,6 +208,27 @@ _int COgre::Late_Tick(_float TimeDelta)
 	{
 		if (EOgreAnim::Death == m_eAnim_Next)
 		{
+			m_pColliderCom_Hurt->Set_NotCollide(true);
+
+			if (false == m_IsDeadSound)
+			{
+				if (90 == (_uint)m_pModelCom->Get_AnimTime())
+				{
+					m_IsDeadSound = true;
+
+					_float fDis = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
+					if (60.f > fDis)
+					{
+						fDis = CData_Manager::GetInstance()->Get_SoundVolume_Effect() / fDis;
+
+						CSound_Manager::GetInstance()->StopSound(CHANNEL_OGRE_D);
+
+						CSound_Manager::GetInstance()->Play_Sound(L"Ogre_Dead.ogg", CHANNEL_OGRE_D);
+
+						CSound_Manager::GetInstance()->Set_Volume(CHANNEL_OGRE_D, fDis + 0.2f);
+					}
+				}
+			}
 			if (true == m_pModelCom->Get_IsFinishedAnimaion())
 			{
 				CData_Manager::GetInstance()->Add_MonsterCount();

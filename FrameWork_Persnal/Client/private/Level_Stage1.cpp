@@ -122,9 +122,9 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 	//CSound_Manager::GetInstance()->PlayBGM(L"BGM2.mp3", Engine::CHANNEL_BGM, 1.f);
 	//CSound_Manager::GetInstance()->Play_Sound(L"button.wav", Engine::CHANNEL_PLAYER, GET_CAMERA_POSITION, XMVectorSet(0.f,0.f,0.f,1.f), 10.f);
 
-	if (true == m_IsIntro)
+	if (false == m_IsIntro)
 	{
-		m_IsIntro = false;
+		m_IsIntro = true;
 		CSound_Manager::GetInstance()->StopSound(CHANNEL_CORE);
 		CSound_Manager::GetInstance()->Play_Sound(L"Phase_Intro.ogg", CHANNEL_CORE);
 		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_CORE, CData_Manager::GetInstance()->Get_SoundVolume_BGM());
@@ -134,7 +134,8 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 		if (false == m_IsBGM)
 		{
 			m_IsBGM = true;
-			CSound_Manager::GetInstance()->PlayBGM(L"Phase_Bulid_BGM.mp3", CHANNEL_BGM);
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_BGM);
+			CSound_Manager::GetInstance()->PlayBGM(L"Phase_Bulid_BGM.ogg", CHANNEL_BGM);
 			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, CData_Manager::GetInstance()->Get_SoundVolume_BGM());
 		}
 	}
@@ -142,7 +143,6 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 
 	if (GET_KEY_INPUT(DIK_F1) && true == CData_Manager::GetInstance()->Get_Tick_Stop())
 	{
-
 		CData_Manager::GetInstance()->Set_Tick_Stop(false);
 	}
 
@@ -181,6 +181,10 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 		if (true == CData_Manager::GetInstance()->Is_PhaseClear())
 		{
 			CData_Manager::GetInstance()->Set_NowPhase(EPhaseState::Build);
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_BGM);
+			CSound_Manager::GetInstance()->PlayBGM(L"Phase_Bulid_BGM.ogg", CHANNEL_BGM);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, CData_Manager::GetInstance()->Get_SoundVolume_BGM());
+
 			++m_iWaveCount;
 		}
 	}
@@ -219,14 +223,30 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 		CData_Manager::GetInstance()->Reset_MonsterCount();
 		CData_Manager::GetInstance()->Set_MonsterCount_Max(18);
 		CData_Manager::GetInstance()->Set_BossDead(false);
-		CData_Manager::GetInstance()->Set_BossPhase(true);
 		++m_iWaveCount;
+
+		m_IsCombat = true;
 	}
 		break;
 	case 2:
+		if (true == m_IsCombat)
+		{
+			m_IsBulid = true;
+			m_IsCombat = false;
+// 			CSound_Manager::GetInstance()->PlayBGM(L"Phase_Combat_BGM.mp3", CHANNEL_BGM);
+// 			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, CData_Manager::GetInstance()->Get_SoundVolume_BGM());
+		}
 		break;
 	case 3:
 	{
+		if (true == m_IsBulid)
+		{
+			m_IsBulid = false;
+			m_IsCombat = true;
+// 			CSound_Manager::GetInstance()->PlayBGM(L"Phase_Bulid_BGM.mp3", CHANNEL_BGM);
+// 			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, CData_Manager::GetInstance()->Get_SoundVolume_BGM());
+		}
+
 		PHASEINFO_DESC Phase;
 		Phase.IsAddMonster[(_uint)EMonster_List::Goblin] = true;
 		Phase.IsAddMonster[(_uint)EMonster_List::Ogre] = true;

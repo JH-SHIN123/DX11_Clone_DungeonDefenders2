@@ -107,7 +107,7 @@ HRESULT CMonster::Render()
 
 	_int iShader = 0;
 
-	if (0 > m_pStatusCom->Get_Hp()) 
+	if (0 >= m_pStatusCom->Get_Hp()) 
 	{
 		iShader = 12;
 		//_vector vColor_Now = XMLoadFloat4(&m_vColor);

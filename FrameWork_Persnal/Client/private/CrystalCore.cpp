@@ -190,6 +190,11 @@ void CCrystalCore::Button_Dis_Check(_float TimeDelta)
 
 				CSound_Manager::GetInstance()->Play_Sound(L"Crystal_Activate.ogg", CHANNEL_CORE);
 				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_CORE, CData_Manager::GetInstance()->Get_SoundVolume_Effect());
+
+				CSound_Manager::GetInstance()->StopSound(CHANNEL_BGM);
+				CSound_Manager::GetInstance()->PlayBGM(L"Phase_Combat_BGM.ogg", CHANNEL_BGM);
+				CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BGM, CData_Manager::GetInstance()->Get_SoundVolume_BGM());
+
 			}
 		}
 	}

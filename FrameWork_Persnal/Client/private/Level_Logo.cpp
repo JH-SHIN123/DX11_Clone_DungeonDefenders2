@@ -27,8 +27,8 @@ HRESULT CLevel_Logo::NativeConstruct()
 
 
 	GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Static, L"Prototype_Fade", (_uint)ELevel::Logo, L"Layer_Fade");
-
 	CSound_Manager::GetInstance()->PlayBGM(L"Menu.mp3", CHANNEL_BGM);
+
 	return S_OK;
 }
 
