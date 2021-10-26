@@ -129,7 +129,12 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 	wsprintf(m_szFPS, TEXT("%d - FPS"), m_pNaviCom->Get_CellIndex(m_pMovementCom->Get_State(EState::Position)));
 	SetWindowText(g_hWnd, m_szFPS);
 
-
+	if (EPlayerAnimation::Heal == m_eAnimationState_Next)
+	{
+		if (false == CSound_Manager::GetInstance()->IsPlaying(CHANNEL_EFFECT_PLAYER))
+			CSound_Manager::GetInstance()->Play_Sound(L"Player_Heal.ogg", CHANNEL_EFFECT_PLAYER);
+		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_EFFECT_PLAYER, 0.7f);
+	}
 
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
@@ -343,18 +348,29 @@ void CPlayer::Key_Check(_float TimeDelta)
 			m_eAnimationState_Next_Second = EPlayerAnimation::Fire;
 			m_IsSecondAnimation = true;
 			m_pWeapon->Create_Bullet(XMVector3Normalize(m_pMovementCom->Get_State(EState::Look)), m_iAtt);
+
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_EFFECT_PLAYER_E1);
+			CSound_Manager::GetInstance()->Play_Sound(L"Player_Attack.ogg", CHANNEL_EFFECT_PLAYER_E1);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_EFFECT_PLAYER_E1, 0.7f);
+
 			return;
 		}
 
 		switch (m_eTowerSpawn)
 		{
 		case Client::ETowerSpawn::Locate:
+			CSound_Manager::GetInstance()->Play_Sound(L"TowerPlacementConfirm.ogg", CHANNEL_EFFECT_PLAYER_E2);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_EFFECT_PLAYER_E2, 0.7f);
 			m_eTowerSpawn = ETowerSpawn::Rotate;
 			break;
 		case Client::ETowerSpawn::Rotate:
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_EFFECT_PLAYER_E2);
+			CSound_Manager::GetInstance()->Play_Sound(L"TowerPlacementConfirm.ogg", CHANNEL_EFFECT_PLAYER_E2);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_EFFECT_PLAYER_E2, 0.7f);
 			m_eTowerSpawn = ETowerSpawn::Spawn;
 			break;
 		case Client::ETowerSpawn::Spawn:
+
 			break;
 		}
 	}
@@ -481,7 +497,7 @@ void CPlayer::Key_Check(_float TimeDelta)
 		{
 			pSkill->Set_Skill_CoolDown(4, 7.f);
 			m_eAnimationState_Next = EPlayerAnimation::Heal;
-			m_fChargeSkill = 5.f;
+			m_fChargeSkill = 4.f;
 			m_IsCharging = true;
 			m_fHealTime = 0.f;
 			m_iHealSize = m_pStatusCom->Get_HpMax() - m_pStatusCom->Get_Hp();
@@ -550,6 +566,7 @@ void CPlayer::Tower_Pick()
 
 			if (true == m_IsRenderTower[RENDER_LIGHTING])
 				m_pLightningTower->Set_TowerPos(vOutPos);
+
 		}
 	}
 		break;
@@ -583,7 +600,7 @@ void CPlayer::Tower_Pick()
 	}
 		break;
 	case Client::ETowerSpawn::Spawn:
-
+		//TowerSummoned2
 		if (false == m_IsTowerSpawning)
 		{
 			static_cast<CCamera_Target*>(GET_GAMEINSTANCE->Get_GameObject((_uint)ELevel::Stage1, L"Layer_Camera"))->Set_CameraView_Mode(ECameraViewMode::TopToTPS);
@@ -624,6 +641,10 @@ void CPlayer::Tower_Pick()
 			m_pStatusCom->Set_Mp(iMp);
 			
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, szPrototypeName, (_uint)ELevel::Stage1, L"Layer_Tower", &Data);
+
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_EFFECT_PLAYER_E2);
+			CSound_Manager::GetInstance()->Play_Sound(L"TowerSummoned2.ogg", CHANNEL_EFFECT_PLAYER_E2);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_EFFECT_PLAYER_E2, 0.7f);
 		}
 		m_IsTowerSpawning = false;
 
@@ -807,6 +828,10 @@ void CPlayer::Skill_AttackBuff(_float TimeDelta)
 
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_BuffAura", (_uint)ELevel::Stage1, L"Layer_Effect", &Point_Desc);
 
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_PLAYER);
+			CSound_Manager::GetInstance()->Play_Sound(L"Player_Buff.ogg", CHANNEL_PLAYER);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_PLAYER, 0.7f);
+
 			m_IsCast_AttackBuff = true;
 		}
 	}
@@ -854,6 +879,10 @@ void CPlayer::Skill_ManaBomb()
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Skill_ManaBomb", (_uint)ELevel::Stage1, L"Layer_Skill", &Data);
 
 			m_IsCast_ManaBomb = true;
+
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_PLAYER);
+			CSound_Manager::GetInstance()->Play_Sound(L"Player_Manabomb.ogg", CHANNEL_PLAYER);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_PLAYER, 0.7f);
 		}
 	}
 }
@@ -884,6 +913,10 @@ void CPlayer::Skill_Meteor()
 			Data.Attack_Collide_Desc.IsCenter = true;
 
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Skill_Meteor", (_uint)ELevel::Stage1, L"Layer_Bullet", &Data);
+
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_PLAYER);
+			CSound_Manager::GetInstance()->Play_Sound(L"Player_Meteor.ogg", CHANNEL_PLAYER);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_PLAYER, 0.7f);
 
 			m_IsCast_Meteor = true;
 		}
@@ -920,7 +953,9 @@ void CPlayer::Skill_BrainWash()
 
 			GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Skill_BrainWash", (_uint)ELevel::Stage1, L"Layer_Bullet_Posion", &Data);
 
-
+			CSound_Manager::GetInstance()->StopSound(CHANNEL_PLAYER);
+			CSound_Manager::GetInstance()->Play_Sound(L"Player_Poison.ogg", CHANNEL_PLAYER);
+			CSound_Manager::GetInstance()->Set_Volume(CHANNEL_PLAYER, 0.7f);
 			m_IsCast_BrainWash = true;
 		}
 	}
@@ -930,6 +965,10 @@ void CPlayer::Skill_Healing(_float TimeDelta)
 {
 	if (EPlayerAnimation::Heal == m_eAnimationState_Next)
 	{
+		if (false == CSound_Manager::GetInstance()->IsPlaying(CHANNEL_EFFECT_PLAYER))
+			CSound_Manager::GetInstance()->Play_Sound(L"Player_Heal.ogg", CHANNEL_EFFECT_PLAYER);
+		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_EFFECT_PLAYER, 0.7f);
+
 		m_fHealTime += TimeDelta;
 
 		if (0.125f <= m_fHealTime)
@@ -960,6 +999,8 @@ void CPlayer::Skill_Healing(_float TimeDelta)
 				lstrcpy(Point_Desc.szBuffTarget, L"Layer_Player");
 
 				GET_GAMEINSTANCE->Add_GameObject((_uint)ELevel::Stage1, L"Prototype_Point_Ex_Healing", (_uint)ELevel::Stage1, L"Layer_Effect", &Point_Desc);
+
+
 			}
 
 			m_pStatusCom->Set_Hp((_int)iHp);

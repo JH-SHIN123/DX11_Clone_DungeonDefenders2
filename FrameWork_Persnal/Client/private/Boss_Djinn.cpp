@@ -64,7 +64,7 @@ _int CBoss_Djinn::Tick(_float TimeDelta)
 		if (false == m_IsDeadSound)
 		{
 			m_IsDeadSound = true;
-		CSound_Manager::GetInstance()->Play_Sound(L"GenieKing_Death.ogg", CHANNEL_BOSS_D);
+		CSound_Manager::GetInstance()->Play_Sound(L"Djinn_Death1.ogg", CHANNEL_BOSS_D);
 		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_BOSS_D, 0.4f);
 		}
 
