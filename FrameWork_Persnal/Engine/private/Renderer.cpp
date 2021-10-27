@@ -74,18 +74,20 @@ HRESULT CRenderer::NativeConstruct_Prototype()
 
 
 	// 디버그용 렌더링 Shader_RenderTarget 텍스처 그대로 렌더함
-	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Diffuse"), 0.f, 0.f, 200.f, 200.f)))
+	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Diffuse"), 0.f, 0.f, 150.f, 150.f)))
 		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Normal"), 0.f, 200.f, 200.f, 200.f)))
+	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Normal"), 0.f, 150.f, 150.f, 150.f)))
 		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Depth"), 0.f, 400.f, 200.f, 200.f)))
-		return E_FAIL;
-
-	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Shade"), 200.f, 0.f, 200.f, 200.f)))
-		return E_FAIL;
-	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Specular"), 200.f, 200.f, 200.f, 200.f)))
+	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Depth"), 0.f, 300.f, 150.f, 150.f)))
 		return E_FAIL;
 
+	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Shade"), 150.f, 0.f, 150.f, 150.f)))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Specular"), 150.f, 150.f, 150.f, 150.f)))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Bloom"), 300.f, 0.f, 150.f, 150.f)))
+		return E_FAIL;
 
 	m_pVIBuffer = CVIBuffer_RectRHW::Create(m_pDevice, m_pDevice_Context, 0.f, 0.f, ViewPortDesc.Width, ViewPortDesc.Height, TEXT("../Bin/Shader/Shader_Blend.hlsl"), "DefaultTechnique");
 	if (nullptr == m_pVIBuffer)
@@ -147,6 +149,7 @@ HRESULT CRenderer::Draw_Renderer()
 
 	m_pTarget_Manager->Render_DebugBuffer(TEXT("MRT_Deferred"));
 	m_pTarget_Manager->Render_DebugBuffer(TEXT("MRT_LightAcc"));
+	m_pTarget_Manager->Render_DebugBuffer(TEXT("MRT_Bloom"));
 
 	return S_OK;
 }
@@ -454,13 +457,13 @@ HRESULT CRenderer::Render_Blend_For_Bloom()
 	m_pVIBuffer->Set_ShaderResourceView("g_ShadeTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Shade")));
 	m_pVIBuffer->Set_ShaderResourceView("g_SpecularTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Specular")));
 	m_pVIBuffer->Render(0);
-
-	if (FAILED(m_pTarget_Manager->End_MRT(m_pDevice_Context, TEXT("MRT_LightAcc"))))
+	
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pDevice_Context, TEXT("MRT_Bloom"))))
 		return E_FAIL;
 
-	// Bloom 효과가 나와라 제발
-	m_pVIBuffer_Bloom->Set_ShaderResourceView("g_DepthTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Depth")));
-	m_pVIBuffer_Bloom->Set_ShaderResourceView("g_BloomTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Bloom")));
+	// Bloom 아 이러면 이거만 들어갔네
+	m_pVIBuffer_Bloom->Set_ShaderResourceView("g_DepthTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Diffuse")));
+	m_pVIBuffer_Bloom->Set_ShaderResourceView("g_BloomTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Diffuse")));
 	m_pVIBuffer_Bloom->Render(0);
 
 
