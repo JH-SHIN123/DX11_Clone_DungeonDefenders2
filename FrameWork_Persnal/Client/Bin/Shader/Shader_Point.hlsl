@@ -384,7 +384,7 @@ EX_PS_OUT EX_PS_MAIN_ALPHATIME_DISCARD(EX_PS_IN In)
 	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
 	if (0.f >= In.fTime)
-		discard;
+		Out.vColor.a = 0.f;
 
 	return Out;
 }
@@ -438,7 +438,7 @@ technique11		ExtendTechnique
 		SetBlendState(BlendState_Alpha, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 		VertexShader = compile vs_5_0 EX_VS_MAIN();
 		GeometryShader = compile gs_5_0 EX_GS_MAIN();
-		PixelShader = compile ps_5_0 EX_PS_MAIN_ALPHATIME_DISCARD();
+		PixelShader = compile ps_5_0 EX_PS_MAIN_TIME();
 	}
 };
 

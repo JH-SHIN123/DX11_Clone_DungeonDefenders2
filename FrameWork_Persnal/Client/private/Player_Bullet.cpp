@@ -136,13 +136,13 @@ HRESULT CPlayer_Bullet::Ready_Component(void * pArg)
 	Effect_Data.fAlphaTimePower = 1.5f;
 	Effect_Data.fSpreadDis = 3.f;
 	Effect_Data.fSize = 3.f;
-	Effect_Data.fTimeTerm = 0.05f;
+	Effect_Data.fTimeTerm = 0.1f;
 	Effect_Data.fLifeTime = 10.f;
-	Effect_Data.InstanceValue = EInstanceValue::Point_Ex_200_50;
+	Effect_Data.InstanceValue = EInstanceValue::Point_Ex_1000_100;
 	Effect_Data.iShaderPass = 4;
 	XMStoreFloat4(&Effect_Data.MoveDesc.vPos, m_pMovementCom->Get_State(EState::Position));
 	Effect_Data.vColor = { 1.f,1.f,1.f };
-	lstrcpy(Effect_Data.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_200_50");
+	lstrcpy(Effect_Data.szPointInstance_PrototypeName, L"Component_VIBuffer_PointInstance_Ex_1000_100");
 	lstrcpy(Effect_Data.szTextrueName, L"Component_Texture_Ring_Gray");
 
 	m_pPoint_Trail = CPoint_Ex_Trail::Create(m_pDevice, m_pDevice_Context);

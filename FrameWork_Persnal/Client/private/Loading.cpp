@@ -470,6 +470,11 @@ HRESULT CLoading::LoadingForStage()
 		, CVIBuffer_PointInstance_Extend::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "ExtendTechnique", 1000))))
 		return E_FAIL;
 
+	CEffectDesc_Manager::GetInstance()->Set_Instance(EInstanceValue::Point_Ex_1000_100, 1000, 100);
+	if (FAILED(m_pGameInstance->Add_Prototype((_uint)ELevel::Stage1, TEXT("Component_VIBuffer_PointInstance_Ex_1000_100")
+		, CVIBuffer_PointInstance_Extend::Create(m_pDevice, m_pDevice_Context, TEXT("../Bin/Shader/Shader_Point.hlsl"), "ExtendTechnique", 1000))))
+		return E_FAIL;
+
 #pragma endregion
 
 	if (hr != S_OK)
