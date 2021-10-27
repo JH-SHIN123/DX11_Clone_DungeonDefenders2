@@ -99,6 +99,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>d3d11.lib;DirectXTexd.lib;Effects11d.lib;DirectXTKd.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -150,6 +156,12 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Effects11.lib;DirectXTex.lib;DirectXTK.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -299,6 +311,7 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\bin\Shader\Shader_Blend.hlsl" />
+    <FxCompile Include="..\bin\Shader\Shader_Bloom.hlsl" />
     <FxCompile Include="..\bin\Shader\Shader_Cell.hlsl" />
     <FxCompile Include="..\bin\Shader\Shader_LightAcc.hlsl" />
     <FxCompile Include="..\bin\Shader\Shader_RenderTarget.hlsl" />

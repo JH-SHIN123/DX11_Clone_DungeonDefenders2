@@ -172,6 +172,9 @@
     <Filter Include="02.Utility\04.Light\Manager">
       <UniqueIdentifier>{8dfe6a0c-a81c-4f17-9ce2-e782fbad1225}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Utility\02.Component\00.Renderer\Shader">
+      <UniqueIdentifier>{3fa93b40-aa6c-4d73-a6bb-d5a217198abe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Engine_Defines.h">
@@ -510,6 +513,9 @@
     </FxCompile>
     <FxCompile Include="..\bin\Shader\Shader_LightAcc.hlsl">
       <Filter>02.Utility\04.Light</Filter>
+    </FxCompile>
+    <FxCompile Include="..\bin\Shader\Shader_Bloom.hlsl">
+      <Filter>02.Utility\02.Component\00.Renderer\Shader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

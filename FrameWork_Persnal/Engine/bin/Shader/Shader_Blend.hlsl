@@ -1,3 +1,4 @@
+//#include "Shader_Bloom.hlsl"
 
 texture2D		g_DiffuseTexture;
 
@@ -80,9 +81,9 @@ PS_OUT PS_MAIN(PS_IN In)
 	
 	Out.vColor = vDiffuseDesc * vShadeDesc + vSpecularDesc;
 
-	float3 vColor = Out.vColor;
-	Out.vColor = vector(ToneMapACES(vColor), 1.f);
-	
+	//float3 vColor = Out.vColor.rgb;
+	//Out.vColor = vector(ToneMapACES(vColor), 1.f);
+	//PS_BLOOM
 	return Out;
 }
 

@@ -49,6 +49,9 @@ HRESULT CRenderer::NativeConstruct_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pDevice_Context, TEXT("Target_Specular"), View_Width, View_Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
+	/* Target_Bloom */
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pDevice_Context, TEXT("Target_Bloom"), View_Width, View_Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
 
 
 	/* MRT_Deferred */
@@ -65,9 +68,10 @@ HRESULT CRenderer::NativeConstruct_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("Target_Specular"), TEXT("MRT_LightAcc"))))
 		return E_FAIL;
 
-	m_pVIBuffer = CVIBuffer_RectRHW::Create(m_pDevice, m_pDevice_Context, 0.f, 0.f, ViewPortDesc.Width, ViewPortDesc.Height, TEXT("../Bin/Shader/Shader_Blend.hlsl"), "DefaultTechnique");
-	if (nullptr == m_pVIBuffer)
+	/* MRT_Bloom */
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("Target_Bloom"), TEXT("MRT_Bloom"))))
 		return E_FAIL;
+
 
 	// 디버그용 렌더링 Shader_RenderTarget 텍스처 그대로 렌더함
 	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Diffuse"), 0.f, 0.f, 200.f, 200.f)))
@@ -83,7 +87,13 @@ HRESULT CRenderer::NativeConstruct_Prototype()
 		return E_FAIL;
 
 
+	m_pVIBuffer = CVIBuffer_RectRHW::Create(m_pDevice, m_pDevice_Context, 0.f, 0.f, ViewPortDesc.Width, ViewPortDesc.Height, TEXT("../Bin/Shader/Shader_Blend.hlsl"), "DefaultTechnique");
+	if (nullptr == m_pVIBuffer)
+		return E_FAIL;
 
+	m_pVIBuffer_Bloom = CVIBuffer_RectRHW::Create(m_pDevice, m_pDevice_Context, 0.f, 0.f, ViewPortDesc.Width, ViewPortDesc.Height, TEXT("../Bin/Shader/Shader_Bloom.hlsl"), "DefaultTechnique");
+	if (nullptr == m_pVIBuffer_Bloom)
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -120,7 +130,7 @@ HRESULT CRenderer::Draw_Renderer()
 	Render_LightAcc();
 
 	// 지금까지 그려놓은 MRT들의 픽셀들을 섞자
-	Render_Blend();
+	Render_Blend_For_Bloom();
 
 	Render_NoneAlpha_NotDeffed();
 	Render_Alpha();
@@ -426,7 +436,7 @@ HRESULT CRenderer::Render_LightAcc()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_Blend()
+HRESULT CRenderer::Render_Blend_For_Bloom()
 {
 	if (nullptr == m_pVIBuffer)
 		return E_FAIL;
@@ -434,11 +444,25 @@ HRESULT CRenderer::Render_Blend()
 	// 하나의 버퍼에 지금까지 세팅했던 MRT들을 블렌딩하는 작업이다.
 	// 기본색과, 빛의 명암, 빛의 스펙큘러들을 섞는다.
 	// Shader_Blend 엔진내의 쉐이더를 사용한 RHW버퍼에 그리자
+	// + 그걸 Bloom에 기록하고 다시 그린다.
+
+
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pDevice_Context, TEXT("MRT_Bloom"))))
+		return E_FAIL;
+
 	m_pVIBuffer->Set_ShaderResourceView("g_DiffuseTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Diffuse")));
 	m_pVIBuffer->Set_ShaderResourceView("g_ShadeTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Shade")));
 	m_pVIBuffer->Set_ShaderResourceView("g_SpecularTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Specular")));
-
 	m_pVIBuffer->Render(0);
+
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pDevice_Context, TEXT("MRT_LightAcc"))))
+		return E_FAIL;
+
+	// Bloom 효과가 나와라 제발
+	m_pVIBuffer_Bloom->Set_ShaderResourceView("g_DepthTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Depth")));
+	m_pVIBuffer_Bloom->Set_ShaderResourceView("g_BloomTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Bloom")));
+	m_pVIBuffer_Bloom->Render(0);
+
 
 	return S_OK;
 }
@@ -477,4 +501,5 @@ void CRenderer::Free()
 
 	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pVIBuffer);
+	Safe_Release(m_pVIBuffer_Bloom);
 }

@@ -353,9 +353,9 @@ HRESULT CLevel_Stage1::Ready_Light()
 	LIGHT_DESC			LightDesc;
 	LightDesc.eType = tagLightDesc::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = XMFLOAT3(0.f, -1.f, -0.3f);
-	LightDesc.vDiffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.f);
-	LightDesc.vAmbient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.f);
-	LightDesc.vSpecular = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vDiffuse = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient	= XMFLOAT4(0.78f, 0.78f, 0.78f, 1.f);//XMFLOAT4(0.5f, 0.5f, 0.5f, 1.f);
+	LightDesc.vSpecular = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.f);//XMFLOAT4(0.2f, 0.2f, 0.2f, 1.f);
 
 	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pDevice_Context, LightDesc)))
 		return E_FAIL;

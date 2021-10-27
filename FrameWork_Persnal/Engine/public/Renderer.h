@@ -47,10 +47,11 @@ private:
 private:
 	class CRenderTarget_Manager*			m_pTarget_Manager = nullptr;
 	class CVIBuffer_RectRHW*		m_pVIBuffer = nullptr;
+	class CVIBuffer_RectRHW*		m_pVIBuffer_Bloom = nullptr;
 
 private:
 	HRESULT Render_LightAcc();
-	HRESULT Render_Blend();
+	HRESULT Render_Blend_For_Bloom();
 public:
 	/* 원형생성. */
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);
