@@ -14,12 +14,12 @@ void CSound_Manager::Initialize(void)
 	FMOD_System_Init(m_pSystem, CHANNEL_END, FMOD_INIT_NORMAL, NULL);
 
 	_finddata_t	fd = {};
-	long long handle = 0;
+	intptr_t handle = 0;
 	int iResult = 0;
 
 	//../Bin/Resources/Sound/
 	handle = _findfirst("../Bin/Resources/Sound/*.*", &fd);
-	//_findfirst()
+
 	if (-1 == handle)
 	{
 		MSG_BOX("Can't Read SoundFile");
