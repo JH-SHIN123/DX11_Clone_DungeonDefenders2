@@ -79,7 +79,7 @@ HRESULT CPlayer_Bullet::Render()
 {
 	//__super::Render();
 
-	m_pPointSpread->Render();
+	//m_pPointSpread->Render();
 
 #ifdef _DEBUG
 //	m_pColliderCom_Attack->Render_Collider();

@@ -58,6 +58,9 @@ public: // Getter
 	void Get_TowerDesc(TOWER_DESC* pOutTowerDesc);
 
 public:
+	void Add_RenderGroup_Alpha();
+
+public:
 	void Create_Dead_Effect();
 
 public:

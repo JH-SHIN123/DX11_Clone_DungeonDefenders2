@@ -149,6 +149,13 @@ _int CPlayer::Late_Tick(_float TimeDelta)
 		CSound_Manager::GetInstance()->Set_Volume(CHANNEL_EFFECT_PLAYER, 0.7f);
 	}
 
+	if (true == m_IsRenderTower[RENDER_BLOCAKE])
+		m_pBlockadeTower->Add_RenderGroup_Alpha();
+	if (true == m_IsRenderTower[RENDER_STRIKER])
+		m_pStrikerTower->Add_RenderGroup_Alpha();
+	if (true == m_IsRenderTower[RENDER_LIGHTING])
+		m_pLightningTower->Add_RenderGroup_Alpha();
+
 	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
 
@@ -163,17 +170,6 @@ HRESULT CPlayer::Render()
 	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
-
-	LIGHT_DESC*		LightDesc = GET_GAMEINSTANCE->Get_LightDesc(0);
-
-	m_pModelCom->Set_Variable("vLightPosition", &LightDesc->vPosition, sizeof(_float3));
-	m_pModelCom->Set_Variable("fRange", &LightDesc->fRadius, sizeof(_float));
-
-	m_pModelCom->Set_Variable("vLightDiffuse", &LightDesc->vDiffuse, sizeof(_float4));
-	m_pModelCom->Set_Variable("vLightAmbient", &LightDesc->vAmbient, sizeof(_float4));
-	m_pModelCom->Set_Variable("vLightSpecular", &LightDesc->vSpecular, sizeof(_float4));
-
-	m_pModelCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
 
 	_uint iNumMaterials = m_pModelCom->Get_NumMaterials();
 
@@ -191,12 +187,7 @@ HRESULT CPlayer::Render()
 
 
 
-	if (true == m_IsRenderTower[RENDER_BLOCAKE])
-		m_pBlockadeTower->Render();
-	if (true == m_IsRenderTower[RENDER_STRIKER])
-		m_pStrikerTower->Render();
-	if (true == m_IsRenderTower[RENDER_LIGHTING])
-		m_pLightningTower->Render();
+
 
 
 

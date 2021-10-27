@@ -7,7 +7,7 @@
 BEGIN(Engine)
 
 enum class ENGINE_DLL ERenderGroup
-{ Priority, Priority_Second, NoneAlpha, Alpha, UI, AlphaUI, FrameUI, AlphaUI_Scecond, Option_UI_1, Option_UI_2, SceneChange, Cursor ,End};
+{ Priority, Priority_Second, NoneAlpha, NoneAlpha_NotDeffed, Alpha, UI, AlphaUI, FrameUI, AlphaUI_Scecond, Option_UI_1, Option_UI_2, SceneChange, Cursor ,End};
 
 class ENGINE_DLL CRenderer final : public CComponent
 {
@@ -28,6 +28,7 @@ private:
 	HRESULT	Render_Priority();
 	HRESULT Render_Priority_Second();
 	HRESULT	Render_NoneAlpha();
+	HRESULT	Render_NoneAlpha_NotDeffed();
 	HRESULT	Render_Alpha();
 	HRESULT	Render_UI();
 	HRESULT	Render_AlphaUI();
@@ -43,6 +44,13 @@ private:
 	typedef list <class CGameObject*> RENDER_OBJECTS;
 	RENDER_OBJECTS	m_pRenderObjects[(_uint)ERenderGroup::End]; // Warning C4251. 메모리가 DLL메모리가 아닌 Client의 메모리에 할당이 되기 때문 - 문제는 되지 않는다.
 
+private:
+	class CRenderTarget_Manager*			m_pTarget_Manager = nullptr;
+	class CVIBuffer_RectRHW*		m_pVIBuffer = nullptr;
+
+private:
+	HRESULT Render_LightAcc();
+	HRESULT Render_Blend();
 public:
 	/* 원형생성. */
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context);

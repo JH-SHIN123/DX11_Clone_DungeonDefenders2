@@ -11,23 +11,24 @@ cbuffer BoneMatrixDesc
 {
 	BONEMATRICES		g_BoneMatrices;
 };
+//
+//cbuffer LightDesc
+//{
+//	float3		vLightDirection;
+//	float3		vLightPosition; /* 점광원의 위치. */
+//	float		fRange;			/* 광원의 범위다. */
+//	float4		vLightDiffuse;
+//	float4		vLightAmbient;
+//	float4		vLightSpecular;
+//};
+//
+//cbuffer MtrlDesc
+//{
+//	float4		vMtrlDiffuse = vector(1.f, 1.f, 1.f, 1.f);
+//	float4		vMtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
+//	float4		vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
+//};
 
-cbuffer LightDesc
-{
-	float3		vLightDirection;
-	float3		vLightPosition; /* 점광원의 위치. */
-	float		fRange;			/* 광원의 범위다. */
-	float4		vLightDiffuse;
-	float4		vLightAmbient;
-	float4		vLightSpecular;
-};
-
-cbuffer MtrlDesc
-{
-	float4		vMtrlDiffuse = vector(1.f, 1.f, 1.f, 1.f);
-	float4		vMtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
-	float4		vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
-};
 texture2D		g_DissolveTexture;
 
 texture2D		g_MaskingTexture;
@@ -60,9 +61,9 @@ struct VS_IN
 struct VS_OUT
 {
 	float4 vPosition : SV_POSITION;
-	float4 vShade : COLOR0;
-	float4 vSpecular : COLOR1;
+	float4 vNormal : NORMAL;
 	float2 vTexUV : TEXCOORD0;
+	float4 vProjPosition : TEXCOORD1;
 };
 
 
@@ -88,22 +89,12 @@ VS_OUT VS_MAIN_DIRECTIONAL(VS_IN In)
 	BoneMatrix = mul(BoneMatrix, g_PivotMatrix);
 
 	vector		vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+	vector		vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
 
 	Out.vPosition = mul(vPosition, matWVP);
-
+	Out.vNormal = normalize(mul(vNormal, WorldMatrix));
 	Out.vTexUV = In.vTexUV;
-
-	vector		vWorldPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);
-	vector		vWorldNormal = normalize(mul(vector(In.vNormal, 0.f), g_PivotMatrix));
-	vWorldNormal = mul(vWorldNormal, WorldMatrix);
-
-	Out.vShade = max(dot(normalize(vector(vLightDirection, 0.f)) * -1.f, vWorldNormal), 0.f);
-	Out.vShade.a = 1.f;
-
-	vector		vReflect = reflect(normalize(vector(vLightDirection, 0.f)), normalize(vWorldNormal));
-	vector		vLook = vWorldPosition - vCameraPosition;
-
-	Out.vSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
+	Out.vProjPosition = Out.vPosition;
 
 	return Out;
 }
@@ -114,23 +105,23 @@ VS_OUT VS_MAIN_DIRECTIONAL_TERRAIN(VS_IN In)
 
 	matrix		matWV, matWVP;
 
-	In.vPosition = mul(vector(In.vPosition, 1.f), g_PivotMatrix);
 	matWV = mul(WorldMatrix, ViewMatrix);
 	matWVP = mul(matWV, ProjMatrix);
-	Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP); // 어 시발;
 
+	//matrix		BoneMatrix = g_BoneMatrices.Matrices[In.vBlendIndex.x] * In.vBlendWeight.x +
+	//	g_BoneMatrices.Matrices[In.vBlendIndex.y] * In.vBlendWeight.y +
+	//	g_BoneMatrices.Matrices[In.vBlendIndex.z] * In.vBlendWeight.z +
+	//	g_BoneMatrices.Matrices[In.vBlendIndex.w] * In.vBlendWeight.w;
+
+	//BoneMatrix = mul(BoneMatrix, g_PivotMatrix);
+
+	vector		vPosition = mul(vector(In.vPosition, 1.f), g_PivotMatrix);
+	vector		vNormal = mul(vector(In.vNormal, 0.f), g_PivotMatrix);
+
+	Out.vPosition = mul(vPosition, matWVP);
+	Out.vNormal = normalize(mul(vNormal, WorldMatrix));
 	Out.vTexUV = In.vTexUV;
-
-	vector		vWorldPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);
-	vector		vWorldNormal = normalize(mul(vector(In.vNormal, 0.f), WorldMatrix));
-
-	Out.vShade = max(dot(normalize(vector(vLightDirection, 0.f)) * -1.f, vWorldNormal), 0.f);
-	Out.vShade.a = 1.f;
-
-	vector		vReflect = reflect(normalize(vector(vLightDirection, 0.f)), normalize(vWorldNormal));
-	vector		vLook = vWorldPosition - vCameraPosition;
-
-	Out.vSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
+	Out.vProjPosition = Out.vPosition;
 
 	return Out;
 }
@@ -153,14 +144,17 @@ VS_OUT VS_MAIN_EFFECT_NOLIGHT(VS_IN In)
 struct PS_IN
 {
 	float4 vPosition : SV_POSITION;
-	float4 vShade : COLOR0;
-	float4 vSpecular : COLOR1;
+	float4 vNormal : NORMAL;
 	float2 vTexUV : TEXCOORD0;
+	float4 vProjPosition : TEXCOORD1;
 };
 
 struct PS_OUT
 {
-	vector	vColor : SV_TARGET;
+	// 몇번째 렌더 타겟에 출력을 할래?
+	vector	vDiffuse : SV_TARGET0;
+	vector	vNormal : SV_TARGET1;
+	vector	vDepth : SV_TARGET2;
 };
 
 /* 픽셀의 최종적인 색을 결정하낟. */
@@ -168,51 +162,49 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	vector		vMtrlDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
-	//vector		vMtrlAmbient = g_AmbientTexture.Sample(DiffuseSampler, In.vTexUV);
-	//vector		vMtrlSpecular = g_SpecularTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
-	Out.vColor = (vLightDiffuse * vMtrlDiffuse) * (In.vShade + (vLightAmbient * vMtrlAmbient))
-		+ (vLightSpecular * vMtrlSpecular) * In.vSpecular;
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPosition.w / 430.0f, In.vProjPosition.z / In.vProjPosition.w, 0.f, 0.f);
 
-	return Out;
+	return Out;	return Out;
 }
 
 PS_OUT PS_MAIN_COLOR(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	vector		vMtrlDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
-	//vector		vMtrlAmbient = g_AmbientTexture.Sample(DiffuseSampler, In.vTexUV);
-	//vector		vMtrlSpecular = g_SpecularTexture.Sample(DiffuseSampler, In.vTexUV);
-	vMtrlDiffuse.r *= g_vColor.r;
-	vMtrlDiffuse.g *= g_vColor.g;
-	vMtrlDiffuse.b *= g_vColor.b;
-	vMtrlDiffuse.a *= g_vColor.a;
+	Out.vDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vDiffuse.r *= g_vColor.r;
+	Out.vDiffuse.g *= g_vColor.g;
+	Out.vDiffuse.b *= g_vColor.b;
+	Out.vDiffuse.a *= g_vColor.a;
 
-	Out.vColor = (vLightDiffuse * vMtrlDiffuse) * (In.vShade + (vLightAmbient * vMtrlAmbient))
-		+ (vLightSpecular * vMtrlSpecular) * In.vSpecular;
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPosition.w / 430.0f, In.vProjPosition.z / In.vProjPosition.w, 0.f, 0.f);
 
-	return Out;
+	return Out;	return Out;
 }
 
 PS_OUT PS_MAIN_MASKING_COLOR(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	vector		vMtrlDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 	vector		vMtrlDiffuse_Double = g_MaskingTexture.Sample(DiffuseSampler, In.vTexUV);
 
 	if (0 != vMtrlDiffuse_Double.r)
 	{
-		vMtrlDiffuse.r *= g_vColor.r;
-		vMtrlDiffuse.g *= g_vColor.g;
-		vMtrlDiffuse.b *= g_vColor.b;
-		vMtrlDiffuse.a *= g_vColor.a;
+		Out.vDiffuse.r *= g_vColor.r;
+		Out.vDiffuse.g *= g_vColor.g;
+		Out.vDiffuse.b *= g_vColor.b;
+		Out.vDiffuse.a *= g_vColor.a;
 	}
 
-	Out.vColor = (vLightDiffuse * vMtrlDiffuse) * (In.vShade + (vLightAmbient * vMtrlAmbient))
-		+ (vLightSpecular * vMtrlSpecular) * In.vSpecular;
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPosition.w / 430.0f, In.vProjPosition.z / In.vProjPosition.w, 0.f, 0.f);
+
+
 
 	return Out;
 }
@@ -224,11 +216,11 @@ PS_OUT PS_ONLY_RED(PS_IN In)
 	vector vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
 	if (0.f < vColor.r)
-		Out.vColor.a = vColor.g;
+		Out.vDiffuse.a = vColor.g;
 
-	Out.vColor.r = 0.f;
-	Out.vColor.g = 0.75f;
-	Out.vColor.b = 1.f;
+	Out.vDiffuse.r = 0.f;
+	Out.vDiffuse.g = 0.75f;
+	Out.vDiffuse.b = 1.f;
 
 
 	return Out;
@@ -241,11 +233,11 @@ PS_OUT PS_ONLY_GREEN(PS_IN In)
 	vector vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
 	if (0.f < vColor.g)
-		Out.vColor.a = vColor.g;
+		Out.vDiffuse.a = vColor.g;
 
-	Out.vColor.r = 0.f;
-	Out.vColor.g = 0.75f;
-	Out.vColor.b = 1.f;
+	Out.vDiffuse.r = 0.f;
+	Out.vDiffuse.g = 0.75f;
+	Out.vDiffuse.b = 1.f;
 
 	return Out;
 }
@@ -257,11 +249,11 @@ PS_OUT PS_ONLY_BLUE(PS_IN In)
 	vector vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
 	if (0.f < vColor.b)
-		Out.vColor.a = vColor.g;
+		Out.vDiffuse.a = vColor.g;
 
-	Out.vColor.r = 0.f;
-	Out.vColor.g = 0.75f;
-	Out.vColor.b = 1.f;
+	Out.vDiffuse.r = 0.f;
+	Out.vDiffuse.g = 0.75f;
+	Out.vDiffuse.b = 1.f;
 
 
 	return Out;
@@ -278,7 +270,9 @@ PS_OUT PS_ALPHA_COLOR(PS_IN In)
 	vColor.b *= g_vColor.b;
 	vColor.a *= g_vColor.a;
 
-	Out.vColor = vColor;
+	Out.vDiffuse = vColor;
+	Out.vNormal = vector(1.f, 1.f, 1.f, 0.f);//vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPosition.w / 430.0f, In.vProjPosition.z / In.vProjPosition.w, 0.f, 0.f);
 
 	return Out;
 }
@@ -287,20 +281,20 @@ PS_OUT PS_ALPHA_BLUE(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
 
-	if (0.05f >= Out.vColor.b)
+	if (0.05f >= Out.vDiffuse.b)
 	{
-		Out.vColor.a = 0.f;
+		Out.vDiffuse.a = 0.f;
 		return Out;
 	}
 
-	Out.vColor.a = g_vColor.a;
+	Out.vDiffuse.a = g_vColor.a;
 
-	Out.vColor.r *= g_vColor.r;
-	Out.vColor.g *= g_vColor.g;
-	Out.vColor.b *= g_vColor.b;
+	Out.vDiffuse.r *= g_vColor.r;
+	Out.vDiffuse.g *= g_vColor.g;
+	Out.vDiffuse.b *= g_vColor.b;
 
 
 	return Out;
@@ -310,20 +304,20 @@ PS_OUT PS_ALPHA_BLUE_2(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
 
-	if (0.05f >= Out.vColor.b)
+	if (0.05f >= Out.vDiffuse.b)
 	{
-		Out.vColor.rga = 0.f;
+		Out.vDiffuse.rga = 0.f;
 		return Out;
 	}
-	Out.vColor.rga = 1.f;
-	Out.vColor.a = g_vColor.a;
+	Out.vDiffuse.rga = 1.f;
+	Out.vDiffuse.a = g_vColor.a;
 
-	Out.vColor.r *= g_vColor.r;
-	Out.vColor.g *= g_vColor.g;
-	Out.vColor.b *= g_vColor.b;
+	Out.vDiffuse.r *= g_vColor.r;
+	Out.vDiffuse.g *= g_vColor.g;
+	Out.vDiffuse.b *= g_vColor.b;
 
 
 	return Out;
@@ -333,10 +327,10 @@ PS_OUT PS_ALPHA_RED(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
-	if (0.01f >= Out.vColor.r)
-		Out.vColor.a = 0.f;
+	if (0.01f >= Out.vDiffuse.r)
+		Out.vDiffuse.a = 0.f;
 
 	return Out;
 }
@@ -345,10 +339,10 @@ PS_OUT PS_ALPHA_GREEN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
-	if (0.05f >= Out.vColor.g)
-		Out.vColor.a = 0.f;
+	if (0.05f >= Out.vDiffuse.g)
+		Out.vDiffuse.a = 0.f;
 
 	return Out;
 }
@@ -359,22 +353,22 @@ PS_OUT PS_DISSOLVE(PS_IN In)
 
 	float4 vDissolve = g_DissolveTexture.Sample(DiffuseSampler, In.vTexUV);
 
-	Out.vColor = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
 	// 0.7 >= 0 (최초 시작)
 	if (vDissolve.x >= g_fTime)
 	{
-		Out.vColor.a = 1.f;
+		Out.vDiffuse.a = 1.f;
 		// 이건 그린다.
 		float fDis = abs(vDissolve.x - g_fTime);
 
 		if (fDis <= 0.08f)
 		{
 			//0.294117659f, 0.000000000f, 0.509803951f, 1.000000000f
-			Out.vColor.r = 0.3f;
-			Out.vColor.g = 0.8f;
-			Out.vColor.b = 0.51f;
-			Out.vColor.a = 1.f;
+			Out.vDiffuse.r = 1.f;
+			Out.vDiffuse.g = 0.8f;
+			Out.vDiffuse.b = 0.6f;
+			Out.vDiffuse.a = 1.f;
 
 		}
 

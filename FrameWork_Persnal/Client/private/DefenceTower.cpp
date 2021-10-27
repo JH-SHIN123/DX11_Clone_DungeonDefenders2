@@ -110,18 +110,6 @@ HRESULT CDefenceTower::Render()
 	m_pModelCom->Set_Variable("g_PivotMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_PivotMatrix)), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ViewMatrix", &View, sizeof(_matrix));
 	m_pModelCom->Set_Variable("ProjMatrix", &Proj, sizeof(_matrix));
-
-	LIGHT_DESC*		LightDesc = GET_GAMEINSTANCE->Get_LightDesc(0);
-
-	m_pModelCom->Set_Variable("vLightPosition", &LightDesc->vPosition, sizeof(_float3));
-	m_pModelCom->Set_Variable("fRange", &LightDesc->fRadius, sizeof(_float));
-
-	m_pModelCom->Set_Variable("vLightDiffuse", &LightDesc->vDiffuse, sizeof(_float4));
-	m_pModelCom->Set_Variable("vLightAmbient", &LightDesc->vAmbient, sizeof(_float4));
-	m_pModelCom->Set_Variable("vLightSpecular", &LightDesc->vSpecular, sizeof(_float4));
-
-	m_pModelCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
-
 	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 
 	for (_uint i = 0; i < iNumMaterials; ++i)
@@ -250,6 +238,11 @@ void CDefenceTower::Get_TowerDesc(TOWER_DESC * pOutTowerDesc)
 	XMStoreFloat4(&pOutTowerDesc->MoveState_Desc.vPos, m_pMovementCom->Get_State(EState::Position));
 	XMStoreFloat4(&pOutTowerDesc->MoveState_Desc.vRotateLook, m_pMovementCom->Get_State(EState::Look));
 
+}
+
+void CDefenceTower::Add_RenderGroup_Alpha()
+{
+	m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Alpha, this);
 }
 
 void CDefenceTower::Create_Dead_Effect()

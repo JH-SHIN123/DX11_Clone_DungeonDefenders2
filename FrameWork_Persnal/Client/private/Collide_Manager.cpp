@@ -138,7 +138,7 @@ _bool CCollide_Manager::Collide_Check_Always(const _tchar * szDstObjectLayer, EL
 				// ¸Â¾Ò¾î!
 				if (false == pSrcCol_Attack->Get_NotCollide())
 				{
-
+					pDstCol_Hit->Set_IsCollide(false);
 					return true;
 				}
 			}

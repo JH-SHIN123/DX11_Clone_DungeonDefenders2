@@ -7,20 +7,22 @@ CLight_Manager::CLight_Manager()
 {
 }
 
-HRESULT CLight_Manager::Reserve_Container(_uint iNumLight)
+HRESULT CLight_Manager::Reserve_LightManager(_int iNumLight)
 {
 	m_Lights.reserve(iNumLight);
+
+
 
 	return S_OK;
 }
 
-HRESULT CLight_Manager::Add_Light(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const LIGHT_DESC & Light_Desc)
+HRESULT CLight_Manager::Add_Light(ID3D11Device * pDevice, ID3D11DeviceContext * pDevice_Context, const LIGHT_DESC & LightDesc, _bool isActive)
 {
 	if (nullptr == pDevice ||
 		nullptr == pDevice_Context)
 		return E_FAIL;
 
-	CLight*		pLight = CLight::Create(pDevice, pDevice_Context, Light_Desc);
+	CLight*		pLight = CLight::Create(pDevice, pDevice_Context, LightDesc, isActive);
 	if (nullptr == pLight)
 		return E_FAIL;
 
@@ -29,12 +31,18 @@ HRESULT CLight_Manager::Add_Light(ID3D11Device * pDevice, ID3D11DeviceContext * 
 	return S_OK;
 }
 
-LIGHT_DESC* CLight_Manager::Get_LightDesc(_int iLightIndex) 
+const LIGHT_DESC & CLight_Manager::Get_LightDesc(_int iLightIndex) const
 {
-	if (m_Lights.size() <= iLightIndex)
-		return nullptr;
-
 	return m_Lights[iLightIndex]->Get_LightDesc();
+}
+
+HRESULT CLight_Manager::Render_Lights()
+{
+
+	for (auto& pLight : m_Lights)
+		pLight->Render_Light();
+
+	return S_OK;
 }
 
 void CLight_Manager::Free()

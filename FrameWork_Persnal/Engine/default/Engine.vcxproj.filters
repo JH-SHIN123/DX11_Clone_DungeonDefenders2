@@ -97,9 +97,6 @@
     <Filter Include="02.Utility\04.Light">
       <UniqueIdentifier>{5a12dd17-86f0-49b4-83f9-360b22ee7c3c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Utility\04.Light\Light">
-      <UniqueIdentifier>{8dfe6a0c-a81c-4f17-9ce2-e782fbad1225}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Utility\02.Component\01.Buffer\03.Navgation_Mash">
       <UniqueIdentifier>{886718c7-4496-4650-8f1e-22abd2d6d368}</UniqueIdentifier>
     </Filter>
@@ -162,6 +159,18 @@
     </Filter>
     <Filter Include="02.Utility\02.Component\01.Buffer\10.Instance_Buffer\02.Point_Extend">
       <UniqueIdentifier>{8b324431-9ad3-4995-aa94-c270e838eb7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\07.RenderTarget">
+      <UniqueIdentifier>{5e1cf255-9608-4458-b5e9-2da9cab84aec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\07.RenderTarget\Manager">
+      <UniqueIdentifier>{aa51ec79-5b88-40ce-8fac-f120e49fed7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\02.Component\01.Buffer\11.RectRHW">
+      <UniqueIdentifier>{a34c791f-14dc-42e7-9afe-2cb19835a925}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Utility\04.Light\Manager">
+      <UniqueIdentifier>{8dfe6a0c-a81c-4f17-9ce2-e782fbad1225}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -267,12 +276,6 @@
     <ClInclude Include="..\public\Engine_Easy_Defines.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Light.h">
-      <Filter>02.Utility\04.Light\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Light_Manager.h">
-      <Filter>02.Utility\04.Light</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Rect_Masking.h">
       <Filter>02.Utility\02.Component\01.Buffer\04.Rect_Masking</Filter>
     </ClInclude>
@@ -329,6 +332,21 @@
     </ClInclude>
     <ClInclude Include="..\public\Sound_Manager.h">
       <Filter>01.System\02.Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\RenderTarget.h">
+      <Filter>02.Utility\07.RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_RectRHW.h">
+      <Filter>02.Utility\02.Component\01.Buffer\11.RectRHW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\RenderTarget_Manager.h">
+      <Filter>02.Utility\07.RenderTarget\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Light.h">
+      <Filter>02.Utility\04.Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Light_Manager.h">
+      <Filter>02.Utility\04.Light\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -407,12 +425,6 @@
     <ClCompile Include="..\private\Frame.cpp">
       <Filter>01.System\04.Frame</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Light.cpp">
-      <Filter>02.Utility\04.Light\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Light_Manager.cpp">
-      <Filter>02.Utility\04.Light</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Rect_Masking.cpp">
       <Filter>02.Utility\02.Component\01.Buffer\04.Rect_Masking</Filter>
     </ClCompile>
@@ -470,10 +482,34 @@
     <ClCompile Include="..\private\Sound_Manager.cpp">
       <Filter>01.System\02.Sound</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\RenderTarget.cpp">
+      <Filter>02.Utility\07.RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_RectRHW.cpp">
+      <Filter>02.Utility\02.Component\01.Buffer\11.RectRHW</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\RenderTarget_Manager.cpp">
+      <Filter>02.Utility\07.RenderTarget\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Light.cpp">
+      <Filter>02.Utility\04.Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Light_Manager.cpp">
+      <Filter>02.Utility\04.Light\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\bin\Shader\Shader_Cell.hlsl">
       <Filter>02.Utility\02.Component\09.Navigation\Cell</Filter>
+    </FxCompile>
+    <FxCompile Include="..\bin\Shader\Shader_Blend.hlsl">
+      <Filter>02.Utility\02.Component\00.Renderer</Filter>
+    </FxCompile>
+    <FxCompile Include="..\bin\Shader\Shader_RenderTarget.hlsl">
+      <Filter>02.Utility\07.RenderTarget</Filter>
+    </FxCompile>
+    <FxCompile Include="..\bin\Shader\Shader_LightAcc.hlsl">
+      <Filter>02.Utility\04.Light</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

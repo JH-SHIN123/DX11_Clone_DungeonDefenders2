@@ -225,6 +225,8 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     <ClInclude Include="..\public\Navigation.h" />
     <ClInclude Include="..\public\Pipeline_Manager.h" />
     <ClInclude Include="..\public\Renderer.h" />
+    <ClInclude Include="..\public\RenderTarget.h" />
+    <ClInclude Include="..\public\RenderTarget_Manager.h" />
     <ClInclude Include="..\public\ScreenCapture.h" />
     <ClInclude Include="..\public\Sound_Manager.h" />
     <ClInclude Include="..\public\Status.h" />
@@ -239,6 +241,7 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     <ClInclude Include="..\public\VIBuffer_PointInstance_Extend.h" />
     <ClInclude Include="..\public\VIBuffer_Rect.h" />
     <ClInclude Include="..\public\VIBuffer_RectInstance.h" />
+    <ClInclude Include="..\public\VIBuffer_RectRHW.h" />
     <ClInclude Include="..\public\VIBuffer_Rect_Masking.h" />
     <ClInclude Include="..\public\VIBuffer_Terrain.h" />
     <ClInclude Include="VIBuffer_Cube.h" />
@@ -273,6 +276,8 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     <ClCompile Include="..\private\Navigation.cpp" />
     <ClCompile Include="..\private\Pipeline_Manager.cpp" />
     <ClCompile Include="..\private\Renderer.cpp" />
+    <ClCompile Include="..\private\RenderTarget.cpp" />
+    <ClCompile Include="..\private\RenderTarget_Manager.cpp" />
     <ClCompile Include="..\private\ScreenCapture.cpp" />
     <ClCompile Include="..\private\Sound_Manager.cpp" />
     <ClCompile Include="..\private\Status.cpp" />
@@ -287,12 +292,16 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
     <ClCompile Include="..\private\VIBuffer_PointInstance_Extend.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect.cpp" />
     <ClCompile Include="..\private\VIBuffer_RectInstance.cpp" />
+    <ClCompile Include="..\private\VIBuffer_RectRHW.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect_Masking.cpp" />
     <ClCompile Include="..\private\VIBuffer_Terrain.cpp" />
     <ClCompile Include="VIBuffer_Cube.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\bin\Shader\Shader_Blend.hlsl" />
     <FxCompile Include="..\bin\Shader\Shader_Cell.hlsl" />
+    <FxCompile Include="..\bin\Shader\Shader_LightAcc.hlsl" />
+    <FxCompile Include="..\bin\Shader\Shader_RenderTarget.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

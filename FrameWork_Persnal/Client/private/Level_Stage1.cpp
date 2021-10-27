@@ -166,9 +166,13 @@ _int CLevel_Stage1::Tick(_float Timedelta)
 	// ¸ÂÀ»³ð, ¶§¸±³ð
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_CrystalCore", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Monster", ELevel::Stage1, L"Layer_Bullet", ELevel::Stage1);
+
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Player", ELevel::Stage1, L"Layer_Bullet_Monster", ELevel::Stage1);
+
 	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Tower", ELevel::Stage1, L"Layer_Monster", ELevel::Stage1);
+	CCollide_Manager::GetInstance()->Collide_Check(L"Layer_Tower", ELevel::Stage1, L"Layer_Bullet_Monster", ELevel::Stage1);
+
 	CCollide_Manager::GetInstance()->Collide_Check_Poison(L"Layer_Monster", ELevel::Stage1, L"Layer_Bullet_Posion", ELevel::Stage1);
 
 	CCollide_Manager::GetInstance()->Collide_Check_Always(L"Layer_Player", ELevel::Stage1, L"Layer_ManaToken", ELevel::Stage1);
@@ -343,17 +347,31 @@ HRESULT CLevel_Stage1::Ready_Light()
 
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->Reserve_Container_Light(2);
+	pGameInstance->Reserve_Container_Light(3);
 
 	/* For.Directional */
 	LIGHT_DESC			LightDesc;
-	LightDesc.vDirection = XMFLOAT3(1.f, -1.f, 1.f);
-	LightDesc.vDiffuse = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.f);
+	LightDesc.eType = tagLightDesc::TYPE_DIRECTIONAL;
+	LightDesc.vDirection = XMFLOAT3(0.f, -1.f, -0.3f);
+	LightDesc.vDiffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.f);
+	LightDesc.vAmbient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.f);
+	LightDesc.vSpecular = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.f);
+
+	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pDevice_Context, LightDesc)))
+		return E_FAIL;
+
+
+	LightDesc.eType = tagLightDesc::TYPE_POINT;
+	LightDesc.vPosition = XMFLOAT3(0.f, 5.f, 0.f);
+	LightDesc.fRadius = 10.f;
+	LightDesc.vDiffuse = XMFLOAT4(1.f, 0.5f, 0.5f, 1.f);
+	LightDesc.vAmbient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.f);
 	LightDesc.vSpecular = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(pGameInstance->Add_Light(m_pDevice, m_pDevice_Context, LightDesc)))
 		return E_FAIL;
+
+
 
 	Safe_Release(pGameInstance);
 	return S_OK;

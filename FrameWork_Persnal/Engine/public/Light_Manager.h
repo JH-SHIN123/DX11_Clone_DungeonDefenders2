@@ -11,24 +11,27 @@ class CLight_Manager final : public CBase
 {
 	DECLARE_SINGLETON(CLight_Manager)
 
-public:
+private:
 	CLight_Manager();
 	virtual ~CLight_Manager() = default;
 
 public:
-	HRESULT Reserve_Container(_uint iNumLight);
-	HRESULT	Add_Light(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const LIGHT_DESC& Light_Desc);
-
-public: // Getter
-	LIGHT_DESC* Get_LightDesc(_int iLightIndex);
+	HRESULT Reserve_LightManager(_int iNumLight);
+	HRESULT Add_Light(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const LIGHT_DESC& LightDesc, _bool isActive = true);
+	const LIGHT_DESC& Get_LightDesc(_int iLightIndex) const;
+	/* 빛 연산한 결과를 쉐이드타겟에 그리기위한 함수. */
+	HRESULT Render_Lights();
 
 
 private:
-	typedef vector<class CLight*> LIGHTS;
-	LIGHTS m_Lights;
+	vector<class CLight*>				m_Lights;
+	typedef vector<class CLight*>		LIGHTS;
+
+
 
 public:
 	virtual void Free() override;
+
 };
 
 END

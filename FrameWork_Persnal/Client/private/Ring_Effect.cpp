@@ -54,17 +54,6 @@ HRESULT CRing_Effect::Render()
 	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
 
-	LIGHT_DESC*		LightDesc = GET_GAMEINSTANCE->Get_LightDesc(0);
-
-	m_pModelCom->Set_Variable("vLightPosition", &LightDesc->vPosition, sizeof(_float3));
-	m_pModelCom->Set_Variable("fRange", &LightDesc->fRadius, sizeof(_float));
-
-	m_pModelCom->Set_Variable("vLightDiffuse", &LightDesc->vDiffuse, sizeof(_float4));
-	m_pModelCom->Set_Variable("vLightAmbient", &LightDesc->vAmbient, sizeof(_float4));
-	m_pModelCom->Set_Variable("vLightSpecular", &LightDesc->vSpecular, sizeof(_float4));
-
-	m_pModelCom->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
-
 	_uint iNumMaterials = m_pModelCom->Get_NumMaterials();
 
 	_float4 vColor = { 2.f, 1.5f, 0.8f, 1.f };

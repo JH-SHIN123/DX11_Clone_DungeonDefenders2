@@ -11,7 +11,7 @@ CSound_Manager::CSound_Manager()
 void CSound_Manager::Initialize(void)
 {
 	FMOD_System_Create(&m_pSystem);
-	FMOD_System_Init(m_pSystem, CHANNEL_END, FMOD_INIT_NORMAL, NULL);
+ 	FMOD_System_Init(m_pSystem, CHANNEL_END, FMOD_INIT_NORMAL, NULL);
 
 	_finddata_t	fd = {};
 	intptr_t handle = 0;
@@ -40,7 +40,7 @@ void CSound_Manager::Initialize(void)
 		{
 			TCHAR*	pSoundKey = new TCHAR[256];
 			ZeroMemory(pSoundKey, sizeof(TCHAR) * 256);
-			MultiByteToWideChar(CP_ACP, 0, fd.name, strlen(fd.name) + 1, pSoundKey, 256);
+			MultiByteToWideChar(CP_ACP, 0, fd.name, (_int)strlen(fd.name) + 1, pSoundKey, 256);
 
 			m_MapSound.insert(make_pair(pSoundKey, pSound));
 		}

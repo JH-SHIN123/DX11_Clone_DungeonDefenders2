@@ -1,4 +1,5 @@
 #include "..\public\GameInstance.h"
+#include "RenderTarget_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -266,7 +267,7 @@ HRESULT CGameInstance::Reserve_Container_Light(_uint iNumLight)
 	if (nullptr == m_pLight_Manager)
 		return E_FAIL;
 
-	m_pLight_Manager->Reserve_Container((iNumLight));
+	m_pLight_Manager->Reserve_LightManager((iNumLight));
 
 	return S_OK;
 }
@@ -278,10 +279,10 @@ HRESULT CGameInstance::Add_Light(ID3D11Device * pDevice, ID3D11DeviceContext * p
 	m_pLight_Manager->Add_Light(pDevice, pDevice_Context, Light_Desc);
 	return S_OK;
 }
-LIGHT_DESC * CGameInstance::Get_LightDesc(_int iLightIndex)
+const LIGHT_DESC& CGameInstance::Get_LightDesc(_int iLightIndex)
 {
-	if (nullptr == m_pLight_Manager)
-		return nullptr;
+	//if (nullptr == m_pLight_Manager)
+	//	return nullptr;
 
 	return m_pLight_Manager->Get_LightDesc(iLightIndex);
 }
@@ -299,6 +300,8 @@ _ulong CGameInstance::Release_Engine()
 	if (dwRefCnt = CLevel_Manager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Release CLevel_Manager");
 
+	CRenderTarget_Manager::GetInstance()->DestroyInstance();
+
 	if (dwRefCnt = CGameObject_Manager::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Release CGameObject_Manager");
 
@@ -313,6 +316,8 @@ _ulong CGameInstance::Release_Engine()
 
 	if (dwRefCnt = CGraphic_Device::GetInstance()->DestroyInstance())
 		MSG_BOX("Failed to Release CGraphic_Device");
+
+
 
 	return dwRefCnt;
 }

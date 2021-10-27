@@ -50,7 +50,7 @@ _int CMonster_Gate::Late_Tick(_float TimeDelta)
 	if(EPhaseState::Build == m_ePhase_Next)
 		m_pPhaseMonster_Info->Late_Tick(TimeDelta);
 
-	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Priority, this);
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
 
 HRESULT CMonster_Gate::Render()
@@ -64,18 +64,6 @@ HRESULT CMonster_Gate::Render()
 	m_pModelCom_Left->Set_Variable("g_PivotMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_PivotMatrix)), sizeof(_matrix));
 	m_pModelCom_Left->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
 	m_pModelCom_Left->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
-
-	LIGHT_DESC*		LightDesc = GET_GAMEINSTANCE->Get_LightDesc(0);
-
-	m_pModelCom_Left->Set_Variable("vLightPosition", &LightDesc->vPosition, sizeof(_float3));
-	m_pModelCom_Left->Set_Variable("fRange", &LightDesc->fRadius, sizeof(_float));
-
-	m_pModelCom_Left->Set_Variable("vLightDiffuse", &LightDesc->vDiffuse, sizeof(_float4));
-	m_pModelCom_Left->Set_Variable("vLightAmbient", &LightDesc->vAmbient, sizeof(_float4));
-	m_pModelCom_Left->Set_Variable("vLightSpecular", &LightDesc->vSpecular, sizeof(_float4));
-
-	m_pModelCom_Left->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
-
 
 	m_pModelCom_Left->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 	_uint iNumMaterials = m_pModelCom_Left->Get_NumMaterials();
@@ -95,16 +83,6 @@ HRESULT CMonster_Gate::Render()
 	m_pModelCom_Right->Set_Variable("g_PivotMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_PivotMatrix)), sizeof(_matrix));
 	m_pModelCom_Right->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
 	m_pModelCom_Right->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
-
-	m_pModelCom_Right->Set_Variable("vLightPosition", &LightDesc->vPosition, sizeof(_float3));
-	m_pModelCom_Right->Set_Variable("fRange", &LightDesc->fRadius, sizeof(_float));
-
-	m_pModelCom_Right->Set_Variable("vLightDiffuse", &LightDesc->vDiffuse, sizeof(_float4));
-	m_pModelCom_Right->Set_Variable("vLightAmbient", &LightDesc->vAmbient, sizeof(_float4));
-	m_pModelCom_Right->Set_Variable("vLightSpecular", &LightDesc->vSpecular, sizeof(_float4));
-
-	m_pModelCom_Right->Set_Variable("vCameraPosition", &GET_GAMEINSTANCE->Get_CamPosition(), sizeof(_vector));
-
 
 	m_pModelCom_Right->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 

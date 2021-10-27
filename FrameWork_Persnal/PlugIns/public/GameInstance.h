@@ -80,7 +80,7 @@ public:
 #pragma region Light_Manager
 	HRESULT Reserve_Container_Light(_uint iNumLight);
 	HRESULT	Add_Light(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, const LIGHT_DESC& Light_Desc);
-	LIGHT_DESC* Get_LightDesc(_int iLightIndex);
+	const LIGHT_DESC& Get_LightDesc(_int iLightIndex);
 #pragma endregion
 
 

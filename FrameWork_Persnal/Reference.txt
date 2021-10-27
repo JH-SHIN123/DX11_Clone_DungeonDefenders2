@@ -16,6 +16,14 @@ https://silent3gp.blogspot.com/2018/02/assimp-1-assimp.html
 assimp 라이브러리
 
 
+Fake HDR 개론
+https://blog.naver.com/eryners/110132043354
+https://www.slideshare.net/agebreak/ndc12-hdr
+
+https://bkjcr.tistory.com/entry/%EC%89%90%EC%9D%B4%EB%8D%94-hdr-%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0?category=483470
+https://bkjcr.tistory.com/
+
+
 마스킹 미터바 사용 예시
 	MASK_METERBAR_DESC Data;
 	Data.eFrame_Render = ECastingBar_Frame_Render::Second;
@@ -29,6 +37,22 @@ assimp 라이브러리
 	lstrcpy((Data.UI_Desc.szTextureName), L"Component_Texture_ExpBar");
 	m_pExpBar = CMasking_MeterBar::Create(m_pDevice, m_pDevice_Context);
 	m_pExpBar->NativeConstruct(&Data);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

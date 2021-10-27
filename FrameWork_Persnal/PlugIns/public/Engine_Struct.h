@@ -6,6 +6,10 @@ namespace Engine
 #pragma region Light
 	typedef struct tagLightDesc
 	{
+		enum LIGHTTYPE { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_END };
+
+		LIGHTTYPE		eType;
+
 		// ¹æÇâ¼º ±¤¿ø
 		XMFLOAT3		vDirection;
 
@@ -106,6 +110,12 @@ namespace Engine
 		XMFLOAT3			vPosition;
 		XMFLOAT2			vTexUV;
 	}VTXTEX;
+
+	typedef struct tagVertexTextureRHW
+	{
+		XMFLOAT4			vPosition;
+		XMFLOAT2			vTexUV;
+	}VTXTEXRHW;
 
 	typedef struct tagVertexColor
 	{
