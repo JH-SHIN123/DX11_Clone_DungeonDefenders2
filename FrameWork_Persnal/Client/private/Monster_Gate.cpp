@@ -50,7 +50,7 @@ _int CMonster_Gate::Late_Tick(_float TimeDelta)
 	if(EPhaseState::Build == m_ePhase_Next)
 		m_pPhaseMonster_Info->Late_Tick(TimeDelta);
 
-	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Priority_Second, this);
 }
 
 HRESULT CMonster_Gate::Render()

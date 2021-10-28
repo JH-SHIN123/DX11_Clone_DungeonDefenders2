@@ -23,11 +23,11 @@ public:
 public:
 	HRESULT Clear_View();
 
-#ifdef _DEBUG
 public:
 	HRESULT Ready_DebugBuffer(_float fX, _float fY, _float fSizeX, _float fSizeY);
 	HRESULT Render_DebugBuffer();
-#endif
+
+
 private:
 	ID3D11Device*				m_pDevice = nullptr;
 	ID3D11DeviceContext*		m_pDevice_Context = nullptr;
@@ -39,10 +39,10 @@ private:
 private:
 	_float4				m_vClearColor;
 
-#ifdef _DEBUG
+
 private:
 	class CVIBuffer_RectRHW*		m_pVIBuffer = nullptr;
-#endif 
+
 
 public:
 	static CRenderTarget* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, _uint iWidth, _uint iHeight, DXGI_FORMAT eFormat, _float4 vClearColor);

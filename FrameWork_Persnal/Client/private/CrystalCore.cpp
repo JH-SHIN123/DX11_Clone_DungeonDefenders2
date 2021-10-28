@@ -59,7 +59,7 @@ _int CCrystalCore::Late_Tick(_float TimeDelta)
 {
 	Button_Dis_Check(TimeDelta);
 
-	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha_NotDeffed, this);
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
 }
 
 HRESULT CCrystalCore::Render()
@@ -86,7 +86,7 @@ HRESULT CCrystalCore::Render()
 		if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_DIFFUSE)))
 			return E_FAIL;
 
-		m_pModelCom->Render_Model(i, 5);
+		m_pModelCom->Render_Model(i, 14);
 	}
 
 	m_pRing_Up->Render();

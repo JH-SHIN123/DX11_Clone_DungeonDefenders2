@@ -33,8 +33,8 @@ texture2D		g_DissolveTexture;
 
 texture2D		g_MaskingTexture;
 texture2D		g_DiffuseTexture;
-texture2D		g_AmbientTexture;
-texture2D		g_SpecularTexture;
+texture2D		g_EmissiveTexture;
+
 float3			g_RGBColor;
 matrix			g_PivotMatrix;
 float4			g_vColor;
@@ -155,7 +155,11 @@ struct PS_OUT
 	vector	vDiffuse : SV_TARGET0;
 	vector	vNormal : SV_TARGET1;
 	vector	vDepth : SV_TARGET2;
+	vector	vEmissive : SV_TARGET3;
+
 };
+
+// 	Out.vEmissive = g_EmissiveTexture.Sample(DiffuseSampler, In.vTexUV);
 
 /* 픽셀의 최종적인 색을 결정하낟. */
 PS_OUT PS_MAIN(PS_IN In)
@@ -163,11 +167,35 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
-
+	Out.vEmissive = (vector)0;
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPosition.w / 430.0f, In.vProjPosition.z / In.vProjPosition.w, 0.f, 0.f);
 
-	return Out;	return Out;
+	return Out;
+}
+
+PS_OUT PS_MAIN_GARAEMI(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vEmissive = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPosition.w / 430.0f, In.vProjPosition.z / In.vProjPosition.w, 0.f, 0.f);
+
+	return Out;
+}
+
+PS_OUT PS_MAIN_GARAEMI2(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vEmissive = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPosition.w / 430.0f, In.vProjPosition.z / In.vProjPosition.w, 0.f, 0.f);
+
+	return Out;
 }
 
 PS_OUT PS_MAIN_COLOR(PS_IN In)
@@ -180,10 +208,28 @@ PS_OUT PS_MAIN_COLOR(PS_IN In)
 	Out.vDiffuse.b *= g_vColor.b;
 	Out.vDiffuse.a *= g_vColor.a;
 
+	Out.vEmissive = (vector)0;
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPosition.w / 430.0f, In.vProjPosition.z / In.vProjPosition.w, 0.f, 0.f);
 
-	return Out;	return Out;
+	return Out;
+}
+
+PS_OUT PS_MAIN_COLOR_EMISSIVE(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	Out.vDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vDiffuse.r *= g_vColor.r;
+	Out.vDiffuse.g *= g_vColor.g;
+	Out.vDiffuse.b *= g_vColor.b;
+	Out.vDiffuse.a *= g_vColor.a;
+
+	Out.vEmissive = Out.vDiffuse;
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPosition.w / 430.0f, In.vProjPosition.z / In.vProjPosition.w, 0.f, 0.f);
+
+	return Out;
 }
 
 PS_OUT PS_MAIN_MASKING_COLOR(PS_IN In)
@@ -201,6 +247,7 @@ PS_OUT PS_MAIN_MASKING_COLOR(PS_IN In)
 		Out.vDiffuse.a *= g_vColor.a;
 	}
 
+	Out.vEmissive = (vector)0;
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPosition.w / 430.0f, In.vProjPosition.z / In.vProjPosition.w, 0.f, 0.f);
 
@@ -271,6 +318,7 @@ PS_OUT PS_ALPHA_COLOR(PS_IN In)
 	vColor.a *= g_vColor.a;
 
 	Out.vDiffuse = vColor;
+	Out.vEmissive = (vector)0;
 	Out.vNormal = vector(1.f, 1.f, 1.f, 0.f);//vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPosition.w / 430.0f, In.vProjPosition.z / In.vProjPosition.w, 0.f, 0.f);
 
@@ -314,6 +362,7 @@ PS_OUT PS_ALPHA_BLUE_2(PS_IN In)
 	}
 	Out.vDiffuse.rga = 1.f;
 	Out.vDiffuse.a = g_vColor.a;
+	Out.vEmissive = (vector)0;
 
 	Out.vDiffuse.r *= g_vColor.r;
 	Out.vDiffuse.g *= g_vColor.g;
@@ -352,6 +401,7 @@ PS_OUT PS_DISSOLVE(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;
 
 	float4 vDissolve = g_DissolveTexture.Sample(DiffuseSampler, In.vTexUV);
+	Out.vEmissive = (vector)0;
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV);
 
@@ -510,6 +560,26 @@ technique11		DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DISSOLVE();
+	}
+
+	pass Bone_EmissiveGara // 13
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_Default, 0);
+		SetBlendState(BlendState_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_GARAEMI();
+	}
+
+	pass Core_Emissive // 14
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_Default, 0);
+		SetBlendState(BlendState_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		VertexShader = compile vs_5_0 VS_MAIN_DIRECTIONAL_TERRAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_COLOR_EMISSIVE();
 	}
 };
 //g_DissolveTexture

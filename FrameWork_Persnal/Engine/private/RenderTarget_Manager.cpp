@@ -87,8 +87,6 @@ HRESULT CRenderTarget_Manager::End_MRT(ID3D11DeviceContext* pDevice_Context, con
 	return S_OK;
 }
 
-#ifdef _DEBUG
-
 HRESULT CRenderTarget_Manager::Ready_DebugBuffer(const _tchar * pRenderTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
 {
 	CRenderTarget* pRenderTarget = Find_RenderTarget(pRenderTargetTag);
@@ -112,8 +110,6 @@ HRESULT CRenderTarget_Manager::Render_DebugBuffer(const _tchar * pMRTTag)
 
 	return S_OK;
 }
-
-#endif
 
 CRenderTarget * CRenderTarget_Manager::Find_RenderTarget(const _tchar * pRenderTargetTag)
 {

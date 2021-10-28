@@ -123,6 +123,7 @@
       <AdditionalDependencies>d3d11.lib;DirectXTexd.lib;Effects11d.lib;DirectXTKd.lib;assimp-vc140-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdParty/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
       <Command>xcopy	/y	/e	..\public\*.h	..\..\PlugIns\public\
@@ -130,7 +131,8 @@ xcopy      /y	/e	..\public\*.hpp	..\..\PlugIns\public\
 xcopy      /y	/e	..\public\*.inl	..\..\PlugIns\public\
 xcopy	/y	/e 	..\Bin\*.lib	..\..\PlugIns\Librarys\
 xcopy	/y	/e	..\Bin\*.dll	..\..\Client\Bin\
-xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
+xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\
+xcopy      /y           /e           ..\Bin\Shader\*.hlsl   ..\..\Client\Bin\Shader\</Command>
     </PostBuildEvent>
     <FxCompile>
       <ShaderType>Effect</ShaderType>
@@ -182,6 +184,7 @@ xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
       <AdditionalDependencies>d3d11.lib;Effects11.lib;DirectXTex.lib;DirectXTK.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdParty/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
       <Command>xcopy	/y	/e	..\public\*.h	..\..\PlugIns\public\
@@ -189,7 +192,8 @@ xcopy      /y	/e	..\public\*.hpp	..\..\PlugIns\public\
 xcopy      /y	/e	..\public\*.inl	..\..\PlugIns\public\
 xcopy	/y	/e 	..\Bin\*.lib	..\..\PlugIns\Librarys\
 xcopy	/y	/e	..\Bin\*.dll	..\..\Client\Bin\
-xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\</Command>
+xcopy	/y	/e	..\Bin\*.dll	..\..\Tool\Bin\
+xcopy      /y           /e           ..\Bin\Shader\*.hlsl   ..\..\Client\Bin\Shader\</Command>
     </PostBuildEvent>
     <FxCompile>
       <ShaderType>Effect</ShaderType>

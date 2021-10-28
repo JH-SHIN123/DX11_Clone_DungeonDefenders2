@@ -128,6 +128,7 @@ private:
 	CCollider*			m_pColliderCom_Hit = nullptr;
 	CCollider*			m_pColliderCom_Push = nullptr;
 	CNavigation*		m_pNaviCom = nullptr;
+	CTextures*			m_pTextureEmi = nullptr;
 
 private:
 	_bool			m_IsSkill_Use[10] = { false };

@@ -23,11 +23,11 @@ public:
 	HRESULT Begin_MRT(ID3D11DeviceContext* pDevice_Context, const _tchar* pMRTTag);
 	HRESULT End_MRT(ID3D11DeviceContext* pDevice_Context, const _tchar* pMRTTag);
 
-#ifdef _DEBUG
+
 public:
 	HRESULT Ready_DebugBuffer(const _tchar* pRenderTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
 	HRESULT Render_DebugBuffer(const _tchar* pMRTTag);
-#endif
+
 private:
 	unordered_map<const _tchar*, CRenderTarget*>			m_RenderTargets;
 	unordered_map<const _tchar*, list<CRenderTarget*>>		m_MRTs; // 멀티 렌더 타겟이라는 뜻ㅎ

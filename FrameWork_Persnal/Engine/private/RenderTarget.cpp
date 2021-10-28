@@ -74,8 +74,6 @@ HRESULT CRenderTarget::Clear_View()
 	return S_OK;
 }
 
-#ifdef _DEBUG
-
 HRESULT CRenderTarget::Ready_DebugBuffer(_float fX, _float fY, _float fSizeX, _float fSizeY)
 {
 	m_pVIBuffer = CVIBuffer_RectRHW::Create(m_pDevice, m_pDevice_Context, fX, fY, fSizeX, fSizeY, TEXT("../Bin/Shader/Shader_RenderTarget.hlsl"), "DefaultTechnique");
@@ -93,8 +91,6 @@ HRESULT CRenderTarget::Render_DebugBuffer()
 
 	return S_OK;
 }
-
-#endif
 
 CRenderTarget * CRenderTarget::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pDevice_Context, _uint iWidth, _uint iHeight, DXGI_FORMAT eFormat, _float4 vClearColor)
 {

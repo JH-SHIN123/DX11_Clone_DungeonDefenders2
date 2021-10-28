@@ -19,7 +19,7 @@ HRESULT CLightningTower::NativeConstruct_Prototype()
 
 HRESULT CLightningTower::NativeConstruct(void * pArg)
 {
-	__super::Set_TowerRangeAngle(180.f,-180.f);
+	__super::Set_TowerRangeAngle(180.f, -180.f);
 
 	__super::NativeConstruct(pArg);
 
@@ -98,7 +98,7 @@ _int CLightningTower::Late_Tick(_float TimeDelta)
 		if (m_fAttStartTime > m_fAttCharging && false == m_IsAttack)
 		{
 			m_fAttCharging += TimeDelta;
-			
+
 
 
 		}
@@ -124,7 +124,7 @@ _int CLightningTower::Late_Tick(_float TimeDelta)
 				Data.MoveState_Desc.vScale = { 1.f, 1.f, 1.f, 0.f };
 				Data.MoveState_Desc.fSpeedPerSec = 7.f;
 				Data.fLifeTime = 10.f;
-				
+
 				Data.Attack_Collide_Desc.IsCenter = true;
 				Data.Attack_Collide_Desc.vScale = { 2.f, 2.f, 2.f };
 				Data.Attack_Collide_Desc.Attack_Desc.eDamageType = EDamageType::Shock;
@@ -154,7 +154,7 @@ _int CLightningTower::Late_Tick(_float TimeDelta)
 			m_IsAttack = true;
 			m_fAttCharging = 0.f;
 		}
-		
+
 	}
 	else
 	{

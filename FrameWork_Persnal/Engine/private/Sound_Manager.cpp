@@ -1,5 +1,6 @@
 #include "..\public\Sound_Manager.h"
-#include <conio.h>
+/*#include <conio.h>*/
+#include <io.h>
 
 IMPLEMENT_SINGLETON(CSound_Manager)
 
@@ -22,10 +23,10 @@ void CSound_Manager::Initialize(void)
 
 	if (-1 == handle)
 	{
-		MSG_BOX("Can't Read SoundFile");
-		return;
+		MSG_BOX("Can't Read SoundFile"); 
+		//return;
 	}
-
+	// 릴리즈에서 파일 경로는 못읽지만 내용물은 문제없이 잘 읽음
 	while (-1 != iResult)
 	{
 		char szFullPath[256] = "";
@@ -95,7 +96,10 @@ void CSound_Manager::StopSound(CHANNEL_TYPE eChannel)
 void CSound_Manager::StopSoundAll(void)
 {
 	for (int i = 0; i < CHANNEL_END; ++i)
-		FMOD_Channel_Stop(m_pChannel[i]);
+	{
+		if(nullptr != m_pChannel[i])
+			FMOD_Channel_Stop(m_pChannel[i]);
+	}
 }
 
 bool CSound_Manager::IsPlaying(CHANNEL_TYPE eChannel)

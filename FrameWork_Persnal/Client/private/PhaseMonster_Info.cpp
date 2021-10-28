@@ -42,7 +42,7 @@ _int CPhaseMonster_Info::Late_Tick(_float TimeDelta)
 	_float fCamDis_Original = XMVectorGetX(XMVector3Length(GET_CAMERA_POSITION - m_pMovementCom->Get_State(EState::Position)));
 
 	if (fCamDis_OffSet < fCamDis_Original)
-		return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Priority_Second, this);
+		return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::AlphaUI, this);
 
 	return 0;
 }

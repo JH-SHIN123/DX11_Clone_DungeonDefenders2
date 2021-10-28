@@ -101,7 +101,7 @@ _int CTerrain::Late_Tick(_float TimeDelta)
 	if (nullptr == m_pRendererCom)
 		return -1;
 
-	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::NoneAlpha, this);
+	return m_pRendererCom->Add_GameObjectToRenderer(ERenderGroup::Priority_Second, this);
 }
 
 HRESULT CTerrain::Render()

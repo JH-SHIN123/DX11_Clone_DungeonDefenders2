@@ -1,3 +1,4 @@
+//#include "Shader_Bloom.hlsl"
 
 texture2D		g_DiffuseTexture;
 
@@ -49,6 +50,12 @@ VS_OUT VS_MAIN(VS_IN In)
 }
 
 
+float3 ToneMapACES(float3 hdr)
+{
+	const float A = 2.51, B = 0.03, C = 2.43, D = 0.59, E = 0.14;
+	return saturate((hdr * (A * hdr + B)) / (hdr * (C * hdr * D) + E));
+}
+
 
 struct PS_IN
 {
@@ -74,7 +81,35 @@ PS_OUT PS_MAIN(PS_IN In)
 	
 	Out.vColor = vDiffuseDesc * vShadeDesc + vSpecularDesc;
 
+	//float3 vColor = Out.vColor.rgb;
+	//Out.vColor = vector(ToneMapACES(vColor), 1.f);
+	//PS_BLOOM
 
+	if (Out.vColor.a < 0.02f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT PS_DIFFUSE_BLENDER(PS_IN In)
+{
+	PS_OUT		Out = (PS_OUT)0;
+
+	vector	vDiffuseDesc = g_DiffuseTexture.Sample(DiffuseSampler, In.vTexUV); // 기존에 있던 대상
+	vector	vShadeDesc = g_ShadeTexture.Sample(ShadeSampler, In.vTexUV); // 새로 그려질 대상 
+
+
+	//Out.vColor = vDiffuseDesc;
+	//if (vShadeDesc.a > 0)
+	//{
+	//	Out.vColor = vShadeDesc;
+	//}
+
+	Out.vColor = vDiffuseDesc;
+	if (vShadeDesc.a > 0)
+	{
+		Out.vColor.rgb = vShadeDesc.rgb;
+	}
 
 	return Out;
 }
@@ -107,7 +142,18 @@ technique11		DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
-	}	
+	}
+
+	pass DiffuseBlender
+	{
+		SetRasterizerState(Rasterizer_Solid);
+		SetDepthStencilState(DepthStecil_ZEnable, 0);
+		SetBlendState(BlendState_None, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN();
+	}
 };
 
 

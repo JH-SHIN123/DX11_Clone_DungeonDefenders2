@@ -165,11 +165,14 @@ HRESULT CPlayer::Render()
 		return S_OK;
 
 	m_pModelCom->Bind_VIBuffer();
-
+	
 	m_pModelCom->Set_Variable("g_PivotMatrix", &XMMatrixTranspose(XMLoadFloat4x4(&m_PivotMatrix)), sizeof(_matrix));
 	m_pModelCom->Set_Variable("WorldMatrix", &XMMatrixTranspose(m_pMovementCom->Get_WorldMatrix()), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ViewMatrix", &XMMatrixTranspose(GET_VIEW_SPACE), sizeof(_matrix));
 	m_pModelCom->Set_Variable("ProjMatrix", &XMMatrixTranspose(GET_PROJ_SPACE), sizeof(_matrix));
+
+	_float4 vEmi = { 1.f,1.f,1.f,1.f };
+	m_pModelCom->Set_Variable("g_vColor", &vEmi, sizeof(_float4));
 
 	_uint iNumMaterials = m_pModelCom->Get_NumMaterials();
 
@@ -182,7 +185,7 @@ HRESULT CPlayer::Render()
 		//if (FAILED(m_pModelCom->Set_ShaderResourceView("g_DiffuseTexture", i, aiTextureType::aiTextureType_SPECULAR)))
 		//	return E_FAIL;
 
-		m_pModelCom->Render_Model(i, 0);
+		m_pModelCom->Render_Model(i, 13);
 	}
 
 
@@ -1295,6 +1298,8 @@ void CPlayer::Free()
 	Safe_Release(m_pLightningTower);
 
 	Safe_Release(m_pWeapon);
+
+	Safe_Release(m_pTextureEmi);
 
 	__super::Free();
 }

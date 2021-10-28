@@ -30,7 +30,11 @@ HRESULT CRenderer::NativeConstruct_Prototype()
 
 
 	/* Target_Diffuse */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pDevice_Context, TEXT("Target_Diffuse"), View_Width, View_Height, DXGI_FORMAT_R8G8B8A8_SNORM, _float4(1.f, 1.f, 1.f, 1.f))))
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pDevice_Context, TEXT("Target_Diffuse"), View_Width, View_Height, DXGI_FORMAT_R8G8B8A8_SNORM, _float4(1.f, 1.f, 1.f, 0.f))))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pDevice_Context, TEXT("Target_Diffuse_Pri"), View_Width, View_Height, DXGI_FORMAT_R8G8B8A8_SNORM, _float4(1.f, 1.f, 1.f, 0.f))))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pDevice_Context, TEXT("Target_Diffuse_Final"), View_Width, View_Height, DXGI_FORMAT_R8G8B8A8_SNORM, _float4(1.f, 1.f, 1.f, 0.f))))
 		return E_FAIL;
 
 	/* Target_Normal */
@@ -40,9 +44,12 @@ HRESULT CRenderer::NativeConstruct_Prototype()
 	/* Target_Depth */ // 깊이값의 소수점은 너무 자세하니까 크기를 더 크게 잡음
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pDevice_Context, TEXT("Target_Depth"), View_Width, View_Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
+	/* Target_Emissive */
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pDevice_Context, TEXT("Target_Emissive"), View_Width, View_Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
 
 	/* Target_Shade */
-	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pDevice_Context, TEXT("Target_Shade"), View_Width, View_Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pDevice_Context, TEXT("Target_Shade"), View_Width, View_Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
 		return E_FAIL;
 
 	/* Target_Specular */
@@ -53,6 +60,27 @@ HRESULT CRenderer::NativeConstruct_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pDevice_Context, TEXT("Target_Bloom"), View_Width, View_Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pDevice_Context, TEXT("Target_Blur"), View_Width, View_Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Add_RenderTarget(m_pDevice, m_pDevice_Context, TEXT("Target_Blur_Final"), View_Width, View_Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+	/* MRT_BlurX */
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("Target_Blur"), TEXT("MRT_Blur"))))
+		return E_FAIL;
+
+	/* MRT_BlurY  */
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("Target_Blur_Final"), TEXT("MRT_Blur_Final"))))
+		return E_FAIL;
+
+	/* MRT_Deferred_Pri */
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("Target_Diffuse_Pri"), TEXT("MRT_Deferred_Pri"))))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("Target_Diffuse_Final"), TEXT("MRT_Deferred_Final"))))
+		return E_FAIL;
+
 
 	/* MRT_Deferred */
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("Target_Diffuse"), TEXT("MRT_Deferred"))))
@@ -60,6 +88,8 @@ HRESULT CRenderer::NativeConstruct_Prototype()
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("Target_Normal"), TEXT("MRT_Deferred"))))
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("Target_Depth"), TEXT("MRT_Deferred"))))
+		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Add_MRT(TEXT("Target_Emissive"), TEXT("MRT_Deferred"))))
 		return E_FAIL;
 
 	/* MRT_LightAcc */
@@ -80,6 +110,8 @@ HRESULT CRenderer::NativeConstruct_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Depth"), 0.f, 300.f, 150.f, 150.f)))
 		return E_FAIL;
+	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Emissive"), 0.f, 450.f, 150.f, 150.f)))
+		return E_FAIL;
 
 	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Shade"), 150.f, 0.f, 150.f, 150.f)))
 		return E_FAIL;
@@ -87,6 +119,9 @@ HRESULT CRenderer::NativeConstruct_Prototype()
 		return E_FAIL;
 
 	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Bloom"), 300.f, 0.f, 150.f, 150.f)))
+		return E_FAIL;
+
+	if (FAILED(m_pTarget_Manager->Ready_DebugBuffer(TEXT("Target_Blur_Final"), 300.f, 150.f, 150.f, 150.f)))
 		return E_FAIL;
 
 	m_pVIBuffer = CVIBuffer_RectRHW::Create(m_pDevice, m_pDevice_Context, 0.f, 0.f, ViewPortDesc.Width, ViewPortDesc.Height, TEXT("../Bin/Shader/Shader_Blend.hlsl"), "DefaultTechnique");
@@ -150,6 +185,7 @@ HRESULT CRenderer::Draw_Renderer()
 	m_pTarget_Manager->Render_DebugBuffer(TEXT("MRT_Deferred"));
 	m_pTarget_Manager->Render_DebugBuffer(TEXT("MRT_LightAcc"));
 	m_pTarget_Manager->Render_DebugBuffer(TEXT("MRT_Bloom"));
+	m_pTarget_Manager->Render_DebugBuffer(TEXT("MRT_Blur_Final"));
 
 	return S_OK;
 }
@@ -175,6 +211,8 @@ HRESULT CRenderer::Render_Priority()
 
 HRESULT CRenderer::Render_Priority_Second()
 {
+	m_pTarget_Manager->Begin_MRT(m_pDevice_Context, TEXT("MRT_Deferred_Pri"));
+
 	HRESULT hr = S_OK;
 	for (auto& iter : m_pRenderObjects[(_uint)ERenderGroup::Priority_Second])
 	{
@@ -188,6 +226,7 @@ HRESULT CRenderer::Render_Priority_Second()
 	}
 
 	m_pRenderObjects[(_uint)ERenderGroup::Priority_Second].clear();
+	m_pTarget_Manager->End_MRT(m_pDevice_Context, TEXT("MRT_Deferred_Pri"));
 
 	return S_OK;
 }
@@ -449,11 +488,21 @@ HRESULT CRenderer::Render_Blend_For_Bloom()
 	// Shader_Blend 엔진내의 쉐이더를 사용한 RHW버퍼에 그리자
 	// + 그걸 Bloom에 기록하고 다시 그린다.
 
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pDevice_Context, TEXT("MRT_Deferred_Final"))))
+		return E_FAIL;
+	m_pVIBuffer->Set_ShaderResourceView("g_DiffuseTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Diffuse_Pri")));
+	m_pVIBuffer->Set_ShaderResourceView("g_ShadeTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Diffuse")));
+	m_pVIBuffer->Render(1);
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pDevice_Context, TEXT("MRT_Deferred_Final"))))
+		return E_FAIL;
+
+
+
 
 	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pDevice_Context, TEXT("MRT_Bloom"))))
 		return E_FAIL;
 
-	m_pVIBuffer->Set_ShaderResourceView("g_DiffuseTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Diffuse")));
+	m_pVIBuffer->Set_ShaderResourceView("g_DiffuseTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Diffuse_Final")));
 	m_pVIBuffer->Set_ShaderResourceView("g_ShadeTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Shade")));
 	m_pVIBuffer->Set_ShaderResourceView("g_SpecularTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Specular")));
 	m_pVIBuffer->Render(0);
@@ -461,10 +510,28 @@ HRESULT CRenderer::Render_Blend_For_Bloom()
 	if (FAILED(m_pTarget_Manager->End_MRT(m_pDevice_Context, TEXT("MRT_Bloom"))))
 		return E_FAIL;
 
-	// Bloom 아 이러면 이거만 들어갔네
-	m_pVIBuffer_Bloom->Set_ShaderResourceView("g_DepthTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Diffuse")));
-	m_pVIBuffer_Bloom->Set_ShaderResourceView("g_BloomTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Diffuse")));
-	m_pVIBuffer_Bloom->Render(0);
+
+	// Blur X
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pDevice_Context, TEXT("MRT_Blur"))))
+		return E_FAIL;
+	m_pVIBuffer_Bloom->Set_ShaderResourceView("g_BlurTex", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Emissive")));
+	m_pVIBuffer_Bloom->Render(2);
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pDevice_Context, TEXT("MRT_Blur"))))
+		return E_FAIL;
+
+	// blur Y
+	if (FAILED(m_pTarget_Manager->Begin_MRT(m_pDevice_Context, TEXT("MRT_Blur_Final"))))
+		return E_FAIL;
+	m_pVIBuffer_Bloom->Set_ShaderResourceView("g_BlurTex", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Blur")));
+	m_pVIBuffer_Bloom->Render(3);
+	if (FAILED(m_pTarget_Manager->End_MRT(m_pDevice_Context, TEXT("MRT_Blur_Final"))))
+		return E_FAIL;
+
+	// 
+	m_pVIBuffer_Bloom->Set_ShaderResourceView("g_DepthTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Blur_Final")));
+	m_pVIBuffer_Bloom->Set_ShaderResourceView("g_BloomTexture", m_pTarget_Manager->Get_ShaderResourceView(TEXT("Target_Bloom")));
+	m_pVIBuffer_Bloom->Render(1);
+
 
 
 	return S_OK;

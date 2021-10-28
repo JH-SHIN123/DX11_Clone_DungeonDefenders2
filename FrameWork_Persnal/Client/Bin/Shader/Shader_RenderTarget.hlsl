@@ -83,5 +83,3 @@ technique11		DefaultTechnique
 	}	
 };
 
-
-

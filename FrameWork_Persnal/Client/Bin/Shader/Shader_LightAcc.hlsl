@@ -120,6 +120,7 @@ PS_OUT PS_MAIN_DIRECTIONAL(PS_IN In)
 	vector	vReflect = reflect(normalize(g_vLightDir), vNormal);
 
 	Out.vSpecular = pow(max(dot(normalize(vLook) * -1.f, vReflect), 0.f), g_fPower) * (g_vLightSpecular * g_vMtrlSpecular);
+	Out.vSpecular.a = 0.f;
 
 	return Out;
 }
@@ -130,7 +131,7 @@ PS_OUT PS_MAIN_POINT(PS_IN In)
 
 	vector	vNormalDesc = g_NormalTexture.Sample(NormalSampler, In.vTexUV);
 	vector	vDepthDesc = g_DepthTexture.Sample(DepthSampler, In.vTexUV);
-	float	fViewZ = vDepthDesc.x * 300.f;
+	float	fViewZ = vDepthDesc.x * 430.f;
 
 	vector	vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
@@ -161,6 +162,7 @@ PS_OUT PS_MAIN_POINT(PS_IN In)
 	vector	vReflect = reflect(normalize(g_vLightDir), vNormal);
 
 	Out.vSpecular = (pow(max(dot(normalize(vLook) * -1.f, vReflect), 0.f), g_fPower) * (g_vLightSpecular * g_vMtrlSpecular)) * fAtt;
+	Out.vSpecular.a = 0.f;
 
 	return Out;
 }
@@ -190,6 +192,10 @@ BlendState BlendState_Add
 	SrcBlend = ONE;
 	DestBlend = ONE;
 	BlendOp = Add;
+
+	SrcBlendAlpha = ONE;
+	DestBlendAlpha = ONE;
+	BlendOpAlpha = Add;
 };
 
 technique11		DefaultTechnique
